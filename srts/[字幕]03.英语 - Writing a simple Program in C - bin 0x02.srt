@@ -1,0 +1,635 @@
+1
+00:00:06,180 --> 00:00:11,300
+To be able to find security issues in software,
+one has to understand how software is written.
+
+2
+00:00:11,300 --> 00:00:15,850
+It’s very helpful to explore different programming
+languages to understand their differences
+
+3
+00:00:15,850 --> 00:00:20,230
+and similarities and to get into this special
+way of thinking.
+
+4
+00:00:20,230 --> 00:00:25,110
+Often when I use a software I imagine how
+a certain piece of it might have been implemented
+
+5
+00:00:25,110 --> 00:00:30,630
+- this makes me think about the software architecture
+and potential difficulties the developers
+
+6
+00:00:30,630 --> 00:00:35,910
+may have had, which helps to find bugs that
+can be exploited.
+
+7
+00:00:35,910 --> 00:00:40,460
+When I was younger I used programming to write
+damage calculators for browser games or simple
+
+8
+00:00:40,460 --> 00:00:45,600
+chat programs that we could use at lan parties
+to communicate. Nowadays I use programming
+
+9
+00:00:45,600 --> 00:00:50,010
+more as a tool to solve other problems or
+help me with repetitive tasks.
+
+10
+00:00:50,010 --> 00:00:54,640
+To get a feeling what programming is like,
+we will have a look at a very simple program
+
+11
+00:00:54,640 --> 00:01:00,470
+implemented in the very old and low level
+language C and in the next video we use the
+
+12
+00:01:00,469 --> 00:01:05,819
+more modern scripting language python. You
+will notice a lot of similarities in terms
+
+13
+00:01:05,820 --> 00:01:10,880
+of structure but also how different their
+syntax looks like.
+
+14
+00:01:10,880 --> 00:01:15,510
+Let me first show you what our little program
+will do. To execute it you simply have to
+
+15
+00:01:15,510 --> 00:01:19,960
+enter the path. Because we are in the same
+folder we have to start the path with the
+
+16
+00:01:19,960 --> 00:01:24,800
+“dot”, which is an alias for the current
+location. Maybe you are wondering why the
+
+17
+00:01:24,800 --> 00:01:30,000
+other programs like “LS” don’t require
+a full path to execute them.
+
+18
+00:01:30,000 --> 00:01:35,920
+The reason for that is when you enter a command,
+or generally speaking the name of a program,
+
+19
+00:01:35,920 --> 00:01:41,020
+the shell will look at the configured PATH
+environment variable, which contains a list
+
+20
+00:01:41,020 --> 00:01:45,920
+of directories where to look for programs.
+There are many different environment variables
+
+21
+00:01:45,920 --> 00:01:50,490
+that all have their purpose, but because we
+are only interested in the PATH we can use
+
+22
+00:01:50,490 --> 00:01:56,790
+the pipe to redirect the output of env, into
+another program called grep, which can filter
+
+23
+00:01:56,790 --> 00:02:02,250
+for lines that contain “PATH”.
+I use grep to filter output of other programs
+
+24
+00:02:02,250 --> 00:02:06,430
+all the time. It’s one of the most useful
+tools.
+
+25
+00:02:06,430 --> 00:02:11,690
+Another way to get the content of PATH is
+to use echo to print the variable.
+
+26
+00:02:11,690 --> 00:02:17,310
+Now let’s use “whereis” to find the
+location of the LS program, which shows us
+
+27
+00:02:17,309 --> 00:02:25,379
+that it is indeed in a location specified
+by PATH. The paths are separated by the colon.
+
+28
+00:02:25,379 --> 00:02:30,829
+If we would want to execute our program from
+every location like LS, we can simply add
+
+29
+00:02:30,829 --> 00:02:34,629
+this current directory to the PATH variable
+with export.
+
+30
+00:02:34,629 --> 00:02:40,209
+A nice trick if you want to copy something
+in the terminal is just to mark it, and then
+
+31
+00:02:40,210 --> 00:02:47,240
+press the mouse wheel. this will automatically
+paste the marked text. Now add the user’s
+
+32
+00:02:47,239 --> 00:02:52,109
+home folder to the PATH and then you can execute
+this program like any other.
+
+33
+00:02:52,110 --> 00:02:57,420
+Now let’s dive in.
+
+34
+00:02:57,419 --> 00:02:59,999
+C is over 40 years old and despite it’s
+age it’s still used a lot. Its strength
+
+35
+00:02:59,998 --> 00:03:00,998
+is its simplicity - by that I mean that there
+are not too many language features and thus
+
+36
+00:03:00,998 --> 00:03:03,718
+makes it easy to understand - at least once
+you understand how a CPU works. Many beginners
+
+37
+00:03:03,719 --> 00:03:09,649
+feel that C is hard, because it feels unintuitive
+and too low level at first, but you will notice
+
+38
+00:03:09,650 --> 00:03:14,750
+in later episodes that it is very close to
+assembler, which is ideal to understand and
+
+39
+00:03:14,749 --> 00:03:17,619
+imagine how a computer works.
+
+40
+00:03:17,620 --> 00:03:22,650
+our goal is to look nerdy. So we obviously
+will use a command line text editor called
+
+41
+00:03:22,650 --> 00:03:30,390
+vim. Joke aside, it really makes sense to
+learn vim, because we actually need it a lot.
+
+42
+00:03:30,389 --> 00:03:39,859
+vi is already installed. But vim (which stands
+for vi improved) is a little bit nicer and
+
+43
+00:03:39,859 --> 00:03:46,099
+is not yet there. But we get this nice little
+suggestion to install it with sudo apt-get.
+
+44
+00:03:46,099 --> 00:03:53,259
+The sudo prefix is needed, because only the
+root user can install new software. Enter
+
+45
+00:03:53,260 --> 00:04:00,920
+a Y to continue
+
+46
+00:04:00,919 --> 00:04:07,379
+Now enter vim and the filename to start editing.
+Before you can type you have to enter the
+
+47
+00:04:07,379 --> 00:04:13,669
+“insert” mode by pressing i. Keep an eye
+on the status bar at the bottom, which tells
+
+48
+00:04:13,669 --> 00:04:19,469
+you what you are doing. To exit the insert
+mode hit escape. And then you can enter commands
+
+49
+00:04:19,470 --> 00:04:29,450
+with a colon such as colon w to save the file
+or colon q to exit. or simply colon w q to
+
+50
+00:04:29,449 --> 00:04:33,339
+save and exit.
+We don’t really have to know more features
+
+51
+00:04:33,340 --> 00:04:38,080
+than that for now, except maybe we want to
+enable syntax highlighting and display line
+
+52
+00:04:38,080 --> 00:04:39,080
+numbers
+
+53
+00:04:39,080 --> 00:04:43,440
+:syntax on
+:set number
+
+54
+00:04:43,439 --> 00:04:49,969
+First we want to use the include statement
+to add the standard i/o (input output) functionality
+
+55
+00:04:49,970 --> 00:04:56,550
+to our program. Next we define the entry function
+which is always called “main”. Every C
+
+56
+00:04:56,551 --> 00:05:02,451
+program has this function and this is where
+our program starts to execute. A function
+
+57
+00:05:02,450 --> 00:05:07,820
+has a name and encloses code that belongs
+to this function. The parameter variables
+
+58
+00:05:07,819 --> 00:05:14,909
+defined here are standardized. The first parameter
+is an integer number called argc (which stands
+
+59
+00:05:14,909 --> 00:05:22,149
+for argument count). And the second parameter
+is a list called argv (which stands for argument
+
+60
+00:05:22,150 --> 00:05:28,110
+vector). For now we will use array, list and
+vector as synonyms. So those function parameters
+
+61
+00:05:28,110 --> 00:05:34,350
+are infact what we can pass to a program on
+the command line. Just think of the “cat”
+
+62
+00:05:34,350 --> 00:05:40,440
+command. It takes a filename as first argument.
+And if you would program cat yourself, you
+
+63
+00:05:40,439 --> 00:05:44,609
+would access the filename via argv.
+
+64
+00:05:44,610 --> 00:05:51,910
+Now let’s print something by using the printf
+function and a string as parameter.
+
+65
+00:05:51,909 --> 00:05:59,859
+The backslash n is a special character which
+stands for newline. We have seen it in the
+
+66
+00:05:59,860 --> 00:06:09,490
+last video already.
+Let’s save this with ESC, colon, wq, Enter.
+
+67
+00:06:09,490 --> 00:06:15,290
+Just a friendly reminder, read the man page
+of printf to learn more about this function.
+
+68
+00:06:15,289 --> 00:06:19,919
+To access the manual for the C function printf
+you have to look in the 3rd section of the
+
+69
+00:06:19,919 --> 00:06:27,959
+manual. So man 3 printf.
+
+70
+00:06:27,960 --> 00:06:33,340
+To create a program from the text we have
+to compile it. The compiler converts the text
+
+71
+00:06:33,340 --> 00:06:39,780
+into binary machine code that can be executed
+by the CPU. We can use the gnu c compiler
+
+72
+00:06:39,780 --> 00:06:47,420
+gcc for that. “gcc”, filename of the code
+and minus o to specify the output file name.
+
+73
+00:06:47,419 --> 00:06:55,169
+Ohh… I made a mistake. There is a conflict
+for argv. So let’s quickly fix that by calling
+
+74
+00:06:55,170 --> 00:07:02,610
+this variable properly argc.
+Now you can execute it. Awesome!
+
+75
+00:07:02,610 --> 00:07:11,790
+Let’s be a good programmer from the beginning
+and use -Wall to enable all warnings. Now
+
+76
+00:07:11,790 --> 00:07:18,380
+we get a warning that at the end of the function
+is no return value, despite having main defined
+
+77
+00:07:18,379 --> 00:07:25,069
+to return an integer number. So let’s fix
+that by adding a return 0 at the end, 0 means
+
+78
+00:07:25,069 --> 00:07:30,789
+that the program exited without an error.
+You can hit “o” instead of “i” to
+
+79
+00:07:30,789 --> 00:07:37,199
+enter the insert mode in vim, which automatically
+creates a new line below. Maybe you start
+
+80
+00:07:37,199 --> 00:07:42,769
+to realise now how powerful vim can get when
+you get familiar with the shortcuts.
+
+81
+00:07:42,770 --> 00:07:45,340
+And now it compiles just fine!
+
+82
+00:07:45,340 --> 00:07:50,140
+To make this program a bit more interesting
+we will add an if-statement. We say that the
+
+83
+00:07:50,139 --> 00:07:54,989
+argument count has to be equal to two. And
+if that is the case, we will print the same
+
+84
+00:07:54,990 --> 00:08:01,670
+phrase as before, just without a fixed name.
+We can use this format string syntax of percentage
+
+85
+00:08:01,669 --> 00:08:08,059
+s to indicate that at this place belongs a
+string. And as first parameter we specify
+
+86
+00:08:08,060 --> 00:08:13,980
+this string, which is the second element of
+the arguments vector. Yes it says, 1, but
+
+87
+00:08:13,980 --> 00:08:18,190
+it is the second entry in this list, because
+we always start counting at 0.
+
+88
+00:08:18,189 --> 00:08:23,959
+If we don’t have exactly two arguments,
+we will print an error message. Good practice
+
+89
+00:08:23,960 --> 00:08:30,200
+is to print error messages not to the standard
+output, but to the standard error. May seem
+
+90
+00:08:30,199 --> 00:08:34,839
+weird for now, but you will understand it
+in the future. And instead of printing the
+
+91
+00:08:34,840 --> 00:08:40,130
+second argument, because in this else case
+we might not have one, we will print the first
+
+92
+00:08:40,130 --> 00:08:50,730
+argument instead. We will also add a return
+1 here, and the one indicates that the program
+
+93
+00:08:50,730 --> 00:08:56,750
+exited with an error.
+Compile this code and test it. As you can
+
+94
+00:08:56,750 --> 00:09:01,800
+see if you don’t specify an argument, it
+will display the usage error message with
+
+95
+00:09:01,800 --> 00:09:07,610
+the program name. The shell passes everything
+you typed on the command-line seperated by
+
+96
+00:09:07,610 --> 00:09:15,910
+spaces to the program. And this means the
+first argument will be your program name.
+
+97
+00:09:15,910 --> 00:09:22,010
+Now if you set the second argument, the personalized
+message is printed. Also notice that when
+
+98
+00:09:22,010 --> 00:09:27,000
+you want to have a string with spaces, you
+have to put it in quotes to indicate that
+
+99
+00:09:27,000 --> 00:09:31,940
+it belongs together.
+With dollar questionmark you can display the
+
+100
+00:09:31,940 --> 00:09:38,130
+exit-code of the previously ran program, which
+is either 0 or 1 depending on if we got an
+
+101
+00:09:38,130 --> 00:09:40,830
+error or not.
+
+102
+00:09:40,829 --> 00:09:45,179
+Now let’s play a little bit with this program.
+We already scratched the topic of environment
+
+103
+00:09:45,180 --> 00:09:49,550
+variables. If you look at them again, you
+can find the $USER variable, which contains
+
+104
+00:09:49,550 --> 00:09:56,140
+your username. So when we execute the program
+with dollar USER, it will print liveoverflow.
+
+105
+00:09:56,139 --> 00:09:59,659
+But what if we actually want to print dollar
+User?
+
+106
+00:09:59,660 --> 00:10:05,100
+To achieve that we have to escape the dollar.
+The dollar has a special meaning on the command
+
+107
+00:10:05,100 --> 00:10:11,410
+line. When you enter this text the shell will
+read what you typed and once it reads the
+
+108
+00:10:11,410 --> 00:10:16,680
+dollar, it knows that the next characters
+will be the name of a variable. It will then
+
+109
+00:10:16,680 --> 00:10:20,290
+look up the value of this variable and replace
+it.
+
+110
+00:10:20,290 --> 00:10:26,790
+But if we use a backslash before the dollar,
+the shell will first read the backslash and
+
+111
+00:10:26,790 --> 00:10:32,370
+knows, that if a dollar is following, it will
+not treat it as a special character anymore.
+
+112
+00:10:32,370 --> 00:10:38,360
+Wouldn’t it be cool to always get greeted
+when you open a terminal? Browse to your homefolder
+
+113
+00:10:38,360 --> 00:10:44,590
+again and checkout the dotfiles there. There
+is one file called bashrc, which is a special
+
+114
+00:10:44,589 --> 00:10:49,919
+file that will be loaded once you open a terminal,
+and it can contain commands that are executed
+
+115
+00:10:49,920 --> 00:10:56,960
+everytime. Open it in vim, and go to the bottom
+of the file with shift G switch to the insert
+
+116
+00:10:56,959 --> 00:11:02,509
+mode with “i” or “o”.
+Now we can add the export command from earlier,
+
+117
+00:11:02,510 --> 00:11:06,110
+but because we now know about environment
+variables and how they are recognized and
+
+118
+00:11:06,110 --> 00:11:10,960
+replaced, we can use this better technique
+to change the PATH.
+
+119
+00:11:10,959 --> 00:11:17,389
+And on the next line we add our program with
+the user variable as argument.
+
+120
+00:11:17,389 --> 00:11:22,379
+Escape to enter command mode, colon, w save
+it.
+
+121
+00:11:22,380 --> 00:11:24,580
+Open another terminal and be excited!
+
+122
+00:11:24,579 --> 00:11:30,269
+This obviously could have also been easier,
+by just using echo instead of a compiled C
+
+123
+00:11:30,270 --> 00:11:35,200
+program. But it doesn’t matter. We learned
+something. As an exercise you should add an
+
+124
+00:11:35,199 --> 00:11:40,659
+alternative version with echo and the environment
+variable to the bashrc. And you can also modify
+
+125
+00:11:40,660 --> 00:11:46,150
+the vimrc to always enable syntax highlighting
+for vim.
+
+126
+00:11:46,150 --> 00:11:51,220
+I remove the export command again, because
+I don’t want to have the home folder in
+
+127
+00:11:51,220 --> 00:12:00,710
+the PATH. Go to the line and press d two times
+- you have to be in command mode, so hit ESC
+
+128
+00:12:00,709 --> 00:12:05,479
+if you are still in the insert mode.
+And now I have to use the full path for our
+
+129
+00:12:05,480 --> 00:12:05,560
+program.
+

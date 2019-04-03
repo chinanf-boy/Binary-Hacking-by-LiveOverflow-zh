@@ -1,0 +1,726 @@
+1
+00:00:06,230 --> 00:00:10,310
+The first thing we have to do, is to install
+an operating system that allows us to easy
+
+2
+00:00:10,309 --> 00:00:15,489
+understand how the whole system works. Windows
+and OSX are closed systems that make it very
+
+3
+00:00:15,490 --> 00:00:20,930
+hard to understand on a technical level. Though,
+actually, OSX is very similar to Linux and
+
+4
+00:00:20,930 --> 00:00:25,730
+a lot of concepts can be transferred. But
+we will use Linux, because we can for example
+
+5
+00:00:25,730 --> 00:00:30,620
+have a look at the Linux Kernel sourcecode
+to dig deeper. And also most people come from
+
+6
+00:00:30,619 --> 00:00:36,039
+a different OS - namely windows or mac - so
+it will be cool to learn something new.
+
+7
+00:00:36,040 --> 00:00:41,510
+There are many many distributions of Linux
+that all have their own flavour. For example
+
+8
+00:00:41,510 --> 00:00:46,170
+there is Kali Linux (formerly backtrack),
+which is a Linux operating system that has
+
+9
+00:00:46,170 --> 00:00:51,610
+a lot of preinstalled tools intended for penetration
+testing. There are other Linux distributions
+
+10
+00:00:51,609 --> 00:00:56,569
+that are more aimed to be used as a standard
+desktop environment for example Ubuntu.
+
+11
+00:00:56,570 --> 00:01:01,110
+A lot of people run Debian on a server to host
+some websites. And big companies that need
+
+12
+00:01:01,109 --> 00:01:06,269
+operating systems with support and service
+contracts they often use Red Hat Enterprise Linux
+
+13
+00:01:06,270 --> 00:01:12,280
+And I know many people that build their
+own Linux experience with Archlinux. And there
+
+14
+00:01:12,280 --> 00:01:16,440
+are hundreds of other distributions out there.
+So just google them.
+
+15
+00:01:16,440 --> 00:01:21,750
+When you want to first check out Linux,
+it’s difficult to decide what to go for.
+
+16
+00:01:21,750 --> 00:01:27,330
+I generally just suggest go with Ubuntu. It’s
+a very popular distribution, it's easy to
+
+17
+00:01:27,330 --> 00:01:32,360
+use because it’s kinda aimed at people that
+have never used Linux before. So that is what
+
+18
+00:01:32,360 --> 00:01:34,340
+we will do.
+
+19
+00:01:34,340 --> 00:01:39,430
+But if you are already experienced with Linux,
+why not take a weekend and checkout archlinux
+
+20
+00:01:39,430 --> 00:01:45,070
+and build your system from ground up. You
+will fail the first time, but learn a lot.
+
+21
+00:01:45,070 --> 00:01:49,850
+So I will install Ubuntu as a Virtual Machine.
+It makes it easier for me to record and create
+
+22
+00:01:49,850 --> 00:01:55,180
+those videos, but it also shows another important
+tool that is often used for security research,
+
+23
+00:01:55,180 --> 00:02:00,140
+because you can quickly setup new systems
+to test something. Oftentimes you only have
+
+24
+00:02:00,140 --> 00:02:04,720
+one physical device, but with VMs you can
+just run a lot of different systems on a single
+
+25
+00:02:04,720 --> 00:02:05,680
+machine.
+
+26
+00:02:05,680 --> 00:02:11,000
+So first download and install the VMWare Workstation
+Player. As you can see you can download it
+
+27
+00:02:11,000 --> 00:02:16,310
+for Linux or Windows. If you are on a Mac
+you might want to try VMWare Fusion but it
+
+28
+00:02:16,310 --> 00:02:21,320
+only has a 30 day trial. Or alternatively
+use Virtual Box.
+
+29
+00:02:21,319 --> 00:02:26,299
+Then download the Ubuntu 64bit LTS version.
+If you want you can make sure that you have
+
+30
+00:02:26,299 --> 00:02:29,199
+the same version like I do, but it doesn’t
+really matter.
+
+31
+00:02:29,200 --> 00:02:34,000
+This is the VMWare Player and it is like a
+computer inside your computer. It emulates
+
+32
+00:02:34,000 --> 00:02:39,410
+a real PC. Basically you simply create a virtual
+hard drive and install anything you like on
+
+33
+00:02:39,409 --> 00:02:44,959
+it. We will use this to install and run Linux
+as a so called guest operating system, which
+
+34
+00:02:44,959 --> 00:02:47,139
+runs inside the real operating system.
+
+35
+00:02:47,140 --> 00:02:52,050
+Now let’s create a new Virtual Machine.
+This will launch a wizard for easy installation,
+
+36
+00:02:52,049 --> 00:02:56,659
+but we will install the OS ourselves. Then
+select Linux as Operating System and also
+
+37
+00:02:56,659 --> 00:03:01,929
+specify Ubuntu 64-bit. If you wanted to install
+a different Linux distribution, try to find
+
+38
+00:03:01,930 --> 00:03:07,400
+it in the list, if it's not there just select
+Other Linux and select the matching kernel
+
+39
+00:03:07,400 --> 00:03:12,050
+version. Give it a name and just use the default
+settings.
+
+40
+00:03:12,049 --> 00:03:18,259
+Imagine this to be like a real physical computer.
+To install Linux or another operating system
+
+41
+00:03:18,260 --> 00:03:24,330
+on it you would have to insert the installation
+medium. So we will insert the the ubuntu .iso
+
+42
+00:03:24,329 --> 00:03:25,969
+into the virtual CD drive.
+
+43
+00:03:25,969 --> 00:03:31,409
+When we now start the VM, it will boot from
+the CD and guides us through the installation.
+
+44
+00:03:31,409 --> 00:03:35,499
+There are no important settings for us here
+right now, so just click next. In a later
+
+45
+00:03:35,499 --> 00:03:45,509
+video I want to explain what partitions are,
+but for now just ignore it and continue.
+
+46
+00:03:45,510 --> 00:03:49,760
+After the installation you have to restart
+the machine, but make sure to remove the installation
+
+47
+00:03:49,760 --> 00:04:00,710
+medium again, so it can boot from the hard
+drive where it was installed.
+
+48
+00:04:00,709 --> 00:04:06,679
+Login and welcome to Linux. First thing you
+notice is that the window is inconveniently
+
+49
+00:04:06,680 --> 00:04:12,260
+small, so we want to increase it. We can use
+the search field to find the display settings,
+
+50
+00:04:12,260 --> 00:04:17,730
+but the menu doesn’t have the option to
+set it ta proper 16:9 ratio we want. The 16:10
+
+51
+00:04:17,730 --> 00:04:22,480
+ratio is slightly too big and we have scroll
+bars. So let’s go crazy and immediately
+
+52
+00:04:22,480 --> 00:04:27,320
+check out the command line to fix this. The
+archlinux wiki is a great place to learn more
+
+53
+00:04:27,320 --> 00:04:33,200
+about commands that you use. So it tells us
+that xrandr is a tool that allows us to configure
+
+54
+00:04:33,200 --> 00:04:38,140
+the monitor. Two open the terminal click on
+the top left and type in Terminal in the search
+
+55
+00:04:38,140 --> 00:04:45,940
+bar. And those two commands just add a new
+option for 1920x1080. Now we also see the
+
+56
+00:04:45,940 --> 00:04:47,390
+option in the display settings.
+
+57
+00:04:47,390 --> 00:04:51,890
+Cool. Now let’s just play a little bit with
+the command line to get a feeling for it how
+
+58
+00:04:51,890 --> 00:04:57,450
+it works and let’s compare it to the maybe
+more familiar graphical user interface.
+
+59
+00:04:57,450 --> 00:05:00,940
+On the left you can see the terminal. And
+on the right you can see the default file
+
+60
+00:05:00,940 --> 00:05:05,710
+explorer which currently displays the content
+of the home folder. In fact the terminal on
+
+61
+00:05:05,710 --> 00:05:08,500
+the left is in the same place!
+
+62
+00:05:08,500 --> 00:05:14,060
+The first part is the current user. After
+the @ is the computer or host name. After
+
+63
+00:05:14,060 --> 00:05:21,300
+the colon you can find the current location.
+And the tilde is an alias for your users home
+
+64
+00:05:21,300 --> 00:05:27,110
+folder. For example if you execute the pwd
+command, it will display the current location,
+
+65
+00:05:27,110 --> 00:05:32,780
+which is the home of the user liveoverflow.
+Before we look into more commands, let me
+
+66
+00:05:32,780 --> 00:05:37,740
+show you one of the most important source
+of information for the linux system. It is
+
+67
+00:05:37,740 --> 00:05:44,110
+the Linux manual. So let’s type man followed
+by what we are interested in. In this case
+
+68
+00:05:44,110 --> 00:05:48,680
+pwd. You should get familiar how those man
+pages look like, because we will use them
+
+69
+00:05:48,680 --> 00:05:54,150
+a lot. Right here at the top it says that
+pwd will print the name of the current working
+
+70
+00:05:54,150 --> 00:05:57,000
+directory.
+At the bottom you get the information that
+
+71
+00:05:57,000 --> 00:06:02,400
+you can press h to display a help or q to
+quit and get back to the command line. So
+
+72
+00:06:02,400 --> 00:06:06,910
+when you press h you will see the summary
+of less commands. I will show you later what
+
+73
+00:06:06,910 --> 00:06:11,810
+less is, but for now just think of this as
+some kind of text editor that displays file
+
+74
+00:06:11,810 --> 00:06:17,660
+content. And this editor uses key input for
+navigation. So let’s press q to exit the
+
+75
+00:06:17,660 --> 00:06:22,390
+help, and q again to exit the manual.
+Now I will quickly go over some commands to
+
+76
+00:06:22,390 --> 00:06:26,890
+navigate around the file system. If you don't
+know them or would like to know more about
+
+77
+00:06:26,890 --> 00:06:28,930
+them, you should check out the man pages.
+
+78
+00:06:28,930 --> 00:06:34,200
+Let’s start with ls which will display the
+files of the current folder. You can see it
+
+79
+00:06:34,200 --> 00:06:39,770
+looks almost the same, except the graphical
+interface shows a shortcut to Examples, while
+
+80
+00:06:39,770 --> 00:06:46,410
+ls shows a examples.desktop file. That's weird.
+Let’s use cat to look at the content of
+
+81
+00:06:46,410 --> 00:06:52,150
+the file and investigate this. Cat just prints
+the file content in the terminal and you can
+
+82
+00:06:52,150 --> 00:06:57,980
+now see that this seems to be some kind of
+special file, that defines a type link and
+
+83
+00:06:57,980 --> 00:07:03,410
+name Examples. So the terminal just displays
+the actual files, while the graphical user
+
+84
+00:07:03,410 --> 00:07:08,990
+interface parses the example-content file
+and displays it in a different way. This is
+
+85
+00:07:08,990 --> 00:07:12,800
+one reason why many people say that linux
+command line is very simple because you don’t
+
+86
+00:07:12,800 --> 00:07:17,460
+have to know all those weird features that
+are different in every program.
+
+87
+00:07:17,460 --> 00:07:22,440
+Now execute ls with the option L to display
+the files as a list which also provides more
+
+88
+00:07:22,440 --> 00:07:27,310
+information like the file permissions, ownership
+and date. The first character indicates if
+
+89
+00:07:27,310 --> 00:07:31,810
+the file is a directory.
+Maybe you wonder why I say files, while they
+
+90
+00:07:31,810 --> 00:07:37,090
+are all directories. The reason for that is
+that in Linux everything is a file.
+
+91
+00:07:37,090 --> 00:07:42,770
+Wikipedia even has an entry for “everything
+is a file” and it reads.
+
+92
+00:07:42,770 --> 00:07:48,060
+This is a defining feature of Unix, and its
+derivatives - a wide range of input/output
+
+93
+00:07:48,060 --> 00:07:52,700
+resources such as documents, directories,
+hard-drives, modems, keyboards, printers and
+
+94
+00:07:52,700 --> 00:07:58,460
+even some inter-process and network communications
+are simple streams of bytes exposed through
+
+95
+00:07:58,460 --> 00:08:03,210
+the filesystem - as a file. Over time we will
+understand this better.
+
+96
+00:08:03,210 --> 00:08:09,200
+Now add the option 'a' to display all files.
+'a' and 'l' are single character option switches,
+
+97
+00:08:09,200 --> 00:08:13,580
+which is indicated by the hyphen prefix. Doesn’t
+matter if you combine them or specify them
+
+98
+00:08:13,580 --> 00:08:17,740
+separately.
+Suddenly you see a lot more files that start
+
+99
+00:08:17,740 --> 00:08:23,250
+with a dot. Those dotfiles were hidden before.
+Historically this was a bug and you can read
+
+100
+00:08:23,250 --> 00:08:27,550
+more about it in this post, but now it’s
+a feature and dotfiles are often used for
+
+101
+00:08:27,550 --> 00:08:28,710
+config files.
+
+102
+00:08:28,710 --> 00:08:33,990
+Now let’s look at the filesystem. We can
+use cd to change the directory. Let’s go
+
+103
+00:08:33,990 --> 00:08:39,070
+to the top of the hierarchical filesystem
+which starts at slash. Now you can also see
+
+104
+00:08:39,069 --> 00:08:43,339
+that the tilde changed to the slash, which
+is our new current location.
+
+105
+00:08:43,339 --> 00:08:47,999
+If you specify a path without a slash it’s
+a relative path going forward from your current
+
+106
+00:08:47,999 --> 00:08:52,199
+location. If you have a slash, it will be
+an absolute path. So here are just some examples.
+
+107
+00:08:52,199 --> 00:08:55,749
+Maybe you notice the dots and double dots
+that I am using. If you look at the ls output
+
+108
+00:08:55,749 --> 00:09:01,049
+again, you notice that there are two files
+with dots. A single dot is referencing the
+
+109
+00:09:01,050 --> 00:09:09,200
+current directory. So 'ls' and 'ls .' is exactly
+the same. A double dot goes one hierarchy
+
+110
+00:09:09,199 --> 00:09:14,359
+up. So when you are in your home directory
+you can use two double dots to got to the
+
+111
+00:09:14,360 --> 00:09:14,890
+top.
+
+112
+00:09:14,889 --> 00:09:18,209
+Ok. Slow enough, let’s speed up a bit.
+
+113
+00:09:18,209 --> 00:09:22,919
+'mkdir' makes a new directory
+'touch' makes a new empty file
+
+114
+00:09:22,920 --> 00:09:28,390
+'rm' deletes a file. If you want to delete
+a folder you have to add the recursive option.
+
+115
+00:09:28,389 --> 00:09:31,729
+'echo' and a character sequence just prints
+this text
+
+116
+00:09:31,730 --> 00:09:37,010
+'uname' and uname with different arguments
+provide information about your machine
+
+117
+00:09:37,009 --> 00:09:40,849
+'ll' is a short cut for 'ls' with multiple
+parameters
+
+118
+00:09:40,850 --> 00:09:44,840
+'free' shows you the current memory usage
+and with the parameter h the numbers will
+
+119
+00:09:44,839 --> 00:09:49,879
+be shown in human readable format
+'df' shows file system disk space and again
+
+120
+00:09:49,879 --> 00:09:52,929
+with parameter h the numbers are in human
+readable format
+
+121
+00:09:52,930 --> 00:09:58,150
+'ps' gives information about your currently
+running processes. With parameters you can
+
+122
+00:09:58,149 --> 00:10:02,799
+also show all processes with memory usage,
+cpu and more.
+
+123
+00:10:02,800 --> 00:10:05,500
+and id shows you your current user id
+
+124
+00:10:05,499 --> 00:10:10,879
+One last important feature to learn about
+are pipes and redirections. Linux becomes
+
+125
+00:10:10,879 --> 00:10:14,379
+very powerful once you connect multiple commands
+together.
+
+126
+00:10:14,379 --> 00:10:18,969
+For example echo prints a string. You can
+redirect this output into a file by using
+
+127
+00:10:18,970 --> 00:10:20,870
+the arrow.
+
+128
+00:10:20,870 --> 00:10:26,090
+When you print the content of a file with
+cat you can use the horizontal line or also
+
+129
+00:10:26,089 --> 00:10:32,269
+often called pipe to redirect the output from
+“cat” into the input of another program.
+
+130
+00:10:32,269 --> 00:10:38,759
+For example you can pipe the output of the
+'cat' command into the input of the 'hexdump'
+
+131
+00:10:38,759 --> 00:10:44,259
+command - a tool that shows you the actual
+hex values behind each character. And here
+
+132
+00:10:44,259 --> 00:10:51,199
+the hex '0a' for example, or decimal ten.
+You should start becoming familiar with hex,
+
+133
+00:10:51,199 --> 00:10:56,089
+because you will use it a lot. Check out the
+manual for ascii characters. You can navigate
+
+134
+00:10:56,089 --> 00:11:00,179
+up and down with arrow keys. And exit with
+q.
+
+135
+00:11:00,180 --> 00:11:04,750
+One last thing, you can press arrow key up
+in the terminal to quickly enter previous
+
+136
+00:11:04,749 --> 00:11:10,619
+commands. And even more powerful is CTRL+R,
+which opens a search prompt. Now we look for
+
+137
+00:11:10,620 --> 00:11:15,040
+the command where we used for hexdump, and
+once it found it we can just hit Enter to
+
+138
+00:11:15,040 --> 00:11:19,380
+execute it. If you want to leave this prompt
+or generally want to quit running programs,
+
+139
+00:11:19,379 --> 00:11:22,239
+you can hit CTRL+C.
+
+140
+00:11:22,240 --> 00:11:32,480
+Ok cool. That’s it for now so let’s shutdown
+the system with “shutdown now”.
+
+141
+00:11:32,480 --> 00:11:39,070
+uh! but what is that. You must be root to
+shutdown the machine. The root user or also
+
+142
+00:11:39,069 --> 00:11:45,069
+called superuser is very powerful, because
+this user can do everything. But we are currently
+
+143
+00:11:45,069 --> 00:11:49,839
+the user liveoverflow. It’s good practice
+to not use the root user all the time because
+
+144
+00:11:49,839 --> 00:11:55,239
+you can do a lot of damage. But there is a
+command prefix called sudo, which elevates
+
+145
+00:11:55,240 --> 00:11:58,640
+your privileges. execute id with sudo and
+you see you are liveoverflow. Execute id with
+
+146
+00:11:58,639 --> 00:12:06,139
+sudo, first enter your password, and then
+you will see that you executed it as root.
+
+147
+00:12:06,139 --> 00:12:08,999
+So you can use that now to shutdown the VM.
+
+148
+00:12:08,999 --> 00:12:11,649
+See you next time when we will create our
+first program.
+

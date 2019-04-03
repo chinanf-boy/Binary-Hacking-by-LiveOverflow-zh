@@ -1,0 +1,729 @@
+1
+00:00:00,450 --> 00:00:03,520
+What exactly is the heap, what does malloc
+really do?
+
+2
+00:00:03,520 --> 00:00:12,620
+Those are questions we try to answer in this
+video.
+
+3
+00:00:12,620 --> 00:00:17,000
+You may have learned that when you are programming
+and you need some, more memory you might use
+
+4
+00:00:17,000 --> 00:00:22,340
+the heap, by allocating memory with malloc
+and if you are done you free it again.
+
+5
+00:00:22,340 --> 00:00:26,740
+And somehow, some magic is happening and you
+don’t really know how you magically get
+
+6
+00:00:26,740 --> 00:00:28,100
+more memory or give it back.
+
+7
+00:00:28,100 --> 00:00:32,320
+Before we talk about malloc, let’s first
+talk about how our process gets any memory
+
+8
+00:00:32,320 --> 00:00:33,750
+in the first place.
+
+9
+00:00:33,750 --> 00:00:36,800
+This is done via mmap or brk.
+
+10
+00:00:36,800 --> 00:00:40,370
+Those are system calls, which means we ask
+the kernel directly.
+
+11
+00:00:40,370 --> 00:00:46,000
+mmap asks the kernel give us some new virtual
+address space, basically requesting a new
+
+12
+00:00:46,000 --> 00:00:47,000
+memory segment.
+
+13
+00:00:47,000 --> 00:00:52,900
+Besides mmap there is also brk, which can
+be used to change the size of an already used
+
+14
+00:00:52,899 --> 00:00:53,899
+memory segment.
+
+15
+00:00:53,899 --> 00:00:55,899
+This is real fucking magic.
+
+16
+00:00:55,900 --> 00:01:00,860
+In the end the process doesn’t care how
+this memory is implemented - if there is RAM,
+
+17
+00:01:00,860 --> 00:01:04,790
+and where exactly on the ram you store it,
+or if you have a SWAP file because you don’t
+
+18
+00:01:04,789 --> 00:01:05,789
+have enough RAM.
+
+19
+00:01:05,789 --> 00:01:11,139
+The kernel and hardware takes care of this,
+and maps that memory into the process, this
+
+20
+00:01:11,140 --> 00:01:15,420
+means that the process can transparently access
+those memory addresses and work with them
+
+21
+00:01:15,419 --> 00:01:22,909
+- and transparent in this context means, “doesn’t
+have to know anything about it”.
+
+22
+00:01:22,909 --> 00:01:28,729
+You can execute heap1 with strace and you
+see all those calls to mmap to initially set
+
+23
+00:01:28,729 --> 00:01:30,349
+up the processes memory regions.
+
+24
+00:01:30,350 --> 00:01:34,690
+And near the end it uses brk to setup the
+heap.
+
+25
+00:01:34,689 --> 00:01:40,269
+So why don’t we just use mmap or brk to
+get more memory for our process?
+
+26
+00:01:40,270 --> 00:01:44,830
+And why do we always talk about the heap with
+malloc and free?
+
+27
+00:01:44,829 --> 00:01:51,129
+Well, malloc is just a very fancy and convenient
+wrapper that handles that brk or mmapping
+
+28
+00:01:51,130 --> 00:01:52,310
+for us.
+
+29
+00:01:52,310 --> 00:01:54,720
+And does much more.
+
+30
+00:01:54,719 --> 00:02:00,689
+Malloc will call mmap or brk to get more memory
+if the heap doesn’t exist or is too small.
+
+31
+00:02:00,689 --> 00:02:06,539
+But on top of that it will help us to organize
+and manage that memory.
+
+32
+00:02:06,539 --> 00:02:11,479
+Also during CTF challenges, and the example
+we will have a look at shortly, use the heap
+
+33
+00:02:11,480 --> 00:02:15,640
+so little, that we won’t see any additional
+memory mapped regions.
+
+34
+00:02:15,640 --> 00:02:21,430
+So to keep things simple, we consider the
+heap to be, just a big chunk of fixed memory
+
+35
+00:02:21,430 --> 00:02:23,140
+mapped memory.
+
+36
+00:02:23,140 --> 00:02:26,110
+And we can do in this memory whatever we want.
+
+37
+00:02:26,110 --> 00:02:31,330
+So when we refer to the heap, we actually
+mean this memory region.
+
+38
+00:02:31,330 --> 00:02:34,970
+So what does it mean that malloc will manage
+the heap?
+
+39
+00:02:34,970 --> 00:02:38,090
+Let’s explore this abstractly first.
+
+40
+00:02:38,090 --> 00:02:40,600
+We want to allocate 8 bytes.
+
+41
+00:02:40,599 --> 00:02:42,879
+So we call malloc with 8.
+
+42
+00:02:42,880 --> 00:02:46,310
+This means we block 8 bytes on the heap.
+
+43
+00:02:46,310 --> 00:02:50,900
+Each call to malloc will return the address
+of the heap where the area got blocked, and
+
+44
+00:02:50,900 --> 00:02:54,990
+with this address we know where we can write
+our 8 bytes to.
+
+45
+00:02:54,989 --> 00:03:00,499
+So we can now write the string “AAAABBBB”
+to that address.
+
+46
+00:03:00,500 --> 00:03:03,420
+Now we allocate two more times.
+
+47
+00:03:03,420 --> 00:03:06,730
+malloc(8), malloc(8).
+
+48
+00:03:06,730 --> 00:03:07,920
+This begs the question what does blocking
+mean.
+
+49
+00:03:07,920 --> 00:03:09,310
+And how does malloc know what address to return?
+
+50
+00:03:09,310 --> 00:03:10,760
+If I would hire you to write me a program
+that gives me an address of memory I can use
+
+51
+00:03:10,760 --> 00:03:11,880
+safely for different sizes, you could come
+up with a working solution.
+
+52
+00:03:11,879 --> 00:03:13,189
+And if you would implement that you would
+have created your own heap algorithm.
+
+53
+00:03:13,190 --> 00:03:16,150
+So there are many different ways one could
+implement that.
+
+54
+00:03:16,150 --> 00:03:20,170
+Though most commonly used is an implementation
+called DLmalloc.
+
+55
+00:03:20,170 --> 00:03:23,790
+Because a dude with the name Douglas Lea wrote
+it.
+
+56
+00:03:23,790 --> 00:03:28,540
+And that malloc algorithm will store for each
+chunk it blocks the size of the chunk right
+
+57
+00:03:28,540 --> 00:03:29,540
+before it.
+
+58
+00:03:29,540 --> 00:03:34,240
+And it will also keep 4 bytes before that
+empty for how the free is implemented.
+
+59
+00:03:34,240 --> 00:03:36,330
+But we will only focus on malloc for now.
+
+60
+00:03:36,329 --> 00:03:40,439
+Let’s do the mallocs again, and let’s
+think like a computer.
+
+61
+00:03:40,439 --> 00:03:44,839
+So at the start, when the first malloc is
+called, we obviously know the beginning of
+
+62
+00:03:44,840 --> 00:03:45,950
+the heap.
+
+63
+00:03:45,950 --> 00:03:50,510
+So we store the size that we want to allocate
+there, and return the address where the chunk
+
+64
+00:03:50,510 --> 00:03:53,830
+part, that is usable by the programmer, starts.
+
+65
+00:03:53,830 --> 00:03:58,310
+Though, how does malloc now know on the next
+call to malloc where the next chunk can be
+
+66
+00:03:58,310 --> 00:03:59,320
+placed?
+
+67
+00:03:59,319 --> 00:04:02,079
+Not that we write over our previously allocated
+area.
+
+68
+00:04:02,079 --> 00:04:06,679
+Well we obviously have to kinda memorize where
+our free region begins.
+
+69
+00:04:06,680 --> 00:04:10,770
+So malloc will simply do some math, and update
+the address that pointed to the beginning
+
+70
+00:04:10,769 --> 00:04:15,189
+of the heap, by adding the size of the chunk
+we allocated to it.
+
+71
+00:04:15,189 --> 00:04:17,129
+And this happens every malloc.
+
+72
+00:04:17,130 --> 00:04:22,760
+So there is a pointer somewhere, that will
+always point to free memory.
+
+73
+00:04:22,760 --> 00:04:24,670
+Cool.
+
+74
+00:04:24,670 --> 00:04:26,140
+Just for understanding purposes.
+
+75
+00:04:26,140 --> 00:04:29,760
+Given the returned address of malloc, what
+can you do with that?
+
+76
+00:04:29,760 --> 00:04:34,090
+Well, this pointer points to the start where
+we can write data to.
+
+77
+00:04:34,090 --> 00:04:39,030
+So if we look at the address just before that,
+we can read the size of the current chunk.
+
+78
+00:04:39,030 --> 00:04:43,540
+And if we know the size, we can add the size
+to that address to get to the next chunk on
+
+79
+00:04:43,540 --> 00:04:44,890
+the heap.
+
+80
+00:04:44,890 --> 00:04:47,390
+Where we can do the same again.
+
+81
+00:04:47,390 --> 00:04:51,290
+Now let’s have a look at the heap level
+1 challenge from protostar.
+
+82
+00:04:51,290 --> 00:04:54,890
+We will use that example to look at how malloc
+works in real-life.
+
+83
+00:04:54,890 --> 00:04:59,360
+But first let’s step through the code line
+by line and try to imagine how the heap will
+
+84
+00:04:59,360 --> 00:05:00,520
+look like.
+
+85
+00:05:00,520 --> 00:05:04,000
+And then next video we actually do that practically.
+
+86
+00:05:04,000 --> 00:05:06,340
+The objective here seems to call winner().
+
+87
+00:05:06,340 --> 00:05:10,500
+So we somehow have to redirect code execution
+to that function.
+
+88
+00:05:10,500 --> 00:05:15,380
+At the top there is a struct defined called
+internet, which has two members, a priority
+
+89
+00:05:15,380 --> 00:05:16,380
+integer.
+
+90
+00:05:16,380 --> 00:05:22,030
+And the second member is a char pointer called
+name - Which means name contains a pointer
+
+91
+00:05:22,030 --> 00:05:24,500
+to a string somewhere else.
+
+92
+00:05:24,500 --> 00:05:25,780
+Structs are like classes.
+
+93
+00:05:25,780 --> 00:05:30,570
+At least in terms of providing a structure
+with multiple different member attributes.
+
+94
+00:05:30,570 --> 00:05:36,030
+Now, main defines three variables from the
+type struct internet pointer, but only two
+
+95
+00:05:36,030 --> 00:05:37,030
+are used.
+
+96
+00:05:37,030 --> 00:05:39,850
+I guess a leftover from creating this level.
+
+97
+00:05:39,850 --> 00:05:45,450
+I emphasize struct internet pointer, because
+those three internet objects are not stored
+
+98
+00:05:45,450 --> 00:05:46,450
+on the stack.
+
+99
+00:05:46,450 --> 00:05:52,500
+Only the addresses, the pointer, to those
+objects are stored in i1, i2 and i3.
+
+100
+00:05:52,500 --> 00:05:56,900
+Anyhow, then it starts allocating those objects
+on the heap.
+
+101
+00:05:56,900 --> 00:06:01,550
+It first calls malloc with enough space for
+the i1 object.
+
+102
+00:06:01,550 --> 00:06:05,630
+Sizeof will return the number of bytes this
+struct requires.
+
+103
+00:06:05,630 --> 00:06:10,920
+In this case that’s 8, because the integer
+priority is 4 bytes and the char pointer,
+
+104
+00:06:10,920 --> 00:06:13,290
+which is an address, is also 4 bytes.
+
+105
+00:06:13,290 --> 00:06:16,270
+Because we are on a 32bit machine.
+
+106
+00:06:16,270 --> 00:06:20,250
+And we know that malloc returns the address
+on the heap that we can now use.
+
+107
+00:06:20,250 --> 00:06:25,550
+So i1 points to the start of 8 bytes in memory.
+
+108
+00:06:25,550 --> 00:06:30,620
+And now we want to set priority to 1, which
+will write 1 to the first 4 byte of the allocated
+
+109
+00:06:30,620 --> 00:06:32,310
+area.
+
+110
+00:06:32,310 --> 00:06:36,930
+Then it allocates another 8 byte, and the
+resulting address will be stored in the char
+
+111
+00:06:36,930 --> 00:06:38,520
+pointer name.
+
+112
+00:06:38,520 --> 00:06:42,300
+Which is at offset +4 of the i1 object.
+
+113
+00:06:42,300 --> 00:06:50,310
+As a programmer we write i1-&gt;name, to access
+the name attribute, but implemented is it
+
+114
+00:06:50,310 --> 00:06:56,090
+as simply going to a certain offset of i1,
+in thise case i1+4 is the location of the
+
+115
+00:06:56,090 --> 00:06:57,770
+char pointer name.
+
+116
+00:06:57,770 --> 00:07:04,090
+So now i1-&gt;name will contain an address, which
+points to the allocated heap area which we
+
+117
+00:07:04,090 --> 00:07:06,000
+just allocated.
+
+118
+00:07:06,000 --> 00:07:10,910
+Those 8 bytes are intended to store a list
+of characters, a string - the name.
+
+119
+00:07:10,910 --> 00:07:12,700
+Then the same is done over again for i2.
+
+120
+00:07:12,700 --> 00:07:15,040
+We make space for the struct i2.
+
+121
+00:07:15,040 --> 00:07:16,910
+We set its priority to 2.
+
+122
+00:07:16,910 --> 00:07:20,860
+And we allocate another 8 byte for the name
+string.
+
+123
+00:07:20,860 --> 00:07:26,920
+So basically we have now two objects allocated
+on the heap that we can work with.
+
+124
+00:07:26,920 --> 00:07:29,500
+Next come two strcpys.
+
+125
+00:07:29,500 --> 00:07:34,500
+And we know that strcpy is always super suspicious,
+because there is no length indication and
+
+126
+00:07:34,500 --> 00:07:37,490
+we can potentially write more than we have
+space.
+
+127
+00:07:37,490 --> 00:07:42,770
+In this case the internet-name was allocated
+with only 8 byte, so we could probably write
+
+128
+00:07:42,770 --> 00:07:45,620
+over those 8 bytes and really screw up stuff.
+
+129
+00:07:45,620 --> 00:07:51,810
+Anyhow, the strcpy will copy the first argument
+to the name of the i1 object.
+
+130
+00:07:51,810 --> 00:07:58,400
+i1 points to the start of the i1 object, and
+at offset +4, which is the name, is the address
+
+131
+00:07:58,400 --> 00:08:02,120
+of the free 8 bytes that were allocated for
+the string.
+
+132
+00:08:02,120 --> 00:08:07,590
+So strcpy will take the address stored there
+and copy the string from argument 1 at that
+
+133
+00:08:07,590 --> 00:08:09,020
+location.
+
+134
+00:08:09,020 --> 00:08:11,420
+And the same thing is happening for the second
+argument with i2 object.
+
+135
+00:08:11,421 --> 00:08:13,021
+It will take the address stored at +4 of i2,
+and attempt to copy there our string.
+
+136
+00:08:13,020 --> 00:08:15,830
+After that, we will printf and then quit the
+program.
+
+137
+00:08:15,830 --> 00:08:20,700
+In the next video we will have a look at the
+heap while we execute this program to understand
+
+138
+00:08:20,700 --> 00:08:27,280
+how the heap looks in real-life and how we
+can work with it in gdb.
+
+139
+00:08:27,280 --> 00:08:30,460
+Oh by the way.
+
+140
+00:08:30,460 --> 00:08:31,460
+I lied.
+
+141
+00:08:31,460 --> 00:08:34,300
+I said the second word would contain the size
+of the chunk.
+
+142
+00:08:34,300 --> 00:08:40,490
+Well it does, but also the lowest bit is used
+to indicate that the PREVIOUS chunk is used.
+
+143
+00:08:40,490 --> 00:08:41,520
+Not free.
+
+144
+00:08:41,520 --> 00:08:44,170
+That becomes more important for the free()
+algorithm.
+
+145
+00:08:44,170 --> 00:08:48,600
+Thus in our example those numbers values would
+all be hex 11.
+
+146
+00:08:48,600 --> 00:08:52,540
+I just want to put a small disclaimer here
+at the end.
+
+147
+00:08:52,540 --> 00:08:55,750
+I simplified the heap and malloc a lot.
+
+148
+00:08:55,750 --> 00:09:00,770
+For example I only talked about one pointer
+pointing at the free area, in reality there
+
+149
+00:09:00,770 --> 00:09:02,940
+is obviously way more to this.
+
+150
+00:09:02,940 --> 00:09:08,780
+And If we look into the history of exploitation
+we are currently looking at stuff from more
+
+151
+00:09:08,780 --> 00:09:11,140
+than 15 years ago - like 2001-ish.
+
+152
+00:09:11,140 --> 00:09:16,820
+A lot of the stuff hasn’t changed and the
+concepts are the same, but a lot of sdtuff
+
+153
+00:09:16,820 --> 00:09:18,440
+is also different.
+
+154
+00:09:18,440 --> 00:09:24,280
+Todays malloc implementation is based on dlmalloc,
+but it’s not really the original dlmalloc
+
+155
+00:09:24,280 --> 00:09:28,000
+anymore - now its usually referred to as ptmalloc.
+
+156
+00:09:28,000 --> 00:09:30,440
+And my goal here is to teach you the fundamentals.
+
+157
+00:09:30,440 --> 00:09:36,580
+Eventhough this is not 100% correct, you should
+have now a rough idea what the heap is and
+
+158
+00:09:36,580 --> 00:09:41,230
+what to look for and you can transfer this
+knowledge to any heap implementation.
+

@@ -1,0 +1,413 @@
+1
+00:00:06,370 --> 00:00:11,600
+We can use static analysis and reverse engineer
+the license check algorithm and write a keygen
+
+2
+00:00:11,600 --> 00:00:18,840
+to generate valid keys. Obviously this algorithm
+also can become very complex but generally,
+
+3
+00:00:18,840 --> 00:00:22,800
+if you put a lot of work in it, you can figure
+it out.
+
+4
+00:00:22,800 --> 00:00:28,370
+Now you tell that to your manager, but he
+is a smart ass and tells you: “then stop
+
+5
+00:00:28,369 --> 00:00:33,099
+people from being able to reverse engineer
+the binary”. Then you drag yourself back
+
+6
+00:00:33,100 --> 00:00:38,420
+to the desk and you come up with a new creative
+way how to stop somebody from debugging or
+
+7
+00:00:38,420 --> 00:00:41,630
+reversing it.
+Because you are a pro, you understand that
+
+8
+00:00:41,630 --> 00:00:47,480
+a executable is a very complicated file format.
+With objdump we have seen that this executable
+
+9
+00:00:47,480 --> 00:00:54,110
+has a lot of information in there, that is
+needed to load and execute it. But you also
+
+10
+00:00:54,109 --> 00:00:59,379
+realise that a program like gdb has to parse
+the executable to be able to disassemble and
+
+11
+00:00:59,379 --> 00:01:05,499
+debug it. And radare has to read and parse
+the executable file to show you stuff. So
+
+12
+00:01:05,500 --> 00:01:11,430
+could you modify the executable in a way,
+that you can still execute it with linux,
+
+13
+00:01:11,430 --> 00:01:15,410
+but gdb and radare tell you that something
+is broken?
+
+14
+00:01:15,410 --> 00:01:22,750
+What we are looking for is a parser differential.
+We hope that the parser from execve differs
+
+15
+00:01:22,750 --> 00:01:33,700
+from the gdb parser. In an ideal world, every
+program that reads input, would do it in the
+
+16
+00:01:33,700 --> 00:01:39,460
+exact same way. But every tool implements
+the parsing algorithm a bit different. So
+
+17
+00:01:39,460 --> 00:01:44,790
+if you screw with the input, a linux might
+see a valid file and executes it, while a
+
+18
+00:01:44,790 --> 00:01:51,090
+gdb says its broken and cannot be disassembled.
+Let me show you a very naive way how to find
+
+19
+00:01:51,090 --> 00:01:54,100
+something like that. With fuzzing.
+
+20
+00:01:54,100 --> 00:01:57,230
+So lets create a new python script called
+fuzz_elf.py.
+
+21
+00:01:57,230 --> 00:02:01,670
+First we import some modules we need. Import
+random. And import os.
+
+22
+00:02:01,670 --> 00:02:06,890
+First function we will write is called flip_byte.
+As a parameter it takes a big string. Which
+
+23
+00:02:06,891 --> 00:02:12,701
+will be the whole executable file later. Then
+we select a random index i, between 0 and
+
+24
+00:02:12,700 --> 00:02:19,260
+the max length of the input. Then we select
+a random character that we will use to overwrite
+
+25
+00:02:19,260 --> 00:02:26,150
+a byte in the program. So character byte from
+a random number between 0 and FF, which is
+
+26
+00:02:26,150 --> 00:02:31,960
+255. Then we return the original bytes up
+to index i. The next character will be the
+
+27
+00:02:31,959 --> 00:02:37,069
+random created one, instead of the original
+character i at this point. And we append the
+
+28
+00:02:37,069 --> 00:02:42,739
+remaining original bytes. If you want to understand
+this fancy bracket colon index stuff in python,
+
+29
+00:02:42,739 --> 00:02:44,529
+just google ‘python lists’.
+
+30
+00:02:44,530 --> 00:02:49,690
+So just a quick example of this function.
+print flip_bytes(“ASD123”)
+
+31
+00:02:49,689 --> 00:02:54,199
+With yy you can copy this line and with p
+you can paste it multiple times.
+
+32
+00:02:54,200 --> 00:03:00,510
+And now you can see that a random character
+got changed to something else.
+
+33
+00:03:00,510 --> 00:03:06,160
+With dd you can delete those lines again.
+Now we want a function that copies the original
+
+34
+00:03:06,159 --> 00:03:16,979
+binary but flips a byte and saves it in another
+file. We call this function copy binary. So
+
+35
+00:03:16,981 --> 00:03:24,991
+we open the normal license_2 and a copy license_2_fuzz
+with write access.
+
+36
+00:03:24,989 --> 00:03:31,929
+Now we read the whole original file, and pass
+those bytes to the flip_byte function. Now
+
+37
+00:03:31,930 --> 00:03:36,660
+this returns a copy of our license_2 executable,
+just with a random byte flipped. And then
+
+38
+00:03:36,660 --> 00:03:38,000
+we write this to the copy.
+If we just run this now, the new license_2_fuzz
+
+39
+00:03:38,000 --> 00:03:39,000
+file will be not executable, so I already
+create this file as a copy from the original,
+
+40
+00:03:39,000 --> 00:03:42,780
+and it will be executable.
+Now obviously we flip weird stuff. And the
+
+41
+00:03:42,779 --> 00:03:47,489
+file might not be executable anymore. So we
+should check if the program still works the
+
+42
+00:03:47,489 --> 00:03:54,059
+same way. This means, that it should print
+Access Granted with a valid key. So this output
+
+43
+00:03:54,060 --> 00:03:59,030
+should be the same for the original and the
+fuzz program. That’s why I redirect this
+
+44
+00:03:59,029 --> 00:04:04,299
+output to a file called, original_output.
+Now let’s write a python function that runs
+
+45
+00:04:04,299 --> 00:04:09,529
+the fuzz binary once a byte got flipped and
+let’s check if it outputs the same thing.
+
+46
+00:04:09,530 --> 00:04:15,530
+A really ugly way how I do this now, just
+because it’s less code, I execute the same
+
+47
+00:04:15,529 --> 00:04:20,279
+command like I just did, just pipe the output
+into fuzz_output.
+
+48
+00:04:20,280 --> 00:04:25,690
+Now I add a function to compare the original
+output with the fuzz output. And also let
+
+49
+00:04:25,690 --> 00:04:33,440
+that result return from the check output function.
+Ok so this function checks if the binary still
+
+50
+00:04:33,440 --> 00:04:37,150
+executes normally.
+Now let’s think about how we can check if
+
+51
+00:04:37,150 --> 00:04:43,260
+gdb still works. Basically we don’t want
+people to disassemble main. So you can use
+
+52
+00:04:43,259 --> 00:04:52,139
+echo and pipe this command and quit into gdb
+to get the output. So echo -e and this here
+
+53
+00:04:52,139 --> 00:04:56,579
+just basically types those two commands and
+with the pipe we redirect this to the input
+
+54
+00:04:56,580 --> 00:05:03,590
+of gdb. This looks good. so let’s simply
+redirect this output also to a file, that
+
+55
+00:05:03,590 --> 00:05:08,200
+I will call original_gdb.
+Now let’s basically create the same function,
+
+56
+00:05:08,199 --> 00:05:19,619
+just with check gdb.
+And then compare those two files. Now let’s
+
+57
+00:05:19,620 --> 00:05:27,640
+to the same for radare2. Here we just use
+the commands aaa, s sym.main and pdf. Also
+
+58
+00:05:27,640 --> 00:05:33,520
+store this output in a file. And now again
+we create a check radare function.
+
+59
+00:05:33,520 --> 00:05:37,790
+You can use Shift V, which you can use to
+highlight multiple lines, and with y you can
+
+60
+00:05:37,789 --> 00:05:43,959
+copy it and paste it with p.
+Ok… almost there. Now let’s create an
+
+61
+00:05:43,960 --> 00:05:49,800
+endless loop. Where we first create a new
+copy. Then we check if the executable still
+
+62
+00:05:49,800 --> 00:05:57,440
+works. If that works we want radare and gdb
+to fail. So let’s do if not check_gdb and
+
+63
+00:05:57,440 --> 00:06:02,550
+not check_radare. If we reach this here, we
+print success and exit.
+
+64
+00:06:02,551 --> 00:06:07,111
+Then we print the tail of the radare and gdb
+output. Just to have a visual check if the
+
+65
+00:06:07,110 --> 00:06:12,420
+disassembly failed in a way. With raw_input
+we can halt the python program until we hit
+
+66
+00:06:12,419 --> 00:06:18,329
+enter.
+Now let’s run it. Ah another small mistake.
+
+67
+00:06:18,330 --> 00:06:25,180
+this should be f1 instead of fn1.
+And I just discovered another mistake.
+
+68
+00:06:25,180 --> 00:06:31,940
+Ok it found something, but we clearly still
+se disassembly there. So let’s just continue
+
+69
+00:06:31,940 --> 00:06:40,320
+until we find an output without disassembly.
+Uh. that looks good. Let’s investigate.
+
+70
+00:06:40,319 --> 00:06:49,069
+Binary still works.
+Gdb can’t find a main function.
+
+71
+00:06:49,069 --> 00:06:52,769
+And radare also has problems.
+Haha! that is cool :D
+
+72
+00:06:52,770 --> 00:06:58,200
+I admit, this is very ugly. This is not really
+a good technique that you can use in practice.
+
+73
+00:06:58,199 --> 00:07:02,019
+But that is basically how fuzzing works. And
+how you might discover cool new tricks to
+
+74
+00:07:02,020 --> 00:07:05,840
+hide your malware and make it harder for people
+to analyse it.
+
+75
+00:07:05,840 --> 00:07:11,240
+If you want to learn more about this you can
+read this one, which calls this a “novel
+
+76
+00:07:11,240 --> 00:07:15,320
+technique”, but it is not really new. And
+there is a bit more in depth research on the
+
+77
+00:07:15,321 --> 00:07:19,741
+ELF file format from IOActive.
+And you can go even deeper and read even more
+
+78
+00:07:19,740 --> 00:07:28,440
+crazy ELF file format tricks in the holy “International
+Journal of PoC || GTFO - Issue 0x00“
+
+79
+00:07:28,439 --> 00:07:32,609
+My binary can be found in the github repository
+and you can try different tools like hopper
+
+80
+00:07:32,610 --> 00:07:39,180
+or IDA and see if they still analyse it automatically.
+But I suspect they do. So this is just one
+
+81
+00:07:39,180 --> 00:07:42,910
+small trick which can annoy somebody trying
+to analyse it.
+
+82
+00:07:42,909 --> 00:07:48,139
+Now you can go back to your manager and tell
+him, that he should hire some web developers
+
+83
+00:07:48,139 --> 00:07:52,189
+and move the product into the cloud, so that
+the code only runs on the servers you control.
+

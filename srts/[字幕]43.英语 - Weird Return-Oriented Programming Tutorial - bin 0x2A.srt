@@ -1,0 +1,1211 @@
+1
+00:00:00,120 --> 00:00:03,120
+Okay,
+So last video I showed you this programming
+
+2
+00:00:03,120 --> 00:00:05,780
+language I made, ugly but works.
+
+3
+00:00:05,779 --> 00:00:09,119
+And we compiled this into this weird binary
+format.
+
+4
+00:00:09,120 --> 00:00:14,340
+And then you pass this binary file to this
+program called invoice, and it executes our
+
+5
+00:00:14,339 --> 00:00:15,339
+program.
+
+6
+00:00:15,339 --> 00:00:19,199
+In the last video I also showed you, that
+the beginning of this binary format actually
+
+7
+00:00:19,200 --> 00:00:23,090
+triggers a buffer overflow and overwrites
+the return pointer on the stack.
+
+8
+00:00:23,090 --> 00:00:27,070
+And at that point you might have thought that
+our programs are simply shellcode, so assembler
+
+9
+00:00:27,070 --> 00:00:31,300
+code, that we inject and then jump to, with
+the buffer overflow.
+
+10
+00:00:31,300 --> 00:00:34,930
+But that is not even possible, because the
+stack is not executable.
+
+11
+00:00:34,929 --> 00:00:39,969
+So even though we cannot inject actual assembler
+instructions to execute, we somehow were still
+
+12
+00:00:39,969 --> 00:00:42,399
+able to execute my programs.
+
+13
+00:00:42,399 --> 00:00:47,839
+And at this point it’s pretty clear, that
+this is possible thanks to return-oriented-programming.
+
+14
+00:00:47,839 --> 00:00:50,399
+So let’s examine how this works.
+
+15
+00:00:50,399 --> 00:00:51,819
+But I warn you.
+
+16
+00:00:51,820 --> 00:00:55,880
+You really need to get your brain into an
+abstract philosophical thinking mode.
+
+17
+00:00:55,879 --> 00:00:57,439
+This will get weird.
+
+18
+00:00:57,440 --> 00:01:02,110
+And maybe you have to rewatch it some time
+in the future, maybe checkout some more “normal”
+
+19
+00:01:02,109 --> 00:01:05,119
+Return Oriented Programming tutorials and
+then come back to this.
+
+20
+00:01:05,120 --> 00:01:09,580
+But if you get this video, I think it will
+add to a much greater and deeper understanding
+
+21
+00:01:09,580 --> 00:01:10,580
+for you.
+
+22
+00:01:10,580 --> 00:01:12,870
+So just try...
+
+23
+00:01:12,870 --> 00:01:14,520
+Anyway.
+
+24
+00:01:14,520 --> 00:01:19,480
+Let’s head in.
+
+25
+00:01:19,480 --> 00:01:24,490
+So in x86 assembler there is an instuction
+called “call”.
+
+26
+00:01:24,490 --> 00:01:27,090
+And call actually does two things.
+
+27
+00:01:27,090 --> 00:01:30,490
+First it pushes the return address (which
+is the address immediately after the CALL
+
+28
+00:01:30,491 --> 00:01:32,631
+instruction) on the stack.
+
+29
+00:01:32,630 --> 00:01:37,620
+And then it changes EIP, the current instruction
+pointer, to the call destination.
+
+30
+00:01:37,620 --> 00:01:40,750
+So the CPU continues execution there.
+
+31
+00:01:40,750 --> 00:01:46,690
+Now when we in C call a function, this will
+be compiled to an assembler call instruction.
+
+32
+00:01:46,690 --> 00:01:51,020
+But to understand return-oriented-programming,
+you have to forget this.
+
+33
+00:01:51,020 --> 00:01:54,030
+Ignore the concept of calling functions.
+
+34
+00:01:54,030 --> 00:01:59,140
+Simply remember that this instruction pushes
+the address immediately after the call instruction
+
+35
+00:01:59,140 --> 00:02:04,730
+onto the stack, and then set instruction pointer
+to the target address.
+
+36
+00:02:04,730 --> 00:02:07,530
+And the return instruction behaves in the
+same way.
+
+37
+00:02:07,530 --> 00:02:12,480
+YES ret is compiled from a return in C. But
+forget this connection.
+
+38
+00:02:12,480 --> 00:02:17,560
+A RET simply pops an address, we call it the
+return address, off the stack and sets the
+
+39
+00:02:17,560 --> 00:02:19,900
+instruction pointer back to that.
+
+40
+00:02:19,900 --> 00:02:25,070
+And “pooping a value” from the stack is
+also already again an abstract interpretation.
+
+41
+00:02:25,069 --> 00:02:29,639
+What it literally means is, it looks at the
+stack pointer register, follows that address,
+
+42
+00:02:29,640 --> 00:02:30,720
+takes that value.
+
+43
+00:02:30,719 --> 00:02:33,369
+And then it increments the stack pointer register.
+
+44
+00:02:33,370 --> 00:02:35,430
+It increments because the stack grows downwards.
+
+45
+00:02:35,430 --> 00:02:38,560
+So if we shrink it, when we POP a value, we
+increase it.
+
+46
+00:02:38,560 --> 00:02:40,890
+So it gets closer to the highest address again.
+
+47
+00:02:40,889 --> 00:02:41,889
+Anyway.
+
+48
+00:02:41,889 --> 00:02:42,979
+This is what ret does.
+
+49
+00:02:42,980 --> 00:02:47,070
+It’s taking this value where the stack register
+points to, increments the stack pointer address,
+
+50
+00:02:47,069 --> 00:02:52,289
+and then uses the value it got, to set the
+instruction pointer.That’s how we “return”
+
+51
+00:02:52,290 --> 00:02:54,270
+(in quotation marks).
+
+52
+00:02:54,269 --> 00:02:56,339
+So this was lesson one.
+
+53
+00:02:56,340 --> 00:03:01,920
+Ignore the name of the instruction or it’s
+typical meaning and typical usage, just understand
+
+54
+00:03:01,920 --> 00:03:04,660
+what the instruction itself does.
+
+55
+00:03:04,660 --> 00:03:08,530
+So again, remember what the “ret” (the
+return) instruction does.
+
+56
+00:03:08,530 --> 00:03:12,110
+First look at the stack register, follow this
+address and take that value.
+
+57
+00:03:12,109 --> 00:03:13,189
+Increment the stack pointer.
+
+58
+00:03:13,190 --> 00:03:15,110
+Set the instruction pointer to that value.
+
+59
+00:03:15,110 --> 00:03:16,110
+Done.
+
+60
+00:03:16,110 --> 00:03:18,170
+Now let’s think about something else.
+
+61
+00:03:18,170 --> 00:03:22,140
+What does it mean for a machine to execute
+instructions?
+
+62
+00:03:22,139 --> 00:03:26,339
+A CPU is a piece of hardware that executes
+instructions.
+
+63
+00:03:26,340 --> 00:03:30,350
+Those instructions are machine code or assembler
+code, right?
+
+64
+00:03:30,349 --> 00:03:33,099
+How does that in an abstract sense work?
+
+65
+00:03:33,099 --> 00:03:38,279
+Well there is memory, where instructions are
+stored, and this memory has addresses.
+
+66
+00:03:38,279 --> 00:03:43,359
+Then the CPU has an instruction pointer register,
+that contains an address that points to memory
+
+67
+00:03:43,360 --> 00:03:45,950
+with the next instruction to execute.
+
+68
+00:03:45,950 --> 00:03:48,140
+So if it’s 0, it will execute this.
+
+69
+00:03:48,139 --> 00:03:51,049
+And then it does whatever this instruction
+is defined to do.
+
+70
+00:03:51,049 --> 00:03:53,889
+Not that important what this instruction exactly
+does.
+
+71
+00:03:53,890 --> 00:03:58,800
+But by executing any instruction, the instruction
+pointer is simply incremented and moved forward
+
+72
+00:03:58,799 --> 00:04:00,949
+to point to the next instruction.
+
+73
+00:04:00,950 --> 00:04:05,030
+ANd then that gets executed and the instruction
+pointer will be updated to point to the next
+
+74
+00:04:05,029 --> 00:04:06,029
+one.
+
+75
+00:04:06,029 --> 00:04:07,029
+And so forth.
+
+76
+00:04:07,029 --> 00:04:10,539
+Of course that changes with instructions like
+jumps, or calls, or returns, where the instruction
+
+77
+00:04:10,540 --> 00:04:12,060
+pointer is directly updated.
+
+78
+00:04:12,059 --> 00:04:13,059
+But you get it.
+
+79
+00:04:13,059 --> 00:04:17,199
+A computer, really in the abstract sense,
+is a machine that given instructions computes
+
+80
+00:04:17,199 --> 00:04:19,429
+or executes those instructions.
+
+81
+00:04:19,430 --> 00:04:21,890
+So the CPU is a machine implemented in hardware.
+
+82
+00:04:21,889 --> 00:04:25,149
+But of course there are also virtual machines.
+
+83
+00:04:25,150 --> 00:04:28,200
+So machines implemented on top of our CPU
+machines.
+
+84
+00:04:28,199 --> 00:04:33,769
+And for example the JVM, the Java Virtual
+Machine behaves in the same way.
+
+85
+00:04:33,770 --> 00:04:35,170
+It is a machine.
+
+86
+00:04:35,169 --> 00:04:40,589
+So there is bytecode somewhere in memory,
+and the software, the JVM has an instruction
+
+87
+00:04:40,590 --> 00:04:46,020
+pointer, or there called programm counter
+pc, that points to the next instuction, or
+
+88
+00:04:46,020 --> 00:04:47,550
+there called opcode.
+
+89
+00:04:47,550 --> 00:04:52,550
+And when the JVM executes one opcode it also
+has to update the program counter and move
+
+90
+00:04:52,550 --> 00:04:54,330
+it to the next one.
+
+91
+00:04:54,330 --> 00:04:55,810
+Here I looked up the source code for that.
+
+92
+00:04:55,810 --> 00:04:59,240
+So here is the OpenJDK source code
+And there you see an UPDATE_PC_AND_CONTINUE
+
+93
+00:04:59,240 --> 00:05:04,610
+macro, where it literally adds the size (or
+length) of the current opcode onto the program
+
+94
+00:05:04,610 --> 00:05:07,430
+counter, so this moves it forward.
+
+95
+00:05:07,430 --> 00:05:10,790
+Like the CPU would increment the instruction
+pointer.
+
+96
+00:05:10,790 --> 00:05:12,200
+So this is lesson two.
+
+97
+00:05:12,199 --> 00:05:14,339
+A machine in an abstract sense is simple.
+
+98
+00:05:14,340 --> 00:05:17,340
+There is memory that holds code or instructions.
+
+99
+00:05:17,340 --> 00:05:21,700
+And the machine points to that code, takes
+an instruction, executes it, and then updates
+
+100
+00:05:21,699 --> 00:05:25,409
+the program counter to point to the next one.
+
+101
+00:05:25,409 --> 00:05:29,879
+So what the f’ does this have to do with
+return oriented programming?
+
+102
+00:05:29,879 --> 00:05:34,429
+Well last video I also introduced the concept
+of a weird machine.
+
+103
+00:05:34,430 --> 00:05:38,300
+Somehow this invoice program implemented a
+weird machine.
+
+104
+00:05:38,300 --> 00:05:43,110
+And I know, that concept was super confusing
+but bear with me, it will make sense in a
+
+105
+00:05:43,110 --> 00:05:44,110
+moment.
+
+106
+00:05:44,110 --> 00:05:48,500
+If this invoice program implements a weird
+machine, and you program that weird machine
+
+107
+00:05:48,501 --> 00:05:53,201
+with a technique called return-oriented-programming,
+then you should ask yourself now.
+
+108
+00:05:53,199 --> 00:05:58,219
+where is the memory that contains our instructions,
+where is the instruction pointer that points
+
+109
+00:05:58,220 --> 00:06:03,290
+to those instructions, and where is the logic
+that executes whatever an instruction is defined
+
+110
+00:06:03,290 --> 00:06:04,290
+to do?
+
+111
+00:06:04,290 --> 00:06:08,920
+Well, luckily we have some example programs,
+and we can debug this weird machine with GDB.
+
+112
+00:06:08,919 --> 00:06:13,189
+Let’s load the invoice program into GDB
+and let’s learn how it executes.
+
+113
+00:06:13,189 --> 00:06:17,089
+I don’t want to explain buffer overflows
+again, please checkout my binary exploitation
+
+114
+00:06:17,090 --> 00:06:18,470
+playlist for that.
+
+115
+00:06:18,470 --> 00:06:22,820
+But when you are familiar with it, you know
+that we overwrote stuff on the stack.
+
+116
+00:06:22,820 --> 00:06:26,730
+If you look at the add_invoice function you
+can find the dangerous functions gets() which
+
+117
+00:06:26,730 --> 00:06:28,400
+cause the buffer overflow.
+
+118
+00:06:28,400 --> 00:06:31,980
+So we can set a breakpoint here, and we set
+one at the return.
+
+119
+00:06:31,979 --> 00:06:36,489
+Then let’s run the binary and as an input
+we pass in the helloworld.binary.
+
+120
+00:06:36,490 --> 00:06:40,090
+And we know now that input triggers the buffer
+overflow.
+
+121
+00:06:40,090 --> 00:06:42,480
+So here we hit the breakpoint at the gets.
+
+122
+00:06:42,480 --> 00:06:46,970
+If we execute the gets and examine th stack,
+we can find all of our input here.
+
+123
+00:06:46,971 --> 00:06:50,121
+Here are all the As that fill up the buffer.
+
+124
+00:06:50,120 --> 00:06:55,280
+And then we have these randomly looking, but
+actually carefully chosen values after it.
+
+125
+00:06:55,280 --> 00:06:57,840
+But let’s go forward to the return instruction.
+
+126
+00:06:57,840 --> 00:07:03,930
+So now we are about to execute the return,
+and please remember what return means.
+
+127
+00:07:03,930 --> 00:07:08,760
+It looks at the address in the stack register,
+so here this address points to this memory,
+
+128
+00:07:08,759 --> 00:07:11,649
+so this is the stack and that’s the top
+element.
+
+129
+00:07:11,650 --> 00:07:16,750
+And the return instruction now takes that
+value as an address, and sets the instruction
+
+130
+00:07:16,750 --> 00:07:17,820
+pointer to it.
+
+131
+00:07:17,820 --> 00:07:20,800
+And at the same time increments the stack
+pointer.
+
+132
+00:07:20,800 --> 00:07:22,040
+So let’s do that.
+
+133
+00:07:22,039 --> 00:07:23,709
+Single step forward.
+
+134
+00:07:23,710 --> 00:07:27,020
+ANd now let’s compare before and after the
+return.
+
+135
+00:07:27,020 --> 00:07:28,730
+It did exactly what we expected.
+
+136
+00:07:28,729 --> 00:07:35,389
+The stack pointer register was incremented
+from 0x18 to 0x20, so move 8 bytes forward.
+
+137
+00:07:35,389 --> 00:07:40,229
+And the instruction pointer got set to the
+value previously on top of the stack.
+
+138
+00:07:40,229 --> 00:07:45,719
+Btw... when we execute a “ret” we also
+often use the phrase “we return into &lt;something&gt;”.
+
+139
+00:07:45,719 --> 00:07:51,849
+It doesn’t matter if we say “we returned
+to”, say “we returned into” or say “we
+
+140
+00:07:51,849 --> 00:07:53,019
+continued execution here”.
+
+141
+00:07:53,020 --> 00:07:54,140
+It’s all the same.
+
+142
+00:07:54,139 --> 00:07:57,449
+Don’t get confused by the term “return”.
+
+143
+00:07:57,449 --> 00:07:59,729
+You know what the ret instruction really does.
+
+144
+00:07:59,729 --> 00:08:03,429
+It simply takes a value from the stack and
+sets the instruction pointer to it.
+
+145
+00:08:03,430 --> 00:08:04,430
+Anyway.
+
+146
+00:08:04,430 --> 00:08:05,430
+So what happens now?
+
+147
+00:08:05,430 --> 00:08:08,140
+Where is our instruction pointer pointing
+to?
+
+148
+00:08:08,139 --> 00:08:09,139
+It points here...
+
+149
+00:08:09,139 --> 00:08:10,209
+To this assembler code.
+
+150
+00:08:10,210 --> 00:08:13,380
+A pop rdx and a pop rbx.
+
+151
+00:08:13,380 --> 00:08:15,790
+Followed by another return?
+
+152
+00:08:15,789 --> 00:08:20,449
+So this means it takes one value from the
+stack and puts it into rdx.
+
+153
+00:08:20,449 --> 00:08:21,709
+Increments rsp again.
+
+154
+00:08:21,710 --> 00:08:25,670
+Then takes the next value on the stack and
+moves it into rbx.
+
+155
+00:08:25,670 --> 00:08:28,130
+Increments rsp and then we are at the return
+again.
+
+156
+00:08:28,130 --> 00:08:32,360
+And now return takes the next value on the
+stack and sets the instruction pointer to
+
+157
+00:08:32,360 --> 00:08:33,360
+it.
+
+158
+00:08:33,360 --> 00:08:35,810
+So where does it now continue executing?
+
+159
+00:08:35,810 --> 00:08:36,810
+Okay.
+
+160
+00:08:36,810 --> 00:08:37,820
+So now we are here?
+
+161
+00:08:37,820 --> 00:08:39,670
+Here we have a pop rdi.
+
+162
+00:08:39,669 --> 00:08:43,049
+So it takes the next value on the stack, moves
+it into rdi.
+
+163
+00:08:43,050 --> 00:08:47,660
+And then comes ret, which takes the next value
+and sets the instruction pointer to it.
+
+164
+00:08:47,660 --> 00:08:49,210
+So where are we now?
+
+165
+00:08:49,209 --> 00:08:50,609
+Now we execute a move.
+
+166
+00:08:50,610 --> 00:08:55,480
+We move edx, into the address pointed to by
+rdi.
+
+167
+00:08:55,480 --> 00:08:57,970
+And remember when we set EDX?
+
+168
+00:08:57,970 --> 00:09:03,470
+The pop RDX at the beginning, set the value
+of EDX to a value we had on the stack.
+
+169
+00:09:03,470 --> 00:09:09,040
+And RDI, the address where we now write to,
+we also had on the stack and got it into RDI
+
+170
+00:09:09,040 --> 00:09:11,440
+with a pop RDI.
+
+171
+00:09:11,440 --> 00:09:13,700
+Think about what this code now did!
+
+172
+00:09:13,700 --> 00:09:18,470
+I know it looked weird, but all it did was
+it moved a value we wanted into an address
+
+173
+00:09:18,470 --> 00:09:19,930
+we specified.
+
+174
+00:09:19,930 --> 00:09:25,360
+We moved a value into RDX, then an address
+into RDI, and then we wrote that EDX value
+
+175
+00:09:25,360 --> 00:09:28,070
+to the address RDI points to.
+
+176
+00:09:28,070 --> 00:09:31,110
+Now look at the source code of the hello world
+program.
+
+177
+00:09:31,110 --> 00:09:36,300
+Here the code said we move the string, “hell”
+which is of course 4 bytes, into the variable
+
+178
+00:09:36,300 --> 00:09:37,300
+4.
+
+179
+00:09:37,300 --> 00:09:40,130
+And then store variable:4 in memory location
+1.
+
+180
+00:09:40,130 --> 00:09:44,420
+And that is just another way of saying, we
+move the string, or the 4 bytes, “hell”
+
+181
+00:09:44,420 --> 00:09:45,570
+into rdx.
+
+182
+00:09:45,570 --> 00:09:49,820
+And then we move rdx to a memory location
+we specify in RDI.
+
+183
+00:09:49,820 --> 00:09:53,600
+Which memory location, and converting the
+string “hell” to the four bytes is what
+
+184
+00:09:53,600 --> 00:09:55,260
+my compiler program does.
+
+185
+00:09:55,260 --> 00:10:01,200
+I know, maybe that is a bit too confusing,
+maybe better just ignore my compiler shenanigans.
+
+186
+00:10:01,199 --> 00:10:02,809
+But if think about what we did.
+
+187
+00:10:02,810 --> 00:10:07,620
+We executed these few instructions that move
+a value into some memory location.
+
+188
+00:10:07,620 --> 00:10:14,990
+And we did that by using super weird instructions,
+which we usually refer to as “gadgets”.
+
+189
+00:10:14,990 --> 00:10:19,150
+To perform this memory write, we used three
+gadgets.
+
+190
+00:10:19,150 --> 00:10:24,530
+First we used a “pop rdx, pop rbx” gadget,
+then a “pop rdi” gadget and then a “mov
+
+191
+00:10:24,529 --> 00:10:25,529
+gadget”.
+
+192
+00:10:25,529 --> 00:10:28,059
+And see what all these gadgets have in common?
+
+193
+00:10:28,060 --> 00:10:31,210
+They all end with a return instruction.
+
+194
+00:10:31,210 --> 00:10:32,830
+Now bend you mind.
+
+195
+00:10:32,829 --> 00:10:37,739
+take what we just witnessed and try to fit
+it into the concept of a machine executing
+
+196
+00:10:37,740 --> 00:10:38,740
+instructions.
+
+197
+00:10:38,740 --> 00:10:41,340
+First, we have memory, that is our stack.
+
+198
+00:10:41,339 --> 00:10:44,039
+On there we had all these addresses and values.
+
+199
+00:10:44,040 --> 00:10:50,480
+And in a weird fuckedup way the stack pointer
+was our instruction pointer, right?
+
+200
+00:10:50,480 --> 00:10:55,700
+Our weird machine basically started with a
+return opcode, which took the first address
+
+201
+00:10:55,699 --> 00:10:59,139
+on the stack and continued CPU execution there.
+
+202
+00:10:59,140 --> 00:11:03,160
+Then the stack pointer pointed to the next
+value, we popped it and moved it to the next.
+
+203
+00:11:03,160 --> 00:11:04,880
+Pooped another value moved it to the next.
+
+204
+00:11:04,880 --> 00:11:10,660
+And then came another return which took the
+value and let the CPU execute code there.
+
+205
+00:11:10,660 --> 00:11:13,770
+Moving the stack again to the next value.
+
+206
+00:11:13,769 --> 00:11:19,789
+So In a way those addresses on the stack,
+when we have a return, define instruction
+
+207
+00:11:19,790 --> 00:11:21,270
+handlers, right?
+
+208
+00:11:21,269 --> 00:11:25,829
+You could say this address here is actually
+the opcode, the instruction to perform a pop
+
+209
+00:11:25,830 --> 00:11:28,420
+rdx and then a pop rbx.
+
+210
+00:11:28,420 --> 00:11:33,760
+And this other gadget, this address here,
+is the opcode for the move of edx into the
+
+211
+00:11:33,760 --> 00:11:35,060
+address of rdi.
+
+212
+00:11:35,060 --> 00:11:41,120
+Isn’t this basically the same thing how
+a x86 assembler “call” instruction actually
+
+213
+00:11:41,120 --> 00:11:45,550
+means we push an address on the stack and
+set the instruction pointer to the given destination.
+
+214
+00:11:45,550 --> 00:11:49,930
+How is that “call” x86 instruction different
+from our weird machine gadget?
+
+215
+00:11:49,930 --> 00:11:50,930
+It isn’t!
+
+216
+00:11:50,930 --> 00:11:54,760
+Both define some action, what it does, and
+then the machine moves to the next instruction.
+
+217
+00:11:54,760 --> 00:11:59,800
+The CPU does this by incrementing the instruction
+pointer, the Java Virtual Machine does this
+
+218
+00:11:59,800 --> 00:12:04,140
+by simply incrementing the program counter,
+and our weird machine does this by incrementing
+
+219
+00:12:04,140 --> 00:12:05,900
+the stack pointer.
+
+220
+00:12:05,899 --> 00:12:08,899
+I know, these gadgets are super weird instructions.
+
+221
+00:12:08,899 --> 00:12:13,199
+And each program, depending on how much code
+it contains and what kind of functions were
+
+222
+00:12:13,199 --> 00:12:17,519
+written there, and where in the memory the
+compiler places the code, changes what kind
+
+223
+00:12:17,519 --> 00:12:19,619
+of gadgets are available.
+
+224
+00:12:19,620 --> 00:12:24,620
+With the small tool ropgadgets we can actually
+list all gadgets, so assembler snippets that
+
+225
+00:12:24,620 --> 00:12:28,460
+have this pattern of a few instructions followed
+by a “ret”.
+
+226
+00:12:28,459 --> 00:12:32,839
+Basically these are all the weird instructions
+that we can use to implement whatever we want
+
+227
+00:12:32,840 --> 00:12:34,270
+on this weird machine.
+
+228
+00:12:34,269 --> 00:12:35,589
+I know it’s crappy.
+
+229
+00:12:35,590 --> 00:12:40,670
+Nobody said that it has to be a well thought
+out machine like the CPU or the Java Virtual
+
+230
+00:12:40,670 --> 00:12:41,690
+Machine.
+
+231
+00:12:41,690 --> 00:12:45,520
+But it’s enough to basically perform any
+kind of computation.
+
+232
+00:12:45,519 --> 00:12:50,379
+It was enough for me to collect gadgets that
+seemed useful and built a compiler that translates
+
+233
+00:12:50,380 --> 00:12:56,140
+this text representation to actual addresses
+that point to those gadgets.
+
+234
+00:12:56,140 --> 00:13:01,530
+And that’s why each program with such a
+vulnerability, accidentally crafts its own
+
+235
+00:13:01,529 --> 00:13:03,039
+weird machine.
+
+236
+00:13:03,040 --> 00:13:07,640
+Each vulnerable program will have it’s own
+instruction set, it’s own collection of
+
+237
+00:13:07,640 --> 00:13:08,640
+gadgets.
+
+238
+00:13:08,640 --> 00:13:11,800
+And it’s own initialisation code that setups
+that weird machine.
+
+239
+00:13:11,800 --> 00:13:15,720
+Basically the code that triggered our vulnerability
+in the first place.
+
+240
+00:13:15,720 --> 00:13:17,650
+So writing such an exploit.
+
+241
+00:13:17,649 --> 00:13:23,289
+Is in essence the setting up and instantiation
+of a weird machine by triggering the buffer
+
+242
+00:13:23,290 --> 00:13:24,290
+overflow.
+
+243
+00:13:24,290 --> 00:13:28,730
+And then we program that weird machine with
+a rop-chain, a collection of gadgets chained
+
+244
+00:13:28,730 --> 00:13:34,740
+together that will be executed by our weird
+machine, thanks to how the x86 “ret” instruction
+
+245
+00:13:34,740 --> 00:13:36,620
+together with the stack works.
+
+246
+00:13:36,620 --> 00:13:43,530
+And what we can program is just bound by our
+creativity and availability of useful gadgets.
+
+247
+00:13:43,529 --> 00:13:47,639
+But if you have a large amount of gadgets
+you can understand that you could implement
+
+248
+00:13:47,639 --> 00:13:49,149
+ANYTHING you want.
+
+249
+00:13:49,149 --> 00:13:53,579
+You just chain these small assembler snippets
+together to build anything.
+
+250
+00:13:53,579 --> 00:13:58,209
+In an attack you usually try to create a remote
+shell or something, but it could literally
+
+251
+00:13:58,209 --> 00:13:59,939
+be just a regular program.
+
+252
+00:13:59,940 --> 00:14:04,650
+Like I have created these rop-chains that
+for example take two numbers as an input,
+
+253
+00:14:04,649 --> 00:14:06,619
+adds them together, and prints the result.
+
+254
+00:14:06,620 --> 00:14:07,620
+And that’s it.
+
+255
+00:14:07,620 --> 00:14:11,640
+That is return oriented programming explained
+in a super confused way.
+
+256
+00:14:11,639 --> 00:14:14,849
+I know, this is maybe not the best ROP tutorial.
+
+257
+00:14:14,850 --> 00:14:19,590
+But there are so many “normal” tutorials,
+that I just wanted to try something different
+
+258
+00:14:19,589 --> 00:14:24,459
+and I hope there are some of you where this
+kind of different angle on the topic is mind
+
+259
+00:14:24,459 --> 00:14:25,459
+opening.
+
+260
+00:14:25,459 --> 00:14:30,839
+At least for me this was so mindblowing and
+beautiful that, as you know, it became a slogan
+
+261
+00:14:30,839 --> 00:14:32,609
+for my channel.
+
+262
+00:14:32,610 --> 00:14:37,010
+Also I like to remind you to checkout the
+papers and talks I have listed in the description.
+
+263
+00:14:37,009 --> 00:14:39,579
+Please read them even if you didn’t understand
+this video.
+
+264
+00:14:39,579 --> 00:14:44,459
+They are maybe better, but certainly more
+correct explaining this concept of weird machines
+
+265
+00:14:44,459 --> 00:14:46,129
+and exploit development.
+
+266
+00:14:46,130 --> 00:14:50,250
+Anyway… thanks for watching and maybe checkout
+my Patreon and YouTube membership in the description.
+

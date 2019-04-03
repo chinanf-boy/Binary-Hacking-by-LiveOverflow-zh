@@ -1,0 +1,570 @@
+1
+00:00:06,500 --> 00:00:10,910
+In this episode we start to get a little bit
+closer to a full buffer overflow.
+
+2
+00:00:10,910 --> 00:00:15,370
+In the last episode we have learned how a
+Buffer Overflow can change local variables,
+
+3
+00:00:15,370 --> 00:00:17,230
+which are stored on the stack.
+
+4
+00:00:17,230 --> 00:00:21,000
+Now we will have a look at stack level 3,
+which is very similar.
+
+5
+00:00:21,000 --> 00:00:25,470
+If you forgot how we were able to solve stack
+level 0, you should go back and watch it again.
+
+6
+00:00:25,470 --> 00:00:29,600
+When we look at this code, we see that it
+is basically the same.
+
+7
+00:00:29,600 --> 00:00:34,830
+The only difference is the name, instead of
+a modified variable, we have the fp variable,
+
+8
+00:00:34,830 --> 00:00:37,110
+which is defined as a function pointer.
+
+9
+00:00:37,110 --> 00:00:42,970
+The syntax looks a bit ugly, but if you check
+the if case, it simply checks if fp is not
+
+10
+00:00:42,970 --> 00:00:46,770
+zero, and then just calls fp, as if it were
+a function.
+
+11
+00:00:46,770 --> 00:00:50,350
+Now you know that a function has an address
+location in memory.
+
+12
+00:00:50,350 --> 00:00:54,470
+So it will basically call whatever address
+is stored in fp.
+
+13
+00:00:54,470 --> 00:00:59,810
+Now like the modified variable in stack0,
+the function pointer fp gets set to 0 and
+
+14
+00:00:59,810 --> 00:01:04,050
+after the gets function it will be checked
+if it’s not zero anymore.
+
+15
+00:01:04,050 --> 00:01:07,900
+So we know that fp must also be stored on
+the stack.
+
+16
+00:01:07,900 --> 00:01:12,360
+As a hint it says, that we can use gdb or
+objhump to determine where the win() function
+
+17
+00:01:12,360 --> 00:01:15,100
+lies in memory.
+
+18
+00:01:15,100 --> 00:01:20,490
+So first let’s use gdb and you can use examine
+or print to get the address of win.
+
+19
+00:01:20,490 --> 00:01:24,250
+Then set the disassembly flavor to intel and
+disassemble main.
+
+20
+00:01:24,250 --> 00:01:30,120
+Exactly like stack0, we can see that it makes
+space for hex 60 bytes on the stack.
+
+21
+00:01:30,119 --> 00:01:36,279
+Then we set esp offset 5c to 0, so that is
+the location of the fp variable.
+
+22
+00:01:36,280 --> 00:01:41,790
+After the gets, we compare the value if it
+is still 0 and if that were not the case,
+
+23
+00:01:41,790 --> 00:01:46,310
+we load the value into eax down here, and
+call that address.
+
+24
+00:01:46,310 --> 00:01:48,860
+So let’s set a breakpoint at this call.
+
+25
+00:01:48,860 --> 00:01:53,800
+Now execute it and enter enough characters
+to overwrite this value on the stack.
+
+26
+00:01:53,799 --> 00:01:55,769
+Exactly like last video.
+
+27
+00:01:55,770 --> 00:02:00,140
+Ok we hit the breakpoint, let’s look at
+the registers, and we can see, that we have
+
+28
+00:02:00,140 --> 00:02:06,870
+succesfully set eax to 41414141, which is
+the ascii value of capital A.
+
+29
+00:02:06,869 --> 00:02:09,749
+And the next instruction tries to call this
+address.
+
+30
+00:02:09,750 --> 00:02:11,590
+So basically jump there.
+
+31
+00:02:11,590 --> 00:02:16,950
+But that is obviously invalid memory, se we
+get a Segmentation fault.
+
+32
+00:02:16,950 --> 00:02:19,080
+Now open a second ssh session.
+
+33
+00:02:19,080 --> 00:02:22,120
+And create a python script, that will be our
+exploit.
+
+34
+00:02:22,120 --> 00:02:26,040
+So let’s first try to figure out which offset
+controls eax.
+
+35
+00:02:26,040 --> 00:02:28,070
+So simply print a recognizable pattern.
+
+36
+00:02:28,070 --> 00:02:30,120
+For example the alphabet.
+
+37
+00:02:30,120 --> 00:02:31,740
+Ok. cool.
+
+38
+00:02:31,739 --> 00:02:33,089
+So pipe this output in a file.
+
+39
+00:02:33,090 --> 00:02:36,390
+Now you can use this file in gdb as input.
+
+40
+00:02:36,390 --> 00:02:41,760
+So we dont have to type it everytime, it will
+use the content of that file as input.
+
+41
+00:02:41,760 --> 00:02:46,900
+Now “run” and use the arrow left to redirect
+the file contents in the standard-input of
+
+42
+00:02:46,900 --> 00:02:48,500
+the program.
+
+43
+00:02:48,500 --> 00:02:53,920
+Ok so eax it’s hex 51, and that is a capital
+Q.
+
+44
+00:02:53,920 --> 00:02:56,700
+So now we know which offset modifies eax.
+
+45
+00:02:56,700 --> 00:02:58,700
+let’s rewrite the code a little bit.
+
+46
+00:02:58,700 --> 00:03:01,970
+Let’s call this part up to the “Qs”
+- padding.
+
+47
+00:03:01,970 --> 00:03:06,740
+So now we want to write here the address of
+the win function.
+
+48
+00:03:06,740 --> 00:03:11,040
+So simply use backslash x as hex escape for
+those byte values.
+
+49
+00:03:11,040 --> 00:03:13,080
+Oh oops.
+
+50
+00:03:13,080 --> 00:03:14,080
+That doesn fit.
+
+51
+00:03:14,080 --> 00:03:16,170
+There is a leading 0 missing.
+
+52
+00:03:16,170 --> 00:03:17,980
+Save, write the file.
+
+53
+00:03:17,980 --> 00:03:19,880
+And check it in gdb.
+
+54
+00:03:19,879 --> 00:03:20,879
+Huh?
+
+55
+00:03:20,879 --> 00:03:22,179
+segementation fault?
+
+56
+00:03:22,180 --> 00:03:24,270
+The address looks a bit weird.
+
+57
+00:03:24,269 --> 00:03:25,929
+Looks like it’s the wrong way around?
+
+58
+00:03:25,930 --> 00:03:28,300
+Well, that is because of the endianess.
+
+59
+00:03:28,300 --> 00:03:31,910
+So the numerical value will be basically the
+other way around.
+
+60
+00:03:31,909 --> 00:03:32,909
+cool.
+
+61
+00:03:32,909 --> 00:03:34,589
+Eax looks fine now.
+
+62
+00:03:34,590 --> 00:03:41,160
+let’s continue and we get code flow successfully
+changed!
+
+63
+00:03:41,159 --> 00:03:43,729
+Now let’s quickly solve the next level as
+well.
+
+64
+00:03:43,730 --> 00:03:47,430
+This level is our first buffer overflow, where
+we take advantage of the stack layout.
+
+65
+00:03:47,430 --> 00:03:49,610
+The code doesn’t contain much.
+
+66
+00:03:49,610 --> 00:03:52,210
+There is no function pointer variable we could
+overwrite.
+
+67
+00:03:52,209 --> 00:03:54,159
+And now modified variable.
+
+68
+00:03:54,160 --> 00:03:56,350
+But it still wants us to execute win.
+
+69
+00:03:56,350 --> 00:03:57,940
+So how do we do that?
+
+70
+00:03:57,940 --> 00:04:01,080
+Now do you remember how the stack looks like
+from last video?
+
+71
+00:04:01,080 --> 00:04:03,390
+Here is a quick recap:
+
+72
+00:04:03,390 --> 00:04:05,890
+So here on the left you can see the assembler
+code.
+
+73
+00:04:05,890 --> 00:04:10,130
+And on the right I will illustrate the stack.
+with the 3 important registers, the instruction
+
+74
+00:04:10,129 --> 00:04:16,949
+pointer EIP, the stack pointer ESP and the
+base pointer EBP.
+
+75
+00:04:16,950 --> 00:04:20,280
+So first it starts somewhere else with a ‘call
+main’.
+
+76
+00:04:20,280 --> 00:04:24,970
+Call will push the theoretically next instruction
+pointer onto the stack.
+
+77
+00:04:24,970 --> 00:04:26,870
+And then jump to our main function.
+
+78
+00:04:26,870 --> 00:04:31,960
+As you can see, when the address of the next
+instruction was pushed, the stack pointer
+
+79
+00:04:31,960 --> 00:04:36,000
+got incremented and the address placed there.
+
+80
+00:04:36,000 --> 00:04:38,940
+So now comes our push EBP.
+
+81
+00:04:38,940 --> 00:04:42,660
+How do we now know where to return to from
+main?
+
+82
+00:04:42,660 --> 00:04:47,800
+Well if you remember, call pushed the address
+of the instruction after the call.
+
+83
+00:04:47,800 --> 00:04:51,800
+So the next value on the stack is where we
+want to return to.
+
+84
+00:04:51,800 --> 00:04:55,780
+And the ret instruction is basically just
+popping this address into the instruction
+
+85
+00:04:55,780 --> 00:04:56,960
+pointer.
+
+86
+00:04:56,960 --> 00:04:59,560
+And thus jumping back where we came from.
+
+87
+00:04:59,560 --> 00:05:04,030
+So as you can see, when a function is called,
+the address where we want to return to, will
+
+88
+00:05:04,030 --> 00:05:05,810
+be stored on the stack.
+
+89
+00:05:05,810 --> 00:05:10,000
+So instead of overflowing a local variable,
+we can simply overflow the return pointer
+
+90
+00:05:10,000 --> 00:05:11,320
+on the stack.
+
+91
+00:05:11,320 --> 00:05:17,090
+And when main would return, it would read
+the wrong value and jump there instead.
+
+92
+00:05:17,090 --> 00:05:20,410
+So let’s use the code that we have just
+written, and modify it a bit.
+
+93
+00:05:20,410 --> 00:05:29,390
+Let’s make the payload a bit longer and
+simply throw it at this program in gdb.
+
+94
+00:05:29,389 --> 00:05:35,769
+Segmentationfault in hex 54, so we succsefully
+redirected code execution, to bad memory.
+
+95
+00:05:35,770 --> 00:05:40,530
+And if you look closely you can also spot
+that the basepointer is hex 53.
+
+96
+00:05:40,530 --> 00:05:45,450
+So that one was also overwritten, because
+if you remember from last video, the old basepointer
+
+97
+00:05:45,449 --> 00:05:49,919
+is also stored on the stack, right before
+the instruction pointer.
+
+98
+00:05:49,919 --> 00:05:55,109
+And hex 54 is T. So T allows us to control
+the instruction pointer.
+
+99
+00:05:55,110 --> 00:05:59,210
+This time let’s use objdump to find the
+address of the win function.
+
+100
+00:05:59,210 --> 00:06:03,540
+With -t we get all symbols, and then we can
+grep for win.
+
+101
+00:06:03,539 --> 00:06:04,539
+So there is our address.
+
+102
+00:06:04,539 --> 00:06:05,539
+Now let’s modify our exploit code.
+
+103
+00:06:05,539 --> 00:06:08,989
+Let’s remove everything up to the S, because
+that is the base pointer.
+
+104
+00:06:08,990 --> 00:06:12,180
+Now create two variables ebp and eip.
+
+105
+00:06:12,180 --> 00:06:15,110
+We don’t care about EBP so we can just set
+it to whatever we want.
+
+106
+00:06:15,110 --> 00:06:18,240
+And next we want to set the instruction pointer.
+
+107
+00:06:18,240 --> 00:06:21,820
+But let me show a better way to encode the
+address as a string.
+
+108
+00:06:21,820 --> 00:06:23,250
+So import struct.
+
+109
+00:06:23,250 --> 00:06:27,880
+And then you can use struct.pack, to convert
+the address from the integer number into a
+
+110
+00:06:27,880 --> 00:06:29,550
+binary string.
+
+111
+00:06:29,550 --> 00:06:33,480
+Then print the padding and append the ebp
+and eip variable.
+
+112
+00:06:33,479 --> 00:06:37,949
+so let’s execute this exploit and pipe it
+into the stack4 level.
+
+113
+00:06:37,949 --> 00:06:40,449
+Codeflow was successfully changed!
+
+114
+00:06:40,449 --> 00:06:41,639
+Amazing.
+
+115
+00:06:41,639 --> 00:06:43,979
+We smashed the stack and controlled the instruction
+pointer.
+
+116
+00:06:43,979 --> 00:06:47,339
+But you still get a segementation fault?
+
+117
+00:06:47,340 --> 00:06:51,530
+The reason for that is, that after the win
+function is complete, it tries to return to
+
+118
+00:06:51,530 --> 00:06:56,130
+the next value on the stack, which is now
+some gibberish, and likely not in a valid
+
+119
+00:06:56,130 --> 00:06:57,520
+code area.
+
+120
+00:06:57,520 --> 00:06:59,490
+So it will crash eventually.
+
+121
+00:06:59,490 --> 00:07:02,070
+But we don’t care, because we executed what
+we wanted.
+
+122
+00:07:02,070 --> 00:07:06,380
+In the next video we will write our first
+buffer overflow with shellcode, which will
+
+123
+00:07:06,380 --> 00:07:09,290
+show you how powerful a buffer overflow can
+be.
+
+124
+00:07:09,290 --> 00:07:13,020
+And it will be our first exploit that will
+get us root privileges.
+

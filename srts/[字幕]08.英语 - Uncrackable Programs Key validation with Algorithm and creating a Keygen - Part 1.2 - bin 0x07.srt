@@ -1,0 +1,664 @@
+1
+00:00:06,799 --> 00:00:11,329
+Let’s say you work for a company and your
+manager is mad that there are pirated versions
+
+2
+00:00:11,330 --> 00:00:15,630
+of your product out there. He tells you to
+secure their intellectual property and make
+
+3
+00:00:15,629 --> 00:00:22,149
+the program uncrackable. Is that possible?
+Last video I claimed that every program is
+
+4
+00:00:22,150 --> 00:00:28,200
+crackable. But that was old me. Maybe I learned
+more in the meantime, so let’s try it out.
+
+5
+00:00:28,199 --> 00:00:32,459
+First problem is, that the license key was
+inside the binary. The simplest technique
+
+6
+00:00:32,460 --> 00:00:35,550
+we had was to extract all strings and we found
+the key.
+
+7
+00:00:35,550 --> 00:00:36,990
+In the repository on github you can also find
+the source code of this simple license check.
+
+8
+00:00:36,989 --> 00:00:41,229
+So our first attempt to make this secure would
+be to not have the key inside. We can do this
+
+9
+00:00:41,230 --> 00:00:46,520
+by writing an algorithm that scrambles the
+key. You can come up with very creative ideas.
+
+10
+00:00:46,519 --> 00:00:51,379
+And then you can give your secured binary
+to a friend and ask him to crack it. Or write
+
+11
+00:00:51,379 --> 00:00:57,169
+a keygen. That can be really fun.
+The first idea I have is to simply sum up
+
+12
+00:00:57,170 --> 00:01:03,760
+the ascii values of the key, and compare it
+to a magic value. So let’s modify the original
+
+13
+00:01:03,760 --> 00:01:12,480
+program. First we have to define a new integer
+value that will store our calculated sum.
+
+14
+00:01:12,480 --> 00:01:19,010
+So int sum and set it to 0. Then we will add
+a for loop with the counter variable i, which
+
+15
+00:01:19,010 --> 00:01:25,970
+starts at 0, with the loop condition that
+it continues to repeat this loop as long i
+
+16
+00:01:25,970 --> 00:01:32,310
+is smaller than the string length of the key
+that we can supply via argv[1]. And in each
+
+17
+00:01:32,310 --> 00:01:39,320
+repetition we will increment i by 1. Now we
+want to sum up the value of each character,
+
+18
+00:01:39,320 --> 00:01:48,070
+so sum += argv[1][i]. As you know a computer
+understands only numbers. So each character,
+
+19
+00:01:48,070 --> 00:01:54,500
+as you know from the ascii table, is a number.
+But the compiler knows, that argv is defined
+
+20
+00:01:54,500 --> 00:02:00,390
+as a character sequence. So to not get any
+complaints we cast this value to an integer
+
+21
+00:02:00,390 --> 00:02:05,980
+like that. Now we want to find out what the
+sum of our original key is. So let’s add
+
+22
+00:02:05,980 --> 00:02:17,860
+a printf with %d in the format string and
+the sum as parameter. Now we can compile it
+
+23
+00:02:17,860 --> 00:02:24,990
+and execute it with the original key. So here
+is the sum of all character values for this
+
+24
+00:02:24,990 --> 00:02:30,170
+key. Let’s go to the code again and change
+the key check. We remove the string compare
+
+25
+00:02:30,170 --> 00:02:34,670
+and replace it with a check that sum has to
+be that number.
+
+26
+00:02:34,670 --> 00:02:40,200
+Remove the debug printf and try it. So here
+it says that it’s a wrong key, and here
+
+27
+00:02:40,200 --> 00:02:45,950
+it says that it is a correct key. Now try
+strings, and you will not find this key anymore.
+
+28
+00:02:45,950 --> 00:02:51,120
+How can we crack this now?
+Let’s open it with radare2. Analyse all,
+
+29
+00:02:51,120 --> 00:02:57,040
+seek to the main function and print the disassembly.
+So let’s look for the Success or Fail message.
+
+30
+00:02:57,040 --> 00:03:01,890
+Here it is. And then we can check where the
+branches are coming from to find the check
+
+31
+00:03:01,890 --> 00:03:07,040
+if the license was correct or not.
+Ok so this compare and jump decides if we
+
+32
+00:03:07,040 --> 00:03:12,490
+print Access Granted or if we follow it Wrong.
+You can also see this hex value that is used
+
+33
+00:03:12,490 --> 00:03:17,630
+for the compare. I like to use python to convert
+between hex and decimal. So that’s exactly
+
+34
+00:03:17,630 --> 00:03:22,820
+what we have in our c code.
+So open the file again in debug mode and add
+
+35
+00:03:22,819 --> 00:03:29,399
+a wrong license key. If we start the program
+it says it’s wrong. great. Now let’s set
+
+36
+00:03:29,400 --> 00:03:37,370
+a breakpoint with db at this one compare and
+reopen the file in debug mode. Now dc to continue.
+
+37
+00:03:37,370 --> 00:03:47,530
+Now we hit the breakpoint. with dr you can
+see that rip is at the jump. With dr rip=
+
+38
+00:03:47,530 --> 00:03:55,100
+we can set rip to the address we want to execute
+next. And obviously we want to print the success.
+
+39
+00:03:55,099 --> 00:04:00,609
+So we have cracked it again.
+Ok so we have found out, that if you can find
+
+40
+00:04:00,610 --> 00:04:05,850
+this one compare where it is decided if you
+have a valid license or not, you can simply
+
+41
+00:04:05,849 --> 00:04:10,139
+bypass it.
+But we are hackers, we love challenges. And
+
+42
+00:04:10,140 --> 00:04:14,550
+patching a jump is just boring. So let’s
+write a keygen.
+
+43
+00:04:14,550 --> 00:04:18,470
+So first we have to reverse the algorithm.
+I will open the source code next to it, so
+
+44
+00:04:18,470 --> 00:04:24,940
+we can compare. I Seek to main function. And
+enter visual mode.
+
+45
+00:04:24,939 --> 00:04:29,619
+Ok so we already know a little bit about this
+program from the other video. So here we can
+
+46
+00:04:29,620 --> 00:04:33,130
+see the compare if we have supplied a license
+key.
+
+47
+00:04:33,129 --> 00:04:39,889
+Then comes a printf. Like in our c code. After
+the printf we set the sum to 0. And also the
+
+48
+00:04:39,889 --> 00:04:44,939
+for loop is initialised with the index counter
+i to 0. And you can see that in the assembler
+
+49
+00:04:44,939 --> 00:04:51,819
+code to the left. Two addresses are set to
+0 with a mov. And the address is calculated
+
+50
+00:04:51,819 --> 00:04:57,459
+with the base pointer address, that’s just
+another fancy register. And then the first
+
+51
+00:04:57,460 --> 00:05:04,990
+variable is at offset -0x18 from that, and
+the other one, well, radare replaced the number
+
+52
+00:05:04,990 --> 00:05:12,050
+with a name and calls it local_2_4 variable.
+But behind this name is just another number.
+
+53
+00:05:12,050 --> 00:05:18,310
+Now when we look closely we can find a branch
+that loops back up. So those blocks here are
+
+54
+00:05:18,309 --> 00:05:24,079
+our for loop. And at the end of the for loop
+is a add instruction that adds 1 to this local
+
+55
+00:05:24,080 --> 00:05:32,030
+variable that was set 0 earlier. So that is
+the increment of i. And this local variable
+
+56
+00:05:32,029 --> 00:05:45,089
+that radare identified is i. We can rename
+the variable with “afvn locale_2_4 i.
+
+57
+00:05:45,089 --> 00:05:50,729
+In this block we have a strlen call. And afterwards
+we compare two registers and it either continues
+
+58
+00:05:50,729 --> 00:05:57,899
+with this main block or leaves. So that is
+the for loop condition here.
+
+59
+00:05:57,900 --> 00:06:01,560
+Now comes a little bit of an ugly part if
+you have never seen this before. But if you
+
+60
+00:06:01,559 --> 00:06:07,409
+practice that it’s easy to see. Don’t
+worry if you get lost for the next minute.
+
+61
+00:06:07,409 --> 00:06:13,179
+This just requires some practice.
+So first it loads a value from an address.
+
+62
+00:06:13,180 --> 00:06:19,150
+Which radare assigned a name to. This name
+came up before near the strlen. And if you
+
+63
+00:06:19,150 --> 00:06:25,190
+compare these two assembler blocks they are
+similar. You can see that it adds 8 to the
+
+64
+00:06:25,189 --> 00:06:31,109
+loaded value. So usually that means the value
+that was loaded is an address. Because we
+
+65
+00:06:31,110 --> 00:06:35,580
+have 64bit, we often divide memory in 8 byte
+chunks.
+
+66
+00:06:35,580 --> 00:06:41,660
+Imagine an array in memory, it might use multiple
+8 byte chunks. The first chunk, which is the
+
+67
+00:06:41,659 --> 00:06:47,199
+first value in the array is simply there where
+the address points to. This means that if
+
+68
+00:06:47,199 --> 00:06:53,359
+you want to get the second value in the array
+you have to add 8 to the address. Now it points
+
+69
+00:06:53,360 --> 00:06:59,460
+to the 2nd array entry. So this is argv[1].
+Remember we start counting at 0. So argv[0]
+
+70
+00:06:59,460 --> 00:07:06,170
+would be the first array entry. argv is basically
+a variable that contains an address which
+
+71
+00:07:06,169 --> 00:07:13,379
+points to an array in memory. And this address
+is loaded into rax. And then we add 8 to it,
+
+72
+00:07:13,379 --> 00:07:18,609
+to move it to the second entry in that array.
+Now this second entry itself is another address,
+
+73
+00:07:18,610 --> 00:07:23,250
+which is pointing to a string. In our assembler
+code we can see that the address of this string
+
+74
+00:07:23,249 --> 00:07:30,119
+is loaded, from the location rax is pointing
+to. Remember, the brackets around the register
+
+75
+00:07:30,119 --> 00:07:35,549
+means, that the register contains an address
+and we access the value that is stored at
+
+76
+00:07:35,550 --> 00:07:40,560
+this address.
+Ok so rdx down here now has the address where
+
+77
+00:07:40,559 --> 00:07:47,679
+our string begins. Now we know that the next
+line loads the index counter i into eax. Each
+
+78
+00:07:47,680 --> 00:07:53,330
+ascii character is 1 byte big. So similar
+how we can move an address to point to the
+
+79
+00:07:53,330 --> 00:07:57,930
+next array entry by adding 8, we can move
+this string point to the next character by
+
+80
+00:07:57,929 --> 00:08:04,739
+adding 1. So when we take the counter i, which
+might for example have the value 3, and add
+
+81
+00:08:04,740 --> 00:08:10,000
+it to the address that points to the start
+of the string, it will then point to the 3rd
+
+82
+00:08:09,999 --> 00:08:15,939
+character. Next we load 1 byte from the current
+address in rax. This is the value of this
+
+83
+00:08:15,939 --> 00:08:21,459
+particular character. And then we add this
+value in eax to a local variable at offset
+
+84
+00:08:21,460 --> 00:08:29,080
+-0x18 which we earlier set to 0. So this is
+our sum! Whoa. I know it seems tedious and
+
+85
+00:08:29,080 --> 00:08:33,850
+confusing. And crazy. But if you do this a
+couple of times, and also debug this step
+
+86
+00:08:33,849 --> 00:08:39,249
+by step with gdb, and look at your registers
+in each step and inspect the memory addresses
+
+87
+00:08:39,250 --> 00:08:45,450
+it becomes clear. So now we know that this
+is a loop, that goes over each character of
+
+88
+00:08:45,449 --> 00:08:51,459
+the string and adds the character values to
+a variable. Now when the strlen compare branch
+
+89
+00:08:51,459 --> 00:08:57,999
+goes the other way, we leave the loop and
+the sum is compared to hex 0x394. Cool!
+
+90
+00:08:58,000 --> 00:09:03,470
+If your brain turned off during the previous
+part, Turn in ON again. let’s do this again
+
+91
+00:09:03,470 --> 00:09:09,020
+but thismtime you can ignore most of the stuff
+again and work backwards with educated guesses.
+
+92
+00:09:09,019 --> 00:09:14,419
+So you see that this address gets compared
+with a certain value. So look where this value
+
+93
+00:09:14,420 --> 00:09:21,370
+came from. Ahh it has to do something with
+this add. Now you can reload the binary in
+
+94
+00:09:21,370 --> 00:09:28,820
+debug mode with ood. I will use ABCD as an
+example key. Press p to display the addresses,
+
+95
+00:09:28,819 --> 00:09:38,079
+place a breakpoint. Then use V! to switch
+to fancy mode. And then execute it. Now always
+
+96
+00:09:38,079 --> 00:09:45,089
+continue with :dc and look at the register
+rax that gets added. So in the first loop
+
+97
+00:09:45,089 --> 00:09:51,539
+its 0x41. If you know your ascii table you
+know that this is a capital A. You can also
+
+98
+00:09:51,540 --> 00:09:58,010
+use Python as a handy tool to convert back
+and forth. And next time it's 0x42, that is
+
+99
+00:09:58,009 --> 00:10:05,819
+a Capital B. And then it’s 0x43. So it clearly
+just Iterates over the supplied string. See,
+
+100
+00:10:05,819 --> 00:10:09,459
+now you know that happens, without having
+to read assembler line by line.
+
+101
+00:10:09,459 --> 00:10:15,509
+So let’s recreate this in python.
+Let’s write a function called check key.
+
+102
+00:10:15,509 --> 00:10:21,299
+It takes a key as parameter. Now we define
+a character sum and set it to 0. Then we loop
+
+103
+00:10:21,300 --> 00:10:28,210
+over all characters with for c in key. Then
+we add the ascii value to the sum with ord
+
+104
+00:10:28,209 --> 00:10:32,549
+of c.
+Then we print the current key and it’s sum.
+
+105
+00:10:32,550 --> 00:10:37,340
+Then we return the sum.
+Now let’s do some example keys. With yy
+
+106
+00:10:37,339 --> 00:10:43,009
+you can copy a line. And with p you can paste
+it again. I deliberately use A, B, C, D because
+
+107
+00:10:43,009 --> 00:10:46,309
+their numerical value always increases by
+1.
+
+108
+00:10:46,310 --> 00:10:52,410
+Cool. You can see how the sum is always 1
+bigger than the previous one. Now let’s
+
+109
+00:10:52,410 --> 00:10:57,990
+use a very naiv randomized keygen to try different
+keys, until we find one. This can be obviously
+
+110
+00:10:57,990 --> 00:11:02,430
+made much more intelligentlt, because of the
+linear behaviour of this function. But it
+
+111
+00:11:02,430 --> 00:11:07,190
+will still look cool.
+So import random module and create a endless
+
+112
+00:11:07,190 --> 00:11:11,550
+loop.
+Our key starts with an empty string. Now we
+
+113
+00:11:11,550 --> 00:11:18,650
+select a random character from an alphabet
+with random choice and append it to the key.
+
+114
+00:11:18,649 --> 00:11:25,499
+Now we check this key. If this key’s sum
+is already too big, we reset the key and start
+
+115
+00:11:25,500 --> 00:11:29,710
+fresh. And if we hit the correct value, we
+print this key.
+
+116
+00:11:29,709 --> 00:11:37,449
+I will modify the print in the check_key function
+to make it look cooler.
+
+117
+00:11:37,449 --> 00:11:42,719
+Now save it and run it. Oops… something
+is wroong… Ah… I had the compare the wrong
+
+118
+00:11:42,720 --> 00:11:48,320
+way around. We reset the key when it’s already
+too big. Ok now…
+
+119
+00:11:48,319 --> 00:11:54,129
+DAMN that is fast. Even though it’s a very
+bad algorithm, we quickly find many many keys.
+
+120
+00:11:54,129 --> 00:12:00,429
+Let’s see if they work. Oh yes they work!
+Cool, huh?
+
+121
+00:12:00,430 --> 00:12:06,960
+So we have learned now, that we can hide licence
+keys by using an algorithm to verify if a
+
+122
+00:12:06,959 --> 00:12:11,479
+key is valid. This whole algorithm becomes
+useless when we find the assembler code that
+
+123
+00:12:11,480 --> 00:12:18,230
+decides if it was valid or not. In our case
+it’s a simple compare/jump that we can patch.
+
+124
+00:12:18,230 --> 00:12:22,240
+Obviously you can make that a bit more complex,
+for example doing a license key check in different
+
+125
+00:12:22,240 --> 00:12:25,350
+places. But generally that’s how you can
+defeat that.
+
+126
+00:12:25,350 --> 00:12:29,780
+Now if we like a challenge, or we don’t
+want to patch a binary, because whatever,
+
+127
+00:12:29,779 --> 00:12:35,349
+there are many reasons for why you might want
+a valid key. We can use static analysis and
+
+128
+00:12:35,350 --> 00:12:41,660
+reverse engineer the license check algorithm
+and write a keygen to generate valid keys.
+
+129
+00:12:41,660 --> 00:12:46,590
+Obviously this algorithm also can become very
+complex, but generally if you put a lot of
+
+130
+00:12:46,589 --> 00:12:52,309
+work in it, you can figure it out.
+Now you tell that to your manager, but he
+
+131
+00:12:52,310 --> 00:12:57,340
+is a smart ass and tells you: “then stop
+people from being able to reverse engineer
+
+132
+00:12:57,339 --> 00:13:02,699
+the binary”. Then you drag yourself back
+to the desk and you come up with a new creative
+
+133
+00:13:02,699 --> 00:13:04,699
+how to stop somebody from debugging and reversing it
+

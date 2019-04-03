@@ -1,0 +1,609 @@
+1
+00:00:06,339 --> 00:00:07,669
+This is the 10th episode.
+
+2
+00:00:07,669 --> 00:00:12,689
+And as you can see in the title, I am counting
+the episodes in hexadecimal.
+
+3
+00:00:12,690 --> 00:00:17,280
+I am wondering if the google algorithm will
+screw this up with the suggested next video
+
+4
+00:00:17,279 --> 00:00:18,339
+is wrong.
+
+5
+00:00:18,340 --> 00:00:23,180
+Anyway, I want to explain in this video why
+hexadecimal is cool and why you should use
+
+6
+00:00:23,180 --> 00:00:25,110
+it, when it comes to computers.
+
+7
+00:00:25,110 --> 00:00:30,350
+I will also show you how I convert values
+back and forth and how I often work with them.
+
+8
+00:00:30,350 --> 00:00:31,350
+Ok.
+
+9
+00:00:31,350 --> 00:00:32,350
+So.
+
+10
+00:00:32,350 --> 00:00:35,230
+our computers work in binary, 0s and 1s.
+
+11
+00:00:35,230 --> 00:00:40,550
+Because it is a representation of the physical
+behaviour of our circuits that we have transistors,
+
+12
+00:00:40,550 --> 00:00:44,140
+that are like switches and they are either
+turned on or off.
+
+13
+00:00:44,140 --> 00:00:49,790
+A single value that is either 0 or 1 is called
+a bit.
+
+14
+00:00:49,790 --> 00:00:52,150
+You may know that a byte is 8 bits.
+
+15
+00:00:52,149 --> 00:00:53,939
+But maybe you wonder why that is.
+
+16
+00:00:53,940 --> 00:00:56,040
+Well, this was not always the case.
+
+17
+00:00:56,040 --> 00:00:58,820
+Early computers might have had 6 bits per
+byte.
+
+18
+00:00:58,820 --> 00:01:03,350
+That we use 8 bits for a byte nowadays is
+just how history turned out.
+
+19
+00:01:03,350 --> 00:01:08,330
+It was IBMs fault with the System 360 that
+heavily pushed for an 8-bit byte.
+
+20
+00:01:08,329 --> 00:01:13,769
+Also some people say octad instead of byte
+to make clear that they mean 8 bit.
+
+21
+00:01:13,770 --> 00:01:20,480
+An interesting example is ascii, because you
+will notice that it actually only uses 7bit.
+
+22
+00:01:20,479 --> 00:01:25,829
+But because we now generally use 8bit bytes,
+we kind of waste the first bit.
+
+23
+00:01:25,829 --> 00:01:28,259
+We humans grew up with the decimal system.
+
+24
+00:01:28,259 --> 00:01:31,829
+We are used to counting with symbols from
+0 to 9.
+
+25
+00:01:31,829 --> 00:01:33,129
+But that is rather arbitrary.
+
+26
+00:01:33,130 --> 00:01:35,160
+Sure, we have 10 fingers.
+
+27
+00:01:35,159 --> 00:01:39,439
+But we could also count in 12ths, because
+we have 12 finger bones and we can use the
+
+28
+00:01:39,439 --> 00:01:42,169
+thumb to point to which number we are at.
+
+29
+00:01:42,170 --> 00:01:46,490
+This is the Duodecimal system and we actually
+use it on our clock.
+
+30
+00:01:46,490 --> 00:01:50,450
+So If you would have grown up with counting
+in hex or binary, it would feel as natural
+
+31
+00:01:50,450 --> 00:01:51,450
+to you.
+
+32
+00:01:51,450 --> 00:01:55,600
+Instead of thinking of numbers as something
+fixed, think of it as a tool.
+
+33
+00:01:55,600 --> 00:02:00,710
+And you can use whichever number system makes
+sense for a particular problem.
+
+34
+00:02:00,709 --> 00:02:02,349
+So our computers work with bits.
+
+35
+00:02:02,350 --> 00:02:08,520
+And for our modern computers we have defined
+that we generally work with bytes of 8 bits.
+
+36
+00:02:08,520 --> 00:02:15,220
+And 16bit, 32bit or 64bit architectures just
+play with this value to keep it nicely divisible
+
+37
+00:02:15,219 --> 00:02:17,179
+by 8.
+
+38
+00:02:17,180 --> 00:02:24,480
+When we look at data as raw bits: 0000 0000,
+we quickly see that a byte takes a lot of
+
+39
+00:02:24,480 --> 00:02:27,850
+space if we display it in that way.
+
+40
+00:02:27,849 --> 00:02:30,959
+Maybe decimal would be a cool representation.
+
+41
+00:02:30,959 --> 00:02:33,949
+It certainly would take less space to display
+them.
+
+42
+00:02:33,950 --> 00:02:38,760
+I will use python now to show you how we can
+convert binary to decimal numbers.
+
+43
+00:02:38,760 --> 00:02:42,600
+We simply say that this string represents
+a number in base 2.
+
+44
+00:02:42,599 --> 00:02:48,579
+Let’s do it for a couple of examples with
+a simple for loop.
+
+45
+00:02:48,579 --> 00:02:51,199
+Ok.
+
+46
+00:02:51,200 --> 00:02:53,820
+Well.
+
+47
+00:02:53,819 --> 00:02:54,889
+Takes less space.
+
+48
+00:02:54,890 --> 00:03:01,200
+Though, it kinda bothers me that the biggest
+value with 8 bits, is a weird number in decimal.
+
+49
+00:03:01,200 --> 00:03:04,270
+A number without any interesting properties
+or meanings.
+
+50
+00:03:04,269 --> 00:03:07,589
+Let’s have a look at those numbers in hex.
+
+51
+00:03:07,590 --> 00:03:14,300
+Hex numbers use symbols from 0-9 and A-F to
+describe a number.
+
+52
+00:03:14,299 --> 00:03:17,419
+We can extend our loop in python.
+
+53
+00:03:17,420 --> 00:03:24,420
+And now you can see how pretty hexadecimal
+numbers are to represent 8 bits.
+
+54
+00:03:24,420 --> 00:03:29,290
+The biggest 8 bit value is also the biggest
+value in hex that can be represented by two
+
+55
+00:03:29,290 --> 00:03:30,540
+digits.
+
+56
+00:03:30,540 --> 00:03:35,940
+If we would add 1 more bit, so that we have
+9 bits, we would also have to add another
+
+57
+00:03:35,939 --> 00:03:37,359
+character.
+
+58
+00:03:37,359 --> 00:03:42,449
+And not only that, if you look closely, it
+also nicely represents the two individual
+
+59
+00:03:42,450 --> 00:03:45,620
+nibbles, that means 4 bits.
+
+60
+00:03:45,620 --> 00:03:50,110
+So a 8 bit number in hex can be represented
+by 2 symbols.
+
+61
+00:03:50,110 --> 00:03:53,140
+And each symbol refers to one nibble.
+
+62
+00:03:53,139 --> 00:03:57,509
+So this makes it very very clear and easy
+to read.
+
+63
+00:03:57,510 --> 00:04:01,500
+And now you can understand why the decimal
+representation is not very fitting for this
+
+64
+00:04:01,500 --> 00:04:03,120
+kind of stuff.
+
+65
+00:04:03,120 --> 00:04:08,030
+Can you tell me what is the maximum number
+that an unsigned 32bit integer can represent?
+
+66
+00:04:08,030 --> 00:04:09,650
+Well I don’t know in decimal.
+
+67
+00:04:09,650 --> 00:04:17,510
+I just know that 32bit is 4 times 8 bit and
+thus max int is 0xFFFFFFFF.
+
+68
+00:04:17,510 --> 00:04:22,070
+Now let me quickly show you some cool tricks
+with python to convert stuff back and forth.
+
+69
+00:04:22,070 --> 00:04:25,290
+Python has some builtin functions to convert
+numbers.
+
+70
+00:04:25,289 --> 00:04:27,269
+For example hex() and bin().
+
+71
+00:04:27,270 --> 00:04:32,330
+And also to parse a binary or hex number with
+the int() function and specifying which base
+
+72
+00:04:32,330 --> 00:04:34,960
+it is.
+
+73
+00:04:34,960 --> 00:04:39,400
+If you have a binary string, this means that
+maybe not every value in this string is a
+
+74
+00:04:39,400 --> 00:04:43,750
+nice ascii printable character, you can use
+encode and decode on the string to get the
+
+75
+00:04:43,750 --> 00:04:46,050
+hex representation of the characters.
+
+76
+00:04:46,050 --> 00:04:49,390
+So hex 41 is a capital ‘A’ in ascii.
+
+77
+00:04:49,389 --> 00:04:54,579
+A much more powerful and important functionality
+is offered by python structs.
+
+78
+00:04:54,580 --> 00:04:58,570
+Which I use all the time when I deal with
+binary data.
+
+79
+00:04:58,569 --> 00:04:59,999
+First import struct.
+
+80
+00:05:00,000 --> 00:05:03,980
+And then we can use struct.unpack on our data.
+
+81
+00:05:03,979 --> 00:05:07,759
+In this case I define that this data is an
+unsigned Integer.
+
+82
+00:05:07,759 --> 00:05:13,769
+And you can see I can convert this binary
+data now to an integer number.
+
+83
+00:05:13,770 --> 00:05:20,460
+If you look closely you may wonder why the
+capital A seems to be at the end of the number.
+
+84
+00:05:20,460 --> 00:05:24,160
+The reason for that is that we have a little-endian
+system.
+
+85
+00:05:24,160 --> 00:05:26,670
+bit’s can be interpreted in two ways.
+
+86
+00:05:26,669 --> 00:05:30,539
+Either the first or the last bit can refer
+to the least-significant bit.
+
+87
+00:05:30,539 --> 00:05:34,149
+I think the picture on wikipedia makes this
+very clear.
+
+88
+00:05:34,150 --> 00:05:38,190
+This can be very important when you receive
+data from a big-endian system, because then
+
+89
+00:05:38,190 --> 00:05:40,570
+you have to be careful how you interpret this
+data.
+
+90
+00:05:40,569 --> 00:05:44,739
+But with python struct it’s easy and we
+can define as which endian system we want
+
+91
+00:05:44,740 --> 00:05:46,970
+to interpret this data.
+
+92
+00:05:46,970 --> 00:05:51,540
+If you watch some of my CTF exploitation challenge
+videos, you will see me using python structs
+
+93
+00:05:51,539 --> 00:05:52,759
+a lot.
+
+94
+00:05:52,760 --> 00:05:56,540
+Because it’s great to convert addresses
+and other data back and forth.
+
+95
+00:05:56,540 --> 00:06:00,800
+For example if we want to overwrite an address,
+we have to supply the data as a string.
+
+96
+00:06:00,800 --> 00:06:05,760
+So we can use struct.pack and pack a number
+as a binary string.
+
+97
+00:06:05,759 --> 00:06:10,269
+So the hexadecimal system makes working with
+computers much more simple and you should
+
+98
+00:06:10,270 --> 00:06:12,270
+get used to it.
+
+99
+00:06:12,270 --> 00:06:14,700
+But we just talked about positive numbers.
+
+100
+00:06:14,699 --> 00:06:16,989
+From 0 to 0xFF.
+
+101
+00:06:16,990 --> 00:06:19,980
+But how can we represent negative numbers.
+
+102
+00:06:19,980 --> 00:06:24,500
+Maybe you have heard of the signed bit, that
+the first bit tells you if it is a negative
+
+103
+00:06:24,500 --> 00:06:25,500
+number or not.
+
+104
+00:06:25,500 --> 00:06:30,850
+Though, it’s not as simple as simply reading
+the remaining 7 bit and decide if it’s positive
+
+105
+00:06:30,849 --> 00:06:33,479
+or negative based on the first one.
+
+106
+00:06:33,479 --> 00:06:36,739
+-1 is actually 0xFF.
+
+107
+00:06:36,740 --> 00:06:41,560
+Well it does have the first bit set, but it’s
+not -127.
+
+108
+00:06:41,560 --> 00:06:45,200
+This wheel maybe makes it a bit more clear
+how negative numbers are actually interpreted.
+
+109
+00:06:45,199 --> 00:06:51,409
+The operation to convert their absolute value
+into the negative value, so for example 255
+
+110
+00:06:51,409 --> 00:06:58,499
+(0xFF) to -1 is called Two’s complement,
+you can read that on wikipedia.
+
+111
+00:06:58,500 --> 00:07:08,730
+And you can also very easily negate a given
+number by negating all bits and adding 1.
+
+112
+00:07:08,729 --> 00:07:11,009
+Many functions return -1 on error.
+
+113
+00:07:11,009 --> 00:07:14,699
+At first it sounds weird, but now you know
+that this is just all Fs.
+
+114
+00:07:14,699 --> 00:07:21,159
+So when you read data and you only get 1s
+(or Fs in hex) you might read an errror.
+
+115
+00:07:21,159 --> 00:07:22,969
+What about numbers with a fraction.
+
+116
+00:07:22,970 --> 00:07:23,970
+Well.
+
+117
+00:07:23,970 --> 00:07:24,970
+Don’t get me started on that.
+
+118
+00:07:24,970 --> 00:07:26,600
+It get’s really ugly.
+
+119
+00:07:26,599 --> 00:07:30,779
+But you can guess that representing a value
+with many digits behind the comma can get
+
+120
+00:07:30,780 --> 00:07:34,480
+very creative if you have only 0s and 1s.
+
+121
+00:07:34,480 --> 00:07:38,310
+Now before we end let’s get a summary of
+the terminology:
+
+122
+00:07:38,310 --> 00:07:39,640
+we start with a bit.
+
+123
+00:07:39,639 --> 00:07:41,019
+0 or 1.
+
+124
+00:07:41,020 --> 00:07:43,140
+4 bits are a nibble.
+
+125
+00:07:43,139 --> 00:07:44,829
+8 bits are a byte.
+
+126
+00:07:44,830 --> 00:07:48,540
+And in hexadecimal we can represent a byte
+with two digits.
+
+127
+00:07:48,539 --> 00:07:53,829
+on 32bit architecture a word refers to 32bit
+or 4 bytes.
+
+128
+00:07:53,830 --> 00:07:57,080
+But on 64bit architecture a word is 64bit,
+or 8 bytes.
+
+129
+00:07:57,080 --> 00:08:01,830
+And a double word is obviously the double
+amount of that.
+
+130
+00:08:01,830 --> 00:08:04,910
+As you can see, a computer only has bits.
+
+131
+00:08:04,910 --> 00:08:08,420
+And how we deal with those bits is up to our
+interpretation.
+
+132
+00:08:08,419 --> 00:08:13,419
+I know this was a bit shorter and less technical
+video, but I thought it fits and next time
+
+133
+00:08:13,419 --> 00:08:15,579
+we will dive deep and exploit our first buffer
+overflow.
+

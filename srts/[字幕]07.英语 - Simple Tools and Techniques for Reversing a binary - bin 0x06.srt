@@ -1,0 +1,866 @@
+1
+00:00:07,110 --> 00:00:11,940
+In this video we will revisit the license
+check program from last time.
+
+2
+00:00:11,940 --> 00:00:16,760
+You can get the same compiled 64bit binary
+from github and you can also watch the last
+
+3
+00:00:16,760 --> 00:00:21,020
+video where I went into more detail how to
+crack this simple program.
+
+4
+00:00:21,020 --> 00:00:25,490
+I will show now different simple tools and
+techniques that exist to analyse a program
+
+5
+00:00:25,490 --> 00:00:28,710
+like that to circumvent the license check.
+
+6
+00:00:28,710 --> 00:00:33,630
+This should show you that there are a variety
+of different ways how to solve this challenge.
+
+7
+00:00:33,629 --> 00:00:37,749
+The file command is very useful to check what
+kind of files you have.
+
+8
+00:00:37,750 --> 00:00:43,250
+So ‘file’ on our binary says it’s a
+ELF 64-bit executable for Linux.
+
+9
+00:00:43,250 --> 00:00:48,980
+You can also do ‘file *’ to get the information
+on all files in the directory.
+
+10
+00:00:48,980 --> 00:00:51,260
+And it then also finds the C source code here.
+
+11
+00:00:51,260 --> 00:00:53,450
+So that’s very useful.
+
+12
+00:00:53,450 --> 00:00:57,110
+Let’s open the program in a text editor
+like vim.
+
+13
+00:00:57,110 --> 00:00:59,680
+As you can see it looks very weird.
+
+14
+00:00:59,680 --> 00:01:05,260
+I have introduced ASCII before, so you know
+that every character has assigned a number.
+
+15
+00:01:05,260 --> 00:01:09,030
+But there are numbers that don’t have a
+printable character assigned.
+
+16
+00:01:09,030 --> 00:01:15,490
+If you look at the man page of ascii, you
+see that for example value 0 to hex 1f are
+
+17
+00:01:15,491 --> 00:01:16,851
+not a normal characters.
+
+18
+00:01:16,850 --> 00:01:22,470
+And ascii is also only defined up to hex 7F
+or 127.
+
+19
+00:01:22,470 --> 00:01:29,240
+But because our computer works with bytes,
+so 8 bit, this number can range from 0 to
+
+20
+00:01:29,240 --> 00:01:32,770
+255, And ascii only uses half of them.
+
+21
+00:01:32,770 --> 00:01:36,940
+So all those weird blue values in vim are
+such numbers that don’t have a printable
+
+22
+00:01:36,939 --> 00:01:38,699
+character assigned.
+
+23
+00:01:38,700 --> 00:01:42,460
+You can also do a hexdump of the file, to
+get the actual values.
+
+24
+00:01:42,460 --> 00:01:49,120
+‘hexdump -C license_1’ and you can see
+that there are many many 0s in the file.
+
+25
+00:01:49,120 --> 00:01:54,120
+hexdump displays them as dots, but in vim
+they are the blue stuff.
+
+26
+00:01:54,119 --> 00:01:57,769
+But when you look closely there are quite
+a few meaningful strings in there.
+
+27
+00:01:57,770 --> 00:02:02,450
+For example right at the beginning “ELF”,
+which is a magic value, hinting that this
+
+28
+00:02:02,450 --> 00:02:06,170
+file is an executables.
+
+29
+00:02:06,170 --> 00:02:11,040
+You also can find some strings to libraries
+such as libc, which defines functions such
+
+30
+00:02:11,039 --> 00:02:13,609
+as printf and strcmp.
+
+31
+00:02:13,610 --> 00:02:18,880
+And here we also see strings we know, the
+“Checking License”, “Access Granted”,
+
+32
+00:02:18,880 --> 00:02:21,250
+“WRONG!” and “Usage” message.
+
+33
+00:02:21,250 --> 00:02:26,200
+And also this weird looking “AAAA-ZION-42-OK”
+string.
+
+34
+00:02:26,200 --> 00:02:28,100
+hmmhmh…
+
+35
+00:02:28,099 --> 00:02:31,329
+Remember from last video that there was a
+string compare in it?
+
+36
+00:02:31,330 --> 00:02:35,410
+Might get the license key we enter compared
+to this string?
+
+37
+00:02:35,410 --> 00:02:38,630
+Let’s try it!
+
+38
+00:02:38,630 --> 00:02:39,630
+Access Granted.
+
+39
+00:02:39,630 --> 00:02:40,630
+Indeed!
+
+40
+00:02:40,630 --> 00:02:42,910
+The license key of this program was in there
+all along.
+
+41
+00:02:42,910 --> 00:02:48,370
+There is a great tool called ‘strings’
+that is doing what we just did, just nicer.
+
+42
+00:02:48,370 --> 00:02:53,850
+It will scan a file and prints out all printable
+character sequences with at least a certain
+
+43
+00:02:53,849 --> 00:02:54,849
+length.
+
+44
+00:02:54,849 --> 00:02:57,989
+So let’s try it with ‘strings license_1’.
+
+45
+00:02:57,990 --> 00:03:01,770
+And there are our strings.
+
+46
+00:03:01,770 --> 00:03:06,770
+Last time we used gdb to read the disassembly
+and also debug the program.
+
+47
+00:03:06,769 --> 00:03:09,789
+This time let’s just use objdump for the
+disassembly.
+
+48
+00:03:09,790 --> 00:03:12,910
+‘objdump -d license_1’.
+
+49
+00:03:12,910 --> 00:03:17,160
+You notice that this file has a lot of more
+code than just the ‘main’ function.
+
+50
+00:03:17,160 --> 00:03:21,490
+That is because the compiler puts a bit more
+stuff into the actual binary.
+
+51
+00:03:21,489 --> 00:03:25,439
+You know, computers are a little bit more
+complex than they seem at first.
+
+52
+00:03:25,440 --> 00:03:29,530
+But all of this is just standard stuff you
+basically find in any gcc compiled binary.
+
+53
+00:03:29,530 --> 00:03:35,160
+And usually only the user created functions
+like main are interesting to us.
+
+54
+00:03:35,159 --> 00:03:39,349
+Objdump can be used to get a looot of more
+information about this program.
+
+55
+00:03:39,349 --> 00:03:44,759
+Let’s print everything with ‘objdump -c
+license_1’ and pipe it into less for easier
+
+56
+00:03:44,760 --> 00:03:46,350
+navigation.
+
+57
+00:03:46,349 --> 00:03:52,019
+So first it says the file is a elf binary
+for the x86-64 architecture.
+
+58
+00:03:52,020 --> 00:03:56,350
+The stack is not executable, indicated by
+the missing ‘x’, which is interesting
+
+59
+00:03:56,349 --> 00:03:59,629
+once we will look at classic buffer overflows.
+
+60
+00:03:59,630 --> 00:04:03,560
+And maybe the last interesting info are the
+sections.
+
+61
+00:04:03,560 --> 00:04:07,770
+We can see here where certain data will later
+end up in memory.
+
+62
+00:04:07,769 --> 00:04:10,409
+Interesting for us are the .text section.
+
+63
+00:04:10,410 --> 00:04:19,000
+This section holds our code and it starts
+at address 4004d0 and is hex 1e2 big.
+
+64
+00:04:19,000 --> 00:04:22,920
+And if you check the address where the main
+function was, you will notice that it’s
+
+65
+00:04:22,920 --> 00:04:23,920
+in there.
+
+66
+00:04:23,920 --> 00:04:29,380
+The other interesting section is .rodata,
+which is the read only data section.
+
+67
+00:04:29,379 --> 00:04:32,089
+So our strings can be found in there.
+
+68
+00:04:32,089 --> 00:04:38,139
+If you open up gdb and break at the strcmp,
+you can check the registers.
+
+69
+00:04:38,139 --> 00:04:43,709
+And one of the registers will have an address
+in from this .rodata section.
+
+70
+00:04:43,710 --> 00:04:48,700
+You can print this address with x/s, and voila,
+there is our key again.
+
+71
+00:04:48,699 --> 00:04:51,719
+Let’s have a look at another active tool.
+
+72
+00:04:51,719 --> 00:04:56,629
+It’s called strace and it can trace system
+calls and signals.
+
+73
+00:04:56,629 --> 00:05:01,289
+When I introduced programming in C, we used
+printf to print text.
+
+74
+00:05:01,289 --> 00:05:06,019
+That was a nice function that we added to
+our program from the libc library.
+
+75
+00:05:06,020 --> 00:05:11,150
+But printf is just a wrapper around a function
+that the linux system itself provides us.
+
+76
+00:05:11,149 --> 00:05:16,789
+Linux itself offers many different kind of
+functions called syscalls.
+
+77
+00:05:16,789 --> 00:05:20,179
+You can read more about them in the man page
+to syscalls.
+
+78
+00:05:20,180 --> 00:05:22,510
+One of those functions is ‘write’.
+
+79
+00:05:22,509 --> 00:05:26,859
+And write can be used to write text to the
+standard output, which we can read on the
+
+80
+00:05:26,860 --> 00:05:28,690
+console.
+
+81
+00:05:28,689 --> 00:05:31,529
+So let’s execute the license program with
+strace.
+
+82
+00:05:31,529 --> 00:05:38,559
+The first line is execve, which is the function
+that tells the linux kernel to now execute
+
+83
+00:05:38,559 --> 00:05:41,139
+this program license_1.
+
+84
+00:05:41,139 --> 00:05:45,119
+And then a lot of magic happens that we ignore
+from now.
+
+85
+00:05:45,119 --> 00:05:52,079
+And somewhere all the way at the bottom here,
+the code that I have written starts.
+
+86
+00:05:52,080 --> 00:05:57,870
+And you can here see the write syscalls that
+were executed with the text that we know.
+
+87
+00:05:57,869 --> 00:05:59,039
+Interesting, huh?
+
+88
+00:05:59,039 --> 00:06:03,049
+There is another cool tool called ltrace.
+
+89
+00:06:03,050 --> 00:06:06,070
+Similar to strace it traces certain functions.
+
+90
+00:06:06,069 --> 00:06:08,249
+But this time it traces library functions.
+
+91
+00:06:08,249 --> 00:06:12,969
+Functions like printf or strcmp come from
+the libc library.
+
+92
+00:06:12,970 --> 00:06:15,500
+So ltrace can show us their occurrence.
+
+93
+00:06:15,500 --> 00:06:17,090
+So first you can see the printf.
+
+94
+00:06:17,090 --> 00:06:18,780
+And then comes the strcmp.
+
+95
+00:06:18,779 --> 00:06:21,779
+And it shows us the actual strings it compares.
+
+96
+00:06:21,779 --> 00:06:25,969
+So that also tells us how the license check
+works in a cool way.
+
+97
+00:06:25,969 --> 00:06:29,199
+Let’s thow this file into a graphical user
+interface.
+
+98
+00:06:29,199 --> 00:06:30,979
+I will use hopper on mac.
+
+99
+00:06:30,979 --> 00:06:34,259
+As you may know IDAPro is very expensive.
+
+100
+00:06:34,259 --> 00:06:38,589
+But hopper is a great alternative which is
+actually affordable.
+
+101
+00:06:38,589 --> 00:06:43,859
+Hopper sees that it is a ELF executable and
+it can automatically analyse it for us.
+
+102
+00:06:43,860 --> 00:06:46,740
+It places our curser at a function called
+start.
+
+103
+00:06:46,740 --> 00:06:49,500
+And not main.
+
+104
+00:06:49,500 --> 00:06:54,430
+Like we have seen with objdump before, there
+are a few more functions created by the compiler
+
+105
+00:06:54,429 --> 00:06:58,119
+and this here is the real entry point of the
+program.
+
+106
+00:06:58,120 --> 00:07:02,020
+But what those functions are doing is not
+important right now.
+
+107
+00:07:02,020 --> 00:07:04,750
+We are only interested in the main functionality.
+
+108
+00:07:04,749 --> 00:07:08,869
+So we can look for the main function in the
+list of labels.
+
+109
+00:07:08,869 --> 00:07:11,339
+So here is our main function, like in gdb.
+
+110
+00:07:11,339 --> 00:07:17,159
+Just a bit more colorful and hopper can also
+show us with those arrows where branches are
+
+111
+00:07:17,159 --> 00:07:18,549
+going to.
+
+112
+00:07:18,550 --> 00:07:22,910
+At the end of the last video I have already
+showed the control flow graph which you can
+
+113
+00:07:22,909 --> 00:07:25,139
+access at the top right.
+
+114
+00:07:25,139 --> 00:07:28,969
+And a very cool feauter from hopper is the
+decompiler.
+
+115
+00:07:28,970 --> 00:07:34,550
+Decompiling sounds like it would reverse assembler
+code back to C code.
+
+116
+00:07:34,550 --> 00:07:36,280
+But that is not easy.
+
+117
+00:07:36,279 --> 00:07:42,019
+The compiler changes and optimises stuff and
+you just cannot simply reverse it.
+
+118
+00:07:42,020 --> 00:07:45,380
+But hopper can guess how it might have looked
+like.
+
+119
+00:07:45,379 --> 00:07:49,169
+Sometimes it makes mistakes, but often it
+looks pretty good.
+
+120
+00:07:49,169 --> 00:07:54,329
+So it shows us here how it checks if we have
+supplied a license key, and then it does the
+
+121
+00:07:54,330 --> 00:07:57,790
+strcmp and prints either ‘Access Granted’
+or ‘WRONG!’.
+
+122
+00:07:57,789 --> 00:07:59,449
+So that’s pretty cool.
+
+123
+00:07:59,449 --> 00:08:03,749
+To the left you can also find a button to
+display all strings.
+
+124
+00:08:03,749 --> 00:08:07,429
+And as you can see it also found the key.
+
+125
+00:08:07,430 --> 00:08:11,200
+When you click on it it will jump to the address
+where the key is located.
+
+126
+00:08:11,199 --> 00:08:15,859
+And XREF stands for cross reference, that
+means this address is referenced somewhere.
+
+127
+00:08:15,860 --> 00:08:20,570
+We can follow that xref, and we can see that
+this is the assembler code where the address
+
+128
+00:08:20,569 --> 00:08:24,339
+of the key is moved into the esi register.
+
+129
+00:08:24,339 --> 00:08:28,689
+This prepares the function parameters for
+the strcmp.
+
+130
+00:08:28,689 --> 00:08:31,889
+Some kids may have the opinion that mac users
+suck.
+
+131
+00:08:31,889 --> 00:08:37,959
+To please them we will install now radare2
+by cloning the radare2 repository with git.
+
+132
+00:08:37,960 --> 00:08:40,850
+You might have to install git with sudo apt-get
+install git.
+
+133
+00:08:40,849 --> 00:08:50,269
+To install radare run sys/install.sh and wait.
+
+134
+00:08:50,270 --> 00:08:57,010
+Once it’s installed you can go to the license_1
+program and open it in radare with ‘r2 license_1’.
+
+135
+00:08:57,009 --> 00:09:02,119
+You may remember this address from objdump
+earlier, this is the start of the text segment
+
+136
+00:09:02,120 --> 00:09:04,500
+that contains our code.
+
+137
+00:09:04,500 --> 00:09:10,020
+first run ‘aaa’, to automatically analyse
+an autoname functions.
+
+138
+00:09:10,020 --> 00:09:14,620
+Then use ‘afl’ to print all functions
+that radare found.
+
+139
+00:09:14,620 --> 00:09:16,810
+Each character in radare means something.
+
+140
+00:09:16,810 --> 00:09:21,460
+And with ? you always get information about
+what characters you can use.
+
+141
+00:09:21,459 --> 00:09:24,659
+So ‘a’ performs analysis of code.
+
+142
+00:09:24,660 --> 00:09:29,700
+‘a?’ shows us that we can append ‘f’
+to analyse functions.
+
+143
+00:09:29,699 --> 00:09:32,069
+And ‘afl’ lists those functions.
+
+144
+00:09:32,069 --> 00:09:33,719
+Makes sense, right?
+
+145
+00:09:33,720 --> 00:09:37,070
+ok so afl shows us that it found a main function.
+
+146
+00:09:37,070 --> 00:09:43,810
+Let’s change our current location with ‘s’
+to seek to the location of the function main.
+
+147
+00:09:43,810 --> 00:09:47,130
+You can also use tab-completion here.
+
+148
+00:09:47,130 --> 00:09:50,320
+Now the location in those brackets changed.
+
+149
+00:09:50,319 --> 00:09:55,109
+With ‘pdf’ we can print the disassembly
+of the current function.
+
+150
+00:09:55,110 --> 00:09:59,710
+Like hopper it shows us the disassembly with
+nice arrows where branches go to.
+
+151
+00:09:59,709 --> 00:10:03,889
+And it created comments for us with strings
+that are referenced in there.
+
+152
+00:10:03,889 --> 00:10:07,899
+You can also type capital VV to enter visual
+mode.
+
+153
+00:10:07,899 --> 00:10:11,139
+This shows you a control-graph view of this
+function.
+
+154
+00:10:11,139 --> 00:10:13,649
+You can move it around with arrow keys.
+
+155
+00:10:13,649 --> 00:10:17,259
+The blue border indicates that we currently
+select this box.
+
+156
+00:10:17,259 --> 00:10:20,929
+With Tab and Shift Tab you can select other
+blocks.
+
+157
+00:10:20,930 --> 00:10:27,470
+When you have a block selected you can move
+the block with Shift + hjkl.
+
+158
+00:10:27,470 --> 00:10:30,610
+With ‘p’ you can cycle through different
+representations.
+
+159
+00:10:30,610 --> 00:10:33,780
+For example with our without the address in
+the beginning.
+
+160
+00:10:33,779 --> 00:10:38,609
+Or this minimalistic view, which is useful
+if you have a damn huge function.
+
+161
+00:10:38,610 --> 00:10:40,730
+And with ? you can display a help.
+
+162
+00:10:40,730 --> 00:10:45,340
+This help tells you that capital R is the
+most important shortcut you will ever learn
+
+163
+00:10:45,339 --> 00:10:46,819
+for radare…
+
+164
+00:10:46,819 --> 00:10:49,989
+So press Shift+R and be happy.
+
+165
+00:10:49,990 --> 00:10:54,280
+You can also use radare2 like gdb to debug
+this program.
+
+166
+00:10:54,279 --> 00:10:57,489
+To do that start radare with -d flag.
+
+167
+00:10:57,490 --> 00:11:01,930
+Seek to the main function, analyse all with
+‘aaa’ and display the disassembly with
+
+168
+00:11:01,930 --> 00:11:03,360
+pdf.
+
+169
+00:11:03,360 --> 00:11:05,790
+Now place a breakpoint at the start with ‘db’.
+
+170
+00:11:05,790 --> 00:11:10,600
+Now go into Visual View with “VV” again.
+
+171
+00:11:10,600 --> 00:11:17,150
+Like with vim you can enter command mode with
+‘:’, where you type ‘:dc’ to run the
+
+172
+00:11:17,149 --> 00:11:18,149
+program.
+
+173
+00:11:18,149 --> 00:11:20,099
+Now we hit breakpoint 1.
+
+174
+00:11:20,100 --> 00:11:24,550
+And if you look closely you notice rip in
+the first box.
+
+175
+00:11:24,550 --> 00:11:28,600
+This shows us where the instruction pointer
+currently points to.
+
+176
+00:11:28,600 --> 00:11:30,820
+With s you can step instructions.
+
+177
+00:11:30,820 --> 00:11:36,150
+But we should use capital S, otherwise we
+follow functions which we don’t want to.
+
+178
+00:11:36,149 --> 00:11:37,669
+So Shift+S to step further.
+
+179
+00:11:37,670 --> 00:11:38,670
+Ah damn.
+
+180
+00:11:38,670 --> 00:11:40,610
+We didn’t supply a license key.
+
+181
+00:11:40,610 --> 00:11:42,600
+But you get the idea.
+
+182
+00:11:42,600 --> 00:11:46,180
+I hope this helps you to explore more tools
+and techniques.
+
+183
+00:11:46,180 --> 00:11:49,310
+And remember that no tool is better than the
+other.
+
+184
+00:11:49,310 --> 00:11:52,880
+They all have different features and representations
+of information.
+
+185
+00:11:52,880 --> 00:11:55,580
+It makes sense to master them all.
+
+186
+00:11:55,579 --> 00:11:56,579
+Except radare.
+
+187
+00:11:56,579 --> 00:11:58,199
+Some say radare is the best.
+
+188
+00:11:58,199 --> 00:11:59,949
+But nobody ever masters radare.
+

@@ -1,0 +1,901 @@
+1
+00:00:00,120 --> 00:00:03,620
+So we finished exploit-exercises protostar
+a while ago.
+
+2
+00:00:03,620 --> 00:00:08,770
+Which means we have a really good basic understanding
+of how binary exploitation worked, many years
+
+3
+00:00:08,770 --> 00:00:10,230
+ago.
+
+4
+00:00:10,230 --> 00:00:13,750
+Exploitation nowadays is not as easy anymore
+and some of you have noticed that, because
+
+5
+00:00:13,750 --> 00:00:19,550
+you tried to copy the source code and compile
+it on their own modern linux machine.
+
+6
+00:00:19,550 --> 00:00:23,360
+So I thought it would be interesting to start
+introducing modern techniques and exploit
+
+7
+00:00:23,360 --> 00:00:28,800
+mitigations by revisiting some of the protostar
+challenges on a current ubuntu.
+
+8
+00:00:28,800 --> 00:00:30,000
+And see how far we get.
+
+9
+00:00:30,000 --> 00:00:38,350
+Are they still exploitable?
+
+10
+00:00:38,350 --> 00:00:42,220
+So let’s have a quick look at the very simple
+source code again.
+
+11
+00:00:42,219 --> 00:00:48,689
+There were these variables, a buffer and this
+modified integer which was set to 0.
+
+12
+00:00:48,690 --> 00:00:53,460
+Then there was this gets() function which
+reads in some input into the buffer and it
+
+13
+00:00:53,460 --> 00:00:55,570
+doesn’t have a way to check the length.
+
+14
+00:00:55,570 --> 00:01:00,910
+So this way we were able to fill the buffer
+completely and even write beyond it, into
+
+15
+00:01:00,909 --> 00:01:02,889
+adjacent memory.
+
+16
+00:01:02,890 --> 00:01:08,330
+The binary on the old protostar VM had the
+modified variable just after the buffer.
+
+17
+00:01:08,330 --> 00:01:14,250
+Thus if you wrote more than 64 bytes you overwrote
+the 0 value of the modified variable and thus
+
+18
+00:01:14,250 --> 00:01:17,390
+change the outcome of this if.
+
+19
+00:01:17,390 --> 00:01:19,910
+So let’s try this again on a modern system.
+
+20
+00:01:19,910 --> 00:01:27,100
+I’m using digitalocean to quickly spin up
+a new ubuntu linux machine and ssh into it.
+
+21
+00:01:27,100 --> 00:01:29,430
+Then I take the code and compile it.
+
+22
+00:01:29,430 --> 00:01:31,280
+Oh, new system.
+
+23
+00:01:31,280 --> 00:01:34,700
+So we also have to install gcc, the compiler.
+
+24
+00:01:34,700 --> 00:01:36,240
+Now it works.
+
+25
+00:01:36,240 --> 00:01:40,250
+You can already see that the compiler is warning
+us of the use of gets().
+
+26
+00:01:40,250 --> 00:01:44,990
+You see, making programming mistakes like
+this really requires a developer to ignore
+
+27
+00:01:44,990 --> 00:01:45,990
+warnings like this.
+
+28
+00:01:45,990 --> 00:01:50,500
+You don’t really have to know about the
+dangers from somewhere else anymore, it tells
+
+29
+00:01:50,500 --> 00:01:52,270
+you right away.
+
+30
+00:01:52,270 --> 00:01:53,270
+So let’s see.
+
+31
+00:01:53,270 --> 00:01:57,760
+Let’s try to input a lot of characters and
+see if we can change the modified variable.
+
+32
+00:01:57,760 --> 00:02:01,700
+But it doesn’t seem to work.
+
+33
+00:02:01,700 --> 00:02:05,370
+The only thing we can get is a stack smashing
+detected error.
+
+34
+00:02:05,370 --> 00:02:07,350
+And the process is aborted.
+
+35
+00:02:07,350 --> 00:02:12,160
+That’s the first evidence that a bit more
+stuff is going on here.
+
+36
+00:02:12,159 --> 00:02:16,339
+So let’s look at the assembly code that
+the compiler produced.
+
+37
+00:02:16,340 --> 00:02:20,310
+First of all let’s check why we couldn’t
+overwrite the modified variable.
+
+38
+00:02:20,310 --> 00:02:24,000
+Does the stack smashing detected have to do
+anything with it?
+
+39
+00:02:23,999 --> 00:02:25,309
+Mh kinda.
+
+40
+00:02:25,310 --> 00:02:26,560
+But let’s see.
+
+41
+00:02:26,560 --> 00:02:30,930
+You see this location on the stack is where
+the local variable modified is stored.
+
+42
+00:02:30,930 --> 00:02:35,570
+You can see that because the value 0 is moved
+to it, like in the C code.
+
+43
+00:02:35,569 --> 00:02:39,739
+And this here is the buffer on the stack you
+can see that because the address of it is
+
+44
+00:02:39,739 --> 00:02:41,169
+passed to gets.
+
+45
+00:02:41,170 --> 00:02:42,980
+Like in the C code.
+
+46
+00:02:42,980 --> 00:02:47,460
+So when you look at this you notice, that
+the modified variable is NOT located after
+
+47
+00:02:47,459 --> 00:02:49,229
+the buffer anymore.
+
+48
+00:02:49,230 --> 00:02:54,700
+We can write as many characters as we want,
+but we will never overwrite modified.
+
+49
+00:02:54,700 --> 00:02:59,170
+You can also try to reorder the variables
+in the C code but that has no effect on the
+
+50
+00:02:59,170 --> 00:03:01,250
+assembler code either.
+
+51
+00:03:01,250 --> 00:03:03,870
+And that’s not a coincidence.
+
+52
+00:03:03,870 --> 00:03:08,010
+Buffers or arrays are risky compared to simple
+integer variables.
+
+53
+00:03:08,010 --> 00:03:10,730
+Buffers are prone to buffer overflows.
+
+54
+00:03:10,730 --> 00:03:16,050
+So the compiler made the decision to order
+the local variables in a particular way.
+
+55
+00:03:16,049 --> 00:03:19,109
+And it kinda has something to do with the
+stack smashing detected message.
+
+56
+00:03:19,109 --> 00:03:24,039
+You see this message is caused because a stack
+cookie or stack canary or stack guard was
+
+57
+00:03:24,040 --> 00:03:25,190
+overwritten.
+
+58
+00:03:25,189 --> 00:03:27,019
+So what exactly is that?
+
+59
+00:03:27,019 --> 00:03:31,569
+Let’s open the compiled binary in a disassembler
+to have a better look at it.
+
+60
+00:03:31,569 --> 00:03:36,029
+If you are still learning about this stuff,
+assembler code always looks very intimidating.
+
+61
+00:03:36,030 --> 00:03:38,980
+But it’s all about recognizing and learning
+patterns.
+
+62
+00:03:38,980 --> 00:03:42,370
+One such pattern is here with the stack cookies.
+
+63
+00:03:42,370 --> 00:03:46,830
+Because when you reverse engineer a program,
+you can basically ignore a lot of stuff.
+
+64
+00:03:46,829 --> 00:03:50,909
+For example this here and down here, has to
+do with the stack cookie, and so it has nothing
+
+65
+00:03:50,909 --> 00:03:53,729
+to do with the functionality of the program.
+
+66
+00:03:53,730 --> 00:03:57,870
+If you are interested in what this function
+roughly does, you can look for functions being
+
+67
+00:03:57,870 --> 00:04:02,240
+called here, so there is a gets, so that is
+reading something.
+
+68
+00:04:02,239 --> 00:04:07,509
+Then a local variable is compared and then
+it prints a string with puts in either case.
+
+69
+00:04:07,510 --> 00:04:09,980
+So you already get a rough idea from that.
+
+70
+00:04:09,980 --> 00:04:14,610
+But we already know what it does, so whats
+up with the parts of the stack cookie.
+
+71
+00:04:14,609 --> 00:04:19,989
+In the beginning of the function a value was
+moved from a weird place, fs at offset hex
+
+72
+00:04:19,989 --> 00:04:23,139
+28, into the register rax.
+
+73
+00:04:23,139 --> 00:04:25,249
+And then that value is placed onto the stack.
+
+74
+00:04:25,250 --> 00:04:30,150
+And at the end of the function, just before
+the return, this value is read again from
+
+75
+00:04:30,150 --> 00:04:36,070
+the stack and then xored with this mysterious
+value in fs hex 28.
+
+76
+00:04:36,069 --> 00:04:39,439
+This is just a check if the two values are
+the same.
+
+77
+00:04:39,440 --> 00:04:43,000
+If they are equal the function is allowed
+to return.
+
+78
+00:04:43,000 --> 00:04:48,670
+If the check failed, and those values are
+different, then there is a call to stack_check_fail
+
+79
+00:04:48,669 --> 00:04:51,799
+and the program will never return.
+
+80
+00:04:51,800 --> 00:04:53,160
+And this makes sense right.
+
+81
+00:04:53,160 --> 00:04:57,340
+So some unknown value is written onto the
+stack at the beginning, then stuff happens,
+
+82
+00:04:57,340 --> 00:05:00,320
+for example the gets() call which can overflow
+the buffer,
+
+83
+00:05:00,320 --> 00:05:04,140
+And at the end the value on the stack is compared
+again to this mysterious value.
+
+84
+00:05:04,139 --> 00:05:09,069
+So if we had a buffer overflow that overwrote
+this stack cookie, this check would fail.
+
+85
+00:05:09,069 --> 00:05:15,079
+So fs, or gs or other segment registers, are
+special registers with varying usages depending
+
+86
+00:05:15,080 --> 00:05:20,310
+on 32bit or 64bit and if you are on windows
+or linux and if you write low level boot or
+
+87
+00:05:20,310 --> 00:05:23,940
+kernel ring 0 code or if you write userspace
+ring 3 programs.
+
+88
+00:05:23,940 --> 00:05:26,410
+And there is a lot of historical baggage with
+them.
+
+89
+00:05:26,410 --> 00:05:30,050
+And to be completely honest with you, I don’t
+fully understand it.
+
+90
+00:05:30,050 --> 00:05:34,100
+Maybe somebody in the comments can correct
+me and add some additional information.
+
+91
+00:05:34,100 --> 00:05:36,950
+So take this explanation with a grain of salt.
+
+92
+00:05:36,949 --> 00:05:41,059
+You can imagine the fs register to point to
+some memory.
+
+93
+00:05:41,060 --> 00:05:44,770
+And from the perspective of the process we
+actually don’t really know where it points
+
+94
+00:05:44,770 --> 00:05:45,770
+to.
+
+95
+00:05:45,770 --> 00:05:48,920
+The kernel (I think) set up where it points
+to.
+
+96
+00:05:48,919 --> 00:05:52,829
+So the process doesn’t really care where
+it points to, it can just use it.
+
+97
+00:05:52,830 --> 00:05:57,400
+And it can then reference different values
+at certain offsets in that memory.
+
+98
+00:05:57,400 --> 00:06:01,990
+So for example the stack cookie is stored
+at offset hex 28.
+
+99
+00:06:01,990 --> 00:06:07,010
+And actually the location must be somewhere
+in the virtual memory of the process as well.
+
+100
+00:06:07,009 --> 00:06:15,239
+Let’s install the gdb enhancment peda really
+quick because it has a great memory find function.
+
+101
+00:06:15,240 --> 00:06:19,460
+we can test this by setting a breakpoint at
+the stack cookie handling routines and search
+
+102
+00:06:19,460 --> 00:06:22,340
+the process memory for this value.
+
+103
+00:06:22,340 --> 00:06:27,140
+And you can see it shows up in some kind of
+mapped memory.
+
+104
+00:06:27,139 --> 00:06:29,949
+And if you check the memory maps it is included
+here.
+
+105
+00:06:29,950 --> 00:06:34,110
+And that is really the location where fs points
+to.
+
+106
+00:06:34,110 --> 00:06:39,100
+Because for example we can now overwrite this
+value with hex 41, so capital AAAAAAA.
+
+107
+00:06:39,099 --> 00:06:43,059
+And when we continue and enter a lot of data,
+a lot of As we will overwrite the cookie on
+
+108
+00:06:43,060 --> 00:06:46,430
+the stack with hex 414141.
+
+109
+00:06:46,430 --> 00:06:50,610
+And when we now reach the end of the function
+the stack cookie value was obviously overwritten
+
+110
+00:06:50,610 --> 00:06:51,820
+by us with 414141.
+
+111
+00:06:51,819 --> 00:06:58,079
+But we also just set by hand the original
+value of the stack cookie to 41414.
+
+112
+00:06:58,080 --> 00:07:02,440
+And even though we cannot inspect and see
+where fs points to, the CPU knows where the
+
+113
+00:07:02,439 --> 00:07:05,879
+value is and will compare those two now.
+
+114
+00:07:05,880 --> 00:07:10,100
+And not suprisingly we continue to the return
+and get a segfault.
+
+115
+00:07:10,100 --> 00:07:12,620
+Instead of going to the stack_check_fail.
+
+116
+00:07:12,620 --> 00:07:16,630
+This means we actually have changed the original
+value of the stack cookie.
+
+117
+00:07:16,629 --> 00:07:17,789
+That’s cool huh?
+
+118
+00:07:17,789 --> 00:07:22,289
+But you see it’s not really a bypass for
+cookies, it doesn’t help us in this particular
+
+119
+00:07:22,290 --> 00:07:24,510
+case and magically make it exploitable.
+
+120
+00:07:24,509 --> 00:07:27,179
+We are just playing around with it to understand
+it better.
+
+121
+00:07:27,180 --> 00:07:31,760
+And we know that the original stack cookie
+value is stored somewhere in memory.
+
+122
+00:07:31,759 --> 00:07:36,729
+So those cookies serve a precise purpose,
+but it’s not the magic medicine that stops
+
+123
+00:07:36,729 --> 00:07:38,399
+every exploit attempt.
+
+124
+00:07:38,400 --> 00:07:43,320
+But now you have a better understand of the
+limitations of stack cookies, they are just
+
+125
+00:07:43,320 --> 00:07:48,070
+a value on the stack which are placed there
+at the beginning of a function and compared
+
+126
+00:07:48,069 --> 00:07:51,189
+to the original value before the function
+returns.
+
+127
+00:07:51,189 --> 00:07:55,379
+This means we can overwrite the return pointer
+on the stack, but the issue is, that the function
+
+128
+00:07:55,379 --> 00:07:58,389
+will never return because the cookie is wrong.
+
+129
+00:07:58,389 --> 00:08:02,469
+And if there are other variables on the stack
+before the cookie they could all be still
+
+130
+00:08:02,470 --> 00:08:04,110
+overwritten.
+
+131
+00:08:04,110 --> 00:08:08,440
+So it actually just kinda protects you from
+smashing the return pointer for a classic
+
+132
+00:08:08,439 --> 00:08:09,639
+buffer overflow.
+
+133
+00:08:09,639 --> 00:08:14,399
+It only stops the function form returning,
+but it might not stop other side effects due
+
+134
+00:08:14,400 --> 00:08:17,090
+to things overwritten on the stack.
+
+135
+00:08:17,090 --> 00:08:22,620
+So in our case, theoretically if the modified
+variable would have been placed after the
+
+136
+00:08:22,620 --> 00:08:27,440
+buffer, we could have still overwritten it
+without ever writing so far that we overwrite
+
+137
+00:08:27,439 --> 00:08:29,119
+the stack cookie.
+
+138
+00:08:29,120 --> 00:08:33,920
+But the compiler developers know that buffer
+overflows are a common thing, so they want
+
+139
+00:08:33,919 --> 00:08:37,199
+buffers to be as close as possible to the
+stack cookie.
+
+140
+00:08:37,200 --> 00:08:41,800
+Which causes the modified and buffer variable
+to be reordered in this way.
+
+141
+00:08:41,800 --> 00:08:46,090
+The buffer is placed after the modified variable,
+closer to the cookie.
+
+142
+00:08:46,089 --> 00:08:47,309
+Darn it.
+
+143
+00:08:47,310 --> 00:08:50,770
+There is another interesting thing about stack
+cookies.
+
+144
+00:08:50,769 --> 00:08:56,309
+Let’s rerun the program and collect a few
+random cookies.
+
+145
+00:08:56,310 --> 00:08:59,920
+Do you notice something, they all start with
+a zero byte.
+
+146
+00:08:59,920 --> 00:09:03,890
+So this is the little endian format but in
+memory the bytes would look like this.
+
+147
+00:09:03,889 --> 00:09:06,119
+So that’s interesting.
+
+148
+00:09:06,120 --> 00:09:12,010
+Why would they not use all 8 bytes for random
+values but compromise one of these bytes to
+
+149
+00:09:12,010 --> 00:09:13,530
+be a static 0.
+
+150
+00:09:13,530 --> 00:09:19,860
+Doesn’t that make it weaker, because now
+you only have to bruteforce, eh guess, 7 bytes?
+
+151
+00:09:19,860 --> 00:09:24,760
+There are obviously various ways how you can
+attack a stack cookie, it obviously should
+
+152
+00:09:24,760 --> 00:09:29,880
+not be guessable or bruteforcable, but 7 bytes
+is huuuuge number already.
+
+153
+00:09:29,880 --> 00:09:31,790
+So probably good enough.
+
+154
+00:09:31,790 --> 00:09:37,570
+But as you know there are a lot of ways to
+leak values from memory for example with format
+
+155
+00:09:37,570 --> 00:09:39,250
+string exploits.
+
+156
+00:09:39,250 --> 00:09:44,730
+So you use that to leak a stack cookie value
+and then your overflow is trivial again.
+
+157
+00:09:44,730 --> 00:09:47,690
+But some overflows happen because of a strcpy.
+
+158
+00:09:47,690 --> 00:09:50,630
+And strings in C are zero terminated.
+
+159
+00:09:50,630 --> 00:09:55,850
+So even if you would know the stack cookie,
+and you have a vulnerable strcpy, you can
+
+160
+00:09:55,851 --> 00:10:01,131
+never overwrite the cookie with the corerct
+value, because you cannot write a 0 byte.
+
+161
+00:10:01,130 --> 00:10:03,620
+Because a null byte marks the end of a string
+in c.
+
+162
+00:10:03,620 --> 00:10:09,110
+But in our example uses gets() and according
+to the man page you can see that gets actually
+
+163
+00:10:09,110 --> 00:10:14,120
+only stops at a newline, so you could write
+0 bytes with that.
+
+164
+00:10:14,120 --> 00:10:17,190
+So it’s a very clever choice to include
+a 0 byte in the cookie.
+
+165
+00:10:17,190 --> 00:10:23,250
+It’s an additional protection against strcpys,
+even if the cookie value is known.
+
+166
+00:10:23,250 --> 00:10:26,650
+But maybe you ask yourself now, what about
+32bit?
+
+167
+00:10:26,649 --> 00:10:29,069
+Is there also a byte used for a null byte?
+
+168
+00:10:29,070 --> 00:10:31,150
+Let’s find out.
+
+169
+00:10:31,149 --> 00:10:34,719
+To compile a 32bit program on 64bit you have
+to install some other stuff.
+
+170
+00:10:34,720 --> 00:10:37,720
+And we can also quickly check if this is not
+exploitable.
+
+171
+00:10:37,720 --> 00:10:41,570
+And you can see that we also only get the
+stack smash protection error.
+
+172
+00:10:41,570 --> 00:10:42,570
+Ok.
+
+173
+00:10:42,570 --> 00:10:44,870
+So let’s extract some stack cookies here.
+
+174
+00:10:44,870 --> 00:10:48,450
+You can also see that a different segment
+register is used here on 32bit.
+
+175
+00:10:48,449 --> 00:10:50,919
+But same concept.
+
+176
+00:10:50,920 --> 00:10:52,860
+And who would have thought.
+
+177
+00:10:52,860 --> 00:10:54,690
+Also a 0 byte in it.
+
+178
+00:10:54,690 --> 00:10:57,780
+So this makes only 3 bytes of randomness.
+
+179
+00:10:57,779 --> 00:11:00,569
+16 million possible values.
+
+180
+00:11:00,570 --> 00:11:04,410
+&lt;painful noise&gt; mhmh
+That sounds a bit more scary.
+
+181
+00:11:04,410 --> 00:11:10,440
+16 million depending on the context where
+and how the program is run is not much.
+
+182
+00:11:10,440 --> 00:11:13,370
+Maybe in our case it might actually make it
+exploitable.
+
+183
+00:11:13,370 --> 00:11:18,990
+I mean the original protostar VM was also
+32bit, so I think it’s fair game.
+
+184
+00:11:18,990 --> 00:11:23,120
+But to be fair, 64bit probably makes it unexploitable.
+
+185
+00:11:23,120 --> 00:11:24,390
+So the plan is clear.
+
+186
+00:11:24,390 --> 00:11:30,360
+We write a program that calls this 32bit version
+of stack level 0 all the time and send an
+
+187
+00:11:30,360 --> 00:11:35,770
+exploit string to it, which uses random cookie
+cookie values to bruteforce it.
+
+188
+00:11:35,769 --> 00:11:40,479
+And at some point we might get lucky, guessed
+the correct cookie value, overflow the return
+
+189
+00:11:40,480 --> 00:11:46,140
+pointer and redirect code execution to the
+output, the if case, we want.
+
+190
+00:11:46,140 --> 00:11:47,170
+Well.
+
+191
+00:11:47,170 --> 00:11:48,850
+The plan sounds good.
+
+192
+00:11:48,850 --> 00:11:50,740
+If it were just this easy.
+
+193
+00:11:50,740 --> 00:11:53,960
+We will need a bit more time for this so let’s
+do it in another video.
+
+194
+00:11:53,959 --> 00:11:56,479
+But it’s a fun challenge, so you should
+try that too.
+

@@ -1,0 +1,978 @@
+1
+00:00:06,270 --> 00:00:10,630
+In the first episode I made, I said that we
+will use Linux, because it allows us to have
+
+2
+00:00:10,630 --> 00:00:12,920
+a look at the Linux Kernel source code.
+
+3
+00:00:12,920 --> 00:00:15,390
+In this video we will learn what syscalls
+are.
+
+4
+00:00:15,390 --> 00:00:20,630
+And we will try to understand what user-mode
+and kernel-mode means, by having a look at
+
+5
+00:00:20,630 --> 00:00:24,280
+a specific kernel function copy_from_user.
+
+6
+00:00:24,280 --> 00:00:28,390
+If you have ever wondered what it means to
+have an operating system in a more technical
+
+7
+00:00:28,390 --> 00:00:31,670
+way, I hope I can show you some very interesting
+stuff.
+
+8
+00:00:31,670 --> 00:00:35,550
+You may have seen pictures where it says user-mode
+and kernel-mode.
+
+9
+00:00:35,550 --> 00:00:38,350
+Or those circles with ring-0, ring-1 and so
+forth.
+
+10
+00:00:38,350 --> 00:00:43,440
+They introduce this stuff in school and even
+as a kid who knew how to program, I had noooo
+
+11
+00:00:43,440 --> 00:00:46,030
+imagination of what that actually means.
+
+12
+00:00:46,030 --> 00:00:50,930
+You may even have heard that syscalls are
+an interface between those two worlds...
+
+13
+00:00:50,930 --> 00:00:53,860
+So let’s start by looking at what kind of
+syscalls exist.
+
+14
+00:00:53,860 --> 00:00:57,220
+And again, you can read about syscalls in
+the linux manual.
+
+15
+00:00:57,220 --> 00:00:58,280
+So ‘man syscalls’.
+
+16
+00:00:58,280 --> 00:01:03,810
+It says here, that “system call is the fundamental
+interface between an application and the Linux
+
+17
+00:01:03,809 --> 00:01:10,539
+kernel.” and “System calls are generally
+not invoked directly, but rather via wrapper
+
+18
+00:01:10,540 --> 00:01:12,070
+functions in glibc”.
+
+19
+00:01:12,070 --> 00:01:16,910
+“Often the glibc wrapper function is quite
+thin, doing little work other than copying
+
+20
+00:01:16,909 --> 00:01:21,509
+arguments to the right registers before invoking
+the system call”.
+
+21
+00:01:21,509 --> 00:01:23,089
+Invoking the system call.
+
+22
+00:01:23,090 --> 00:01:24,090
+Mhhh...
+
+23
+00:01:24,090 --> 00:01:26,740
+We will find out what that means soon.
+
+24
+00:01:26,740 --> 00:01:30,320
+Further down we find a huge list of available
+system calls.
+
+25
+00:01:30,320 --> 00:01:36,370
+I mentioned in earlier videos that the libc
+function printf, is just a fancy wrapper around
+
+26
+00:01:36,369 --> 00:01:37,639
+the syscall write.
+
+27
+00:01:37,639 --> 00:01:42,799
+And you can see that, when we use the program
+strace to trace all system calls.
+
+28
+00:01:42,799 --> 00:01:46,529
+Instead of showing printf, it shows us write.
+
+29
+00:01:46,530 --> 00:01:50,410
+The manpage of write says it takes 3 parameters.
+
+30
+00:01:50,409 --> 00:01:54,649
+First the file descriptor, then an address
+to a buffer and a count.
+
+31
+00:01:54,649 --> 00:01:58,399
+So let’s create a simple C program that
+calls this function.
+
+32
+00:01:58,399 --> 00:02:01,159
+The first parameter is a file descriptor.
+
+33
+00:02:01,159 --> 00:02:05,089
+We will talk about that value in another video,
+but we want it to be 1.
+
+34
+00:02:05,090 --> 00:02:10,400
+Which is the file descriptor for the standard
+output.
+
+35
+00:02:10,399 --> 00:02:15,049
+For the second parameter we want an address
+in memory that points to a string.
+
+36
+00:02:15,050 --> 00:02:20,060
+We can simply write our string here, the compiler
+will find a place in memory for it and place
+
+37
+00:02:20,060 --> 00:02:22,310
+the address of it here.
+
+38
+00:02:22,310 --> 00:02:24,530
+And the last parameter will be the length.
+
+39
+00:02:24,530 --> 00:02:29,920
+So in our case 5.
+
+40
+00:02:29,920 --> 00:02:33,980
+Now open it in radare with -d to debug it.
+
+41
+00:02:33,980 --> 00:02:37,070
+Analyse all and seek to the main function.
+
+42
+00:02:37,070 --> 00:02:42,310
+Then print the function and place a breakpoint
+at the write with db.
+
+43
+00:02:42,310 --> 00:02:48,540
+Then dc to start the program and switch to
+a visual view with V!.
+
+44
+00:02:48,540 --> 00:02:52,150
+With s you can now follow this write function.
+
+45
+00:02:52,150 --> 00:02:54,230
+We follow some weird stuff.
+
+46
+00:02:54,230 --> 00:02:56,290
+This is the Procedure Linkage Table.
+
+47
+00:02:56,290 --> 00:02:57,410
+The plt section.
+
+48
+00:02:57,410 --> 00:02:59,940
+It’s also sometimes called function trampoline.
+
+49
+00:02:59,940 --> 00:03:00,940
+Again.
+
+50
+00:03:00,940 --> 00:03:02,560
+A topic for another video.
+
+51
+00:03:02,560 --> 00:03:05,790
+Now at some point we reach some more code.
+
+52
+00:03:05,790 --> 00:03:08,900
+This is now the actual code from the libc
+library.
+
+53
+00:03:08,900 --> 00:03:12,120
+Now press s to step through this huge amount
+of code.
+
+54
+00:03:12,120 --> 00:03:14,240
+I fast forward and cut a bit.
+
+55
+00:03:14,240 --> 00:03:17,010
+There is sooo much stuff in this libc wrapper.
+
+56
+00:03:17,010 --> 00:03:21,430
+But at some point in the end it reaches the
+interesting part.
+
+57
+00:03:21,430 --> 00:03:22,430
+Here it is.
+
+58
+00:03:22,430 --> 00:03:27,760
+It moves 1 into the eax register and then
+comes the syscall instruction.
+
+59
+00:03:27,760 --> 00:03:33,570
+A peak into the intel assembler reference
+tells us, that this is “a Fast call to privilege
+
+60
+00:03:33,570 --> 00:03:35,790
+level 0 system procedures.”
+
+61
+00:03:35,790 --> 00:03:39,200
+and has the opcode 0f 05.
+
+62
+00:03:39,200 --> 00:03:45,790
+It also says “It does so by loading RIP
+from the IA32_LSTAR MSR”.
+
+63
+00:03:45,790 --> 00:03:49,300
+MSR stands for model specific register.
+
+64
+00:03:49,300 --> 00:03:54,610
+So like a jump that set’s RIP to another
+value to continue execution somewhere else,
+
+65
+00:03:54,610 --> 00:03:58,470
+it loads RIP from a model specific register
+(MSR).
+
+66
+00:03:58,470 --> 00:04:04,200
+This address was configured in this special
+register at some point during booting of the
+
+67
+00:04:04,200 --> 00:04:07,510
+system through the WRMSR instruction.
+
+68
+00:04:07,510 --> 00:04:12,540
+But to use this instruction you have to be
+in privilege level 0.
+
+69
+00:04:12,540 --> 00:04:17,150
+So you cannot set this from a simple C program,
+because there you are in user mode, which
+
+70
+00:04:17,150 --> 00:04:19,180
+is privilege level 3.
+
+71
+00:04:19,180 --> 00:04:24,710
+And if you wonder now how you could get into
+level 0 from being level 3, then the answer
+
+72
+00:04:24,710 --> 00:04:27,160
+is, through instructions like syscall.
+
+73
+00:04:27,160 --> 00:04:31,400
+But then you cannot control what will be executed
+when you switch to level 0.
+
+74
+00:04:31,400 --> 00:04:34,280
+Because it will jump to a predefined address.
+
+75
+00:04:34,279 --> 00:04:39,529
+So do you get now what it means to have different
+privilege modes, levels or rings?
+
+76
+00:04:39,530 --> 00:04:44,080
+When you turn on your computer the CPU starts
+in level 0.
+
+77
+00:04:44,080 --> 00:04:50,720
+The kernel then can configure stuff like the
+IA32_LSTAR MSR register with an address through
+
+78
+00:04:50,719 --> 00:04:55,859
+the WRMSR instruction.
+
+79
+00:04:55,860 --> 00:05:00,170
+Then later drops privilege of the CPU to level
+3.
+
+80
+00:05:00,169 --> 00:05:03,149
+Now the hardware is kinda locked down.
+
+81
+00:05:03,150 --> 00:05:06,020
+We cannot reconfigure this register.
+
+82
+00:05:06,020 --> 00:05:07,820
+We cannot reconfigure the hardware.
+
+83
+00:05:07,819 --> 00:05:14,199
+We only can enter level 0 again, through a
+syscall, but we cannot control what will be
+
+84
+00:05:14,199 --> 00:05:17,659
+executed, because that address is fixed.
+
+85
+00:05:17,660 --> 00:05:19,420
+Does it make sense?
+
+86
+00:05:19,419 --> 00:05:20,419
+So aaaanyway...
+
+87
+00:05:20,419 --> 00:05:23,019
+Let’s come back to the syscall invocation.
+
+88
+00:05:23,020 --> 00:05:28,850
+What we do is, we load a number in a register,
+in our case it was 1, and then we syscall
+
+89
+00:05:28,849 --> 00:05:33,489
+to enter privilege level 0 by jumping to a
+fixed address in the kernel.
+
+90
+00:05:33,490 --> 00:05:36,390
+And the kernel takes the number from the register.
+
+91
+00:05:36,389 --> 00:05:38,829
+And it knows which syscall that is.
+
+92
+00:05:38,830 --> 00:05:43,300
+So this nice table here shows us that the
+write syscall has the number 1.
+
+93
+00:05:43,300 --> 00:05:48,850
+So the kernel knows from a table like this,
+what it has to execute.
+
+94
+00:05:48,849 --> 00:05:52,419
+And it’s implemented in the source-code-file
+read_write.c
+
+95
+00:05:52,419 --> 00:05:55,759
+And here it is.
+
+96
+00:05:55,759 --> 00:06:00,019
+So that is what will be executed in the kernel
+when you invoke the write syscall.
+
+97
+00:06:00,020 --> 00:06:05,620
+There is an awesome free book called Linux
+Device Drivers, which goes into great details
+
+98
+00:06:05,620 --> 00:06:07,390
+how the Kernel works.
+
+99
+00:06:07,389 --> 00:06:11,199
+Especially how to write a device driver and
+kernel modules.
+
+100
+00:06:11,199 --> 00:06:16,339
+And in chapter 3 section 7 it reads:
+“The code for read and write in scull needs
+
+101
+00:06:16,340 --> 00:06:21,550
+to copy a whole segment of data to or from
+the user address space.
+
+102
+00:06:21,550 --> 00:06:26,790
+This capability is offered by the following
+kernel functions, which copy an arbitrary
+
+103
+00:06:26,789 --> 00:06:32,019
+array of bytes and sit at the heart of most
+read and write implementations”
+
+104
+00:06:32,020 --> 00:06:36,460
+So first, what does user address space mean.
+
+105
+00:06:36,460 --> 00:06:41,320
+Maybe when you debugged some programs with
+gdb, you wondered how it can be, that every
+
+106
+00:06:41,319 --> 00:06:44,529
+program seems to use the same addresses.
+
+107
+00:06:44,530 --> 00:06:46,420
+Code is always at the same addresses.
+
+108
+00:06:46,419 --> 00:06:48,059
+Stack is always at the same addresses.
+
+109
+00:06:48,059 --> 00:06:49,789
+That doesn’t make sense.
+
+110
+00:06:49,790 --> 00:06:52,470
+How can all programs use use the same addresses
+in memory?
+
+111
+00:06:52,469 --> 00:06:55,549
+Wouldn’t they overwrite each other?
+
+112
+00:06:55,550 --> 00:06:57,570
+This is why we have a MMU.
+
+113
+00:06:57,569 --> 00:06:59,439
+A Memory Management Unit.
+
+114
+00:06:59,439 --> 00:07:04,399
+The kernel sets up the MMU with special CPU
+instructions and configuration registers and
+
+115
+00:07:04,400 --> 00:07:05,570
+so forth.
+
+116
+00:07:05,569 --> 00:07:09,709
+And this tells the MMU how to translate between
+virtual and physical addresses.
+
+117
+00:07:09,710 --> 00:07:16,040
+So when you use the instruction mov eax, [0x08004200]
+in your C program, the MMU will know how to
+
+118
+00:07:16,039 --> 00:07:21,939
+translate this address for a given process
+to an actual physical address in your RAM.
+
+119
+00:07:21,939 --> 00:07:24,369
+So it might request address 0x7f527320.
+
+120
+00:07:24,370 --> 00:07:29,310
+But you don’t have to care about that.
+
+121
+00:07:29,310 --> 00:07:32,370
+The magic happens deep inside the hardware.
+
+122
+00:07:32,369 --> 00:07:37,319
+This allows us to write programs without having
+to think about which addresses are still free.
+
+123
+00:07:37,319 --> 00:07:41,549
+So when you are in the kernel, after you have
+entered it with a syscall, you might want
+
+124
+00:07:41,550 --> 00:07:46,950
+to copy some data from user address space,
+for example to write it somewhere else.
+
+125
+00:07:46,949 --> 00:07:50,559
+To do this you can use the copy_from_user
+function.
+
+126
+00:07:50,559 --> 00:07:54,509
+And I thought it might be an interesting function
+to trace through the kernel source code to
+
+127
+00:07:54,509 --> 00:07:58,859
+get a feeling how the code of an operating
+system looks like.
+
+128
+00:07:58,860 --> 00:08:03,100
+So let’s use the Linux Cross Reference,
+because it allows us to easily search for
+
+129
+00:08:03,099 --> 00:08:04,099
+labels.
+
+130
+00:08:04,099 --> 00:08:08,489
+So let’s start by looking for the function
+copy_from_user.
+
+131
+00:08:08,490 --> 00:08:11,910
+And we get a list with multiple places this
+function is defined.
+
+132
+00:08:11,909 --> 00:08:13,999
+That is so weird.
+
+133
+00:08:14,000 --> 00:08:16,780
+Why are there multiple places for that?
+
+134
+00:08:16,780 --> 00:08:22,270
+Well if you look closely at the file path,
+you will notice that each different CPU architecture
+
+135
+00:08:22,270 --> 00:08:24,150
+has it’s own folder.
+
+136
+00:08:24,150 --> 00:08:27,650
+So you can see here
+ARM, for processors that you can find in your
+
+137
+00:08:27,650 --> 00:08:31,030
+smartphone
+or POWERPC which is used by the Playstation
+
+138
+00:08:31,030 --> 00:08:36,700
+3 or the Nintendo Wii and also x86, which
+is probably the architecture of your computer
+
+139
+00:08:36,700 --> 00:08:38,140
+right now.
+
+140
+00:08:38,140 --> 00:08:40,410
+So the code get’s pretty crazy.
+
+141
+00:08:40,410 --> 00:08:42,020
+And I don’t know a lot about it.
+
+142
+00:08:42,020 --> 00:08:45,710
+But let’s just follow the main functions
+here and ignore the checks and stuff around
+
+143
+00:08:45,710 --> 00:08:46,940
+it.
+
+144
+00:08:46,940 --> 00:08:50,900
+So copy_from_user calls an underscore copy_from_user.
+
+145
+00:08:50,900 --> 00:08:56,940
+That function calls access_ok on the from
+parameter, which is an address the user specified,
+
+146
+00:08:56,940 --> 00:09:01,250
+in our case the address of the string we wanted
+to write.
+
+147
+00:09:01,250 --> 00:09:06,970
+And this checks if this particular process
+is allowed to read from the address.
+
+148
+00:09:06,970 --> 00:09:11,350
+Imagine if the process tries to read some
+secrets from another process.
+
+149
+00:09:11,350 --> 00:09:15,850
+And if everything is fine it calls underscore
+underscore copy_from_user.
+
+150
+00:09:15,850 --> 00:09:20,200
+Uhh… now it seems to split up in either
+32bit or 64bit.
+
+151
+00:09:20,200 --> 00:09:25,070
+And because we have a 64bit ubuntu linux,
+let’s follow that path.
+
+152
+00:09:25,070 --> 00:09:28,940
+This looks like just a wrapper around copy_from_user_nocheck.
+
+153
+00:09:28,940 --> 00:09:32,620
+Indicating that the following functions won’t
+check the access rights again.
+
+154
+00:09:32,620 --> 00:09:34,870
+But luckily the kernel already did that.
+
+155
+00:09:34,870 --> 00:09:39,700
+Ok we follow that and we arrive at a pretty
+big function.
+
+156
+00:09:39,700 --> 00:09:45,080
+So here is a big switch-case statements which
+seems to check the size we want to read from
+
+157
+00:09:45,080 --> 00:09:46,770
+the user space.
+
+158
+00:09:46,770 --> 00:09:50,520
+So let’s say we just wanted to read 1 byte
+from userspace.
+
+159
+00:09:50,520 --> 00:09:53,830
+We would be in this case 1: here.
+
+160
+00:09:53,830 --> 00:09:57,710
+So get_user_asm is a preprocessor macro.
+
+161
+00:09:57,710 --> 00:10:00,810
+This get’s into how a C file is compiled
+in stages.
+
+162
+00:10:00,810 --> 00:10:02,150
+But it’s actually very simple.
+
+163
+00:10:02,150 --> 00:10:05,050
+This statement is just a simple copy and replace.
+
+164
+00:10:05,050 --> 00:10:09,940
+So it means that this code that is defined
+here, is just simply copied at the location
+
+165
+00:10:09,940 --> 00:10:14,830
+it was used earlier, before the compiler starts
+to compile it to machine code.
+
+166
+00:10:14,830 --> 00:10:18,600
+So you can basically just read it like a standard
+C function.
+
+167
+00:10:18,600 --> 00:10:22,670
+And get_user_asm defines some actual CPU instructions.
+
+168
+00:10:22,670 --> 00:10:28,320
+And this move here is the instruction that
+moves data from the user space into a variable
+
+169
+00:10:28,320 --> 00:10:29,380
+here.
+
+170
+00:10:29,380 --> 00:10:32,490
+So itype and rtype are from the parameters
+up here.
+
+171
+00:10:32,490 --> 00:10:34,880
+And they were set to “b” for a single
+byte.
+
+172
+00:10:34,880 --> 00:10:39,690
+And in the way how those preprocessor statements
+work, you just replace this text with b.
+
+173
+00:10:39,690 --> 00:10:44,430
+So the actual instruction would look like
+‘movb %2,%b1’.
+
+174
+00:10:44,430 --> 00:10:53,070
+Eh so this is at&amp;t assembler syntax so it
+means it moves whatever %2 is into %b1.
+
+175
+00:10:53,070 --> 00:10:57,280
+Now this is C inline assembler syntax and
+it refers to the variables that are defined
+
+176
+00:10:57,280 --> 00:10:58,450
+down here.
+
+177
+00:10:58,450 --> 00:11:01,720
+So percentage 2 refers to the third parameter.
+
+178
+00:11:01,720 --> 00:11:03,590
+0, 1, 2.
+
+179
+00:11:03,590 --> 00:11:06,400
+Which is the address we want to move data
+from.
+
+180
+00:11:06,400 --> 00:11:10,250
+And we want to move it into %1, which is x.
+
+181
+00:11:10,250 --> 00:11:15,080
+And that is the location we want to move it
+to.
+
+182
+00:11:15,080 --> 00:11:21,920
+The move is wrapped with STAC and CLAC, which
+stands for set and clear ac register.
+
+183
+00:11:21,920 --> 00:11:25,790
+And it has to do with SMAP, an anti exploitation
+feature.
+
+184
+00:11:25,790 --> 00:11:28,760
+And there are the raw opcodes from that instruction.
+
+185
+00:11:28,760 --> 00:11:34,030
+And below the move we see something with section
+fixup and assembler exception table.
+
+186
+00:11:34,030 --> 00:11:39,270
+That goes into how the kernel handles hardware
+exception.
+
+187
+00:11:39,270 --> 00:11:42,960
+But there is a great documentation I found
+and you can read what it does there exactly:
+
+188
+00:11:42,960 --> 00:11:43,960
+Anyhow.
+
+189
+00:11:43,960 --> 00:11:48,780
+As you can see, there was no code that would
+somehow translate the user supplied virtual
+
+190
+00:11:48,780 --> 00:11:51,310
+address to a real physical address.
+
+191
+00:11:51,310 --> 00:11:53,020
+It just executes a mov.
+
+192
+00:11:53,020 --> 00:11:56,730
+That is because the magic happens somewhere
+else.
+
+193
+00:11:56,730 --> 00:12:01,090
+When the kernel executes this instruction,
+it will cause a page fault, because it tries
+
+194
+00:12:01,090 --> 00:12:03,440
+to access a virtual address.
+
+195
+00:12:03,440 --> 00:12:08,100
+And that is an interrupt, which means the
+CPU will jump to another predefined code location
+
+196
+00:12:08,100 --> 00:12:11,670
+in the kernel where this exception will be
+handled.
+
+197
+00:12:11,670 --> 00:12:16,110
+Pretty similar how the syscall instruction
+made us jump to a predefined address.
+
+198
+00:12:16,110 --> 00:12:20,930
+And in that page fault handler in the kernel,
+all the address magic with the MMU will happen.
+
+199
+00:12:20,930 --> 00:12:25,820
+I will not go into that, because it’s already
+enough information for now.
+
+200
+00:12:25,820 --> 00:12:31,010
+But I hope this random dive into the kernel
+code was interesting and maybe even eye opening.
+
+201
+00:12:31,010 --> 00:12:35,370
+So many smart people worked together on creating
+such a complex and amazing platform.
+
+202
+00:12:35,370 --> 00:12:39,610
+Almost makes me emotional thinking about how
+the media celebrates new iPhone apps, while
+
+203
+00:12:39,610 --> 00:12:41,830
+the real magic happens down here.
+
+204
+00:12:41,830 --> 00:12:44,570
+Don’t worry if you didn’t understand everything.
+
+205
+00:12:44,570 --> 00:12:46,870
+Hell, I even didn’t understand a lot of
+it.
+
+206
+00:12:46,870 --> 00:12:50,750
+But it’s important to just dive into some
+unknown stuff once in a while and get a first
+
+207
+00:12:50,750 --> 00:12:52,280
+glimpse of what is there.
+
+208
+00:12:52,280 --> 00:12:57,250
+And I am sure that at least subconsciously
+you now have a feeling for what it means to
+
+209
+00:12:57,250 --> 00:12:58,250
+have a Kernel.
+
+210
+00:12:58,250 --> 00:13:02,730
+I start to worry a bit that I may forget to
+explain certain things that seem clear to
+
+211
+00:13:02,730 --> 00:13:04,870
+me and that you guys get lost.
+
+212
+00:13:04,870 --> 00:13:10,120
+So please give me feedback on how the first
+couple of videos of the series were for you.
+
+213
+00:13:10,120 --> 00:13:11,590
+And what is still unclear.
+
+214
+00:13:11,590 --> 00:13:14,820
+So I can improve and make content that helps
+as many people as possible.
+
