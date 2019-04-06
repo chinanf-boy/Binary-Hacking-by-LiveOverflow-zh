@@ -1,7 +1,6 @@
 1
 00:00:06,220 --> 00:00:10,400
-In this video we will write the same program
-from the previous part, just in a different
+In this video we will write the same program from the previous part, just in a different
 
 2
 00:00:10,400 --> 00:00:11,560
@@ -9,43 +8,35 @@ language.
 
 3
 00:00:11,559 --> 00:00:17,939
-The C program got compiled by a compiler in
-machine code that can be executed directly.
+The C program got compiled by a compiler in machine code that can be executed directly.
 
 4
 00:00:17,940 --> 00:00:20,750
-Python on the other hand is an interpreted
-language.
+Python on the other hand is an interpreted language.
 
 5
 00:00:20,750 --> 00:00:24,740
-To understand the difference I try to make
-an abstract example.
+To understand the difference I try to make an abstract example.
 
 6
 00:00:24,740 --> 00:00:30,780
-You can imagine a program written in C as
-a machine built for a very specific task.
+You can imagine a program written in C as a machine built for a very specific task.
 
 7
 00:00:30,779 --> 00:00:38,899
-And python itself is such a machine written
-in C. But it’s a special machine ... a robot,
+And python itself is such a machine written in C. But it’s a special machine ... a robot,
 
 8
 00:00:38,900 --> 00:00:43,980
-which is built to interpret different language
-of code - python code.
+which is built to interpret different language of code - python code.
 
 9
 00:00:43,980 --> 00:00:49,740
-So in a trivialized sense, somebody wrote
-C code in a file “python.c”.
+So in a trivialized sense, somebody wrote C code in a file “python.c”.
 
 10
 00:00:49,740 --> 00:00:54,890
-Then used gcc like in the previous video to
-compile this sourcecode into a binary with
+Then used gcc like in the previous video to compile this sourcecode into a binary with
 
 11
 00:00:54,890 --> 00:00:56,870
@@ -53,33 +44,27 @@ the name python.
 
 12
 00:00:56,870 --> 00:01:00,570
-You can see that when you use the tool “file”
-to display file information.
+You can see that when you use the tool “file” to display file information.
 
 13
 00:01:00,570 --> 00:01:07,370
-When you use file on our c matrix program,
-it says it’s an ELF executable.
+When you use file on our c matrix program, it says it’s an ELF executable.
 
 14
 00:01:07,369 --> 00:01:14,249
-And when you do the same for the python program
-it also says that it is an ELF executable.
+And when you do the same for the python program it also says that it is an ELF executable.
 
 15
 00:01:14,250 --> 00:01:17,830
-Now when you execute the “python” program,
-you get an interpreter prompt, where you can
+Now when you execute the “python” program, you get an interpreter prompt, where you can
 
 16
 00:01:17,830 --> 00:01:22,410
-enter text and python will interpret it for
-you.
+enter text and python will interpret it for you.
 
 17
 00:01:22,409 --> 00:01:27,989
-Or just pass it a python script file and it
-will execute it.
+Or just pass it a python script file and it will execute it.
 
 18
 00:01:27,990 --> 00:01:30,670
@@ -87,18 +72,15 @@ I hope that makes sense.
 
 19
 00:01:30,670 --> 00:01:33,300
-So let’s create a new python script called
-matrix.py.
+So let’s create a new python script called matrix.py.
 
 20
 00:01:33,300 --> 00:01:38,470
-We will also open our previous code alongside,to
-compare them.
+We will also open our previous code alongside,to compare them.
 
 21
 00:01:38,470 --> 00:01:43,780
-We can do that with vim by specifying both
-filenames with minus capital O.
+We can do that with vim by specifying both filenames with minus capital O.
 
 22
 00:01:43,780 --> 00:01:48,670
@@ -106,43 +88,35 @@ This tells vim to open the files split vertically.
 
 23
 00:01:48,670 --> 00:01:51,110
-Now check if the cursor is in the correct
-document.
+Now check if the cursor is in the correct document.
 
 24
 00:01:51,110 --> 00:01:57,790
-If not you can use CTRL+W Left or Right to
-switch between the views.
+If not you can use CTRL+W Left or Right to switch between the views.
 
 25
 00:01:57,790 --> 00:02:02,020
-Now enter the insert mode by pressing i and
-let’s get started.
+Now enter the insert mode by pressing i and let’s get started.
 
 26
 00:02:02,020 --> 00:02:04,830
-In python we don’t have to specify a main
-function.
+In python we don’t have to specify a main function.
 
 27
 00:02:04,830 --> 00:02:09,450
-The code will be just executed sequentially
-from the start of the file to the end.
+The code will be just executed sequentially from the start of the file to the end.
 
 28
 00:02:09,450 --> 00:02:15,260
-To access the command-line arguments argv
-we have to import a python module called sys.
+To access the command-line arguments argv we have to import a python module called sys.
 
 29
 00:02:15,260 --> 00:02:21,300
-With print sys.argv we can print the content
-of this variable.
+With print sys.argv we can print the content of this variable.
 
 30
 00:02:21,300 --> 00:02:25,550
-So let’s see how this sys.argv variable
-looks like.
+So let’s see how this sys.argv variable looks like.
 
 31
 00:02:25,550 --> 00:02:28,720
@@ -158,8 +132,7 @@ For example ls.
 
 34
 00:02:34,690 --> 00:02:39,040
-You will see that the editor disappeared into
-the background and it displays the result
+You will see that the editor disappeared into the background and it displays the result
 
 35
 00:02:39,040 --> 00:02:41,070
@@ -167,8 +140,7 @@ of the ls command.
 
 36
 00:02:41,070 --> 00:02:43,990
-So let’s use that to execute our python
-program.
+So let’s use that to execute our python program.
 
 37
 00:02:43,989 --> 00:02:46,649
@@ -176,8 +148,7 @@ Go back by pressing Enter.
 
 38
 00:02:46,650 --> 00:02:52,590
-Colon ! python to start python and as first
-argument we specify the script name which
+Colon ! python to start python and as first argument we specify the script name which
 
 39
 00:02:52,590 --> 00:02:54,080
@@ -185,8 +156,7 @@ is matrix.py.
 
 40
 00:02:54,080 --> 00:03:00,680
-Instead of writing the name you can also just
-use %. Vim will automatically replace the
+Instead of writing the name you can also just use %. Vim will automatically replace the
 
 41
 00:03:00,680 --> 00:03:03,780
@@ -194,8 +164,7 @@ use %. Vim will automatically replace the
 
 42
 00:03:03,780 --> 00:03:06,600
-You can now see that the first argument was
-matrix.py.
+You can now see that the first argument was matrix.py.
 
 43
 00:03:06,599 --> 00:03:09,059
@@ -203,8 +172,7 @@ And that’s all we got.
 
 44
 00:03:09,060 --> 00:03:14,090
-Like I explained in the last video, the arguments
-passed to the program start with the programs
+Like I explained in the last video, the arguments passed to the program start with the programs
 
 45
 00:03:14,090 --> 00:03:15,090
@@ -216,13 +184,11 @@ Now let’s add a few arbitrary arguments.
 
 47
 00:03:17,410 --> 00:03:23,260
-A normal one, one with quotes and spaces and
-some more words.
+A normal one, one with quotes and spaces and some more words.
 
 48
 00:03:23,260 --> 00:03:26,830
-Maybe even with more spaces in between, to
-just see what happens.
+Maybe even with more spaces in between, to just see what happens.
 
 49
 00:03:26,830 --> 00:03:29,420
@@ -230,13 +196,11 @@ There is the output.
 
 50
 00:03:29,420 --> 00:03:34,710
-So the brackets indicate a list in python.
-and the elements are comma separated.
+So the brackets indicate a list in python. and the elements are comma separated.
 
 51
 00:03:34,710 --> 00:03:40,100
-And the list contains many strings starting
-with the filename and the stuff we placed
+And the list contains many strings starting with the filename and the stuff we placed
 
 52
 00:03:40,099 --> 00:03:41,099
@@ -244,13 +208,11 @@ afterwards.
 
 53
 00:03:41,099 --> 00:03:43,409
-Hope that makes command-line arguments a bit
-more clearer.
+Hope that makes command-line arguments a bit more clearer.
 
 54
 00:03:43,410 --> 00:03:49,290
-Ok so to check if we have got two arguments,
-we don’t need a counter of arguments like
+Ok so to check if we have got two arguments, we don’t need a counter of arguments like
 
 55
 00:03:49,290 --> 00:03:50,910
@@ -262,8 +224,7 @@ We can just check if len(sys.argv)==2.
 
 57
 00:03:56,040 --> 00:03:59,160
-Note that python doesn’t use curly braces
-to define context.
+Note that python doesn’t use curly braces to define context.
 
 58
 00:03:59,159 --> 00:04:02,839
@@ -279,13 +240,11 @@ That’s ugly.
 
 61
 00:04:06,690 --> 00:04:10,150
-I prefer everything to be filled with simple
-spaces.
+I prefer everything to be filled with simple spaces.
 
 62
 00:04:10,150 --> 00:04:17,030
-So you can use set expandtab shiftwidth=4
-softtabstop=4.
+So you can use set expandtab shiftwidth=4 softtabstop=4.
 
 63
 00:04:17,030 --> 00:04:19,770
@@ -297,13 +256,11 @@ Now we wan’t to print the first argument.
 
 65
 00:04:22,710 --> 00:04:29,330
-So with print and pythons special format string
-syntax we can do exactly the same like in
+So with print and pythons special format string syntax we can do exactly the same like in
 
 66
 00:04:29,330 --> 00:04:35,340
-C. Inside the string with curley braces we
-can define which following format parameter
+C. Inside the string with curley braces we can define which following format parameter
 
 67
 00:04:35,340 --> 00:04:36,940
@@ -311,8 +268,7 @@ shall be placed here.
 
 68
 00:04:36,940 --> 00:04:40,270
-And we start counting with 0, so here will
-be the first format parameter. and obviosuly
+And we start counting with 0, so here will be the first format parameter. and obviosuly
 
 69
 00:04:40,270 --> 00:04:43,280
@@ -320,8 +276,7 @@ our first format parameter will be sys.argv[1].
 
 70
 00:04:43,280 --> 00:04:50,520
-Then we do the else and to print to standard
-error we have to access stderr directly through
+Then we do the else and to print to standard error we have to access stderr directly through
 
 71
 00:04:50,520 --> 00:04:52,330
@@ -329,18 +284,15 @@ the sys module.
 
 72
 00:04:52,330 --> 00:05:01,650
-So sys.stderr.write and the again Usage curley
-braces 0 to indicate here should be the first
+So sys.stderr.write and the again Usage curley braces 0 to indicate here should be the first
 
 73
 00:05:01,650 --> 00:05:09,380
-format variable. and the first format variable
-is the first element of the argv list.
+format variable. and the first format variable is the first element of the argv list.
 
 74
 00:05:09,380 --> 00:05:13,290
-Note that the simple print doesn’t need
-the backslash n newline at the end.
+Note that the simple print doesn’t need the backslash n newline at the end.
 
 75
 00:05:13,290 --> 00:05:14,860
@@ -348,8 +300,7 @@ but the write needs it.
 
 76
 00:05:14,860 --> 00:05:19,020
-That’s because pythons says that printing
-with a newline at the end is pretty common,
+That’s because pythons says that printing with a newline at the end is pretty common,
 
 77
 00:05:19,020 --> 00:05:22,000
@@ -357,13 +308,11 @@ so it does that automatically for print.
 
 78
 00:05:22,000 --> 00:05:26,880
-but if you use a bit more low level access
-function, then we have to add it ourselves.
+but if you use a bit more low level access function, then we have to add it ourselves.
 
 79
 00:05:26,880 --> 00:05:31,500
-Also that fact that we use “write” to
-output text should peak your curiosity.
+Also that fact that we use “write” to output text should peak your curiosity.
 
 80
 00:05:31,500 --> 00:05:33,530
@@ -375,13 +324,11 @@ Well.
 
 82
 00:05:34,530 --> 00:05:37,500
-Everything is a file as you may remember from
-the linux introduction video.
+Everything is a file as you may remember from the linux introduction video.
 
 83
 00:05:37,500 --> 00:05:41,840
-So keep that in mind when we talk about this
-more.
+So keep that in mind when we talk about this more.
 
 84
 00:05:41,840 --> 00:05:42,840
@@ -397,8 +344,7 @@ save it and quit vim.
 
 87
 00:05:47,300 --> 00:05:56,920
-Make sure to quit two times for both open
-views.
+Make sure to quit two times for both open views.
 
 88
 00:05:56,920 --> 00:05:58,760
@@ -410,8 +356,7 @@ Just like our C program.
 
 90
 00:06:00,940 --> 00:06:04,840
-If you don’t want to type python before
-your python script all the time we can do
+If you don’t want to type python before your python script all the time we can do
 
 91
 00:06:04,840 --> 00:06:06,290
@@ -419,13 +364,11 @@ something about that.
 
 92
 00:06:06,289 --> 00:06:11,039
-Open the script again and create a new line
-above the import.
+Open the script again and create a new line above the import.
 
 93
 00:06:11,039 --> 00:06:14,789
-Remember how you can press o instead of i
-to enter insert mode, which creates a new
+Remember how you can press o instead of i to enter insert mode, which creates a new
 
 94
 00:06:14,789 --> 00:06:17,109
@@ -437,18 +380,15 @@ Guess what happens when you use shift O.
 
 96
 00:06:19,530 --> 00:06:24,050
-It creates a new empty line above your cursor
-and enters insert mode.
+It creates a new empty line above your cursor and enters insert mode.
 
 97
 00:06:24,050 --> 00:06:27,060
-Now add shebang with the path to the python
-binary.
+Now add shebang with the path to the python binary.
 
 98
 00:06:27,060 --> 00:06:30,030
-#!/usr/bin/python
-There is also a nice wikipedia entry about
+#!/usr/bin/python There is also a nice wikipedia entry about
 
 99
 00:06:30,030 --> 00:06:32,790
@@ -456,18 +396,15 @@ shebang, so check that out.
 
 100
 00:06:32,789 --> 00:06:37,419
-This line tells the program loader that this
-is a script that should be executed with python.
+This line tells the program loader that this is a script that should be executed with python.
 
 101
 00:06:37,419 --> 00:06:41,789
-So it basically does python matrix.py for
-us.
+So it basically does python matrix.py for us.
 
 102
 00:06:41,790 --> 00:06:48,300
-Now we can execute it like our C program,
-by using the path to the python script…
+Now we can execute it like our C program, by using the path to the python script…
 
 103
 00:06:48,300 --> 00:06:49,300
@@ -483,18 +420,15 @@ let’s have a look at the permissions.
 
 106
 00:06:52,180 --> 00:06:59,750
-ls -la to display all files along with their
-permissions but also use matrix *. This basically
+ls -la to display all files along with their permissions but also use matrix *. This basically
 
 107
 00:06:59,750 --> 00:07:05,010
-means that it should display all files that
-start with matrix and anything can then follow.
+means that it should display all files that start with matrix and anything can then follow.
 
 108
 00:07:05,010 --> 00:07:10,410
-When we compare our matrix binary with the
-matrix python script we notice that it has
+When we compare our matrix binary with the matrix python script we notice that it has
 
 109
 00:07:10,410 --> 00:07:12,050
@@ -506,38 +440,31 @@ X stands for executable.
 
 111
 00:07:14,389 --> 00:07:19,399
-But our file only has r and w, which stands
-for read and write permissions.
+But our file only has r and w, which stands for read and write permissions.
 
 112
 00:07:19,400 --> 00:07:24,920
-So to be allowed to execute it, we have to
-add the execute permission to that file.
+So to be allowed to execute it, we have to add the execute permission to that file.
 
 113
 00:07:24,919 --> 00:07:31,099
-We can sue chmod for that, which stands for
-change mode bits of a file.
+We can sue chmod for that, which stands for change mode bits of a file.
 
 114
 00:07:31,100 --> 00:07:36,260
-Remember to always read the man page to learn
-more about the commands.
+Remember to always read the man page to learn more about the commands.
 
 115
 00:07:36,259 --> 00:07:41,789
-So we can use chmod +x to add execution rights
-and the filename.
+So we can use chmod +x to add execution rights and the filename.
 
 116
 00:07:41,790 --> 00:07:51,170
-When we now list the files we see that it
-now has execution permissions.
+When we now list the files we see that it now has execution permissions.
 
 117
 00:07:51,169 --> 00:07:56,409
-I mentioned this in the very first video briefly,
-but maybe now is a good moment to talk about
+I mentioned this in the very first video briefly, but maybe now is a good moment to talk about
 
 118
 00:07:56,410 --> 00:07:57,890
@@ -549,13 +476,11 @@ Tab completion is extremely handy.
 
 120
 00:08:00,210 --> 00:08:03,810
-For example when I start typing the current
-path with dot slash.
+For example when I start typing the current path with dot slash.
 
 121
 00:08:03,810 --> 00:08:08,560
-And hit tab twice, it shows me all possible
-files that could follow.
+And hit tab twice, it shows me all possible files that could follow.
 
 122
 00:08:08,560 --> 00:08:10,020
@@ -563,18 +488,15 @@ So we want matrix.
 
 123
 00:08:10,020 --> 00:08:13,750
-Let’s just type one letter m and hit tab
-again.
+Let’s just type one letter m and hit tab again.
 
 124
 00:08:13,750 --> 00:08:16,860
-Now it will have automatically filled it in
-as matrix.
+Now it will have automatically filled it in as matrix.
 
 125
 00:08:16,860 --> 00:08:20,690
-Because there are multiple matrix files it
-has stopped at the part where they start to
+Because there are multiple matrix files it has stopped at the part where they start to
 
 126
 00:08:20,690 --> 00:08:21,950
@@ -586,8 +508,7 @@ Double Tab to display all options.
 
 128
 00:08:23,750 --> 00:08:29,960
-Now add a . which makes the only option left
-matrix.py.
+Now add a . which makes the only option left matrix.py.
 
 129
 00:08:29,960 --> 00:08:33,060
@@ -603,8 +524,7 @@ Almost anything I program I write in python.
 
 132
 00:08:38,360 --> 00:08:42,520
-So most of my examples will be written in
-python and it’s also a language I highly
+So most of my examples will be written in python and it’s also a language I highly
 
 133
 00:08:42,519 --> 00:08:44,729
@@ -612,21 +532,17 @@ recommend to learn in general.
 
 134
 00:08:44,730 --> 00:08:51,350
-So maybe checkout codecademy python courses
-or just google yourself.
+So maybe checkout codecademy python courses or just google yourself.
 
 135
 00:08:51,350 --> 00:08:54,260
-Before we finish, let’s keep our system
-updated.
+Before we finish, let’s keep our system updated.
 
 136
 00:08:54,260 --> 00:08:57,970
-Type sudo apt-get update, to update the package
-list from the repositories.
+Type sudo apt-get update, to update the package list from the repositories.
 
 137
 00:08:57,970 --> 00:09:20,020
-And the apt-get upgrade, to install new versions
-for software you have installed.
+And the apt-get upgrade, to install new versions for software you have installed.
 

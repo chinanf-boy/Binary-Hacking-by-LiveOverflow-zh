@@ -1,12 +1,10 @@
 1
 00:00:06,910 --> 00:00:12,780
-In this video we make another excursion into
-reversing C programs. To be specific, we will
+In this video we make another excursion into reversing C programs. To be specific, we will
 
 2
 00:00:12,780 --> 00:00:18,580
-talk about the Global Offset Table (short
-GOT) and the Process Linkage Table (short
+talk about the Global Offset Table (short GOT) and the Process Linkage Table (short
 
 3
 00:00:18,580 --> 00:00:19,580
@@ -14,243 +12,195 @@ PLT).
 
 4
 00:00:19,580 --> 00:00:24,660
-Let’s start by creating a very simple C
-program that just calls a couple of libc functions.
+Let’s start by creating a very simple C program that just calls a couple of libc functions.
 
 5
 00:00:24,660 --> 00:00:30,120
-So I just write two printfs and an exit. These
-two functions are clearly external functions,
+So I just write two printfs and an exit. These two functions are clearly external functions,
 
 6
 00:00:30,119 --> 00:00:35,799
-I haven’t defined them myself. And they
-come from libc. When I compile this binary
+I haven’t defined them myself. And they come from libc. When I compile this binary
 
 7
 00:00:35,800 --> 00:00:42,850
-with gcc libc will be dynamically linked to
-this binary. Which means that libc is not
+with gcc libc will be dynamically linked to this binary. Which means that libc is not
 
 8
 00:00:42,850 --> 00:00:48,710
-included in the program. With `ldd` we can
-see the dynamic libraries referenced from
+included in the program. With `ldd` we can see the dynamic libraries referenced from
 
 9
 00:00:48,710 --> 00:00:54,560
-this binary and it shows that it wants libc,
-and it also displays the path on my system
+this binary and it shows that it wants libc, and it also displays the path on my system
 
 10
 00:00:54,559 --> 00:01:00,449
-where my libc binary is. This is great because
-then the program can be much smaller, and
+where my libc binary is. This is great because then the program can be much smaller, and
 
 11
 00:01:00,449 --> 00:01:04,789
-libc can receive updates without having to
-recompile my binnary.
+libc can receive updates without having to recompile my binnary.
 
 12
 00:01:04,790 --> 00:01:10,860
-But this also means, that the addresses in
-libc might be different for each version.
+But this also means, that the addresses in libc might be different for each version.
 
 13
 00:01:10,860 --> 00:01:16,450
-So how can I compile a binary to assembler,
-when I have to know the exact address so I
+So how can I compile a binary to assembler, when I have to know the exact address so I
 
 14
 00:01:16,450 --> 00:01:22,270
-can create a call instruction? Well this is
-where the PLT and GOT comes into play.
+can create a call instruction? Well this is where the PLT and GOT comes into play.
 
 15
 00:01:22,270 --> 00:01:28,000
-Let’s open this binary in hopper disassembler
-and let’s have a look at the main function.
+Let’s open this binary in hopper disassembler and let’s have a look at the main function.
 
 16
 00:01:28,000 --> 00:01:32,940
-So first thing we notice is, where the hell
-are our printfs()? Why are there puts() calls?
+So first thing we notice is, where the hell are our printfs()? Why are there puts() calls?
 
 17
 00:01:32,940 --> 00:01:37,150
-Well the disassembler saw that we specified
-a constant string, nota dynamic format string,
+Well the disassembler saw that we specified a constant string, nota dynamic format string,
 
 18
 00:01:37,150 --> 00:01:42,270
-thus decided to replace the printf with puts.
-But anyway, we have here our three function
+thus decided to replace the printf with puts. But anyway, we have here our three function
 
 19
 00:01:42,270 --> 00:01:47,340
-calls and hopper decided to prefix the name
-of the call location with a j, probably for
+calls and hopper decided to prefix the name of the call location with a j, probably for
 
 20
 00:01:47,340 --> 00:01:51,160
-jump. Not sure.
-So if we follow this call, we noticed that
+jump. Not sure. So if we follow this call, we noticed that
 
 21
 00:01:51,160 --> 00:01:58,060
-we don’t end up in libc puts. We are still
-in our binary. Also how would we, because
+we don’t end up in libc puts. We are still in our binary. Also how would we, because
 
 22
 00:01:58,060 --> 00:02:05,830
-libc is not included in this binary. We landed
-in the plt section. The process linkage table.
+libc is not included in this binary. We landed in the plt section. The process linkage table.
 
 23
 00:02:05,830 --> 00:02:13,090
-And the call to this here is immediatly followed
-up with a jump to an address stored at a nother
+And the call to this here is immediatly followed up with a jump to an address stored at a nother
 
 24
 00:02:13,090 --> 00:02:20,490
-location. And this location got the name puts
-@ GOT. So let’s go there.
+location. And this location got the name puts @ GOT. So let’s go there.
 
 25
 00:02:20,490 --> 00:02:26,940
-Now we are in a segment called got. The global
-offset table. And the jump will jump to whatever
+Now we are in a segment called got. The global offset table. And the jump will jump to whatever
 
 26
 00:02:26,940 --> 00:02:32,420
-address is stored here. And at the moment
-the address that is stored here is referencing
+address is stored here. And at the moment the address that is stored here is referencing
 
 27
 00:02:32,420 --> 00:02:38,670
-an external symbol. So…
-So what are they doing here?
+an external symbol. So… So what are they doing here?
 
 28
 00:02:38,670 --> 00:02:43,780
-During compilation we don’t know the address
-of puts, or exit. So we just create a function
+During compilation we don’t know the address of puts, or exit. So we just create a function
 
 29
 00:02:43,780 --> 00:02:50,930
-trampoline. We call a location we know where
-it is, the PLT section. Which contains a jump
+trampoline. We call a location we know where it is, the PLT section. Which contains a jump
 
 30
 00:02:50,930 --> 00:02:56,430
-with the jump location referenced from this
-list (or table if you want). So all we have
+with the jump location referenced from this list (or table if you want). So all we have
 
 31
 00:02:56,430 --> 00:03:02,250
-to do, to be able to use external functions
-from a library, is somehow write the real
+to do, to be able to use external functions from a library, is somehow write the real
 
 32
 00:03:02,250 --> 00:03:06,940
-address of the libc function in this table.
-And this is what is happening when we execute
+address of the libc function in this table. And this is what is happening when we execute
 
 33
 00:03:06,940 --> 00:03:12,840
-the binary. As you know by now, an ELF binary
-is not just plain assembler code. Before our
+the binary. As you know by now, an ELF binary is not just plain assembler code. Before our
 
 34
 00:03:12,840 --> 00:03:20,060
-codes get executed, the complicated ELF format
-is parsed and based on that the process is
+codes get executed, the complicated ELF format is parsed and based on that the process is
 
 35
 00:03:20,060 --> 00:03:25,360
-set up by the kernel. And during that time
-references like that might get resolved.
+set up by the kernel. And during that time references like that might get resolved.
 
 36
 00:03:25,360 --> 00:03:30,500
-So let’s debug this binary. Let’s use
-hopper this time. First we set a breakpoint
+So let’s debug this binary. Let’s use hopper this time. First we set a breakpoint
 
 37
 00:03:30,500 --> 00:03:37,540
-in main by clicking the red column in the
-right row. Then we open the debugger interface
+in main by clicking the red column in the right row. Then we open the debugger interface
 
 38
 00:03:37,540 --> 00:03:43,630
-with teh buttom on the top right. So let’s
-step forward until we follow the call to puts().
+with teh buttom on the top right. So let’s step forward until we follow the call to puts().
 
 39
 00:03:43,630 --> 00:03:49,860
-As expected we arrive in the PLT section and
-are just about to jump to the address referenced
+As expected we arrive in the PLT section and are just about to jump to the address referenced
 
 40
 00:03:49,860 --> 00:03:55,730
-in the global offset table. Let’s step further
-and let’s see what happens. Oh… nope.
+in the global offset table. Let’s step further and let’s see what happens. Oh… nope.
 
 41
 00:03:55,730 --> 00:04:00,860
-We don’t go to puts in libc. Somehow we
-ended up right after the jump and push a value
+We don’t go to puts in libc. Somehow we ended up right after the jump and push a value
 
 42
 00:04:00,860 --> 00:04:04,840
-now on the stack.
-As you can see every PLT entry, also for our
+now on the stack. As you can see every PLT entry, also for our
 
 43
 00:04:04,840 --> 00:04:09,380
-exit() function, we have this push of a number
-and then a jump to this address up here. And
+exit() function, we have this push of a number and then a jump to this address up here. And
 
 44
 00:04:09,381 --> 00:04:14,541
-when we follow this jump we end up in a function
-called _dl_runtime_resolve.
+when we follow this jump we end up in a function called _dl_runtime_resolve.
 
 45
 00:04:14,540 --> 00:04:18,530
-We can use the proc file system to have a
-look at the memory maps of this process and
+We can use the proc file system to have a look at the memory maps of this process and
 
 46
 00:04:18,530 --> 00:04:25,100
-we can see that the address from _dl_runtime_resolve
-belongs to this ld.so binary. The man page
+we can see that the address from _dl_runtime_resolve belongs to this ld.so binary. The man page
 
 47
 00:04:25,100 --> 00:04:31,180
-for `ld.so` tells us that this is the dynamic
-linker/loader. So this library helps us to
+for `ld.so` tells us that this is the dynamic linker/loader. So this library helps us to
 
 48
 00:04:31,180 --> 00:04:36,310
-set upt the external references to libc.
-This function does magic. No idea what it
+set upt the external references to libc. This function does magic. No idea what it
 
 49
 00:04:36,310 --> 00:04:42,020
-does in detail, but it will find the address
-of the puts() function in libc and updates
+does in detail, but it will find the address of the puts() function in libc and updates
 
 50
 00:04:42,020 --> 00:04:48,780
-the GOT table and also executes puts.
-Now the second time we want to execute puts(),
+the GOT table and also executes puts. Now the second time we want to execute puts(),
 
 51
 00:04:48,780 --> 00:04:54,350
-the GOT got updated and when we jump to the
-address stored in the global offset table
+the GOT got updated and when we jump to the address stored in the global offset table
 
 52
 00:04:54,350 --> 00:04:58,460
@@ -258,8 +208,7 @@ we end up in puts() from libc.
 
 53
 00:04:58,460 --> 00:05:04,640
-This Global offset table is very very useful
-when writing exploits, because there are a
+This Global offset table is very very useful when writing exploits, because there are a
 
 54
 00:05:04,639 --> 00:05:06,739
@@ -267,18 +216,15 @@ couple of things you can do with it.
 
 55
 00:05:06,740 --> 00:05:12,600
-First instance, we have an arbitrary write.
-We can write a value, we want, anywhere in
+First instance, we have an arbitrary write. We can write a value, we want, anywhere in
 
 56
 00:05:12,600 --> 00:05:18,050
-memory. So you can simply overwrite the address
-in the global offset table for a certain function.
+memory. So you can simply overwrite the address in the global offset table for a certain function.
 
 57
 00:05:18,050 --> 00:05:22,550
-And the next time this function is called,
-the code will be redirected to whatever you
+And the next time this function is called, the code will be redirected to whatever you
 
 58
 00:05:22,550 --> 00:05:25,560
@@ -286,78 +232,63 @@ entered in the global offset table.
 
 59
 00:05:25,560 --> 00:05:30,410
-Let’s say you have a memory leak, for example
-through a format string exploit like from
+Let’s say you have a memory leak, for example through a format string exploit like from
 
 60
 00:05:30,410 --> 00:05:35,890
-the previous video. And the binary doesn’t
-use ASLR. Well, the system itself can still
+the previous video. And the binary doesn’t use ASLR. Well, the system itself can still
 
 61
 00:05:35,889 --> 00:05:42,139
-have ASLR enabled thus the location of libc
-will always be random. But the address of
+have ASLR enabled thus the location of libc will always be random. But the address of
 
 62
 00:05:42,139 --> 00:05:47,439
-the global offset table in your binary is
-always fixed. So when you can read from an
+the global offset table in your binary is always fixed. So when you can read from an
 
 63
 00:05:47,440 --> 00:05:53,150
-address you control, you can read an entry
-of the global offset table, which is an address
+address you control, you can read an entry of the global offset table, which is an address
 
 64
 00:05:53,150 --> 00:05:58,650
-in libc. Which you can then use to calculate
-the offsets to other locations of libc. Which
+in libc. Which you can then use to calculate the offsets to other locations of libc. Which
 
 65
 00:05:58,651 --> 00:06:02,561
-is useful if you have to find rop gadgets
-or you want to do a return-to-libc.
+is useful if you have to find rop gadgets or you want to do a return-to-libc.
 
 66
 00:06:02,560 --> 00:06:03,560
-And even if your binary uses ASLR, if you
-are able to leak an address of your binary
+And even if your binary uses ASLR, if you are able to leak an address of your binary
 
 67
 00:06:03,560 --> 00:06:04,560
-to defeat its address randomization, you can
-then calculate the offset to the global offset
+to defeat its address randomization, you can then calculate the offset to the global offset
 
 68
 00:06:04,560 --> 00:06:05,560
-table and then leak an address of libc that
-way.
+table and then leak an address of libc that way.
 
 69
 00:06:05,560 --> 00:06:08,840
-Sometimes you even have a buffer overflow
-or an arbitrary write in a function, but the
+Sometimes you even have a buffer overflow or an arbitrary write in a function, but the
 
 70
 00:06:08,840 --> 00:06:14,840
-function itself never returns, because it
-calls exit(), or loops forever, thus overwriting
+function itself never returns, because it calls exit(), or loops forever, thus overwriting
 
 71
 00:06:14,840 --> 00:06:20,840
-the return pointer on the stack doesn’t
-help to redirect code execution. That’s
+the return pointer on the stack doesn’t help to redirect code execution. That’s
 
 72
 00:06:20,840 --> 00:06:25,950
-exactly the challenge in format level 4 of
-exploit-exercises.com. We cannot overwrite
+exactly the challenge in format level 4 of exploit-exercises.com. We cannot overwrite
 
 73
 00:06:25,949 --> 00:06:37,139
-the return address on the stack, so we have
-to rely on a different technique to gain control
+the return address on the stack, so we have to rely on a different technique to gain control
 
 74
 00:06:37,139 --> 00:06:38,869
@@ -365,8 +296,7 @@ over the program execution.
 
 75
 00:06:38,870 --> 00:06:44,600
-See you next time when we use a format string
-vulnerability to overwrite an entry on the
+See you next time when we use a format string vulnerability to overwrite an entry on the
 
 76
 00:06:44,600 --> 00:06:46,470

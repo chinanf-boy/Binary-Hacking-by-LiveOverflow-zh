@@ -4,8 +4,7 @@ Now I want to introduce how a CPU works.
 
 2
 00:00:08,920 --> 00:00:13,430
-I hope I can take away any fear of assembler
-you might have, because it’s actually pretty
+I hope I can take away any fear of assembler you might have, because it’s actually pretty
 
 3
 00:00:13,430 --> 00:00:14,430
@@ -13,13 +12,11 @@ simple.
 
 4
 00:00:14,430 --> 00:00:20,590
-And in the next video you will be able to
-use this crack your first small program.
+And in the next video you will be able to use this crack your first small program.
 
 5
 00:00:20,590 --> 00:00:25,190
-First I had a long script where I basically
-tried to develop the concepts of a CPU step
+First I had a long script where I basically tried to develop the concepts of a CPU step
 
 6
 00:00:25,190 --> 00:00:26,190
@@ -27,23 +24,19 @@ by step.
 
 7
 00:00:26,190 --> 00:00:29,700
-But I realised it’s just too long and I
-think I didn’t get the point across.
+But I realised it’s just too long and I think I didn’t get the point across.
 
 8
 00:00:29,701 --> 00:00:34,641
-But then I came accross this hacking game
-by starfighters.io - at the time of creating
+But then I came accross this hacking game by starfighters.io - at the time of creating
 
 9
 00:00:34,640 --> 00:00:37,050
-this video, starfighters.io was not available
-yet.
+this video, starfighters.io was not available yet.
 
 10
 00:00:37,050 --> 00:00:39,710
-But when you see this here it should be up
-and running.
+But when you see this here it should be up and running.
 
 11
 00:00:39,710 --> 00:00:41,130
@@ -51,28 +44,23 @@ So go check that out.
 
 12
 00:00:41,130 --> 00:00:47,480
-And the creators of that site have uploaded
-an article as a preview of the game.
+And the creators of that site have uploaded an article as a preview of the game.
 
 13
 00:00:47,480 --> 00:00:53,590
-That preview is a fictional report of reversing
-a hand-held device used for financial trading.
+That preview is a fictional report of reversing a hand-held device used for financial trading.
 
 14
 00:00:53,589 --> 00:00:58,299
-And even though it’s fictional, it’s not
-far away from how it would look like in reality.
+And even though it’s fictional, it’s not far away from how it would look like in reality.
 
 15
 00:00:58,300 --> 00:01:01,170
-That’s why I strongly recommend you to read
-it.
+That’s why I strongly recommend you to read it.
 
 16
 00:01:01,170 --> 00:01:05,560
-But I will now take just the part where they
-introduce programming assembly and talk a
+But I will now take just the part where they introduce programming assembly and talk a
 
 17
 00:01:05,561 --> 00:01:07,301
@@ -80,13 +68,11 @@ little bit more around it.
 
 18
 00:01:07,300 --> 00:01:10,680
-And then I hope you will start to understand
-how a CPU works.
+And then I hope you will start to understand how a CPU works.
 
 19
 00:01:10,680 --> 00:01:16,560
-A CPU has amazingly simple concepts that can
-be used to solve very complex tasks.
+A CPU has amazingly simple concepts that can be used to solve very complex tasks.
 
 20
 00:01:16,560 --> 00:01:18,060
@@ -94,13 +80,11 @@ It’s pretty crazy.
 
 21
 00:01:18,060 --> 00:01:21,840
-I hope you realise that by the end of this
-video.
+I hope you realise that by the end of this video.
 
 22
 00:01:21,840 --> 00:01:26,700
-So Imagine just a sheet of paper, where you
-write instructions from the top to the bottom.
+So Imagine just a sheet of paper, where you write instructions from the top to the bottom.
 
 23
 00:01:26,700 --> 00:01:29,800
@@ -108,13 +92,11 @@ This is your memory like the RAM in your computer.
 
 24
 00:01:29,799 --> 00:01:36,259
-And each line on that paper has a number assigned,
-just like a location in memory has an address.
+And each line on that paper has a number assigned, just like a location in memory has an address.
 
 25
 00:01:36,259 --> 00:01:41,179
-So instead of line 5 on a paper, in memory
-it would be something like address in hex
+So instead of line 5 on a paper, in memory it would be something like address in hex
 
 26
 00:01:41,180 --> 00:01:42,730
@@ -122,8 +104,7 @@ it would be something like address in hex
 
 27
 00:01:42,730 --> 00:01:48,720
-So that paper, or you know, your memory contains
-the assembly code.
+So that paper, or you know, your memory contains the assembly code.
 
 28
 00:01:48,719 --> 00:01:52,249
@@ -131,8 +112,7 @@ But what can assembly code do?
 
 29
 00:01:52,250 --> 00:01:56,950
-So first of all, you're given 8-32 global
-variables of fixed size to work with, and
+So first of all, you're given 8-32 global variables of fixed size to work with, and
 
 30
 00:01:56,950 --> 00:01:59,560
@@ -140,13 +120,11 @@ they are called ‘registers’.
 
 31
 00:01:59,560 --> 00:02:03,120
-So your CPU, depending on your architecture
-has a number of those registers.
+So your CPU, depending on your architecture has a number of those registers.
 
 32
 00:02:03,121 --> 00:02:04,121
-So for example the 64bit intel CPU has like
-16, 17, maybe more?
+So for example the 64bit intel CPU has like 16, 17, maybe more?
 
 33
 00:02:04,121 --> 00:02:05,121
@@ -154,8 +132,7 @@ Depends a little bit on how you count.
 
 34
 00:02:05,121 --> 00:02:06,121
-But generally that’s the amount of registers
-that you mostly see or use.
+But generally that’s the amount of registers that you mostly see or use.
 
 35
 00:02:06,121 --> 00:02:07,121
@@ -163,18 +140,15 @@ Anyway.
 
 36
 00:02:07,121 --> 00:02:08,551
-They call those registers ‘global variables’,
-and that is what they are.
+They call those registers ‘global variables’, and that is what they are.
 
 37
 00:02:08,550 --> 00:02:13,370
-Just like in your C or python programming
-you can use them like variables.
+Just like in your C or python programming you can use them like variables.
 
 38
 00:02:13,370 --> 00:02:19,430
-Store a value in them and perform some arithmetics
-on them like adding or multiplying.
+Store a value in them and perform some arithmetics on them like adding or multiplying.
 
 39
 00:02:19,430 --> 00:02:21,790
@@ -190,13 +164,11 @@ And in a 64bit machine, they have 64bits.
 
 42
 00:02:28,349 --> 00:02:32,759
-So this is the biggest number you can store
-in one of those registers.
+So this is the biggest number you can store in one of those registers.
 
 43
 00:02:32,760 --> 00:02:36,930
-And when you want to have bigger numbers,
-you obviously have to write code to split
+And when you want to have bigger numbers, you obviously have to write code to split
 
 44
 00:02:36,930 --> 00:02:40,780
@@ -208,8 +180,7 @@ And some of those registers are special registers.
 
 46
 00:02:43,599 --> 00:02:48,259
-The most important is the "Program
-Counter", which tells the CPU which instruction
+The most important is the "Program Counter", which tells the CPU which instruction
 
 47
 00:02:48,260 --> 00:02:50,480
@@ -217,13 +188,11 @@ we're executing next.
 
 48
 00:02:50,480 --> 00:02:54,840
-Every time we execute an instruction, we advance
-the program counter.
+Every time we execute an instruction, we advance the program counter.
 
 49
 00:02:54,840 --> 00:03:00,740
-This register is often called PC, meaning
-Program Counter, but on our intel x86 architecture
+This register is often called PC, meaning Program Counter, but on our intel x86 architecture
 
 50
 00:03:00,739 --> 00:03:03,599
@@ -235,18 +204,15 @@ IP.
 
 52
 00:03:04,599 --> 00:03:10,499
-Or EIP, or RIP - depending on 16bit, 32bit
-or 64bit mode.
+Or EIP, or RIP - depending on 16bit, 32bit or 64bit mode.
 
 53
 00:03:10,500 --> 00:03:15,130
-So when you look at your paper with instructions
-in each line, the instruction pointer register
+So when you look at your paper with instructions in each line, the instruction pointer register
 
 54
 00:03:15,129 --> 00:03:18,829
-will have the number of the line that will
-be executed next.
+will have the number of the line that will be executed next.
 
 55
 00:03:18,830 --> 00:03:21,670
@@ -259,8 +225,7 @@ So the instruction pointer points to line
 
 57
 00:03:26,310 --> 00:03:30,510
-And when it has executed that instruction
-it will be increased by one, to move it to
+And when it has executed that instruction it will be increased by one, to move it to
 
 58
 00:03:30,510 --> 00:03:32,190
@@ -268,8 +233,7 @@ the next line.
 
 59
 00:03:32,190 --> 00:03:37,050
-Virtually all computation is expressed in
-terms of simple operations on registers.
+Virtually all computation is expressed in terms of simple operations on registers.
 
 60
 00:03:37,049 --> 00:03:39,219
@@ -277,8 +241,7 @@ Let’s do an example.
 
 61
 00:03:39,220 --> 00:03:42,820
-In x86 assembler you can move a number into
-a register.
+In x86 assembler you can move a number into a register.
 
 62
 00:03:42,819 --> 00:03:45,229
@@ -308,28 +271,23 @@ So ‘mov ebx, 8’.
 
 68
 00:04:00,680 --> 00:04:05,780
-And then you can subtract those to with ‘sub
-eax, ebx’.
+And then you can subtract those to with ‘sub eax, ebx’.
 
 69
 00:04:05,780 --> 00:04:12,130
-This means that ebx is subtracted from eax
-and the result is stored in eax.
+This means that ebx is subtracted from eax and the result is stored in eax.
 
 70
 00:04:12,129 --> 00:04:16,069
-But Real programs need many more than 32 1-byte
-variables to work with.
+But Real programs need many more than 32 1-byte variables to work with.
 
 71
 00:04:16,070 --> 00:04:17,070
-And what doesn't fit in registers lives in
-memory.
+And what doesn't fit in registers lives in memory.
 
 72
 00:04:17,070 --> 00:04:22,270
-In our case of x86 architecture that would
-be more than 16 registers with 64bit, which
+In our case of x86 architecture that would be more than 16 registers with 64bit, which
 
 73
 00:04:22,271 --> 00:04:23,771
@@ -337,13 +295,11 @@ is 8-byte.
 
 74
 00:04:23,770 --> 00:04:26,710
-Imagine to write a game like Super Mario in
-assembly.
+Imagine to write a game like Super Mario in assembly.
 
 75
 00:04:26,710 --> 00:04:31,850
-You would have to store marios x-/y-position,
-the lives, the enemies, the coins.
+You would have to store marios x-/y-position, the lives, the enemies, the coins.
 
 76
 00:04:31,850 --> 00:04:34,730
@@ -351,18 +307,15 @@ You just need more than 16 variables.
 
 77
 00:04:34,729 --> 00:04:39,739
-And when you want to collect more than 32bit
-worth of coins, you need more space.
+And when you want to collect more than 32bit worth of coins, you need more space.
 
 78
 00:04:39,740 --> 00:04:43,470
-Next point is, what doesn't fit in registers
-lives in memory.
+Next point is, what doesn't fit in registers lives in memory.
 
 79
 00:04:43,470 --> 00:04:47,530
-You can just use other parts of the paper
-where there is no assembly code to store more
+You can just use other parts of the paper where there is no assembly code to store more
 
 80
 00:04:47,530 --> 00:04:48,530
@@ -374,8 +327,7 @@ Makes sense, right?
 
 82
 00:04:50,090 --> 00:04:54,770
-Memory is accessed either with loads and stores
-at addresses, as if it were a big array, or
+Memory is accessed either with loads and stores at addresses, as if it were a big array, or
 
 83
 00:04:54,770 --> 00:04:57,690
@@ -383,13 +335,11 @@ through PUSH and POP operations on a stack.
 
 84
 00:04:57,690 --> 00:05:02,090
-So the load and store instructions are called
-move in x86 assembler.
+So the load and store instructions are called move in x86 assembler.
 
 85
 00:05:02,090 --> 00:05:06,900
-So we can move values from a memory address
-into a register, and we can move values from
+So we can move values from a memory address into a register, and we can move values from
 
 86
 00:05:06,900 --> 00:05:08,210
@@ -401,8 +351,7 @@ For example ‘mov eax, [0x4005db]’.
 
 88
 00:05:09,210 --> 00:05:10,260
-There are different syntax how you can write
-assembler.
+There are different syntax how you can write assembler.
 
 89
 00:05:10,259 --> 00:05:12,769
@@ -410,13 +359,11 @@ I like intel assembler syntax the most.
 
 90
 00:05:12,770 --> 00:05:16,490
-So in this case the brackets are like brackets
-from an array or list.
+So in this case the brackets are like brackets from an array or list.
 
 91
 00:05:16,490 --> 00:05:22,640
-So for example in python to access a certain
-value in a list you would write ‘my_list[5]’
+So for example in python to access a certain value in a list you would write ‘my_list[5]’
 
 92
 00:05:22,639 --> 00:05:25,339
@@ -424,8 +371,7 @@ to get the element at index 5.
 
 93
 00:05:25,340 --> 00:05:30,000
-So we just do basically the same, just with
-a very big number 0x4005db, because our RAM
+So we just do basically the same, just with a very big number 0x4005db, because our RAM
 
 94
 00:05:30,000 --> 00:05:31,920
@@ -433,13 +379,11 @@ is very big.
 
 95
 00:05:31,919 --> 00:05:35,479
-Also they talk about push and pop operations
-on a stack.
+Also they talk about push and pop operations on a stack.
 
 96
 00:05:35,479 --> 00:05:39,379
-The stack is nothing else than just an area
-at the bottom of the memory.
+The stack is nothing else than just an area at the bottom of the memory.
 
 97
 00:05:39,380 --> 00:05:41,670
@@ -447,8 +391,7 @@ So like at the bottom of our paper.
 
 98
 00:05:41,669 --> 00:05:47,519
-And then you have a special register that
-always points at the top of the stack.
+And then you have a special register that always points at the top of the stack.
 
 99
 00:05:47,520 --> 00:05:49,640
@@ -468,23 +411,19 @@ It’s special like the instruction pointer.
 
 103
 00:05:53,160 --> 00:05:58,910
-And when you push a new value on top of the
-stack, for example `push 5`, the stack pointer
+And when you push a new value on top of the stack, for example `push 5`, the stack pointer
 
 104
 00:05:58,910 --> 00:06:04,580
-will be incremented, pointing to the next
-address and the value will be placed there.
+will be incremented, pointing to the next address and the value will be placed there.
 
 105
 00:06:04,580 --> 00:06:09,940
-And when you do `pop eax`, the value at the
-address of the stack pointer will be saved
+And when you do `pop eax`, the value at the address of the stack pointer will be saved
 
 106
 00:06:09,940 --> 00:06:14,260
-in the eax register, and the stack pointer
-will be decremented.
+in the eax register, and the stack pointer will be decremented.
 
 107
 00:06:14,259 --> 00:06:16,589
@@ -508,13 +447,11 @@ so the stack grows downwards.
 
 112
 00:06:23,460 --> 00:06:27,210
-Meaning it starts from the highest address
-and when we push a value we don’t increment
+Meaning it starts from the highest address and when we push a value we don’t increment
 
 113
 00:06:27,210 --> 00:06:31,420
-the stack pointer, we decrement it. and with
-pop vice-versa.
+the stack pointer, we decrement it. and with pop vice-versa.
 
 114
 00:06:31,419 --> 00:06:32,439
@@ -522,18 +459,15 @@ But doesn’t really matter.
 
 115
 00:06:32,440 --> 00:06:38,860
-Just imagine literally a stack, where you
-put something on top, or take something away.
+Just imagine literally a stack, where you put something on top, or take something away.
 
 116
 00:06:38,860 --> 00:06:43,980
-Memory is to an assembly program what the
-disk is to a Ruby or Python program: you pull
+Memory is to an assembly program what the disk is to a Ruby or Python program: you pull
 
 117
 00:06:43,979 --> 00:06:48,199
-things out of memory into variables, do things
-with them, and eventually put them back into
+things out of memory into variables, do things with them, and eventually put them back into
 
 118
 00:06:48,199 --> 00:06:49,799
@@ -545,18 +479,15 @@ Now when we talk about efficiency and speed.
 
 120
 00:06:51,930 --> 00:06:55,070
-Then calculations on registers are super super
-fast.
+Then calculations on registers are super super fast.
 
 121
 00:06:55,069 --> 00:06:58,579
-And ideally your whole program should only
-use registers.
+And ideally your whole program should only use registers.
 
 122
 00:06:58,580 --> 00:07:02,830
-But because that’s unlikely you have to
-put values sometimes into memory because you
+But because that’s unlikely you have to put values sometimes into memory because you
 
 123
 00:07:02,830 --> 00:07:05,610
@@ -564,8 +495,7 @@ need the registers for more complex stuff.
 
 124
 00:07:05,610 --> 00:07:09,330
-But if you would optimize your code, you would
-always want to make sure to access memory
+But if you would optimize your code, you would always want to make sure to access memory
 
 125
 00:07:09,330 --> 00:07:10,810
@@ -577,8 +507,7 @@ Well.
 
 127
 00:07:11,810 --> 00:07:15,950
-This is also only half true, because you have
-something like caches near your CPU.
+This is also only half true, because you have something like caches near your CPU.
 
 128
 00:07:15,949 --> 00:07:17,449
@@ -586,13 +515,11 @@ Actually multiple levels of caches.
 
 129
 00:07:17,449 --> 00:07:22,229
-So if you repeatedly use a certain memory
-address, it will be cached in a special super
+So if you repeatedly use a certain memory address, it will be cached in a special super
 
 130
 00:07:22,229 --> 00:07:24,679
-super fast memory near the CPU and not in
-RAM.
+super fast memory near the CPU and not in RAM.
 
 131
 00:07:24,680 --> 00:07:26,630
@@ -604,13 +531,11 @@ But you get the idea.
 
 133
 00:07:28,539 --> 00:07:33,199
-Control flow is done via GOTOs --- jumps,
-branches, or calls.
+Control flow is done via GOTOs --- jumps, branches, or calls.
 
 134
 00:07:33,199 --> 00:07:35,579
-The
-effect of these instructions is to alter the
+The effect of these instructions is to alter the
 
 135
 00:07:35,580 --> 00:07:37,910
@@ -618,38 +543,31 @@ program counter directly.
 
 136
 00:07:37,910 --> 00:07:42,790
-Control flow means that a CPU would be less
-useful if it would just execute your program
+Control flow means that a CPU would be less useful if it would just execute your program
 
 137
 00:07:42,789 --> 00:07:45,979
-line by line, without being able to jump to
-somewhere else.
+line by line, without being able to jump to somewhere else.
 
 138
 00:07:45,979 --> 00:07:49,359
-For example to repeat a task, you want to
-constantly jump back.
+For example to repeat a task, you want to constantly jump back.
 
 139
 00:07:49,360 --> 00:07:52,890
-In assembler you have different instructions
-to do that.
+In assembler you have different instructions to do that.
 
 140
 00:07:52,889 --> 00:07:56,069
-They are referred to as jumps, branches or
-calls.
+They are referred to as jumps, branches or calls.
 
 141
 00:07:56,069 --> 00:07:59,819
-And they all basically change the instruction
-pointer to a different value.
+And they all basically change the instruction pointer to a different value.
 
 142
 00:07:59,819 --> 00:08:05,449
-So when you read a ‘jump 2’, you would
-simply set the instruction pointer to 2, and
+So when you read a ‘jump 2’, you would simply set the instruction pointer to 2, and
 
 143
 00:08:05,449 --> 00:08:07,049
@@ -665,23 +583,19 @@ A jump is just an unconditional GOTO.
 
 146
 00:08:12,669 --> 00:08:17,489
-So when you encounter a jump, you will always
-follow it.
+So when you encounter a jump, you will always follow it.
 
 147
 00:08:17,490 --> 00:08:23,750
-But much more interesting for complex tasks
-is to make decisions what to calculate next.
+But much more interesting for complex tasks is to make decisions what to calculate next.
 
 148
 00:08:23,750 --> 00:08:27,320
-And Most operations on registers, like addition
-and subtraction, have the
+And Most operations on registers, like addition and subtraction, have the
 
 149
 00:08:27,319 --> 00:08:31,799
-side effect of altering status flags, like
-"the last value computed
+side effect of altering status flags, like "the last value computed
 
 150
 00:08:31,800 --> 00:08:32,820
@@ -689,18 +603,15 @@ resulted in zero".
 
 151
 00:08:32,820 --> 00:08:37,810
-There are just a few status flags, and they
-usually live in a special register.
+There are just a few status flags, and they usually live in a special register.
 
 152
 00:08:37,810 --> 00:08:43,980
-So for example when we earlier added 3 to
-the 5 with the ‘add eax, 3’ the result
+So for example when we earlier added 3 to the 5 with the ‘add eax, 3’ the result
 
 153
 00:08:43,980 --> 00:08:47,980
-was bigger than zero, so the zero flag would
-have been not set.
+was bigger than zero, so the zero flag would have been not set.
 
 154
 00:08:47,980 --> 00:08:49,220
@@ -708,8 +619,7 @@ or simply 0.
 
 155
 00:08:49,220 --> 00:08:56,250
-But when we subtract 8 from that with ‘sub
-eax, 8’, the result will be 0 and thus enabling
+But when we subtract 8 from that with ‘sub eax, 8’, the result will be 0 and thus enabling
 
 156
 00:08:56,250 --> 00:08:59,260
@@ -717,28 +627,23 @@ the zero flag, setting it to 1.
 
 157
 00:08:59,260 --> 00:09:04,620
-And branches are just GOTOs that are predicated
-on a status flag, like, "GOTO this address
+And branches are just GOTOs that are predicated on a status flag, like, "GOTO this address
 
 158
 00:09:04,620 --> 00:09:08,290
-only if the last arithmetic operation resulted
-in zero".
+only if the last arithmetic operation resulted in zero".
 
 159
 00:09:08,290 --> 00:09:13,630
-In x86 assembly that would be the ‘je’
-instruction.
+In x86 assembly that would be the ‘je’ instruction.
 
 160
 00:09:13,630 --> 00:09:17,890
-Sounds weird, but how would you test if two
-values are equal?
+Sounds weird, but how would you test if two values are equal?
 
 161
 00:09:17,890 --> 00:09:22,430
-You can simply subtract them and when their
-result is 0, they were equal and thus set
+You can simply subtract them and when their result is 0, they were equal and thus set
 
 162
 00:09:22,430 --> 00:09:23,430
@@ -746,28 +651,23 @@ the zero flag.
 
 163
 00:09:23,430 --> 00:09:29,560
-So it makes sense to call the ‘branch if
-zero flag is set’ simply ‘jump if equal’.
+So it makes sense to call the ‘branch if zero flag is set’ simply ‘jump if equal’.
 
 164
 00:09:29,560 --> 00:09:34,500
-A CALL is just an unconditional GOTO that
-pushes the next address on the stack, so a
+A CALL is just an unconditional GOTO that pushes the next address on the stack, so a
 
 165
 00:09:34,500 --> 00:09:40,170
-RET instruction can later pop it off and keep
-going where the CALL left off.
+RET instruction can later pop it off and keep going where the CALL left off.
 
 166
 00:09:40,170 --> 00:09:44,220
-So earlier I explained how the push and pop
-instruction works.
+So earlier I explained how the push and pop instruction works.
 
 167
 00:09:44,220 --> 00:09:48,360
-So a very clever usage of the stack is this
-call instruction.
+So a very clever usage of the stack is this call instruction.
 
 168
 00:09:48,360 --> 00:09:50,860
@@ -779,8 +679,7 @@ How would you do that in assembler?
 
 170
 00:09:52,750 --> 00:09:57,600
-Especially because a function might be used
-in multiple places, so you always want to
+Especially because a function might be used in multiple places, so you always want to
 
 171
 00:09:57,600 --> 00:09:59,840
@@ -788,28 +687,23 @@ jump back where you came from.
 
 172
 00:09:59,840 --> 00:10:05,550
-If you would just use the ‘jmp’ instruction,
-you would have to specify the exact address.
+If you would just use the ‘jmp’ instruction, you would have to specify the exact address.
 
 173
 00:10:05,550 --> 00:10:09,330
-So what you can do is use the ‘call’ instruction
-instead.
+So what you can do is use the ‘call’ instruction instead.
 
 174
 00:10:09,330 --> 00:10:14,220
-This will push the instruction pointer of
-the next instruction on to the stack.
+This will push the instruction pointer of the next instruction on to the stack.
 
 175
 00:10:14,220 --> 00:10:19,190
-And when the function you jumped to finishes,
-it will execute the ‘ret’ instruction.
+And when the function you jumped to finishes, it will execute the ‘ret’ instruction.
 
 176
 00:10:19,190 --> 00:10:23,710
-And ret will pop the current value on top
-of the stack into the instruction pointer
+And ret will pop the current value on top of the stack into the instruction pointer
 
 177
 00:10:23,710 --> 00:10:24,710
@@ -821,13 +715,11 @@ So like a `pop eip`.
 
 179
 00:10:26,330 --> 00:10:30,790
-So we can continue executing where we originally
-came from.
+So we can continue executing where we originally came from.
 
 180
 00:10:30,790 --> 00:10:34,580
-And before we finish this video,I just want
-to make clear, that the assembler instructions
+And before we finish this video,I just want to make clear, that the assembler instructions
 
 181
 00:10:34,580 --> 00:10:36,080
@@ -835,13 +727,11 @@ are actually just numbers.
 
 182
 00:10:36,080 --> 00:10:42,270
-As you know a computer can only store 0 and
-1s, and we generally represent those as numbers.
+As you know a computer can only store 0 and 1s, and we generally represent those as numbers.
 
 183
 00:10:42,270 --> 00:10:45,730
-So assembler code doesn’t actually say ‘mov
-eax, 5’.
+So assembler code doesn’t actually say ‘mov eax, 5’.
 
 184
 00:10:45,730 --> 00:10:51,170
@@ -849,8 +739,7 @@ It will actually ‘B8 05 00 00 00’.
 
 185
 00:10:51,170 --> 00:10:58,420
-And hex B8 refers to `mov eax`, and the remaining
-numbers are available for the number you want
+And hex B8 refers to `mov eax`, and the remaining numbers are available for the number you want
 
 186
 00:10:58,420 --> 00:11:00,790
@@ -858,8 +747,7 @@ to move into eax.
 
 187
 00:11:00,790 --> 00:11:05,340
-So when the hardware reads this number, it
-knows that it has to move the following number
+So when the hardware reads this number, it knows that it has to move the following number
 
 188
 00:11:05,340 --> 00:11:07,120
@@ -867,8 +755,7 @@ in it’s eax register.
 
 189
 00:11:07,120 --> 00:11:12,750
-And a disassembler is a software that takes
-this number B8 and makes readable text out
+And a disassembler is a software that takes this number B8 and makes readable text out
 
 190
 00:11:12,750 --> 00:11:16,310
@@ -876,33 +763,27 @@ of it for us to easier read assembler.
 
 191
 00:11:16,310 --> 00:11:19,800
-If you want to try this out in practice, you
-can go to microcorruption.com.
+If you want to try this out in practice, you can go to microcorruption.com.
 
 192
 00:11:19,800 --> 00:11:20,800
-It’s a hacking game where you are given
-a fictional architecture and CPU.
+It’s a hacking game where you are given a fictional architecture and CPU.
 
 193
 00:11:20,800 --> 00:11:22,800
-And then you have to use a debugger to solve
-different challenges.
+And then you have to use a debugger to solve different challenges.
 
 194
 00:11:22,800 --> 00:11:26,630
-They also have a nice tutorial introduction
-to that debugger.
+They also have a nice tutorial introduction to that debugger.
 
 195
 00:11:26,630 --> 00:11:31,000
-And even though it’s not a real x86 gdb,
-it has exactly the same concepts.
+And even though it’s not a real x86 gdb, it has exactly the same concepts.
 
 196
 00:11:31,000 --> 00:11:35,800
-And understanding concepts is way more valuable
-than mastering the technique.
+And understanding concepts is way more valuable than mastering the technique.
 
 197
 00:11:35,800 --> 00:11:36,800
@@ -910,8 +791,7 @@ In my opinion.
 
 198
 00:11:36,800 --> 00:11:41,680
-In the next video we will use this knowledge
-to do a practical example where we will crack
+In the next video we will use this knowledge to do a practical example where we will crack
 
 199
 00:11:41,680 --> 00:11:43,060

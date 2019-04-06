@@ -1,7 +1,6 @@
 1
 00:00:00,149 --> 00:00:04,339
-These networking levels from protostar are
-not really security related, but they are
+These networking levels from protostar are not really security related, but they are
 
 2
 00:00:04,340 --> 00:00:07,270
@@ -9,8 +8,7 @@ great to do some first simple network programming.
 
 3
 00:00:07,270 --> 00:00:11,590
-And just for the sake of having a complete
-series from exploit-exercises, we will solve
+And just for the sake of having a complete series from exploit-exercises, we will solve
 
 4
 00:00:11,589 --> 00:00:14,629
@@ -22,13 +20,11 @@ these challenges too.
 
 6
 00:00:16,960 --> 00:00:23,680
-The previous two videos were already a good
-introduction into networking, sockets, TCP,
+The previous two videos were already a good introduction into networking, sockets, TCP,
 
 7
 00:00:23,679 --> 00:00:27,959
-and, so let’s build on this foundation by
-writing a python script to interact with this
+and, so let’s build on this foundation by writing a python script to interact with this
 
 8
 00:00:27,960 --> 00:00:30,200
@@ -36,8 +32,7 @@ program over the network.
 
 9
 00:00:30,199 --> 00:00:34,659
-Especially for CTFs, this is an important
-part, because for many many challenges you
+Especially for CTFs, this is an important part, because for many many challenges you
 
 10
 00:00:34,660 --> 00:00:37,520
@@ -45,8 +40,7 @@ interact with a service over TCP.
 
 11
 00:00:37,520 --> 00:00:41,010
-So the exploit you write has to do this over
-the network.
+So the exploit you write has to do this over the network.
 
 12
 00:00:41,010 --> 00:00:42,730
@@ -54,8 +48,7 @@ Let’s have a look at this level.
 
 13
 00:00:42,730 --> 00:00:46,650
-I won’t go over the meaning of all these
-unknown functions, because we have done so
+I won’t go over the meaning of all these unknown functions, because we have done so
 
 14
 00:00:46,650 --> 00:00:48,230
@@ -63,8 +56,7 @@ in episode hex 19.
 
 15
 00:00:48,230 --> 00:00:54,550
-As we see in the defines, or simply by checking
-netstat on the VM, we can see that net level
+As we see in the defines, or simply by checking netstat on the VM, we can see that net level
 
 16
 00:00:54,550 --> 00:00:57,610
@@ -72,8 +64,7 @@ netstat on the VM, we can see that net level
 
 17
 00:00:57,610 --> 00:01:01,330
-Again we could use netcat to talk to this
-service, but this time, we want to write a
+Again we could use netcat to talk to this service, but this time, we want to write a
 
 18
 00:01:01,330 --> 00:01:03,240
@@ -85,18 +76,15 @@ But let’s first have a look at the run function.
 
 20
 00:01:06,370 --> 00:01:13,210
-First run generates a random unsigned integer,
-and then we sprintf the number into fub.
+First run generates a random unsigned integer, and then we sprintf the number into fub.
 
 21
 00:01:13,210 --> 00:01:18,340
-We haven’t seen S-printf before - so other
-than regular printf which writes the resulting
+We haven’t seen S-printf before - so other than regular printf which writes the resulting
 
 22
 00:01:18,340 --> 00:01:25,310
-string to stdout, sprintf will write the resulting
-string the address specified in the first
+string to stdout, sprintf will write the resulting string the address specified in the first
 
 23
 00:01:25,310 --> 00:01:27,800
@@ -104,8 +92,7 @@ argument - in this case buf.
 
 24
 00:01:27,800 --> 00:01:32,950
-This means `fub` will contain the decimal
-representation of the number in ascii, and
+This means `fub` will contain the decimal representation of the number in ascii, and
 
 25
 00:01:32,951 --> 00:01:35,791
@@ -113,8 +100,7 @@ not contain the raw byte values.
 
 26
 00:01:35,790 --> 00:01:41,830
-Then write will write to the socket, thus
-sending us the integer number, thus the raw
+Then write will write to the socket, thus sending us the integer number, thus the raw
 
 27
 00:01:41,830 --> 00:01:42,830
@@ -126,28 +112,23 @@ That’s what we saw returned by netcat.
 
 29
 00:01:44,790 --> 00:01:49,000
-After that, the program will wait for user
-input with fread.
+After that, the program will wait for user input with fread.
 
 30
 00:01:49,000 --> 00:01:53,900
-Once we send some data it will overwrite any
-newline or carriage return with a null byte.
+Once we send some data it will overwrite any newline or carriage return with a null byte.
 
 31
 00:01:53,900 --> 00:01:58,650
-This makes sense because when we for example
-use netcat and hit ENTER to send something,
+This makes sense because when we for example use netcat and hit ENTER to send something,
 
 32
 00:01:58,650 --> 00:02:02,740
-it will include a newline at the end, because
-that’s the key we pressed.
+it will include a newline at the end, because that’s the key we pressed.
 
 33
 00:02:02,740 --> 00:02:06,530
-But obviously this program only wants the
-characters we actually meant to send - thus
+But obviously this program only wants the characters we actually meant to send - thus
 
 34
 00:02:06,530 --> 00:02:08,350
@@ -155,8 +136,7 @@ stripping away the newline.
 
 35
 00:02:08,350 --> 00:02:12,260
-Then it compares the original number with
-the number it received and either prints success
+Then it compares the original number with the number it received and either prints success
 
 36
 00:02:12,260 --> 00:02:13,310
@@ -172,8 +152,7 @@ But how do we do that?
 
 39
 00:02:17,260 --> 00:02:23,320
-Maybe a first hint on how to do network programming
-could be to look at how netcat connects to
+Maybe a first hint on how to do network programming could be to look at how netcat connects to
 
 40
 00:02:23,319 --> 00:02:24,319
@@ -181,13 +160,11 @@ the server.
 
 41
 00:02:24,319 --> 00:02:26,619
-So we can use strace, to trace all syscalls
-of netcat.
+So we can use strace, to trace all syscalls of netcat.
 
 42
 00:02:26,620 --> 00:02:30,910
-Now let’s try to identify the important
-ones, and then we try to figure out how to
+Now let’s try to identify the important ones, and then we try to figure out how to
 
 43
 00:02:30,909 --> 00:02:33,019
@@ -195,8 +172,7 @@ implement them in python.
 
 44
 00:02:33,019 --> 00:02:37,209
-First one is obviously the call to socket,
-so let’s look into the python socket documentation
+First one is obviously the call to socket, so let’s look into the python socket documentation
 
 45
 00:02:37,209 --> 00:02:39,159
@@ -204,8 +180,7 @@ on how to do that in or script.
 
 46
 00:02:39,159 --> 00:02:44,529
-So the call to socket uses the parameters
-PF_INET and SOCK_STREAM and when we look here
+So the call to socket uses the parameters PF_INET and SOCK_STREAM and when we look here
 
 47
 00:02:44,530 --> 00:02:46,990
@@ -217,18 +192,15 @@ Except that it suggests to use AF_INET.
 
 49
 00:02:49,609 --> 00:02:54,969
-So I wondered what’s the difference between
-PF and AF_INET, so I googled and surprisingly,
+So I wondered what’s the difference between PF and AF_INET, so I googled and surprisingly,
 
 50
 00:02:54,969 --> 00:02:59,999
-it turns out, that that is a remnant of an
-idea that never took off, and in fact in the
+it turns out, that that is a remnant of an idea that never took off, and in fact in the
 
 51
 00:03:00,000 --> 00:03:03,360
-linux kernel it’s now simply defined as
-being the same as AF_INET.
+linux kernel it’s now simply defined as being the same as AF_INET.
 
 52
 00:03:03,359 --> 00:03:05,829
@@ -236,8 +208,7 @@ Ha, learned something today.
 
 53
 00:03:05,830 --> 00:03:10,910
-And the python doc then uses connect to connect
-to a hostname, or an IP and port.
+And the python doc then uses connect to connect to a hostname, or an IP and port.
 
 54
 00:03:10,909 --> 00:03:12,639
@@ -245,8 +216,7 @@ Which we can also see in the strace.
 
 55
 00:03:12,640 --> 00:03:17,190
-Here it’s called with the port 2998 and
-the ip address 127.0.0.1
+Here it’s called with the port 2998 and the ip address 127.0.0.1
 
 56
 00:03:17,189 --> 00:03:20,329
@@ -258,13 +228,11 @@ Cool.
 
 58
 00:03:21,330 --> 00:03:26,420
-And now we can use send and receive with this
-socket.
+And now we can use send and receive with this socket.
 
 59
 00:03:26,419 --> 00:03:30,259
-Obviously we want to read the number that
-is sent to us, so we use recv, but we have
+Obviously we want to read the number that is sent to us, so we use recv, but we have
 
 60
 00:03:30,260 --> 00:03:33,520
@@ -272,8 +240,7 @@ to specify how much data we want to read.
 
 61
 00:03:33,519 --> 00:03:38,389
-In this case we expect an unsigned integer,
-which is 32bit large, thus we have to read
+In this case we expect an unsigned integer, which is 32bit large, thus we have to read
 
 62
 00:03:38,390 --> 00:03:39,510
@@ -281,8 +248,7 @@ which is 32bit large, thus we have to read
 
 63
 00:03:39,510 --> 00:03:43,670
-Now let’s simply print the data we receive
-and then test it.
+Now let’s simply print the data we receive and then test it.
 
 64
 00:03:43,669 --> 00:03:44,689
@@ -290,8 +256,7 @@ Cool.
 
 65
 00:03:44,689 --> 00:03:50,449
-Btw, also notice that when we request a new
-number very quickly, that a lot of numbers
+Btw, also notice that when we request a new number very quickly, that a lot of numbers
 
 66
 00:03:50,449 --> 00:03:52,279
@@ -299,13 +264,11 @@ are the same and not random?
 
 67
 00:03:52,280 --> 00:03:56,980
-That’s because in the code the random number
-generator is seeded by the time in seconds.
+That’s because in the code the random number generator is seeded by the time in seconds.
 
 68
 00:03:56,980 --> 00:04:01,550
-Thus if we send fast enough, the seconds will
-be the same and thus produce the same pseudo
+Thus if we send fast enough, the seconds will be the same and thus produce the same pseudo
 
 69
 00:04:01,549 --> 00:04:02,549
@@ -313,18 +276,15 @@ random number.
 
 70
 00:04:02,549 --> 00:04:11,219
-Don’t you ever use a non random source as
-a seed for a pseudo random number generator!
+Don’t you ever use a non random source as a seed for a pseudo random number generator!
 
 71
 00:04:11,219 --> 00:04:15,859
-And now it’s easy to solve it, because we
-are already very experience with converting
+And now it’s easy to solve it, because we are already very experience with converting
 
 72
 00:04:15,859 --> 00:04:20,579
-numbers to raw bytes and raw bytes to numbers
-from all the exploits with memory values that
+numbers to raw bytes and raw bytes to numbers from all the exploits with memory values that
 
 73
 00:04:20,579 --> 00:04:21,579
@@ -332,18 +292,15 @@ we have written.
 
 74
 00:04:21,579 --> 00:04:25,949
-So we can simply use the struct module and
-convert the raw binary data back to an unsigned
+So we can simply use the struct module and convert the raw binary data back to an unsigned
 
 75
 00:04:25,949 --> 00:04:30,019
-integer, and then send it as a string back
-to the server.
+integer, and then send it as a string back to the server.
 
 76
 00:04:30,020 --> 00:04:34,340
-Remember that struct unpack returns a tuple,
-so the actual unpacked number is the first
+Remember that struct unpack returns a tuple, so the actual unpacked number is the first
 
 77
 00:04:34,340 --> 00:04:35,340
@@ -363,18 +320,15 @@ Now it seems to work.
 
 81
 00:04:40,180 --> 00:04:44,230
-The receive hangs when it is waiting for data
-and doesn’t get any, so I assume the server
+The receive hangs when it is waiting for data and doesn’t get any, so I assume the server
 
 82
 00:04:44,230 --> 00:04:50,080
-sends too fast and there is no buffer buffering
-the data, and when we are finally ready to
+sends too fast and there is no buffer buffering the data, and when we are finally ready to
 
 83
 00:04:50,080 --> 00:04:52,200
-recv data, the data is already lost in the
-void.
+recv data, the data is already lost in the void.
 
 84
 00:04:52,199 --> 00:04:53,199
@@ -382,13 +336,11 @@ Anyhow, it worked.
 
 85
 00:04:53,199 --> 00:04:59,269
-Doesn’t have to be perfect, as long as you
-succeed once, the attack was sucessful.
+Doesn’t have to be perfect, as long as you succeed once, the attack was sucessful.
 
 86
 00:04:59,270 --> 00:05:03,940
-This episode is so short, and these challenges
-are not really about security anyway, so let’s
+This episode is so short, and these challenges are not really about security anyway, so let’s
 
 87
 00:05:03,939 --> 00:05:05,699
@@ -396,38 +348,31 @@ quickly solve the next one too.
 
 88
 00:05:05,699 --> 00:05:12,959
-Net2 is very similar, we again have a network
-setup with a program listening on port 2997.
+Net2 is very similar, we again have a network setup with a program listening on port 2997.
 
 89
 00:05:12,960 --> 00:05:18,150
-In the run function we see a for loop that
-runs 4 times and each time it generates a
+In the run function we see a for loop that runs 4 times and each time it generates a
 
 90
 00:05:18,150 --> 00:05:23,160
-random number, adds it to the sum of them
-all and then sends it over the network.
+random number, adds it to the sum of them all and then sends it over the network.
 
 91
 00:05:23,159 --> 00:05:26,969
-The description also says that we have to
-add 4 32bit integers.
+The description also says that we have to add 4 32bit integers.
 
 92
 00:05:26,970 --> 00:05:30,970
-And it already warns us about the possibility
-of it wrapping.
+And it already warns us about the possibility of it wrapping.
 
 93
 00:05:30,970 --> 00:05:37,790
-Or in proper terms, it warns us about an integers
-overflow - which again is security relevant.
+Or in proper terms, it warns us about an integers overflow - which again is security relevant.
 
 94
 00:05:37,789 --> 00:05:42,539
-Ok, so let’s copy our previous script and
-quickly modify it to read 4 integers and then
+Ok, so let’s copy our previous script and quickly modify it to read 4 integers and then
 
 95
 00:05:42,540 --> 00:05:44,250
@@ -435,8 +380,7 @@ calculate the sum.
 
 96
 00:05:44,250 --> 00:05:48,450
-We can simply extend the struct unpack modifier,
-and then we can also just create a sum over
+We can simply extend the struct unpack modifier, and then we can also just create a sum over
 
 97
 00:05:48,449 --> 00:05:50,179
@@ -448,13 +392,11 @@ Easy as that.
 
 99
 00:05:51,650 --> 00:05:56,620
-The code expects the result not in an ascii
-decimal representation but as a raw binary,
+The code expects the result not in an ascii decimal representation but as a raw binary,
 
 100
 00:05:56,620 --> 00:06:01,320
-so we can use struct pack to covnert it to
-a binary string and send that.
+so we can use struct pack to covnert it to a binary string and send that.
 
 101
 00:06:01,319 --> 00:06:02,359
@@ -474,8 +416,7 @@ because of the integer overflow.
 
 105
 00:06:09,159 --> 00:06:12,559
-If we have a look at the result of the sum
-in binary we can see that it contains more
+If we have a look at the result of the sum in binary we can see that it contains more
 
 106
 00:06:12,560 --> 00:06:15,390
@@ -487,23 +428,19 @@ An integer is only 32bit large.
 
 108
 00:06:17,190 --> 00:06:21,730
-So what happens is, that the integer is simply
-overflowing, or wrapping around.
+So what happens is, that the integer is simply overflowing, or wrapping around.
 
 109
 00:06:21,729 --> 00:06:24,419
-This means the carry of the highest bit is
-just lost.
+This means the carry of the highest bit is just lost.
 
 110
 00:06:24,419 --> 00:06:29,909
-Well, it’s not entirely true, the CPU is
-actually aware of this, when an arithmetic
+Well, it’s not entirely true, the CPU is actually aware of this, when an arithmetic
 
 111
 00:06:29,910 --> 00:06:35,220
-operation such as an addition ends up overflowing
-the value in a register, a special overflow
+operation such as an addition ends up overflowing the value in a register, a special overflow
 
 112
 00:06:35,220 --> 00:06:37,550
@@ -511,13 +448,11 @@ flag is set that could be checked.
 
 113
 00:06:37,550 --> 00:06:43,130
-But anyway, in this case our unsigned integer
-on the server will always wrap around.
+But anyway, in this case our unsigned integer on the server will always wrap around.
 
 114
 00:06:43,129 --> 00:06:47,849
-And apparently this old python struct version
-actually did that for us, but this behaviour
+And apparently this old python struct version actually did that for us, but this behaviour
 
 115
 00:06:47,849 --> 00:06:48,849
@@ -529,8 +464,7 @@ So we can simply do the same in our code.
 
 117
 00:06:50,969 --> 00:06:55,969
-As I said, this issue is called integer overflow,
-and when you search for this you will find
+As I said, this issue is called integer overflow, and when you search for this you will find
 
 118
 00:06:55,969 --> 00:06:57,819
@@ -538,13 +472,11 @@ many bug reports about it.
 
 119
 00:06:57,819 --> 00:07:01,269
-Let’s make a simple example of a typical
-integer overflow issue.
+Let’s make a simple example of a typical integer overflow issue.
 
 120
 00:07:01,270 --> 00:07:06,250
-Let’s say you have a loop that keeps reading
-data and adds the size to an overall size
+Let’s say you have a loop that keeps reading data and adds the size to an overall size
 
 121
 00:07:06,250 --> 00:07:07,250
@@ -552,8 +484,7 @@ variable.
 
 122
 00:07:07,250 --> 00:07:11,750
-Once it’s done with the loop, it will know
-for how much data it has to allocate space
+Once it’s done with the loop, it will know for how much data it has to allocate space
 
 123
 00:07:11,749 --> 00:07:12,749
@@ -561,13 +492,11 @@ for.
 
 124
 00:07:12,749 --> 00:07:17,689
-The issue is now, if you manage to send so
-much data, that the counter overflows, wraps
+The issue is now, if you manage to send so much data, that the counter overflows, wraps
 
 125
 00:07:17,689 --> 00:07:22,729
-around, a smaller space is allocated for the
-huge amounts of data, and then you have a
+around, a smaller space is allocated for the huge amounts of data, and then you have a
 
 126
 00:07:22,729 --> 00:07:25,849
@@ -575,8 +504,7 @@ typical overflow condition.
 
 127
 00:07:25,849 --> 00:07:30,809
-We are slowly heading into the final levels
-of exploit-exercises protostar and we start
+We are slowly heading into the final levels of exploit-exercises protostar and we start
 
 128
 00:07:30,810 --> 00:07:33,640

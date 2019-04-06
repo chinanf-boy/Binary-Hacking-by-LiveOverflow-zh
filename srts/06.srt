@@ -8,28 +8,23 @@ It’s supposed to be a simple license check.
 
 3
 00:00:14,660 --> 00:00:21,410
-So you can execute it and you can supply a
-key as argument and it will be checked.
+So you can execute it and you can supply a key as argument and it will be checked.
 
 4
 00:00:21,410 --> 00:00:25,440
-Our goal is to crack this program so we don’t
-have to use a valid license key.
+Our goal is to crack this program so we don’t have to use a valid license key.
 
 5
 00:00:25,440 --> 00:00:29,330
-I have made this program available through
-a github repository.
+I have made this program available through a github repository.
 
 6
 00:00:29,330 --> 00:00:37,780
-You can download it from github.com/liveoverflow/liveoverflow_youtube
-or you can install ‘git’ with ‘sudo
+You can download it from github.com/liveoverflow/liveoverflow_youtube or you can install ‘git’ with ‘sudo
 
 7
 00:00:37,780 --> 00:00:43,460
-apt-get install git’ and get the whole repository
-with ‘git clone’ and the address you can
+apt-get install git’ and get the whole repository with ‘git clone’ and the address you can
 
 8
 00:00:43,460 --> 00:00:44,600
@@ -37,13 +32,11 @@ see on github.
 
 9
 00:00:44,600 --> 00:00:47,850
-We will probably talk more about what git
-is later.
+We will probably talk more about what git is later.
 
 10
 00:00:47,850 --> 00:00:52,390
-For now it’s enough to know, that this is
-a way how developers can program together
+For now it’s enough to know, that this is a way how developers can program together
 
 11
 00:00:52,390 --> 00:00:53,650
@@ -55,8 +48,7 @@ And I use it to share some stuff.
 
 13
 00:00:57,159 --> 00:01:01,489
-To have a look at the binary assembler code,
-we can use a program called gdb.
+To have a look at the binary assembler code, we can use a program called gdb.
 
 14
 00:01:01,489 --> 00:01:04,259
@@ -72,8 +64,7 @@ So every C program has a main function, remember?
 
 17
 00:01:10,550 --> 00:01:15,370
-So let’s type in ‘disassemble main’
-which will display all assembler instructions
+So let’s type in ‘disassemble main’ which will display all assembler instructions
 
 18
 00:01:15,370 --> 00:01:17,280
@@ -93,13 +84,11 @@ So type in ‘set disassembly-flavor intel’.
 
 22
 00:01:26,830 --> 00:01:29,400
-Remember that you can use tab completion here
-as well.
+Remember that you can use tab completion here as well.
 
 23
 00:01:29,400 --> 00:01:33,850
-Now ‘disassemble main’ again, and now
-it’s much more readable.
+Now ‘disassemble main’ again, and now it’s much more readable.
 
 24
 00:01:33,850 --> 00:01:34,850
@@ -123,8 +112,7 @@ First of all get a high-level view of it.
 
 29
 00:01:41,270 --> 00:01:45,800
-It doesn’t make sense to start going through
-this instruction by instruction.
+It doesn’t make sense to start going through this instruction by instruction.
 
 30
 00:01:45,800 --> 00:01:48,720
@@ -132,18 +120,15 @@ This main function obviously calls other functions.
 
 31
 00:01:48,720 --> 00:01:53,140
-So just draw a mental picture of the rough
-control flow.
+So just draw a mental picture of the rough control flow.
 
 32
 00:01:53,140 --> 00:01:56,210
-I will actually print out this assembler code
-and use a pen.
+I will actually print out this assembler code and use a pen.
 
 33
 00:01:56,210 --> 00:02:00,720
-That’s how I did it in the beginning and
-still do it when I encounter more complex
+That’s how I did it in the beginning and still do it when I encounter more complex
 
 34
 00:02:00,720 --> 00:02:01,990
@@ -151,13 +136,11 @@ code.
 
 35
 00:02:01,990 --> 00:02:08,200
-And remember to just ignore most of the stuff,
-concentrate on the actual flow.
+And remember to just ignore most of the stuff, concentrate on the actual flow.
 
 36
 00:02:08,200 --> 00:02:12,410
-So at the start it arrives at a compare with
-the number 2.
+So at the start it arrives at a compare with the number 2.
 
 37
 00:02:12,409 --> 00:02:15,309
@@ -177,13 +160,11 @@ Which we know is a function to display text.
 
 41
 00:02:31,980 --> 00:02:39,810
-Then comes a ‘strcmp’, if you don’t
-know that function, read the man page of it.
+Then comes a ‘strcmp’, if you don’t know that function, read the man page of it.
 
 42
 00:02:39,810 --> 00:02:45,990
-‘man 3 strcmp’ - so this compares two
-strings and returns 0 if both strings were
+‘man 3 strcmp’ - so this compares two strings and returns 0 if both strings were
 
 43
 00:02:45,990 --> 00:02:49,510
@@ -191,8 +172,7 @@ the same.
 
 44
 00:02:49,510 --> 00:03:00,410
-After that call we see another ‘jump not
-equal’ so if the zero flag is not set, there
+After that call we see another ‘jump not equal’ so if the zero flag is not set, there
 
 45
 00:03:00,410 --> 00:03:03,230
@@ -200,13 +180,11 @@ will be a ‘puts’ call.
 
 46
 00:03:03,230 --> 00:03:14,080
-Use the man page to figure out what it does,
-but it just prints text like printf.
+Use the man page to figure out what it does, but it just prints text like printf.
 
 47
 00:03:14,080 --> 00:03:19,200
-So if the original compare with the number
-2 was not true, then it would jump to this
+So if the original compare with the number 2 was not true, then it would jump to this
 
 48
 00:03:19,200 --> 00:03:23,790
@@ -214,13 +192,11 @@ address 0x400623, which is at offset main+102.
 
 49
 00:03:23,790 --> 00:03:30,290
-So in that case it prints some other text
-with ‘puts’ and exits.
+So in that case it prints some other text with ‘puts’ and exits.
 
 50
 00:03:30,290 --> 00:03:34,630
-I always add the addresses, or at least part
-of the address, from important locations,
+I always add the addresses, or at least part of the address, from important locations,
 
 51
 00:03:34,630 --> 00:03:37,210
@@ -228,8 +204,7 @@ so I know where I am.
 
 52
 00:03:37,209 --> 00:03:40,799
-This will help you later when we step through
-the program.
+This will help you later when we step through the program.
 
 53
 00:03:40,800 --> 00:03:42,550
@@ -237,8 +212,7 @@ Now we have one branch missing.
 
 54
 00:03:42,550 --> 00:03:46,710
-If this compare was incorrect, this branch
-would jump to offset main+90.
+If this compare was incorrect, this branch would jump to offset main+90.
 
 55
 00:03:46,710 --> 00:03:52,390
@@ -246,33 +220,27 @@ Which also just prints text.
 
 56
 00:03:52,390 --> 00:03:57,910
-Some jumps are still missing, but you can
-add them to get a nice control-flow graph.
+Some jumps are still missing, but you can add them to get a nice control-flow graph.
 
 57
 00:03:57,910 --> 00:04:01,460
-Now let’s actually execute this and step
-through it.
+Now let’s actually execute this and step through it.
 
 58
 00:04:01,460 --> 00:04:05,780
-You can then draw which path through the graph
-you have taken on your paper.
+You can then draw which path through the graph you have taken on your paper.
 
 59
 00:04:05,780 --> 00:04:11,800
-To do do this we first set a breakpoint at
-the start of main with ‘break *main’.
+To do do this we first set a breakpoint at the start of main with ‘break *main’.
 
 60
 00:04:11,800 --> 00:04:16,220
-Breakpoint is set, now use ‘run’ to start
-the program.
+Breakpoint is set, now use ‘run’ to start the program.
 
 61
 00:04:16,220 --> 00:04:20,100
-Starting program and we hit the breakpoint
-1 at this address.
+Starting program and we hit the breakpoint 1 at this address.
 
 62
 00:04:20,100 --> 00:04:24,880
@@ -284,8 +252,7 @@ Now look at the registers with ‘info registers’.
 
 64
 00:04:27,580 --> 00:04:34,520
-Here you can see that RIP, the instruction
-pointer, points to the first address in main.
+Here you can see that RIP, the instruction pointer, points to the first address in main.
 
 65
 00:04:34,520 --> 00:04:38,250
@@ -297,23 +264,19 @@ Now we are at a new address in main.
 
 67
 00:04:39,990 --> 00:04:44,000
-‘info registers’ and you see the changed
-instruction pointer.
+‘info registers’ and you see the changed instruction pointer.
 
 68
 00:04:44,000 --> 00:04:50,030
-So now just step through it all and follow
-the addresses in your control graph.
+So now just step through it all and follow the addresses in your control graph.
 
 69
 00:04:50,030 --> 00:04:54,780
-But use ‘ni’ instead of ‘si’, because
-‘si’ would step into function calls.
+But use ‘ni’ instead of ‘si’, because ‘si’ would step into function calls.
 
 70
 00:04:54,780 --> 00:05:07,500
-But we only want to step through this main
-function and not follow stuff like ‘puts’.
+But we only want to step through this main function and not follow stuff like ‘puts’.
 
 71
 00:05:07,500 --> 00:05:10,300
@@ -321,38 +284,31 @@ Ok did you notice when we jumped?
 
 72
 00:05:10,300 --> 00:05:16,160
-The jump was at 5d0, and then the next instruction
-was at 623.
+The jump was at 5d0, and then the next instruction was at 623.
 
 73
 00:05:16,160 --> 00:05:24,840
-So we followed the jump, which means whatever
-was compared to 2, was not 2.
+So we followed the jump, which means whatever was compared to 2, was not 2.
 
 74
 00:05:24,840 --> 00:05:31,380
-And then the program printed the Usage information
-after 628, which was the last ‘puts’ call.
+And then the program printed the Usage information after 628, which was the last ‘puts’ call.
 
 75
 00:05:31,380 --> 00:05:35,350
-So we can write down, that this ‘puts’
-prints the ‘Usage’ information.
+So we can write down, that this ‘puts’ prints the ‘Usage’ information.
 
 76
 00:05:35,350 --> 00:05:41,560
-Now it’s pretty clear, that we didn’t
-pass a key to this program.
+Now it’s pretty clear, that we didn’t pass a key to this program.
 
 77
 00:05:41,560 --> 00:05:46,480
-Which means the check was looking at the arguments
-if we supplied a license key.
+Which means the check was looking at the arguments if we supplied a license key.
 
 78
 00:05:46,480 --> 00:05:55,250
-So let’s run the program again, but this
-time with a random license key.
+So let’s run the program again, but this time with a random license key.
 
 79
 00:05:55,250 --> 00:05:57,160
@@ -368,8 +324,7 @@ Now do the same.
 
 82
 00:06:02,169 --> 00:06:06,129
-Now we are at 5d0 again, will we jump this
-time?
+Now we are at 5d0 again, will we jump this time?
 
 83
 00:06:06,130 --> 00:06:07,870
@@ -393,8 +348,7 @@ Another print text.
 
 88
 00:06:18,710 --> 00:06:24,960
-So that ‘printf’ is the info that a license
-key will be checked.
+So that ‘printf’ is the info that a license key will be checked.
 
 89
 00:06:24,960 --> 00:06:27,160
@@ -406,8 +360,7 @@ Now comes the branch.
 
 91
 00:06:28,790 --> 00:06:34,080
-Ok we arrived at 609, let’s see where we
-are afterwards.
+Ok we arrived at 609, let’s see where we are afterwards.
 
 92
 00:06:34,080 --> 00:06:36,000
@@ -415,13 +368,11 @@ At 617.
 
 93
 00:06:36,000 --> 00:06:40,500
-So we did jump, which means that the strcmp
-failed.
+So we did jump, which means that the strcmp failed.
 
 94
 00:06:40,500 --> 00:06:45,060
-And when we continue with ‘ni’ we see
-that it’s wrong.
+And when we continue with ‘ni’ we see that it’s wrong.
 
 95
 00:06:45,060 --> 00:06:46,060
@@ -429,13 +380,11 @@ Ok.
 
 96
 00:06:46,060 --> 00:06:52,200
-Let’s set a breakpoint just before the last
-compare and run the program again.
+Let’s set a breakpoint just before the last compare and run the program again.
 
 97
 00:06:52,200 --> 00:06:57,490
-Remember that you can easily copy&amp;paste values
-in the terminal by simply marking something
+Remember that you can easily copy&amp;paste values in the terminal by simply marking something
 
 98
 00:06:57,490 --> 00:06:59,790
@@ -455,18 +404,15 @@ Now ‘continue’.
 
 102
 00:07:05,290 --> 00:07:10,360
-This will run the program normally again,
-until we hit the next breakpoint.
+This will run the program normally again, until we hit the next breakpoint.
 
 103
 00:07:10,360 --> 00:07:14,320
-Now stopped before we execute the ‘test
-eax, eax’.
+Now stopped before we execute the ‘test eax, eax’.
 
 104
 00:07:14,320 --> 00:07:20,770
-EAX just refers to the first 32bit of the
-64bit RAX register.
+EAX just refers to the first 32bit of the 64bit RAX register.
 
 105
 00:07:20,770 --> 00:07:23,430
@@ -474,8 +420,7 @@ So it’s value is hex 0xE.
 
 106
 00:07:23,430 --> 00:07:31,710
-Let’s set this to 0, which would indicate
-that the ‘strcmp’ was correct and returned
+Let’s set this to 0, which would indicate that the ‘strcmp’ was correct and returned
 
 107
 00:07:31,710 --> 00:07:33,890
@@ -483,13 +428,11 @@ a 0. ‘set $eax=0’.
 
 108
 00:07:33,889 --> 00:07:37,459
-‘info registers’ and you can see that
-it’s now 0.
+‘info registers’ and you can see that it’s now 0.
 
 109
 00:07:37,460 --> 00:07:43,020
-Now use ‘ni’ again to step and follow
-your control path.
+Now use ‘ni’ again to step and follow your control path.
 
 110
 00:07:43,020 --> 00:07:48,150
@@ -509,8 +452,7 @@ It think that’s pretty cool!
 
 114
 00:07:58,150 --> 00:08:04,050
-And you can always write your own little C
-program trying to make it more secure, and
+And you can always write your own little C program trying to make it more secure, and
 
 115
 00:08:04,050 --> 00:08:05,810
@@ -518,8 +460,7 @@ then crack it yourself again.
 
 116
 00:08:05,810 --> 00:08:11,510
-You will notice that it’s impossible to
-make a program uncrackable.
+You will notice that it’s impossible to make a program uncrackable.
 
 117
 00:08:11,510 --> 00:08:14,420
@@ -527,8 +468,7 @@ Those kind of challenges are called ‘crackme’.
 
 118
 00:08:14,419 --> 00:08:17,469
-People create small programs that have to
-be cracked.
+People create small programs that have to be cracked.
 
 119
 00:08:17,470 --> 00:08:20,490
@@ -536,33 +476,27 @@ Or more often you have to create a valid keygen.
 
 120
 00:08:20,490 --> 00:08:26,700
-If you think something like this is fun, checkout
-http://crackmes.de/.
+If you think something like this is fun, checkout http://crackmes.de/.
 
 121
 00:08:26,699 --> 00:08:30,229
-Creating control graphs like we just did is
-pretty useful.
+Creating control graphs like we just did is pretty useful.
 
 122
 00:08:30,230 --> 00:08:33,980
-That’s why there are some programs that
-do that for us.
+That’s why there are some programs that do that for us.
 
 123
 00:08:33,979 --> 00:08:39,799
-Here are three different examples of this
-specific control graph.
+Here are three different examples of this specific control graph.
 
 124
 00:08:39,800 --> 00:08:48,390
-First is HopperApp, second is IDAPro and the
-last one is from radare2.
+First is HopperApp, second is IDAPro and the last one is from radare2.
 
 125
 00:08:48,390 --> 00:08:53,160
-See you hopefully next time when we use some
-different tools to explore this licence check
+See you hopefully next time when we use some different tools to explore this licence check
 
 126
 00:08:53,160 --> 00:08:54,160
@@ -570,13 +504,11 @@ binary a bit more.
 
 127
 00:08:54,160 --> 00:08:55,160
-Let’s figure out together the basic concepts
-of a CPU.
+Let’s figure out together the basic concepts of a CPU.
 
 128
 00:08:55,160 --> 00:08:56,160
-Computers have different memory to store stuff
-- so first we need something to store the
+Computers have different memory to store stuff - so first we need something to store the
 
 129
 00:08:56,160 --> 00:08:57,160
@@ -584,13 +516,11 @@ machine code in.
 
 130
 00:08:57,160 --> 00:08:58,160
-Let’s take a spreadsheet and imagine that
-this is memory.
+Let’s take a spreadsheet and imagine that this is memory.
 
 131
 00:08:58,160 --> 00:08:59,160
-You can store values in it and each memory
-cell has an address, which is the number on
+You can store values in it and each memory cell has an address, which is the number on
 
 132
 00:08:59,160 --> 00:09:00,160
@@ -598,18 +528,15 @@ the left.
 
 133
 00:09:00,160 --> 00:09:01,160
-And I will use the 2nd column to write some
-comments in there.
+And I will use the 2nd column to write some comments in there.
 
 134
 00:09:01,160 --> 00:09:02,160
-As you can see there are some hexadecimal
-numbers stored in this memory.
+As you can see there are some hexadecimal numbers stored in this memory.
 
 135
 00:09:02,160 --> 00:09:03,160
-And at first it looks very random, but that
-is our machine code and soon you will understand
+And at first it looks very random, but that is our machine code and soon you will understand
 
 136
 00:09:03,160 --> 00:09:04,160
@@ -617,8 +544,7 @@ this.
 
 137
 00:09:04,160 --> 00:09:05,160
-So the first thing the CPU needs to have is
-something to keep track where in memory the
+So the first thing the CPU needs to have is something to keep track where in memory the
 
 138
 00:09:05,160 --> 00:09:06,160
@@ -626,8 +552,7 @@ CPU currently is.
 
 139
 00:09:06,160 --> 00:09:07,160
-Which means we shoud add a little storage
-for our CPU and call it the “Instruction
+Which means we shoud add a little storage for our CPU and call it the “Instruction
 
 140
 00:09:07,160 --> 00:09:08,160
@@ -635,8 +560,7 @@ Pointer”.
 
 141
 00:09:08,160 --> 00:09:09,160
-This little storage area will contain the
-address of memory the CPU is looking at the
+This little storage area will contain the address of memory the CPU is looking at the
 
 142
 00:09:09,160 --> 00:09:10,160
@@ -644,13 +568,11 @@ moment.
 
 143
 00:09:10,160 --> 00:09:11,160
-So obviously our program starts from the top,
-so the address will be 1.
+So obviously our program starts from the top, so the address will be 1.
 
 144
 00:09:11,160 --> 00:09:12,160
-Now let’s start the CPU, it looks at address
-1 and reads 48, AA, 14.
+Now let’s start the CPU, it looks at address 1 and reads 48, AA, 14.
 
 145
 00:09:12,160 --> 00:09:13,160
@@ -658,13 +580,11 @@ But what do those numbers mean?
 
 146
 00:09:13,160 --> 00:09:14,160
-The CPU knows that 48 means it has to MOVE
-data around.
+The CPU knows that 48 means it has to MOVE data around.
 
 147
 00:09:14,160 --> 00:09:15,160
-The AA means the destination of that move.
-and the 14 is the source.
+The AA means the destination of that move. and the 14 is the source.
 
 148
 00:09:15,160 --> 00:09:16,160
@@ -672,18 +592,15 @@ So in address 14 we can see the number 42.
 
 149
 00:09:16,160 --> 00:09:17,160
-And the destination is another small storage
-unit inside the CPU.
+And the destination is another small storage unit inside the CPU.
 
 150
 00:09:17,160 --> 00:09:18,160
-So the CPU will move the 42 into it’s small
-storage area called AA.
+So the CPU will move the 42 into it’s small storage area called AA.
 
 151
 00:09:18,160 --> 00:09:19,160
-So this instruction is done, and the CPU increases
-the Instruction pointer by one.
+So this instruction is done, and the CPU increases the Instruction pointer by one.
 
 152
 00:09:19,160 --> 00:09:20,160
@@ -691,13 +608,11 @@ And we start over.
 
 153
 00:09:20,160 --> 00:09:21,160
-The CPU reads the current value at the address
-of it’s instruction pointer.
+The CPU reads the current value at the address of it’s instruction pointer.
 
 154
 00:09:21,160 --> 00:09:22,160
-So it reads 48 again which means move, and
-this time it’s moving the content of address
+So it reads 48 again which means move, and this time it’s moving the content of address
 
 155
 00:09:22,160 --> 00:09:23,160
@@ -709,8 +624,7 @@ Notice how I use brackets around the 15.
 
 157
 00:09:24,160 --> 00:09:25,160
-This indicates that 15 is an address, and
-we actually reference the content of 15, which
+This indicates that 15 is an address, and we actually reference the content of 15, which
 
 158
 00:09:25,160 --> 00:09:26,160
@@ -722,8 +636,7 @@ And not the number 15 itself.
 
 160
 00:09:27,160 --> 00:09:28,160
-Instruction done, increase the Instruction
-pointer.
+Instruction done, increase the Instruction pointer.
 
 161
 00:09:28,160 --> 00:09:29,160
@@ -739,13 +652,11 @@ And it compares the values in AA and BB.
 
 164
 00:09:31,160 --> 00:09:32,160
-Now it has to somehow remember the result
-of this compare.
+Now it has to somehow remember the result of this compare.
 
 165
 00:09:32,160 --> 00:09:33,160
-So let’s add another small storage that
-stores this result.
+So let’s add another small storage that stores this result.
 
 166
 00:09:33,160 --> 00:09:34,160
@@ -753,13 +664,11 @@ We call it Zero Flag.
 
 167
 00:09:34,160 --> 00:09:35,160
-You know what an intelligent way is to compare
-two numbers?
+You know what an intelligent way is to compare two numbers?
 
 168
 00:09:35,160 --> 00:09:36,160
-If you subtract them from each other and their
-result is 0, they were the same.
+If you subtract them from each other and their result is 0, they were the same.
 
 169
 00:09:36,160 --> 00:09:37,160
@@ -799,8 +708,7 @@ So the CPU checks the state of the Zero Flag.
 
 178
 00:09:45,160 --> 00:09:46,160
-And The Zero flag is set to FALSE, so the
-previous compare was not equal.
+And The Zero flag is set to FALSE, so the previous compare was not equal.
 
 179
 00:09:46,160 --> 00:09:47,160
@@ -812,8 +720,7 @@ A jump is easy.
 
 181
 00:09:48,160 --> 00:09:49,160
-The CPU just sets its Instruction Pointer
-to 07.
+The CPU just sets its Instruction Pointer to 07.
 
 182
 00:09:49,160 --> 00:09:50,160
@@ -841,8 +748,7 @@ Well, for a computer everything is numbers.
 
 188
 00:09:55,160 --> 00:09:56,160
-Like those instructions the CPU executes,
-they are just numbers.
+Like those instructions the CPU executes, they are just numbers.
 
 189
 00:09:56,160 --> 00:09:57,160
@@ -850,13 +756,11 @@ So text is made out of numbers too.
 
 190
 00:09:57,160 --> 00:09:58,160
-Remember how I brushed over ASCII values in
-a previous video?
+Remember how I brushed over ASCII values in a previous video?
 
 191
 00:09:58,160 --> 00:09:59,160
-Now it’s the time to pull up the ascii man
-page again.
+Now it’s the time to pull up the ascii man page again.
 
 192
 00:09:59,160 --> 00:10:00,160
@@ -880,13 +784,11 @@ Which means the computer will print ‘NO’.
 
 197
 00:10:04,160 --> 00:10:05,160
-So looks like this code simply compares two
-numbers.
+So looks like this code simply compares two numbers.
 
 198
 00:10:05,160 --> 00:10:06,160
-I will not go over the case when those two
-numbers are the same, but you should try it
+I will not go over the case when those two numbers are the same, but you should try it
 
 199
 00:10:06,160 --> 00:10:07,160
@@ -898,18 +800,15 @@ That’s crazy, huh?
 
 201
 00:10:08,160 --> 00:10:09,160
-CPU simply reads the memory sequentially and
-does whatever it reads.
+CPU simply reads the memory sequentially and does whatever it reads.
 
 202
 00:10:09,160 --> 00:10:10,160
-And programmers can build crazy complex stuff
-with that.
+And programmers can build crazy complex stuff with that.
 
 203
 00:10:10,160 --> 00:10:11,160
-Now let me change the text a little bit so
-it reflects more the reality of how we write
+Now let me change the text a little bit so it reflects more the reality of how we write
 
 204
 00:10:11,160 --> 00:10:12,160
@@ -921,23 +820,19 @@ Basically just abbreviation of it.
 
 206
 00:10:13,160 --> 00:10:14,160
-Also don’t get confused with the order of
-parameters.
+Also don’t get confused with the order of parameters.
 
 207
 00:10:14,160 --> 00:10:15,160
-simply think of it like a variable assignment
-in programming.
+simply think of it like a variable assignment in programming.
 
 208
 00:10:15,160 --> 00:10:16,160
-This was a very simple example, but the real
-world is not much different.
+This was a very simple example, but the real world is not much different.
 
 209
 00:10:16,160 --> 00:10:17,160
-People just came up with a lot more instructions
-that might be interesting and wrote complex
+People just came up with a lot more instructions that might be interesting and wrote complex
 
 210
 00:10:17,160 --> 00:10:18,160

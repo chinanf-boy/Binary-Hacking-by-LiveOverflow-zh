@@ -1,232 +1,186 @@
 1
 00:00:00,110 --> 00:00:04,920
-The previous heap exploitation videos were
-about abusing application logic. Basically
+The previous heap exploitation videos were about abusing application logic. Basically
 
 2
 00:00:04,920 --> 00:00:09,840
-because the program used faulty data from
-the heap. But this time we exploit the heap
+because the program used faulty data from the heap. But this time we exploit the heap
 
 3
 00:00:09,839 --> 00:00:14,959
-algorithm itself. In this video I want to
-explore heap level 3 from exploit-exercises
+algorithm itself. In this video I want to explore heap level 3 from exploit-exercises
 
 4
 00:00:14,959 --> 00:00:25,719
-protostar which is about the infamous unlink()
-macro.
+protostar which is about the infamous unlink() macro.
 
 5
 00:00:25,720 --> 00:00:30,090
-This video is based on the excellent phrack
-article “Once upon a free()”. As you can
+This video is based on the excellent phrack article “Once upon a free()”. As you can
 
 6
 00:00:30,090 --> 00:00:36,540
-see this article is from 2001. So we are still
-15 years behind the times and have not yet
+see this article is from 2001. So we are still 15 years behind the times and have not yet
 
 7
 00:00:36,540 --> 00:00:42,130
-caught up with the modern state of exploitation.
-The heap implementation that we will exploit
+caught up with the modern state of exploitation. The heap implementation that we will exploit
 
 8
 00:00:42,130 --> 00:00:46,880
-changed over the years to prevent this kind
-of attack. But the current versions are still
+changed over the years to prevent this kind of attack. But the current versions are still
 
 9
 00:00:46,880 --> 00:00:52,030
-based on this old algorithm, so it’s important
-to understand this easy version here.
+based on this old algorithm, so it’s important to understand this easy version here.
 
 10
 00:00:52,030 --> 00:00:54,760
-So let’s start by looking at the code of
-this level.
+So let’s start by looking at the code of this level.
 
 11
 00:00:54,760 --> 00:01:00,860
-This level introduces the Doug Lea Malloc
-(dlmalloc) and how heap meta data can be modified
+This level introduces the Doug Lea Malloc (dlmalloc) and how heap meta data can be modified
 
 12
 00:01:00,860 --> 00:01:05,390
-to change program execution.
-The goal is obviously to call the function
+to change program execution. The goal is obviously to call the function
 
 13
 00:01:05,390 --> 00:01:09,740
-winner.
-First we malloc 3 objects with 32 byte. A.
+winner. First we malloc 3 objects with 32 byte. A.
 
 14
 00:01:09,740 --> 00:01:14,290
-B. and C.
-Then we copy the program arguments to A. B.
+B. and C. Then we copy the program arguments to A. B.
 
 15
 00:01:14,290 --> 00:01:18,170
-and C.
-Obviously strcpy is vulnerable because it
+and C. Obviously strcpy is vulnerable because it
 
 16
 00:01:18,170 --> 00:01:22,910
-doesn’t stop us from copying more than 32
-byte. So that is our overflow.
+doesn’t stop us from copying more than 32 byte. So that is our overflow.
 
 17
 00:01:22,910 --> 00:01:27,880
-And then we free again the objects in reverse
-order, C, B and A.
+And then we free again the objects in reverse order, C, B and A.
 
 18
 00:01:27,880 --> 00:01:32,930
-And we have the printf at the end.
-So as you can see, there is no obvious application
+And we have the printf at the end. So as you can see, there is no obvious application
 
 19
 00:01:32,930 --> 00:01:38,880
-logic we could exploit. No use-after-free,
-no vulnerable pointer on the heap. But still
+logic we could exploit. No use-after-free, no vulnerable pointer on the heap. But still
 
 20
 00:01:38,880 --> 00:01:43,440
-it’s possible to redirect code execution.
-And as the description says, this level is
+it’s possible to redirect code execution. And as the description says, this level is
 
 21
 00:01:43,439 --> 00:01:48,849
-about corrupting heap meta data. So there
-is an issue with the heap algorithm, in this
+about corrupting heap meta data. So there is an issue with the heap algorithm, in this
 
 22
 00:01:48,850 --> 00:01:54,460
-case in the free() function, that we can use
-to redirect execution to winner().
+case in the free() function, that we can use to redirect execution to winner().
 
 23
 00:01:54,460 --> 00:02:00,670
-Let’s start by looking at the heap in gdb.
-To do this let’s add a couple of breakpoints.
+Let’s start by looking at the heap in gdb. To do this let’s add a couple of breakpoints.
 
 24
 00:02:00,670 --> 00:02:06,370
-How about at each library function. So break
-at malloc, strcpy, free and the printf, which
+How about at each library function. So break at malloc, strcpy, free and the printf, which
 
 25
 00:02:06,370 --> 00:02:10,810
-is actually puts, at the end.
-Let’s quickly run it, don’t forget the
+is actually puts, at the end. Let’s quickly run it, don’t forget the
 
 26
 00:02:10,810 --> 00:02:15,620
-3 arguments and continue until you arrive
-at the first strcpy. Then check the mapped
+3 arguments and continue until you arrive at the first strcpy. Then check the mapped
 
 27
 00:02:15,620 --> 00:02:22,330
-memory for this process and look for the heap.
-So this shows us, that our heap area is from
+memory for this process and look for the heap. So this shows us, that our heap area is from
 
 28
 00:02:22,330 --> 00:02:29,790
-804c to 804d. And we can define a hook-stop
-to always print like 56 words of this area
+804c to 804d. And we can define a hook-stop to always print like 56 words of this area
 
 29
 00:02:29,790 --> 00:02:34,660
-when we hit a breakpoint.
-When we now rerun the program we can see how
+when we hit a breakpoint. When we now rerun the program we can see how
 
 30
 00:02:34,660 --> 00:02:39,180
-the heap develops. Let’s do it.
-Before we execute the first malloc we don’t
+the heap develops. Let’s do it. Before we execute the first malloc we don’t
 
 31
 00:02:39,180 --> 00:02:44,630
-have a heap yet. After the malloc we can now
-see the first object on the heap. So remember
+have a heap yet. After the malloc we can now see the first object on the heap. So remember
 
 32
 00:02:44,629 --> 00:02:49,489
-how a heap chunk looks like? This is the size
-of the current chunk. Which is hex 29. The
+how a heap chunk looks like? This is the size of the current chunk. Which is hex 29. The
 
 33
 00:02:49,490 --> 00:02:55,260
-last bit indicates if the PREVIOUS chunk is
-in use. And because it’s the special first
+last bit indicates if the PREVIOUS chunk is in use. And because it’s the special first
 
 34
 00:02:55,260 --> 00:03:00,280
-chunk, there is no valid memory before that,
-thus it has the bit set indicating that that
+chunk, there is no valid memory before that, thus it has the bit set indicating that that
 
 35
 00:03:00,280 --> 00:03:06,160
-memory is not avilable, not free. This means
-the true size of the chunk is hex 28, which
+memory is not avilable, not free. This means the true size of the chunk is hex 28, which
 
 36
 00:03:06,160 --> 00:03:12,310
-is 40 bytes, so malloc allocated a bit more
-than 32 bytes. But doesn’t matter to us.
+is 40 bytes, so malloc allocated a bit more than 32 bytes. But doesn’t matter to us.
 
 37
 00:03:12,310 --> 00:03:16,480
-After this chunk we have the wilderness, which
-is like the first chunk - a little bit special.
+After this chunk we have the wilderness, which is like the first chunk - a little bit special.
 
 38
 00:03:16,480 --> 00:03:21,920
-But you can just imagien it as a huge free
-block still avilable for allocation and that’s
+But you can just imagien it as a huge free block still avilable for allocation and that’s
 
 39
 00:03:21,920 --> 00:03:26,080
-it’s size. And it obviously has the last
-bit set, because the previous chunk is in
+it’s size. And it obviously has the last bit set, because the previous chunk is in
 
 40
 00:03:26,080 --> 00:03:31,210
-use. We malloc the second object. Same size.
-Last bit set because the previous chunk is
+use. We malloc the second object. Same size. Last bit set because the previous chunk is
 
 41
 00:03:31,209 --> 00:03:36,089
-in use. And the wilderness was updated and
-has now less free space, but still the previous
+in use. And the wilderness was updated and has now less free space, but still the previous
 
 42
 00:03:36,090 --> 00:03:41,200
-chunk is in use. And then the last object.
-Another one with the same size. Last bit set,
+chunk is in use. And then the last object. Another one with the same size. Last bit set,
 
 43
 00:03:41,200 --> 00:03:45,740
-because the previous is in use. And less space
-available in the wilderness.
+because the previous is in use. And less space available in the wilderness.
 
 44
 00:03:45,739 --> 00:03:50,539
-Next we execute the string copies. So we copy
-the first argument which was the As to the
+Next we execute the string copies. So we copy the first argument which was the As to the
 
 45
 00:03:50,540 --> 00:03:56,500
-first chunk. The Bs to the second chunk and
-the Cs to the third chunk. Obviously we could
+first chunk. The Bs to the second chunk and the Cs to the third chunk. Obviously we could
 
 46
 00:03:56,500 --> 00:04:00,960
-have written a lot more and completly overwrite
-everything. Including the chunk size, which
+have written a lot more and completly overwrite everything. Including the chunk size, which
 
 47
 00:04:00,959 --> 00:04:03,179
@@ -234,43 +188,35 @@ is the heap metadata.
 
 48
 00:04:03,180 --> 00:04:08,150
-Next we gonna free them again, so the last
-chunk got freed. The Cs got overwritten with
+Next we gonna free them again, so the last chunk got freed. The Cs got overwritten with
 
 49
 00:04:08,150 --> 00:04:13,330
-zero, because these two words here have special
-meaning for a free block. So previously we
+zero, because these two words here have special meaning for a free block. So previously we
 
 50
 00:04:13,330 --> 00:04:18,220
-had allocated blocks. Now we have a block
-that is available again. Free. Not much else
+had allocated blocks. Now we have a block that is available again. Free. Not much else
 
 51
 00:04:18,219 --> 00:04:22,789
-changed. Infact those chunks are very small
-and are considered “fastbins” by malloc.
+changed. Infact those chunks are very small and are considered “fastbins” by malloc.
 
 52
 00:04:22,789 --> 00:04:26,149
-They behave a little bit different. We will
-learn about that a little bit later.
+They behave a little bit different. We will learn about that a little bit later.
 
 53
 00:04:26,150 --> 00:04:30,670
-But let’s continue and free the next one,
-so we have two free blocks. This time our
+But let’s continue and free the next one, so we have two free blocks. This time our
 
 54
 00:04:30,669 --> 00:04:35,069
-Bs got overwritten with an address, and it
-points to the other free block. So that’s
+Bs got overwritten with an address, and it points to the other free block. So that’s
 
 55
 00:04:35,069 --> 00:04:38,729
-the special meaning of the overwritten word,
-they are pointers, pointing to the next free
+the special meaning of the overwritten word, they are pointers, pointing to the next free
 
 56
 00:04:38,729 --> 00:04:40,199
@@ -278,68 +224,55 @@ block. A linked list.
 
 57
 00:04:40,199 --> 00:04:44,749
-Okay continue and free the next one, and we
-extend that linked list. The first free block
+Okay continue and free the next one, and we extend that linked list. The first free block
 
 58
 00:04:44,749 --> 00:04:47,839
-points to the second one, and that second
-one points to the third one, which is the
+points to the second one, and that second one points to the third one, which is the
 
 59
 00:04:47,840 --> 00:04:51,800
-last block before the wilderness.
-You probably ask yourself why the last bit
+last block before the wilderness. You probably ask yourself why the last bit
 
 60
 00:04:51,800 --> 00:04:56,950
-of the sizes, which indicate that the previous
-blocks are in-use didn’t get set to 0. It’s
+of the sizes, which indicate that the previous blocks are in-use didn’t get set to 0. It’s
 
 61
 00:04:56,949 --> 00:05:01,709
-a bit confusing, but think like an algorithm
-for a second. In this case, they are small
+a bit confusing, but think like an algorithm for a second. In this case, they are small
 
 62
 00:05:01,710 --> 00:05:06,540
-fast bins and we want to be super fast handling
-them. And how we freed blocks in this reverse
+fast bins and we want to be super fast handling them. And how we freed blocks in this reverse
 
 63
 00:05:06,539 --> 00:05:10,729
-order, it just doesn’t matter.
-It would be unnecessary wasted time to set
+order, it just doesn’t matter. It would be unnecessary wasted time to set
 
 64
 00:05:10,729 --> 00:05:15,899
-that bit. Just imagining this pointer somewhere,
-which always points to the first free chunk.
+that bit. Just imagining this pointer somewhere, which always points to the first free chunk.
 
 65
 00:05:15,899 --> 00:05:20,049
-When I now want to malloc something and look
-for free space, I can then simply follow the
+When I now want to malloc something and look for free space, I can then simply follow the
 
 66
 00:05:20,050 --> 00:05:24,080
-linked list to find all free chunks and thus
-the information that a previous chunk is free
+linked list to find all free chunks and thus the information that a previous chunk is free
 
 67
 00:05:24,080 --> 00:05:29,290
-is just irrelevant, right? But, It would also
-look a little bit different if the chunk sizes
+is just irrelevant, right? But, It would also look a little bit different if the chunk sizes
 
 68
 00:05:29,289 --> 00:05:34,199
-were bigger. Then malloc and free would clean
-up a little bit more and use more heap metadata
+were bigger. Then malloc and free would clean up a little bit more and use more heap metadata
 
 69
 00:05:34,199 --> 00:05:38,459
-for housekpeeing. But let’s not get hung
-up on this. We will walk through some part
+for housekpeeing. But let’s not get hung up on this. We will walk through some part
 
 70
 00:05:38,460 --> 00:05:41,790
@@ -347,13 +280,11 @@ of the algirthm later and clear up some parts.
 
 71
 00:05:41,789 --> 00:05:47,009
-So let’s have a look in the code. When you
-look for the dlmalloc algorithm for this case,
+So let’s have a look in the code. When you look for the dlmalloc algorithm for this case,
 
 72
 00:05:47,009 --> 00:05:50,599
-make sure you have a version that is over
-15 years old, otherwise you look at a patched
+make sure you have a version that is over 15 years old, otherwise you look at a patched
 
 73
 00:05:50,599 --> 00:05:51,789
@@ -361,188 +292,151 @@ version.
 
 74
 00:05:51,789 --> 00:05:56,279
-Now before we start reading the code, think
-for a moment what we are looking for. We look
+Now before we start reading the code, think for a moment what we are looking for. We look
 
 75
 00:05:56,279 --> 00:06:01,969
-for a primitive that allows us to perform
-an arbitrary write. That would allow us to
+for a primitive that allows us to perform an arbitrary write. That would allow us to
 
 76
 00:06:01,969 --> 00:06:08,319
-overwrite an entry in the global offset table.
-One possible way how such code that can be
+overwrite an entry in the global offset table. One possible way how such code that can be
 
 77
 00:06:08,319 --> 00:06:15,369
-abused for that looks like, is following pointers
-that we control, right? If there is some kind
+abused for that looks like, is following pointers that we control, right? If there is some kind
 
 78
 00:06:15,369 --> 00:06:22,219
-of code here that performs a write based on
-pointers on the heap we can overflow, we win.
+of code here that performs a write based on pointers on the heap we can overflow, we win.
 
 79
 00:06:22,219 --> 00:06:26,069
-Let’s keep that in mind when we look at
-the code.
+Let’s keep that in mind when we look at the code.
 
 80
 00:06:26,070 --> 00:06:31,640
-The function starts with the parameter mem,
-which is the address we want to free. Shortly
+The function starts with the parameter mem, which is the address we want to free. Shortly
 
 81
 00:06:31,639 --> 00:06:36,489
-afterwards mem2chunk is called which get the
-address two words ahead of mem, which is the
+afterwards mem2chunk is called which get the address two words ahead of mem, which is the
 
 82
 00:06:36,490 --> 00:06:42,280
-true starting address of the chunk.
-The first if we reach contains only a little
+true starting address of the chunk. The first if we reach contains only a little
 
 83
 00:06:42,280 --> 00:06:47,560
-bit of code. And it refers to fastbins. THis
-is exactly what we witnessed when we freed
+bit of code. And it refers to fastbins. THis is exactly what we witnessed when we freed
 
 84
 00:06:47,560 --> 00:06:53,070
-our small 32byte chunks. It updated the first
-pointer, the fd pointer. Which created the
+our small 32byte chunks. It updated the first pointer, the fd pointer. Which created the
 
 85
 00:06:53,069 --> 00:06:57,429
-linked list. But otherwise not much happens
-and thus it’s not interesting.
+linked list. But otherwise not much happens and thus it’s not interesting.
 
 86
 00:06:57,429 --> 00:07:02,319
-So this means we just really want to make
-sure, that our size is greater than the maximum
+So this means we just really want to make sure, that our size is greater than the maximum
 
 87
 00:07:02,319 --> 00:07:08,919
-fastbin chunk size, which is defined as 80.
-Our chunk sizes are 32, so we wanna make sure
+fastbin chunk size, which is defined as 80. Our chunk sizes are 32, so we wanna make sure
 
 88
 00:07:08,919 --> 00:07:12,709
-that we overflow the size of the chunk we
-handle.
+that we overflow the size of the chunk we handle.
 
 89
 00:07:12,709 --> 00:07:16,539
-If we head into the else if, we arrive at
-an interesting comment:
+If we head into the else if, we arrive at an interesting comment:
 
 90
 00:07:16,539 --> 00:07:21,249
-“Consolidate other non-mmaped chunks”.
-If we check what is necessary to pass this
+“Consolidate other non-mmaped chunks”. If we check what is necessary to pass this
 
 91
 00:07:21,250 --> 00:07:27,030
-test, we look at the chunk_is_mmaped macro
-which takes the size of p, which is the size
+test, we look at the chunk_is_mmaped macro which takes the size of p, which is the size
 
 92
 00:07:27,029 --> 00:07:32,829
-of the current chunk, and checks the IS_MMAPPPED
-flag. Very similar to the PREV_INUSE bit,
+of the current chunk, and checks the IS_MMAPPPED flag. Very similar to the PREV_INUSE bit,
 
 93
 00:07:32,830 --> 00:07:37,890
-which is the last one, the IS_MMAPPED flag
-is the second last bit. So when we want to
+which is the last one, the IS_MMAPPED flag is the second last bit. So when we want to
 
 94
 00:07:37,889 --> 00:07:42,899
-reach the code in here, we have to make sure
-that the 2nd last bit is not set.
+reach the code in here, we have to make sure that the 2nd last bit is not set.
 
 95
 00:07:42,900 --> 00:07:46,690
-Then we get the address of the next chunk,
-which we can calculate based on the size of
+Then we get the address of the next chunk, which we can calculate based on the size of
 
 96
 00:07:46,689 --> 00:07:52,029
-our current chunk. So with an overflow, the
-size is already something we can control,
+our current chunk. So with an overflow, the size is already something we can control,
 
 97
 00:07:52,029 --> 00:07:57,779
-this means, that here we have a first opportunity
-to fool free() into thinking some other data
+this means, that here we have a first opportunity to fool free() into thinking some other data
 
 98
 00:07:57,779 --> 00:08:02,299
-is the next chunk.
-After that we have a check if the previous
+is the next chunk. After that we have a check if the previous
 
 99
 00:08:02,300 --> 00:08:07,130
-chunk is in use, if the previous chunk would
-not be in use, which is defined by the lowest
+chunk is in use, if the previous chunk would not be in use, which is defined by the lowest
 
 100
 00:08:07,129 --> 00:08:11,979
-bit set to 0, we would follow the prev_size,
-which we haven’t introduced yet, but it’s
+bit set to 0, we would follow the prev_size, which we haven’t introduced yet, but it’s
 
 101
 00:08:11,979 --> 00:08:17,219
-this word before our chunk size. And thus
-calculates the address of the previous chunk.
+this word before our chunk size. And thus calculates the address of the previous chunk.
 
 102
 00:08:17,219 --> 00:08:23,289
-Again, a value we possibly can control.
-Then we execute an unlink. That’s the magic
+Again, a value we possibly can control. Then we execute an unlink. That’s the magic
 
 103
 00:08:23,289 --> 00:08:26,709
-word I mentioned at the beginning. So let’s
-see what that means.
+word I mentioned at the beginning. So let’s see what that means.
 
 104
 00:08:26,710 --> 00:08:32,000
-The first parameter p, is the block before
-our current block, which we got by following
+The first parameter p, is the block before our current block, which we got by following
 
 105
 00:08:31,999 --> 00:08:37,429
-the prev_size. We take the forward and backward
-pointer of that chunk, which is the first
+the prev_size. We take the forward and backward pointer of that chunk, which is the first
 
 106
 00:08:37,430 --> 00:08:43,680
-and second word after the size and remember
-it in FD and BK.
+and second word after the size and remember it in FD and BK.
 
 107
 00:08:43,680 --> 00:08:50,130
-For simplicity ignore the -&gt;bk and -&gt;fd, because
-that just references a small offset from the
+For simplicity ignore the -&gt;bk and -&gt;fd, because that just references a small offset from the
 
 108
 00:08:50,130 --> 00:08:57,310
-address here. We add those offsets afterwards.
-So now we write the address BK, to the address
+address here. We add those offsets afterwards. So now we write the address BK, to the address
 
 109
 00:08:57,310 --> 00:09:00,430
-where FD is pointing to.
-And then we write FD to the address where
+where FD is pointing to. And then we write FD to the address where
 
 110
 00:09:00,430 --> 00:09:01,740
-BK is pointing to.
-Or to be exact at their respective offsets
+BK is pointing to. Or to be exact at their respective offsets
 
 111
 00:09:01,740 --> 00:09:02,740
@@ -550,108 +444,87 @@ where the prev and next pointer is stored.
 
 112
 00:09:02,740 --> 00:09:05,990
-Okay stop! BK could be the address of the
-winner function. And FD+12 could be our GoT
+Okay stop! BK could be the address of the winner function. And FD+12 could be our GoT
 
 113
 00:09:05,990 --> 00:09:09,530
-table entry for puts().
-This would overwrite an entry in the global
+table entry for puts(). This would overwrite an entry in the global
 
 114
 00:09:09,529 --> 00:09:12,899
-offset table with the winner function. This
-sounds perfect!!!
+offset table with the winner function. This sounds perfect!!!
 
 115
 00:09:12,899 --> 00:09:18,279
-But we forget the next part, where we would
-take our GOT address in FD and attempt to
+But we forget the next part, where we would take our GOT address in FD and attempt to
 
 116
 00:09:18,279 --> 00:09:24,279
-write it to the address of Winner (+8).
-Mhhh… that would segfault. We can’t write
+write it to the address of Winner (+8). Mhhh… that would segfault. We can’t write
 
 117
 00:09:24,280 --> 00:09:30,600
-into the code segment. Damnit…
-But now you just have to get creative. Think
+into the code segment. Damnit… But now you just have to get creative. Think
 
 118
 00:09:30,601 --> 00:09:36,751
-about. If we have two memory segments. Segment
-A and B. We can write an address from segment
+about. If we have two memory segments. Segment A and B. We can write an address from segment
 
 119
 00:09:36,750 --> 00:09:41,280
-A into segment B. And we write an address
-from segment B into segment A. The global
+A into segment B. And we write an address from segment B into segment A. The global
 
 120
 00:09:41,279 --> 00:09:45,719
-offset table is writeable, so that could be
-one of those segments, just the code segment
+offset table is writeable, so that could be one of those segments, just the code segment
 
 121
 00:09:45,720 --> 00:09:51,120
-can’t be the other one. But the HEAP could
-be our second one. We can write to the heap.
+can’t be the other one. But the HEAP could be our second one. We can write to the heap.
 
 122
 00:09:51,120 --> 00:09:55,160
-This would allow us to write an address from
-the Heap to the global offset table, and some
+This would allow us to write an address from the Heap to the global offset table, and some
 
 123
 00:09:55,160 --> 00:09:59,580
-unimportant address from the global offset
-table will be written into the heap! This
+unimportant address from the global offset table will be written into the heap! This
 
 124
 00:09:59,581 --> 00:10:05,031
-means we can redirect code execution via the
-global offset table to shellcode that we can
+means we can redirect code execution via the global offset table to shellcode that we can
 
 125
 00:10:05,029 --> 00:10:09,749
-place on the Heap. and then this shellcode
-calls winner for us.
+place on the Heap. and then this shellcode calls winner for us.
 
 126
 00:10:09,750 --> 00:10:14,440
-That sounds like an awesome plan.
-Let’s take the state of the heap as we know
+That sounds like an awesome plan. Let’s take the state of the heap as we know
 
 127
 00:10:14,440 --> 00:10:18,420
-it and think about how we would want to construct
-the case we just explained.
+it and think about how we would want to construct the case we just explained.
 
 128
 00:10:18,420 --> 00:10:22,800
-So we could decide that we want to free the
-last block and make sure the prev in_use bit
+So we could decide that we want to free the last block and make sure the prev in_use bit
 
 129
 00:10:22,800 --> 00:10:28,270
-set to 0. So that it attempts to consolidate
-the previous block. Let’s actually make
+set to 0. So that it attempts to consolidate the previous block. Let’s actually make
 
 130
 00:10:28,269 --> 00:10:33,639
-those changes right here with gdb, this way
-we can directly test it. Set the chunk size
+those changes right here with gdb, this way we can directly test it. Set the chunk size
 
 131
 00:10:33,640 --> 00:10:40,120
-to more than 80 and have the prev in use bit
-set to 0. So why not 100. Now we want to set
+to more than 80 and have the prev in use bit set to 0. So why not 100. Now we want to set
 
 132
 00:10:40,120 --> 00:10:46,040
-the prev_size, to point to the previous block
-we want to merge with. Let’s make that a
+the prev_size, to point to the previous block we want to merge with. Let’s make that a
 
 133
 00:10:46,040 --> 00:10:48,220
@@ -659,78 +532,63 @@ small block. So maybe hex 10.
 
 134
 00:10:48,220 --> 00:10:57,180
-This means at -0x10 we have to create a fake
-chunk. Of that size. So set 0x11, because
+This means at -0x10 we have to create a fake chunk. Of that size. So set 0x11, because
 
 135
 00:10:57,180 --> 00:11:03,540
-we want to indicate that the chunk before
-this fake chunk would be in use. great.
+we want to indicate that the chunk before this fake chunk would be in use. great.
 
 136
 00:11:03,540 --> 00:11:09,290
-Now we need the address from puts in the global
-offset table. This will be the forward pointer
+Now we need the address from puts in the global offset table. This will be the forward pointer
 
 137
 00:11:09,290 --> 00:11:15,900
-where the 2nd pointer will be written to at
-+12. That’s why you have to do puts-12,
+where the 2nd pointer will be written to at +12. That’s why you have to do puts-12,
 
 138
 00:11:15,899 --> 00:11:21,409
-because it will be written to the address
-+12. And the other pointer will be the address
+because it will be written to the address +12. And the other pointer will be the address
 
 139
 00:11:21,410 --> 00:11:25,510
-that we write to the global offset table,
-so that one should point somewhere into the
+that we write to the global offset table, so that one should point somewhere into the
 
 140
 00:11:25,509 --> 00:11:30,199
-heap where we can place some shellcode. Why
-not go here.
+heap where we can place some shellcode. Why not go here.
 
 141
 00:11:30,199 --> 00:11:35,419
-Just one other thing to consider, before we
-can test it, the size is used to calculate
+Just one other thing to consider, before we can test it, the size is used to calculate
 
 142
 00:11:35,420 --> 00:11:41,040
-the next chunk and the next size. And after
-the unlink those values are used. So if we
+the next chunk and the next size. And after the unlink those values are used. So if we
 
 143
 00:11:41,040 --> 00:11:46,650
-use the size 100, we point into some unused
-memory and we have to make sure that the values
+use the size 100, we point into some unused memory and we have to make sure that the values
 
 144
 00:11:46,649 --> 00:11:52,279
-there behave nicely. Otherwise we will crash
-somewehere. There is an if-check if the next
+there behave nicely. Otherwise we will crash somewehere. There is an if-check if the next
 
 145
 00:11:52,279 --> 00:11:58,039
-chunk is the top, or what we call wilderness.
-But our size is overshooting that address.
+chunk is the top, or what we call wilderness. But our size is overshooting that address.
 
 146
 00:11:58,040 --> 00:12:03,870
-This means we land in this if-case. And now
-it calculates the next block of that one and
+This means we land in this if-case. And now it calculates the next block of that one and
 
 147
 00:12:03,870 --> 00:12:08,910
-checks the prev in use bit to figure out if
-the block before it is free or not. So if
+checks the prev in use bit to figure out if the block before it is free or not. So if
 
 148
 00:12:08,910 --> 00:12:14,130
-it is not in use we perform another unlink
-to also merge the unused block after the current
+it is not in use we perform another unlink to also merge the unused block after the current
 
 149
 00:12:14,129 --> 00:12:17,459
@@ -738,38 +596,31 @@ one. Which copies around those pointers.
 
 150
 00:12:17,459 --> 00:12:22,759
-Hey, this is LiveOverflow from the future.
-I’m just editing this part and I realized
+Hey, this is LiveOverflow from the future. I’m just editing this part and I realized
 
 151
 00:12:22,759 --> 00:12:27,759
-that I missread the code here. I thought I
-had the choice between this short unlink if
+that I missread the code here. I thought I had the choice between this short unlink if
 
 152
 00:12:27,760 --> 00:12:32,480
-case, or the whole else case below. But I
-missed that there are no curly braces, which
+case, or the whole else case below. But I missed that there are no curly braces, which
 
 153
 00:12:32,481 --> 00:12:39,231
-means the else case is just this clear_inuse_bit_at_offset.
-When I was developing this proof of concept
+means the else case is just this clear_inuse_bit_at_offset. When I was developing this proof of concept
 
 154
 00:12:39,230 --> 00:12:44,340
-I thought to myself I don’t want to overcomplicate
-it with the code down here. Infact I made
+I thought to myself I don’t want to overcomplicate it with the code down here. Infact I made
 
 155
 00:12:44,339 --> 00:12:49,589
-it over complicated because we have to construct
-another fake chunk now to deal with this second
+it over complicated because we have to construct another fake chunk now to deal with this second
 
 156
 00:12:49,589 --> 00:12:54,459
-unlink in here. But whatever, I think that
-was a great learning experience. Let’s head
+unlink in here. But whatever, I think that was a great learning experience. Let’s head
 
 157
 00:12:54,459 --> 00:12:58,699
@@ -777,13 +628,11 @@ back into the episode.
 
 158
 00:12:58,700 --> 00:13:01,870
-At this point we should have already succeeded
-in writing our heap address to the global
+At this point we should have already succeeded in writing our heap address to the global
 
 159
 00:13:01,870 --> 00:13:06,000
-offset table with the previous unlink, so
-we can just pick two random heap values to
+offset table with the previous unlink, so we can just pick two random heap values to
 
 160
 00:13:06,000 --> 00:13:08,330
@@ -791,8 +640,7 @@ not crash here.
 
 161
 00:13:08,330 --> 00:13:12,750
-So those are two more fake chunks. With the
-forward and backward pointer pointing into
+So those are two more fake chunks. With the forward and backward pointer pointing into
 
 162
 00:13:12,750 --> 00:13:15,200
@@ -800,88 +648,71 @@ the heap which we don’t care about.
 
 163
 00:13:15,200 --> 00:13:19,960
-This is LiveOverflow from the future. Again.
-I just realized I made another small mistake
+This is LiveOverflow from the future. Again. I just realized I made another small mistake
 
 164
 00:13:19,959 --> 00:13:23,639
-which negates my false assumption about the
-big else case from earlier.
+which negates my false assumption about the big else case from earlier.
 
 165
 00:13:23,639 --> 00:13:30,229
-I actually did set the prev_in_use bit, which
-means it does NOT consolidate this fake chunk.
+I actually did set the prev_in_use bit, which means it does NOT consolidate this fake chunk.
 
 166
 00:13:30,230 --> 00:13:34,650
-Not to mention that I set the fd and bk pointer
-for the wrong chunk anyway. Should have been
+Not to mention that I set the fd and bk pointer for the wrong chunk anyway. Should have been
 
 167
 00:13:34,649 --> 00:13:38,269
-on the other chunk before. I’m sorry guys.
-I’m just a noob.
+on the other chunk before. I’m sorry guys. I’m just a noob.
 
 168
 00:13:38,269 --> 00:13:44,309
-So to summarize. We change the size of the
-block we are going to free. We create a fake
+So to summarize. We change the size of the block we are going to free. We create a fake
 
 169
 00:13:44,310 --> 00:13:50,530
-free chunk before our current one to trigger
-an unlink and overwrite the GoT. And we created
+free chunk before our current one to trigger an unlink and overwrite the GoT. And we created
 
 170
 00:13:50,529 --> 00:13:54,989
-two fake chunk afterwards, where the second
-one says about the previous that it is in
+two fake chunk afterwards, where the second one says about the previous that it is in
 
 171
 00:13:54,990 --> 00:14:00,500
-use. Thus not triggering another unlink. And
-those two values here were unecessary.
+use. Thus not triggering another unlink. And those two values here were unecessary.
 
 172
 00:14:00,499 --> 00:14:06,409
-Now if we continue and execute the first free,
-we can check the entry for puts and we see
+Now if we continue and execute the first free, we can check the entry for puts and we see
 
 173
 00:14:06,410 --> 00:14:10,760
-the function address was sucsessfully written.
-And when we look at the heap, we can see that
+the function address was sucsessfully written. And when we look at the heap, we can see that
 
 174
 00:14:10,759 --> 00:14:17,859
-at the offset +8 we have a GOT address written.
-Awesome. And when we continue to the puts
+at the offset +8 we have a GOT address written. Awesome. And when we continue to the puts
 
 175
 00:14:17,860 --> 00:14:22,680
-and single step forward we jump into the heap.
-AWESOME!
+and single step forward we jump into the heap. AWESOME!
 
 176
 00:14:22,680 --> 00:14:26,670
-This works! Now we just have to get these
-values into the heap with the strcpy…
+This works! Now we just have to get these values into the heap with the strcpy…
 
 177
 00:14:26,670 --> 00:14:36,050
-Oh no. oh nonononono. I’m stupid. Strcpy
-can’t copy nullbytes. A string in C is defined
+Oh no. oh nonononono. I’m stupid. Strcpy can’t copy nullbytes. A string in C is defined
 
 178
 00:14:36,050 --> 00:14:43,150
-to end with NULL. So we can’t write sizes
-like hex 10 into memory. At least not multiple
+to end with NULL. So we can’t write sizes like hex 10 into memory. At least not multiple
 
 179
 00:14:43,149 --> 00:14:49,929
-times. Oh dammit. The whole plan doesn’t
-work in this case… if it were a read() it
+times. Oh dammit. The whole plan doesn’t work in this case… if it were a read() it
 
 180
 00:14:49,930 --> 00:14:52,390
@@ -889,6 +720,5 @@ would work. But not with strcpy.
 
 181
 00:14:52,389 --> 00:14:57,179
-I go sit in my corner now and think about
-all the failures in life. See you soon. Maybe.
+I go sit in my corner now and think about all the failures in life. See you soon. Maybe.
 

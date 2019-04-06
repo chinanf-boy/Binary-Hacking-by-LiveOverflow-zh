@@ -1,22 +1,18 @@
 1
 00:00:00,149 --> 00:00:05,899
-The topic of this video is very special to
-me because it's the slogan of this channel.
+The topic of this video is very special to me because it's the slogan of this channel.
 
 2
 00:00:05,900 --> 00:00:11,320
-"explore weird machines". So in this video
-I want to introduce what a weird machine is
+"explore weird machines". So in this video I want to introduce what a weird machine is
 
 3
 00:00:11,320 --> 00:00:17,610
-and use it to explain return oriented programming.
-But let's start from a clean slate. Please
+and use it to explain return oriented programming. But let's start from a clean slate. Please
 
 4
 00:00:17,611 --> 00:00:23,171
-forget the term return oriented programming
-and weird machine. And let's start with something
+forget the term return oriented programming and weird machine. And let's start with something
 
 5
 00:00:23,170 --> 00:00:27,120
@@ -24,38 +20,31 @@ else.
 
 6
 00:00:27,119 --> 00:00:36,019
-I really want to show you this really weird
-programming language I made. It's a really
+I really want to show you this really weird programming language I made. It's a really
 
 7
 00:00:36,020 --> 00:00:40,340
-terrible language. But let me show you some
-example programs.
+terrible language. But let me show you some example programs.
 
 8
 00:00:40,340 --> 00:00:45,900
-Here is a simple hello world. In this programming
-language you first have to initialize the
+Here is a simple hello world. In this programming language you first have to initialize the
 
 9
 00:00:45,900 --> 00:00:51,010
-program, and then you can start writing actual
-instructions. So here we SET the variable
+program, and then you can start writing actual instructions. So here we SET the variable
 
 10
 00:00:51,010 --> 00:00:56,740
-four to the string Hell.
-And then we store that variable four in memory
+four to the string Hell. And then we store that variable four in memory
 
 11
 00:00:56,740 --> 00:01:02,020
-location 1.
-Then we set variable four to O SPACE W O,
+location 1. Then we set variable four to O SPACE W O,
 
 12
 00:01:02,020 --> 00:01:07,740
-and store variable four again in memory location
-2. And lastly we set the variable four to
+and store variable four again in memory location 2. And lastly we set the variable four to
 
 13
 00:01:07,740 --> 00:01:13,090
@@ -64,28 +53,23 @@ rld! and store that value in memory location
 
 14
 00:01:13,090 --> 00:01:16,180
-Cool!
-Next we want to print it. To do that we have
+Cool! Next we want to print it. To do that we have
 
 15
 00:01:16,180 --> 00:01:22,120
-to prepare the two parameters for PRINTF.
-The fist parameter, that will be the destination
+to prepare the two parameters for PRINTF. The fist parameter, that will be the destination
 
 16
 00:01:22,120 --> 00:01:27,630
-variable, is set to the memory location 1.
-The memory locations are continuous memory,
+variable, is set to the memory location 1. The memory locations are continuous memory,
 
 17
 00:01:27,630 --> 00:01:32,270
-so printing from location 1 will print the
-whole string.. And the second parameter of
+so printing from location 1 will print the whole string.. And the second parameter of
 
 18
 00:01:32,270 --> 00:01:37,450
-printf will just be set to 0. It's just a
-printf of the hello world string. No printf
+printf will just be set to 0. It's just a printf of the hello world string. No printf
 
 19
 00:01:37,450 --> 00:01:40,550
@@ -93,58 +77,47 @@ format modifiers and parameters here.
 
 20
 00:01:40,550 --> 00:01:46,200
-And at the end we exit. All in all a bit ugly
-language, but makes somewhat sense, right?
+And at the end we exit. All in all a bit ugly language, but makes somewhat sense, right?
 
 21
 00:01:46,200 --> 00:01:49,800
-pretty simple.
-So let's run this program!
+pretty simple. So let's run this program!
 
 22
 00:01:49,799 --> 00:01:56,669
-First we have to compile it with this python
-compile script that I wrote. python compile.py
+First we have to compile it with this python compile script that I wrote. python compile.py
 
 23
 00:01:56,670 --> 00:02:02,800
-helloworld.weird, that's the source code,
-and the name of the outfile, so helloworld.binary.
+helloworld.weird, that's the source code, and the name of the outfile, so helloworld.binary.
 
 24
 00:02:02,799 --> 00:02:09,059
-Let's quickly look at the produced binary
-in the text editor. It starts off with some
+Let's quickly look at the produced binary in the text editor. It starts off with some
 
 25
 00:02:09,060 --> 00:02:16,280
-readable characters, 1, 123 and a lot of AAAAAAAs.
-But we also can find our Hello world snippets
+readable characters, 1, 123 and a lot of AAAAAAAs. But we also can find our Hello world snippets
 
 26
 00:02:16,280 --> 00:02:23,630
-in there. HELL o WO RLD. The other values
-are just jibberish.
+in there. HELL o WO RLD. The other values are just jibberish.
 
 27
 00:02:23,629 --> 00:02:28,879
-But let's run it! To run it you have to simply
-cat, so print the binary file and pipe the
+But let's run it! To run it you have to simply cat, so print the binary file and pipe the
 
 28
 00:02:28,879 --> 00:02:36,109
-output into the interpreter, called invoice.
-Okay, I know the output is really confusing.
+output into the interpreter, called invoice. Okay, I know the output is really confusing.
 
 29
 00:02:36,109 --> 00:02:41,399
-but that's just part of the weird invoice
-program. so just ignore that invoicing menu.
+but that's just part of the weird invoice program. so just ignore that invoicing menu.
 
 30
 00:02:41,400 --> 00:02:46,030
-Because all the way down here at the bottom
-we can find our output! HELLO WORLD!
+Because all the way down here at the bottom we can find our output! HELLO WORLD!
 
 31
 00:02:46,030 --> 00:02:47,030
@@ -152,43 +125,35 @@ Awesome!
 
 32
 00:02:47,030 --> 00:02:52,620
-Let me show you some other examples. This
-here is a simple ECHO program. It reads a
+Let me show you some other examples. This here is a simple ECHO program. It reads a
 
 33
 00:02:52,620 --> 00:02:58,970
-string from standard input into memory location
-1. And then also prepares printf with the
+string from standard input into memory location 1. And then also prepares printf with the
 
 34
 00:02:58,969 --> 00:03:05,149
-memory 1 location to print that string. Again
-we can try this out by first compiling it,
+memory 1 location to print that string. Again we can try this out by first compiling it,
 
 35
 00:03:05,150 --> 00:03:09,890
-and then we have to output the binary and
-pipe it into the input of the invoice program.
+and then we have to output the binary and pipe it into the input of the invoice program.
 
 36
 00:03:09,890 --> 00:03:14,210
-But not only that, we should also execute
-cat so the input doesn't close and we can
+But not only that, we should also execute cat so the input doesn't close and we can
 
 37
 00:03:14,209 --> 00:03:18,549
-send more input that we type to the program.
-Just some linux commandline foo, don't worry
+send more input that we type to the program. Just some linux commandline foo, don't worry
 
 38
 00:03:18,549 --> 00:03:24,269
-about it. but fact is when we execute this,
-the program waits for input, we can type something
+about it. but fact is when we execute this, the program waits for input, we can type something
 
 39
 00:03:24,269 --> 00:03:28,379
-in, and the output is here! It worked!!! and
-please, again ignore the invoice jibberish
+in, and the output is here! It worked!!! and please, again ignore the invoice jibberish
 
 40
 00:03:28,379 --> 00:03:29,559
@@ -196,28 +161,23 @@ menu around it.
 
 41
 00:03:29,560 --> 00:03:33,800
-Let's do another example. I'm really proud
-of this one.
+Let's do another example. I'm really proud of this one.
 
 42
 00:03:33,799 --> 00:03:39,099
-This will read a string into memory location
-1. Then it will execute String to integer
+This will read a string into memory location 1. Then it will execute String to integer
 
 43
 00:03:39,099 --> 00:03:45,169
-on that value. So we have to enter a number.
-The result, so the raw integer number will
+on that value. So we have to enter a number. The result, so the raw integer number will
 
 44
 00:03:45,169 --> 00:03:49,339
-be in the result variable.
-Then we initialize the variable four with
+be in the result variable. Then we initialize the variable four with
 
 45
 00:03:49,340 --> 00:03:54,750
-zero, and add the result, so the number we
-entered to it. Then we store that value into
+zero, and add the result, so the number we entered to it. Then we store that value into
 
 46
 00:03:54,749 --> 00:03:57,319
@@ -225,63 +185,51 @@ memory location 2.
 
 47
 00:03:57,319 --> 00:04:02,369
-Then we read another number as string and
-convert that string also to an integer. Now
+Then we read another number as string and convert that string also to an integer. Now
 
 48
 00:04:02,371 --> 00:04:07,801
-we load the old value from memory location
-2 back into variable four, and then we add
+we load the old value from memory location 2 back into variable four, and then we add
 
 49
 00:04:07,799 --> 00:04:12,339
-the new converted integer in result to the
-variable 4.
+the new converted integer in result to the variable 4.
 
 50
 00:04:12,340 --> 00:04:17,210
-And then we prepare printf, but this time
-we have two parameters. The first one is of
+And then we prepare printf, but this time we have two parameters. The first one is of
 
 51
 00:04:17,209 --> 00:04:23,189
-course a format string. The programming language
-has a few hardcoded format strings like this
+course a format string. The programming language has a few hardcoded format strings like this
 
 52
 00:04:23,190 --> 00:04:30,160
-string 1 here. And as the second parameter,
-we have our variable 4. Cool. Let's try it!!!
+string 1 here. And as the second parameter, we have our variable 4. Cool. Let's try it!!!
 
 53
 00:04:30,160 --> 00:04:36,820
-We compile the sum program. And execute it
-again with cat. Then we enter the first number.
+We compile the sum program. And execute it again with cat. Then we enter the first number.
 
 54
 00:04:36,820 --> 00:04:41,050
-Then the second number. And we get the calculated
-sum output.
+Then the second number. And we get the calculated sum output.
 
 55
 00:04:41,050 --> 00:04:46,980
-Okay... you ask yourself probably what is
-up with this weird programming language. Why
+Okay... you ask yourself probably what is up with this weird programming language. Why
 
 56
 00:04:46,980 --> 00:04:53,350
-am I showing this here? Well... the only reason
-why I showd it was, because I need you to
+am I showing this here? Well... the only reason why I showd it was, because I need you to
 
 57
 00:04:53,349 --> 00:04:59,179
-fully agree with me, this is a "programming
-language", right? We can write programs, and
+fully agree with me, this is a "programming language", right? We can write programs, and
 
 58
 00:04:59,180 --> 00:05:04,950
-then we can somehow compile them, and then
-they get executed. Simple... but also very
+then we can somehow compile them, and then they get executed. Simple... but also very
 
 59
 00:05:04,950 --> 00:05:06,830
@@ -289,68 +237,55 @@ weird looking.
 
 60
 00:05:06,830 --> 00:05:12,560
-So let's have a quick look at the invoice
-program. It's actually a regular simple c
+So let's have a quick look at the invoice program. It's actually a regular simple c
 
 61
 00:05:12,560 --> 00:05:18,080
-program. When we just execute it alone we
-can for example add an invoice, enter an amount
+program. When we just execute it alone we can for example add an invoice, enter an amount
 
 62
 00:05:18,080 --> 00:05:24,120
-in euro and add a comment. We can add a few
-more to just get a feeling for the program.
+in euro and add a comment. We can add a few more to just get a feeling for the program.
 
 63
 00:05:24,120 --> 00:05:29,830
-And can then select options like calculating
-the sum of all invoices. Or we can just finalize
+And can then select options like calculating the sum of all invoices. Or we can just finalize
 
 64
 00:05:29,830 --> 00:05:35,300
-and exit. After entering our name we get a
-nice list of our invoices.
+and exit. After entering our name we get a nice list of our invoices.
 
 65
 00:05:35,300 --> 00:05:43,110
-Soooo... wait... what? This is an invoice
-managment system? So how can this program
+Soooo... wait... what? This is an invoice managment system? So how can this program
 
 66
 00:05:43,110 --> 00:05:48,580
-execute these other programs? wat? that doesn't
-make any sense?
+execute these other programs? wat? that doesn't make any sense?
 
 67
 00:05:48,580 --> 00:05:53,890
-Let's look again at the binary of one of our
-compiled programs. We know this is given as
+Let's look again at the binary of one of our compiled programs. We know this is given as
 
 68
 00:05:53,889 --> 00:06:00,009
-input to the invoice program, so let's just
-try to copy that. And maybe we also run it
+input to the invoice program, so let's just try to copy that. And maybe we also run it
 
 69
 00:06:00,009 --> 00:06:06,189
-with GDB. So run the invoice program. Then
-we select 1. Add an invoice. It asks for the
+with GDB. So run the invoice program. Then we select 1. Add an invoice. It asks for the
 
 70
 00:06:06,189 --> 00:06:12,559
-amount and we enter 123. And then comes all
-theese AAAAAs... let's copy those and add
+amount and we enter 123. And then comes all theese AAAAAs... let's copy those and add
 
 71
 00:06:12,560 --> 00:06:18,130
-a bit more data at the end.
-BOOM! Segmentation fault? RIP, the instruction
+a bit more data at the end. BOOM! Segmentation fault? RIP, the instruction
 
 72
 00:06:18,130 --> 00:06:26,090
-pointer is 42424242, so BBBB. We have caused
-a buffer overflow and overwrote the return
+pointer is 42424242, so BBBB. We have caused a buffer overflow and overwrote the return
 
 73
 00:06:26,090 --> 00:06:28,980
@@ -358,23 +293,19 @@ pointer on the stack. BAM!
 
 74
 00:06:28,979 --> 00:06:33,729
-Maybe you think now, ahh... this was just
-a buffer overflow, and our programs were just
+Maybe you think now, ahh... this was just a buffer overflow, and our programs were just
 
 75
 00:06:33,729 --> 00:06:39,599
-shellcode in assembler. But nope! when you
-check the security flags you see that the
+shellcode in assembler. But nope! when you check the security flags you see that the
 
 76
 00:06:39,599 --> 00:06:45,029
-non-executable flag is used. And looking at
-the memory layout you can also see that the
+non-executable flag is used. And looking at the memory layout you can also see that the
 
 77
 00:06:45,030 --> 00:06:52,320
-stack or heap is not executable. So how can
-we execute these programs even though we can't
+stack or heap is not executable. So how can we execute these programs even though we can't
 
 78
 00:06:52,319 --> 00:06:55,659
@@ -382,43 +313,35 @@ inject assembler as shellcode?
 
 79
 00:06:55,659 --> 00:07:01,589
-To answer this question I would like Sergey
-Bratus to introduce the concept of weird machines
+To answer this question I would like Sergey Bratus to introduce the concept of weird machines
 
 80
 00:07:01,590 --> 00:07:05,200
-from his talk "What hacker research taught
-me".
+from his talk "What hacker research taught me".
 
 81
 00:07:05,199 --> 00:07:15,919
-Lesson 2, is what I call "composition creates
-weird machines" parallel universes of computers.
+Lesson 2, is what I call "composition creates weird machines" parallel universes of computers.
 
 82
 00:07:15,919 --> 00:07:26,129
-Any complex system turns out to be casting
-mini shadows. and of these shadows only one
+Any complex system turns out to be casting mini shadows. and of these shadows only one
 
 83
 00:07:26,129 --> 00:07:32,599
-is what you intended. that is the development
-environment you work on. everything else is
+is what you intended. that is the development environment you work on. everything else is
 
 84
 00:07:32,600 --> 00:07:41,440
-a weird machine. Whose instructions are actually
-combinations of your well designed features.
+a weird machine. Whose instructions are actually combinations of your well designed features.
 
 85
 00:07:41,439 --> 00:07:52,709
-But it will run the attackers code. And do
-exactly what we defined as undermining your
+But it will run the attackers code. And do exactly what we defined as undermining your
 
 86
 00:07:52,710 --> 00:07:58,650
-trust assumptions. leading to behaviour that
-is entirely unexpected by the designer of
+trust assumptions. leading to behaviour that is entirely unexpected by the designer of
 
 87
 00:07:58,650 --> 00:07:59,690
@@ -426,73 +349,59 @@ the machine.
 
 88
 00:07:59,690 --> 00:08:09,100
-So think of stack overflows. Think of heap
-overflows which are a bit more interesting.
+So think of stack overflows. Think of heap overflows which are a bit more interesting.
 
 89
 00:08:09,099 --> 00:08:18,899
-In each case you have a component of your
-actual machine that is executing instructions
+In each case you have a component of your actual machine that is executing instructions
 
 90
 00:08:18,900 --> 00:08:28,050
-that the exploit crafted input can trigger.
-That you did not intended to be executed in
+that the exploit crafted input can trigger. That you did not intended to be executed in
 
 91
 00:08:28,050 --> 00:08:35,270
-that fashion. It's a whole universe of weird
-machines.
+that fashion. It's a whole universe of weird machines.
 
 92
 00:08:35,270 --> 00:08:41,230
-So exploitation is from that point of view,
-programming of that weird machine via crafted
+So exploitation is from that point of view, programming of that weird machine via crafted
 
 93
 00:08:41,230 --> 00:08:48,540
-input most often.
-And so here is one case study from 1997 when
+input most often. And so here is one case study from 1997 when
 
 94
 00:08:48,540 --> 00:08:56,530
-a technique called return-into-libc was invented
-to what the academia now calls return oriented
+a technique called return-into-libc was invented to what the academia now calls return oriented
 
 95
 00:08:56,530 --> 00:09:03,760
-programming. And it took about 10 years to
-propagate.
+programming. And it took about 10 years to propagate.
 
 96
 00:09:03,760 --> 00:09:09,770
-All the work in these series of techniques
-is done by code fragments already present
+All the work in these series of techniques is done by code fragments already present
 
 97
 00:09:09,770 --> 00:09:15,720
-in the trusted code. So no new untrusted executable
-code is introduced. No new attacker code is
+in the trusted code. So no new untrusted executable code is introduced. No new attacker code is
 
 98
 00:09:15,720 --> 00:09:22,330
-introduced. All the manipulation. All the
-activity is done by parts of the machine that
+introduced. All the manipulation. All the activity is done by parts of the machine that
 
 99
 00:09:22,330 --> 00:09:30,310
-you thought were your friends. Well no, they
-are traitors, lying and wait.
+you thought were your friends. Well no, they are traitors, lying and wait.
 
 100
 00:09:30,310 --> 00:09:40,540
-In 2008 when academia finally got a firm understanding
-of this brand of technique, it was dubbed,
+In 2008 when academia finally got a firm understanding of this brand of technique, it was dubbed,
 
 101
 00:09:40,540 --> 00:09:51,010
-malicious computation, to distinguish it from
-malicious code - which is what your exploit
+malicious computation, to distinguish it from malicious code - which is what your exploit
 
 102
 00:09:51,010 --> 00:09:52,680
@@ -500,58 +409,47 @@ malicious code - which is what your exploit
 
 103
 00:09:52,680 --> 00:09:58,390
-The concept of weird machines is so beautiful
-and that realization was very impactful to
+The concept of weird machines is so beautiful and that realization was very impactful to
 
 104
 00:09:58,390 --> 00:10:04,100
-me. Thus it became the mantra ar slogan of
-my channel.
+me. Thus it became the mantra ar slogan of my channel.
 
 105
 00:10:04,100 --> 00:10:10,310
-Return Oriented Programming is one example
-of using a weird machine. And the weird machine
+Return Oriented Programming is one example of using a weird machine. And the weird machine
 
 106
 00:10:10,310 --> 00:10:16,470
-we have here is implemented in the invoice
-program. The invoice program implemented one
+we have here is implemented in the invoice program. The invoice program implemented one
 
 107
 00:10:16,470 --> 00:10:23,060
-intended machine, the invoice management system,
-but also implemented an endless amount of
+intended machine, the invoice management system, but also implemented an endless amount of
 
 108
 00:10:23,060 --> 00:10:29,580
-weird machines due to a stack buffer overflow.
-The developer has crafted a weird machine
+weird machines due to a stack buffer overflow. The developer has crafted a weird machine
 
 109
 00:10:29,580 --> 00:10:37,410
-without even knowing it. A weird machine so
-powerful that it can execute basically anything.
+without even knowing it. A weird machine so powerful that it can execute basically anything.
 
 110
 00:10:37,410 --> 00:10:44,090
-So powerful we can create a programming language
-that only runs on this single weird machine.
+So powerful we can create a programming language that only runs on this single weird machine.
 
 111
 00:10:44,090 --> 00:10:49,330
-Isn't that amazing?
-And remember, we do this WITHOUT injecting
+Isn't that amazing? And remember, we do this WITHOUT injecting
 
 112
 00:10:49,330 --> 00:10:56,130
-arbitrary assembler instructions - we don't
-have shellcode here. We are using the technique
+arbitrary assembler instructions - we don't have shellcode here. We are using the technique
 
 113
 00:10:56,130 --> 00:11:03,000
-of return oriented programming to achieve
-arbitrary execution. And it's so weird. And
+of return oriented programming to achieve arbitrary execution. And it's so weird. And
 
 114
 00:11:03,000 --> 00:11:05,680
@@ -559,23 +457,19 @@ it's so beautiful at the same time.
 
 115
 00:11:05,680 --> 00:11:10,450
-In the next video I want to look closer at
-the weird programs that I have written, and
+In the next video I want to look closer at the weird programs that I have written, and
 
 116
 00:11:10,450 --> 00:11:15,930
-what the compiler does, and how exactly this
-is executed. And if you haven’t already
+what the compiler does, and how exactly this is executed. And if you haven’t already
 
 117
 00:11:15,930 --> 00:11:21,560
-guessed it, let me give you a small teaser,
-you could call these “instructions” actually
+guessed it, let me give you a small teaser, you could call these “instructions” actually
 
 118
 00:11:21,560 --> 00:11:27,040
-“gadgets” *wink* *wink*. So next video
-we will learn how return oriented programming
+“gadgets” *wink* *wink*. So next video we will learn how return oriented programming
 
 119
 00:11:27,040 --> 00:11:28,140
@@ -583,13 +477,11 @@ works.
 
 120
 00:11:28,140 --> 00:11:31,610
-But in the meantime, please go watch the talks
-I have linked below and read the papers I
+But in the meantime, please go watch the talks I have linked below and read the papers I
 
 121
 00:11:31,610 --> 00:11:36,250
-have linked. For me, they belong to the most
-important computer science and hacking or
+have linked. For me, they belong to the most important computer science and hacking or
 
 122
 00:11:36,250 --> 00:11:37,440

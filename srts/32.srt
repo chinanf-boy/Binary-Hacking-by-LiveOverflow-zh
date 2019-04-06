@@ -1,12 +1,10 @@
 1
 00:00:00,110 --> 00:00:03,480
-So I was browsing reddit, and this new CTF
-for beginners popped up.
+So I was browsing reddit, and this new CTF for beginners popped up.
 
 2
 00:00:03,479 --> 00:00:09,079
-Obviously I had to check it out and directly
-head to my favorite category, the binary exploitation
+Obviously I had to check it out and directly head to my favorite category, the binary exploitation
 
 3
 00:00:09,080 --> 00:00:10,080
@@ -14,13 +12,11 @@ stuff.
 
 4
 00:00:10,080 --> 00:00:14,080
-And of course there is a server you can connect
-to as a regular user, and when you exploit
+And of course there is a server you can connect to as a regular user, and when you exploit
 
 5
 00:00:14,079 --> 00:00:18,129
-a challenge you will elevate privileges to
-another user to gain access to the secret
+a challenge you will elevate privileges to another user to gain access to the secret
 
 6
 00:00:18,130 --> 00:00:19,240
@@ -28,8 +24,7 @@ flag.
 
 7
 00:00:19,240 --> 00:00:23,810
-But the biggest challenge of all, and I couldn’t
-find rules that would forbid this, would be
+But the biggest challenge of all, and I couldn’t find rules that would forbid this, would be
 
 8
 00:00:23,810 --> 00:00:24,810
@@ -45,8 +40,7 @@ Remember my dirty cow explanation video?
 
 11
 00:00:34,990 --> 00:00:40,030
-Let’s use the proof of concept exploit that
-we had there and test if it works on this
+Let’s use the proof of concept exploit that we had there and test if it works on this
 
 12
 00:00:40,030 --> 00:00:41,030
@@ -54,18 +48,15 @@ server.
 
 13
 00:00:41,030 --> 00:00:44,370
-So we can simply copy this code to a file
-in tmp and compile it.
+So we can simply copy this code to a file in tmp and compile it.
 
 14
 00:00:44,370 --> 00:00:49,180
-To test if we can overwrite files that don’t
-belong to us, without overwriting critical
+To test if we can overwrite files that don’t belong to us, without overwriting critical
 
 15
 00:00:49,180 --> 00:00:55,050
-root owned files, we log in as another challenge
-user on the system, create a file with some
+root owned files, we log in as another challenge user on the system, create a file with some
 
 16
 00:00:55,050 --> 00:00:56,050
@@ -73,8 +64,7 @@ content.
 
 17
 00:00:56,050 --> 00:01:00,850
-And then we go back to the first user, execute
-dirty cow on that file and attempt to write
+And then we go back to the first user, execute dirty cow on that file and attempt to write
 
 18
 00:01:00,850 --> 00:01:02,790
@@ -86,8 +76,7 @@ And when we check, we can see that it works.
 
 20
 00:01:04,949 --> 00:01:09,849
-At this point I wrote the author a message
-on reddit to inform him that the server is
+At this point I wrote the author a message on reddit to inform him that the server is
 
 21
 00:01:09,850 --> 00:01:12,070
@@ -95,13 +84,11 @@ vulnerable and he should quickly update.
 
 22
 00:01:12,070 --> 00:01:16,550
-But now we need a plan what root file we could
-overwrite to become root ourselves.
+But now we need a plan what root file we could overwrite to become root ourselves.
 
 23
 00:01:16,550 --> 00:01:21,650
-Our restriction is, that we have to overwrite
-something in a file, we can’t append or
+Our restriction is, that we have to overwrite something in a file, we can’t append or
 
 24
 00:01:21,650 --> 00:01:23,500
@@ -109,13 +96,11 @@ prepend anything.
 
 25
 00:01:23,500 --> 00:01:29,520
-The first obvious idea would be a setuid binary,
-but the issue is that in order to write a
+The first obvious idea would be a setuid binary, but the issue is that in order to write a
 
 26
 00:01:29,520 --> 00:01:34,190
-backdoor shell to the binary, we would have
-to parse the elf file format and figure out
+backdoor shell to the binary, we would have to parse the elf file format and figure out
 
 27
 00:01:34,189 --> 00:01:36,549
@@ -123,8 +108,7 @@ where the entry point is.
 
 28
 00:01:36,549 --> 00:01:40,589
-An easier strategy is to overwrite data in
-a text file.
+An easier strategy is to overwrite data in a text file.
 
 29
 00:01:40,590 --> 00:01:43,280
@@ -132,8 +116,7 @@ And I chose /etc/passwd.
 
 30
 00:01:43,280 --> 00:01:48,200
-You can see here the user id of the users,
-and if we would change the uid of the pwn1
+You can see here the user id of the users, and if we would change the uid of the pwn1
 
 31
 00:01:48,200 --> 00:01:51,280
@@ -145,28 +128,23 @@ So.
 
 33
 00:01:52,280 --> 00:01:55,560
-The dirty cow proof of concept writes to the
-beginning of the file.
+The dirty cow proof of concept writes to the beginning of the file.
 
 34
 00:01:55,560 --> 00:01:58,560
-So first we have to figure out the offset
-inside of /etc/passwd.
+So first we have to figure out the offset inside of /etc/passwd.
 
 35
 00:01:58,560 --> 00:02:02,160
-We can use hexdump for that and count a little
-bit.
+We can use hexdump for that and count a little bit.
 
 36
 00:02:02,159 --> 00:02:06,839
-So pwn1 user is at offset hex 4c0 plus a little
-bit.
+So pwn1 user is at offset hex 4c0 plus a little bit.
 
 37
 00:02:06,840 --> 00:02:12,970
-I use python as a caluclator and modify the
-exploit code to write to a fixed offset.
+I use python as a caluclator and modify the exploit code to write to a fixed offset.
 
 38
 00:02:12,970 --> 00:02:14,960
@@ -174,28 +152,23 @@ I think here would be a good plan.
 
 39
 00:02:14,959 --> 00:02:20,089
-And you have to be very very careful with
-choosing these offsets and choosing what to
+And you have to be very very careful with choosing these offsets and choosing what to
 
 40
 00:02:20,091 --> 00:02:23,951
-write, because you can screw up the whole
-system if you don’t.
+write, because you can screw up the whole system if you don’t.
 
 41
 00:02:23,950 --> 00:02:30,150
-So I copy /etc/passwd to try what I want to
-do before doing it to the real binary.
+So I copy /etc/passwd to try what I want to do before doing it to the real binary.
 
 42
 00:02:30,150 --> 00:02:33,730
-And of course, my first attempt would have
-wrecked the system.
+And of course, my first attempt would have wrecked the system.
 
 43
 00:02:33,730 --> 00:02:40,670
-So adjusting the offset a bit and also appending
-a newline at the end is finally successful
+So adjusting the offset a bit and also appending a newline at the end is finally successful
 
 44
 00:02:40,670 --> 00:02:43,360
@@ -203,8 +176,7 @@ and I write to the real /etc/passwd.
 
 45
 00:02:43,360 --> 00:02:47,870
-Now when we switch to pwn1 or ssh login to
-pwn1, we get a root shell.
+Now when we switch to pwn1 or ssh login to pwn1, we get a root shell.
 
 46
 00:02:47,870 --> 00:02:51,770
@@ -212,8 +184,7 @@ Then we can read out all flags.
 
 47
 00:02:51,770 --> 00:02:57,290
-Once we are done, we revert back /etc/passwd
-to the original state.
+Once we are done, we revert back /etc/passwd to the original state.
 
 48
 00:02:57,290 --> 00:02:58,550
@@ -221,13 +192,11 @@ Some important notes.
 
 49
 00:02:58,550 --> 00:03:01,930
-Be very very careful what you overwrite with
-an exploit like this.
+Be very very careful what you overwrite with an exploit like this.
 
 50
 00:03:01,930 --> 00:03:08,730
-Just one byte miscalculated, and you might
-destabilize, crash, DoS the system or simply
+Just one byte miscalculated, and you might destabilize, crash, DoS the system or simply
 
 51
 00:03:08,730 --> 00:03:10,400
@@ -235,23 +204,19 @@ lock yourself out.
 
 52
 00:03:10,400 --> 00:03:15,590
-Also if you find a server vulnerable, think
-about the impact or context you are in.
+Also if you find a server vulnerable, think about the impact or context you are in.
 
 53
 00:03:15,590 --> 00:03:21,070
-This small private CTF server project, that
-is intended to be hammered is different from
+This small private CTF server project, that is intended to be hammered is different from
 
 54
 00:03:21,069 --> 00:03:23,789
-a webserver you exploited from some random
-company.
+a webserver you exploited from some random company.
 
 55
 00:03:23,790 --> 00:03:27,950
-So don’t go around and try this if you have
-no permissions or you could cause a lot of
+So don’t go around and try this if you have no permissions or you could cause a lot of
 
 56
 00:03:27,950 --> 00:03:30,400
@@ -267,8 +232,7 @@ Be aware of the risk you are taking.
 
 59
 00:03:34,519 --> 00:03:39,239
-And thanks to maro for being cool about this
-and allowing me to make a video about it.
+And thanks to maro for being cool about this and allowing me to make a video about it.
 
 60
 00:03:39,239 --> 00:03:40,299

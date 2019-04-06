@@ -1,22 +1,18 @@
 1
 00:00:06,370 --> 00:00:12,420
-In this episode we will have a look at the
-first level of protostar from exploit-exercises.com.
+In this episode we will have a look at the first level of protostar from exploit-exercises.com.
 
 2
 00:00:12,420 --> 00:00:16,150
-If you have questions about the setup, you
-can watch the previous video.
+If you have questions about the setup, you can watch the previous video.
 
 3
 00:00:16,150 --> 00:00:21,590
-Generally I advise you to stop the video right
-here, and work on it by yourself first.
+Generally I advise you to stop the video right here, and work on it by yourself first.
 
 4
 00:00:21,590 --> 00:00:24,090
-Maybe give it a day and see how much you can
-figure out.
+Maybe give it a day and see how much you can figure out.
 
 5
 00:00:24,090 --> 00:00:26,540
@@ -24,28 +20,23 @@ And after that, watch my explanation.
 
 6
 00:00:26,540 --> 00:00:29,910
-But if you feel completely lost, then just
-follow me.
+But if you feel completely lost, then just follow me.
 
 7
 00:00:29,910 --> 00:00:33,370
-This here should give you enough information
-to solve the next level on your own.
+This here should give you enough information to solve the next level on your own.
 
 8
 00:00:33,370 --> 00:00:37,050
-So let’s first have a look at the challenge
-description.
+So let’s first have a look at the challenge description.
 
 9
 00:00:37,050 --> 00:00:42,400
-This level introduces the concept that memory
-can be accessed outside of its allocated region,
+This level introduces the concept that memory can be accessed outside of its allocated region,
 
 10
 00:00:42,399 --> 00:00:47,359
-how the stack variables are laid out, and
-that modifying outside of the allocated memory
+how the stack variables are laid out, and that modifying outside of the allocated memory
 
 11
 00:00:47,359 --> 00:00:50,109
@@ -61,8 +52,7 @@ Ok.
 
 14
 00:00:54,809 --> 00:00:58,259
-Next we will have a look at the source code
-which is provided below.
+Next we will have a look at the source code which is provided below.
 
 15
 00:00:58,260 --> 00:01:01,370
@@ -70,23 +60,19 @@ Let’s start with a first quick overview.
 
 16
 00:01:01,370 --> 00:01:06,560
-This is clearly a program written in C. It
-reads some input with gets(), then checks
+This is clearly a program written in C. It reads some input with gets(), then checks
 
 17
 00:01:06,560 --> 00:01:10,900
-the modified variable and prints either a
-success or fail message.
+the modified variable and prints either a success or fail message.
 
 18
 00:01:10,900 --> 00:01:16,050
-So obviously the goal of this level is to
-make the program print the success string.
+So obviously the goal of this level is to make the program print the success string.
 
 19
 00:01:16,050 --> 00:01:20,970
-Note, this level is not about executing arbitrary
-code to gain root privileges.
+Note, this level is not about executing arbitrary code to gain root privileges.
 
 20
 00:01:20,970 --> 00:01:23,060
@@ -94,13 +80,11 @@ First we have to understand a couple of basics.
 
 21
 00:01:23,060 --> 00:01:26,780
-A real full root exploit will come in later
-levels.
+A real full root exploit will come in later levels.
 
 22
 00:01:26,780 --> 00:01:30,170
-So for now, let’s focus on this smaller
-goal.
+So for now, let’s focus on this smaller goal.
 
 23
 00:01:30,170 --> 00:01:32,740
@@ -108,13 +92,11 @@ We can also execute the stack0 program.
 
 24
 00:01:32,740 --> 00:01:37,570
-And we can see that it seems to wait for some
-input, and then prints “Try again?”.
+And we can see that it seems to wait for some input, and then prints “Try again?”.
 
 25
 00:01:37,570 --> 00:01:39,780
-Ok so let’s have a more detailed look at
-the code.
+Ok so let’s have a more detailed look at the code.
 
 26
 00:01:39,780 --> 00:01:42,060
@@ -122,13 +104,11 @@ There are two local variables.
 
 27
 00:01:42,060 --> 00:01:47,820
-An integer number modified, and a char array
-buffer with space for 64 characters.
+An integer number modified, and a char array buffer with space for 64 characters.
 
 28
 00:01:47,820 --> 00:01:51,310
-An array of chars in C is basically just a
-string.
+An array of chars in C is basically just a string.
 
 29
 00:01:51,310 --> 00:01:52,790
@@ -140,8 +120,7 @@ And apparently never changed changed.
 
 31
 00:01:56,060 --> 00:01:59,820
-Next is the gets function with our 64 character
-long char buffer.
+Next is the gets function with our 64 character long char buffer.
 
 32
 00:01:59,820 --> 00:02:03,060
@@ -149,13 +128,11 @@ Let’s have a look at the gets man page.
 
 33
 00:02:03,060 --> 00:02:06,520
-So gets is used to read a string from the
-input.
+So gets is used to read a string from the input.
 
 34
 00:02:06,520 --> 00:02:12,170
-When we scroll down we can also find a Bugs
-section, which is telling us, to never use
+When we scroll down we can also find a Bugs section, which is telling us, to never use
 
 35
 00:02:12,170 --> 00:02:13,500
@@ -163,13 +140,11 @@ gets()!
 
 36
 00:02:13,500 --> 00:02:17,410
-This cannot be more clear that this is the
-vulnerability in this program.
+This cannot be more clear that this is the vulnerability in this program.
 
 37
 00:02:17,409 --> 00:02:22,679
-As an explanation it says, that it’s impossible
-to tell how many characters gets will read.
+As an explanation it says, that it’s impossible to tell how many characters gets will read.
 
 38
 00:02:22,680 --> 00:02:25,810
@@ -177,8 +152,7 @@ It has been used to break computer security.
 
 39
 00:02:25,810 --> 00:02:28,970
-And after the gets call, modified is compared
-to 0.
+And after the gets call, modified is compared to 0.
 
 40
 00:02:28,970 --> 00:02:31,440
@@ -194,8 +168,7 @@ It’s set to 0 and never changed.
 
 43
 00:02:36,180 --> 00:02:42,020
-btw. the volatile is a way to tell the compiler,
-that it should not optimize the usage of this
+btw. the volatile is a way to tell the compiler, that it should not optimize the usage of this
 
 44
 00:02:42,019 --> 00:02:43,019
@@ -203,8 +176,7 @@ variable.
 
 45
 00:02:43,019 --> 00:02:47,189
-Because at first glance it looks like modified
-will always be 0 and thus it might simply
+Because at first glance it looks like modified will always be 0 and thus it might simply
 
 46
 00:02:47,189 --> 00:02:50,329
@@ -212,13 +184,11 @@ remove the unnecessary if-case.
 
 47
 00:02:50,329 --> 00:02:54,369
-But with volatile we can force the compiler
-to keep it as it is.
+But with volatile we can force the compiler to keep it as it is.
 
 48
 00:02:54,370 --> 00:02:59,190
-I think we have a good understanding of this
-program now in C. Let’s open it with gdb
+I think we have a good understanding of this program now in C. Let’s open it with gdb
 
 49
 00:02:59,189 --> 00:03:01,999
@@ -226,13 +196,11 @@ and start debugging.
 
 50
 00:03:01,999 --> 00:03:06,009
-First let’s set a breakpoint in main with
-break *main.
+First let’s set a breakpoint in main with break *main.
 
 51
 00:03:06,010 --> 00:03:09,600
-Then type run or short r to start the program
-from the beginning.
+Then type run or short r to start the program from the beginning.
 
 52
 00:03:09,599 --> 00:03:12,319
@@ -240,23 +208,19 @@ Now it stopped at the start of main.
 
 53
 00:03:12,319 --> 00:03:15,889
-With disassemble you can disassemble the current
-function.
+With disassemble you can disassemble the current function.
 
 54
 00:03:15,890 --> 00:03:19,970
-But also set the disassembly-flavor to intel,
-because I like it more.
+But also set the disassembly-flavor to intel, because I like it more.
 
 55
 00:03:19,970 --> 00:03:22,750
-Let’s try to understand fully what is happening
-here.
+Let’s try to understand fully what is happening here.
 
 56
 00:03:22,750 --> 00:03:28,910
-I ignored those parts in my reverse-engineering
-introduction, but here we need to fully understand
+I ignored those parts in my reverse-engineering introduction, but here we need to fully understand
 
 57
 00:03:28,910 --> 00:03:30,740
@@ -264,8 +228,7 @@ how the stack works.
 
 58
 00:03:30,740 --> 00:03:34,680
-So let’s start with the first instruction
-‘push ebp’.
+So let’s start with the first instruction ‘push ebp’.
 
 59
 00:03:34,680 --> 00:03:37,050
@@ -273,13 +236,11 @@ A quick flashback to my CPU introduction video.
 
 60
 00:03:37,049 --> 00:03:41,049
-I mentioned that the stack is just a memory
-area at the bottom.
+I mentioned that the stack is just a memory area at the bottom.
 
 61
 00:03:41,049 --> 00:03:46,649
-When we look at the mapped memory with ‘info
-proc mappings’, we can see that the stack
+When we look at the mapped memory with ‘info proc mappings’, we can see that the stack
 
 62
 00:03:46,650 --> 00:03:51,610
@@ -287,13 +248,11 @@ goes from bffeb000 to c0000.
 
 63
 00:03:51,609 --> 00:03:56,299
-And because the stack grows from the bottom,
-it starts at the highest address.
+And because the stack grows from the bottom, it starts at the highest address.
 
 64
 00:03:56,299 --> 00:04:04,649
-c0000 doesnt belong to it anymore, so basically
-the stack starts at c0000-8. which is bfffff8.
+c0000 doesnt belong to it anymore, so basically the stack starts at c0000-8. which is bfffff8.
 
 65
 00:04:04,650 --> 00:04:06,020
@@ -301,13 +260,11 @@ So push EBP.
 
 66
 00:04:06,019 --> 00:04:10,259
-EBP is a register which is used as the base
-pointer.
+EBP is a register which is used as the base pointer.
 
 67
 00:04:10,260 --> 00:04:13,900
-And it contains an address pointing somwhere
-into the stack.
+And it contains an address pointing somwhere into the stack.
 
 68
 00:04:13,900 --> 00:04:14,900
@@ -319,8 +276,7 @@ And at that position is this b7something value.
 
 70
 00:04:15,900 --> 00:04:19,930
-Ok so whatever the meaning of this address
-is, it seems to be important, because it get’s
+Ok so whatever the meaning of this address is, it seems to be important, because it get’s
 
 71
 00:04:19,930 --> 00:04:20,930
@@ -332,13 +288,11 @@ Which is like saving the value.
 
 73
 00:04:22,310 --> 00:04:25,790
-And at the end of the main function you find
-a leave.
+And at the end of the main function you find a leave.
 
 74
 00:04:25,789 --> 00:04:31,759
-And the intel instruction reference tells
-us that leave is just basically a mov esp,
+And the intel instruction reference tells us that leave is just basically a mov esp,
 
 75
 00:04:31,759 --> 00:04:33,459
@@ -346,13 +300,11 @@ ebp and pop ebp.
 
 76
 00:04:33,460 --> 00:04:38,620
-As you can see the start and end of a function
-is symmetrical.
+As you can see the start and end of a function is symmetrical.
 
 77
 00:04:38,620 --> 00:04:42,840
-At the start we push ebp and mov esp into
-ebp.
+At the start we push ebp and mov esp into ebp.
 
 78
 00:04:42,840 --> 00:04:45,020
@@ -360,8 +312,7 @@ And when the function is done, we do the reverse.
 
 79
 00:04:45,020 --> 00:04:48,350
-Don’t worry, I will illustrate this nicely
-in a moment.
+Don’t worry, I will illustrate this nicely in a moment.
 
 80
 00:04:48,349 --> 00:04:50,279
@@ -369,8 +320,7 @@ Just one more little thing.
 
 81
 00:04:50,280 --> 00:04:54,960
-After those two instructions we mask esp,
-which basically just sets the last 4 bits
+After those two instructions we mask esp, which basically just sets the last 4 bits
 
 82
 00:04:54,960 --> 00:04:57,280
@@ -386,13 +336,11 @@ And then we subtract hex 60 from it.
 
 85
 00:05:00,860 --> 00:05:06,190
-So ESP, the stack pointer now points to a
-bit lower address than ebp.
+So ESP, the stack pointer now points to a bit lower address than ebp.
 
 86
 00:05:06,190 --> 00:05:11,640
-And the next instruction moves a 0 at the
-memory location at offset hex 5c from the
+And the next instruction moves a 0 at the memory location at offset hex 5c from the
 
 87
 00:05:11,639 --> 00:05:12,639
@@ -400,8 +348,7 @@ stack pointer.
 
 88
 00:05:12,639 --> 00:05:18,759
-And that seems to perfectly match our modified
-variable that gets set to 0.
+And that seems to perfectly match our modified variable that gets set to 0.
 
 89
 00:05:18,759 --> 00:05:20,369
@@ -409,33 +356,27 @@ At first it’s a lot to take in.
 
 90
 00:05:20,370 --> 00:05:24,400
-But let’s do it again but this time with
-an animation.
+But let’s do it again but this time with an animation.
 
 91
 00:05:24,400 --> 00:05:26,910
-So here on the left you can see the assembler
-code.
+So here on the left you can see the assembler code.
 
 92
 00:05:26,910 --> 00:05:31,140
-And on the right I will illustrate the stack.
-with the 3 important registers, the instruction
+And on the right I will illustrate the stack. with the 3 important registers, the instruction
 
 93
 00:05:31,140 --> 00:05:37,970
-pointer EIP, the stack pointer ESP and the
-base pointer EBP.
+pointer EIP, the stack pointer ESP and the base pointer EBP.
 
 94
 00:05:37,970 --> 00:05:41,290
-So first it starts somewhere else with a ‘call
-main’.
+So first it starts somewhere else with a ‘call main’.
 
 95
 00:05:41,289 --> 00:05:46,089
-Call will push the theoretically next instruction
-pointer onto the stack.
+Call will push the theoretically next instruction pointer onto the stack.
 
 96
 00:05:46,090 --> 00:05:47,910
@@ -443,8 +384,7 @@ And then jump to our main function.
 
 97
 00:05:47,910 --> 00:05:52,980
-As you can see, when the address of the next
-instruction was pushed, the stack pointer
+As you can see, when the address of the next instruction was pushed, the stack pointer
 
 98
 00:05:52,980 --> 00:05:57,030
@@ -456,8 +396,7 @@ So now comes our push EBP.
 
 100
 00:05:59,780 --> 00:06:04,450
-I will illustrate with some arrows that this
-value is a stack address, which points to
+I will illustrate with some arrows that this value is a stack address, which points to
 
 101
 00:06:04,449 --> 00:06:06,669
@@ -465,8 +404,7 @@ another location on the stack.
 
 102
 00:06:06,669 --> 00:06:12,999
-Now we overwrite EBP with the value from ESP.
-mov ebp, esp.
+Now we overwrite EBP with the value from ESP. mov ebp, esp.
 
 103
 00:06:13,000 --> 00:06:16,150
@@ -478,13 +416,11 @@ Look at the stack now.
 
 105
 00:06:18,689 --> 00:06:23,719
-This area between esp and ebp is called a
-stack frame.
+This area between esp and ebp is called a stack frame.
 
 106
 00:06:23,720 --> 00:06:29,360
-This is now a small area of memory, that we
-can use for local variables and calculations
+This is now a small area of memory, that we can use for local variables and calculations
 
 107
 00:06:29,360 --> 00:06:31,390
@@ -500,8 +436,7 @@ It’s pointing to the OLD ebp.
 
 110
 00:06:36,930 --> 00:06:45,760
-So this area here is basically the stack frame
-of the previous function, which called main.
+So this area here is basically the stack frame of the previous function, which called main.
 
 111
 00:06:45,759 --> 00:06:49,689
@@ -517,13 +452,11 @@ And that’s true.
 
 114
 00:06:54,580 --> 00:06:58,310
-The local variables all have their space in
-this stack frame.
+The local variables all have their space in this stack frame.
 
 115
 00:06:58,310 --> 00:07:02,440
-And it’s so big, because it had to make
-space for at least 64 characters and the modified
+And it’s so big, because it had to make space for at least 64 characters and the modified
 
 116
 00:07:02,439 --> 00:07:04,509
@@ -531,8 +464,7 @@ integer.
 
 117
 00:07:04,509 --> 00:07:07,449
-At the end of this function we will now perform
-a leave.
+At the end of this function we will now perform a leave.
 
 118
 00:07:07,449 --> 00:07:10,389
@@ -540,13 +472,11 @@ Which moves EBP into ESP.
 
 119
 00:07:10,389 --> 00:07:13,669
-Effectively destroying the previous stack
-frame.
+Effectively destroying the previous stack frame.
 
 120
 00:07:13,669 --> 00:07:16,719
-Then we pop EBP, which restores the previous
-stack frame.
+Then we pop EBP, which restores the previous stack frame.
 
 121
 00:07:16,720 --> 00:07:17,890
@@ -558,23 +488,19 @@ But WAIT! it gets cooler.
 
 123
 00:07:20,140 --> 00:07:23,420
-How do we now know where to return to from
-main?
+How do we now know where to return to from main?
 
 124
 00:07:23,419 --> 00:07:28,999
-Well if you remember, call pushed the address
-of the instruction after the call.
+Well if you remember, call pushed the address of the instruction after the call.
 
 125
 00:07:29,000 --> 00:07:32,540
-So the next value on the stack is where we
-want to return to.
+So the next value on the stack is where we want to return to.
 
 126
 00:07:32,539 --> 00:07:36,969
-And the ret instruction is basically just
-popping this address into the instruction
+And the ret instruction is basically just popping this address into the instruction
 
 127
 00:07:36,969 --> 00:07:37,969
@@ -602,8 +528,7 @@ Now let’s continue with the assembler code.
 
 133
 00:07:48,419 --> 00:07:54,339
-After a value on the stack got set to 0, we
-prepare the eax register with an address from
+After a value on the stack got set to 0, we prepare the eax register with an address from
 
 134
 00:07:54,340 --> 00:07:56,580
@@ -611,13 +536,11 @@ the stack at offset 0x1c.
 
 135
 00:07:56,580 --> 00:08:03,230
-LEA (load effective address) is similar to
-a move, but instead of moving the content
+LEA (load effective address) is similar to a move, but instead of moving the content
 
 136
 00:08:03,229 --> 00:08:08,189
-of an register offset into a register, it
-moves the address of an register offset into
+of an register offset into a register, it moves the address of an register offset into
 
 137
 00:08:08,189 --> 00:08:09,599
@@ -625,8 +548,7 @@ a register.
 
 138
 00:08:09,599 --> 00:08:12,909
-And this address then get’s placed at the
-top of the stack.
+And this address then get’s placed at the top of the stack.
 
 139
 00:08:12,909 --> 00:08:15,289
@@ -634,23 +556,19 @@ This is called calling convention.
 
 140
 00:08:15,289 --> 00:08:20,179
-The programs and functions have to agree how
-to pass function parameters in assembler.
+The programs and functions have to agree how to pass function parameters in assembler.
 
 141
 00:08:20,180 --> 00:08:23,350
-In this case the parameters are placed on
-the stack.
+In this case the parameters are placed on the stack.
 
 142
 00:08:23,349 --> 00:08:28,129
-And the gets function takes one parameter,
-which points to a character buffer. and the
+And the gets function takes one parameter, which points to a character buffer. and the
 
 143
 00:08:28,129 --> 00:08:32,599
-character buffer is on the stack, thus we
-have to pass it the address where the character
+character buffer is on the stack, thus we have to pass it the address where the character
 
 144
 00:08:32,599 --> 00:08:34,999
@@ -658,8 +576,7 @@ buffer starts.
 
 145
 00:08:35,000 --> 00:08:40,020
-Afterwards we read the value we previously
-set to 0, and with test we can check if it
+Afterwards we read the value we previously set to 0, and with test we can check if it
 
 146
 00:08:40,020 --> 00:08:41,040
@@ -671,8 +588,7 @@ And branch off to print one of the messages.
 
 148
 00:08:45,020 --> 00:08:48,570
-So let’s remove the breakpoint form main
-with ‘del’ delete and set a breakpoint
+So let’s remove the breakpoint form main with ‘del’ delete and set a breakpoint
 
 149
 00:08:48,570 --> 00:08:49,900
@@ -680,33 +596,27 @@ before and after the gets.
 
 150
 00:08:49,899 --> 00:08:52,429
-Before we restart, I want to show you a cool
-trick.
+Before we restart, I want to show you a cool trick.
 
 151
 00:08:52,430 --> 00:08:58,000
-We will define a hook, that will execute some
-gdb commands when we stop at a breakpoint.
+We will define a hook, that will execute some gdb commands when we stop at a breakpoint.
 
 152
 00:08:58,000 --> 00:09:01,260
-To do this type
-define hook-stop
+To do this type define hook-stop
 
 153
 00:09:01,260 --> 00:09:08,360
-then info registers to show the registers
-and x/24wx $esp.
+then info registers to show the registers and x/24wx $esp.
 
 154
 00:09:08,360 --> 00:09:13,000
-and x/2i $eip
-and finish with end.
+and x/2i $eip and finish with end.
 
 155
 00:09:13,000 --> 00:09:19,260
-This will now print the registers, the stack
-and the next two instructions every time when
+This will now print the registers, the stack and the next two instructions every time when
 
 156
 00:09:19,260 --> 00:09:20,750
@@ -722,18 +632,15 @@ Boom. first breakpoint.
 
 159
 00:09:22,750 --> 00:09:23,750
-Now continue and enter a couple of capital
-A’s.
+Now continue and enter a couple of capital A’s.
 
 160
 00:09:23,750 --> 00:09:28,820
-Do you see those hex 41s. those are all the
-As you have entered.
+Do you see those hex 41s. those are all the As you have entered.
 
 161
 00:09:28,820 --> 00:09:33,050
-Now let’s see the content of the address
-we check if it’s 0.
+Now let’s see the content of the address we check if it’s 0.
 
 162
 00:09:33,050 --> 00:09:37,110
@@ -745,13 +652,11 @@ Still 0.
 
 164
 00:09:38,240 --> 00:09:42,740
-But it shows us where it is located on the
-stack. and when we look at our stack, we see
+But it shows us where it is located on the stack. and when we look at our stack, we see
 
 165
 00:09:42,740 --> 00:09:46,430
-that our As are still a little bit too far
-away.
+that our As are still a little bit too far away.
 
 166
 00:09:46,430 --> 00:09:48,110
@@ -771,8 +676,7 @@ And we have 3 full rows.
 
 170
 00:09:54,140 --> 00:09:57,880
-And with the next full row we can apparently
-write into those zeroes.
+And with the next full row we can apparently write into those zeroes.
 
 171
 00:09:57,880 --> 00:09:59,460
@@ -788,8 +692,7 @@ I like to use recognizable patterns.
 
 174
 00:10:02,780 --> 00:10:06,650
-So I can clearly see which letter which row
-is.
+So I can clearly see which letter which row is.
 
 175
 00:10:06,649 --> 00:10:10,429
@@ -797,8 +700,7 @@ looks promising.
 
 176
 00:10:10,430 --> 00:10:14,150
-So a single step forward, and it will load
-the modified variable from the stack into
+So a single step forward, and it will load the modified variable from the stack into
 
 177
 00:10:14,149 --> 00:10:15,599
@@ -818,8 +720,7 @@ Let’s try this without gdb.
 
 181
 00:10:23,959 --> 00:10:29,709
-We can use echo and our previous string and
-pipe it into the stack0 program.
+We can use echo and our previous string and pipe it into the stack0 program.
 
 182
 00:10:29,710 --> 00:10:32,820
@@ -827,8 +728,7 @@ Cool! it worked.
 
 183
 00:10:32,820 --> 00:10:37,490
-Before we end, let me show you how we can
-make the input a bit more convenient thanks
+Before we end, let me show you how we can make the input a bit more convenient thanks
 
 184
 00:10:37,490 --> 00:10:38,820
@@ -836,13 +736,11 @@ to python.
 
 185
 00:10:38,820 --> 00:10:43,450
-With python -c we can specify a command that
-should be executed.
+With python -c we can specify a command that should be executed.
 
 186
 00:10:43,450 --> 00:10:48,150
-Then we can use print and pythons cool string
-syntax which allows us to repeat this character
+Then we can use print and pythons cool string syntax which allows us to repeat this character
 
 187
 00:10:48,150 --> 00:10:50,190
@@ -850,13 +748,11 @@ multiple times.
 
 188
 00:10:50,190 --> 00:10:53,300
-With this knowledge you should be able to
-solve stack1 and stack2.
+With this knowledge you should be able to solve stack1 and stack2.
 
 189
 00:10:53,300 --> 00:10:57,630
-It’s pretty much the same task, just with
-some different ways of input and a different
+It’s pretty much the same task, just with some different ways of input and a different
 
 190
 00:10:57,630 --> 00:10:59,090
@@ -864,8 +760,7 @@ vulnerable function.
 
 191
 00:10:59,089 --> 00:11:02,659
-But if you invest some time, you can absolutely
-solve it.
+But if you invest some time, you can absolutely solve it.
 
 192
 00:11:02,660 --> 00:11:05,660

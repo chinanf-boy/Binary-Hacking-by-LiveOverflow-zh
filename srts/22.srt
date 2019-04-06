@@ -1,12 +1,10 @@
 1
 00:00:00,170 --> 00:00:04,480
-In the last video we learned some basics about
-how the heap works and now we want to apply
+In the last video we learned some basics about how the heap works and now we want to apply
 
 2
 00:00:04,480 --> 00:00:15,450
-this to heap level 1 from exploit-exercsies
-protostar to solve it.
+this to heap level 1 from exploit-exercsies protostar to solve it.
 
 3
 00:00:15,450 --> 00:00:17,320
@@ -18,8 +16,7 @@ We do some roleplaying.
 
 5
 00:00:18,460 --> 00:00:23,220
-Let’s first be the security researcher who
-want’s to find a bug to exploit in this
+Let’s first be the security researcher who want’s to find a bug to exploit in this
 
 6
 00:00:23,220 --> 00:00:24,600
@@ -27,13 +24,11 @@ binary.
 
 7
 00:00:24,600 --> 00:00:29,680
-Afterwards we play developer trying to understand
-the exploit to fix the issue.
+Afterwards we play developer trying to understand the exploit to fix the issue.
 
 8
 00:00:29,680 --> 00:00:36,440
-So we put on our black hoodie and get started…
-first we open the binary heap1 in gdb and
+So we put on our black hoodie and get started… first we open the binary heap1 in gdb and
 
 9
 00:00:36,440 --> 00:00:37,500
@@ -45,13 +40,11 @@ We get a segfault.
 
 11
 00:00:38,499 --> 00:00:43,829
-And it also shows us that the segfault was
-caused by strcpy, because it tried to copy
+And it also shows us that the segfault was caused by strcpy, because it tried to copy
 
 12
 00:00:43,829 --> 00:00:49,539
-a string from the address 0, to this other
-address here, and 0 is obviously not valid
+a string from the address 0, to this other address here, and 0 is obviously not valid
 
 13
 00:00:49,539 --> 00:00:51,679
@@ -59,8 +52,7 @@ memory - so it crashes.
 
 14
 00:00:51,679 --> 00:00:56,699
-We know how linux binaries work, so we make
-an educated guess that this application might
+We know how linux binaries work, so we make an educated guess that this application might
 
 15
 00:00:56,699 --> 00:01:00,369
@@ -72,13 +64,11 @@ Run with aaaa.
 
 17
 00:01:03,069 --> 00:01:07,679
-Again another segfault, but the attentive
-viewer will notice that the address is now
+Again another segfault, but the attentive viewer will notice that the address is now
 
 18
 00:01:07,680 --> 00:01:13,820
-different, so this is a different strcpy,
-which again can’t copy from address 0, so
+different, so this is a different strcpy, which again can’t copy from address 0, so
 
 19
 00:01:13,820 --> 00:01:16,800
@@ -86,13 +76,11 @@ we guess that it requires another argument.
 
 20
 00:01:16,799 --> 00:01:21,359
-And this time the program runs through without
-errors.
+And this time the program runs through without errors.
 
 21
 00:01:21,360 --> 00:01:26,270
-Now we try to find a bug, so the simplest
-thing to do is, we just throw some long inputs
+Now we try to find a bug, so the simplest thing to do is, we just throw some long inputs
 
 22
 00:01:26,270 --> 00:01:29,330
@@ -100,13 +88,11 @@ at the program and see if something happens.
 
 23
 00:01:29,329 --> 00:01:34,209
-So for the first argument I choose to do a
-pattern with letters and for the second argument
+So for the first argument I choose to do a pattern with letters and for the second argument
 
 24
 00:01:34,210 --> 00:01:38,930
-I do numbers, just so I could idnetify them
-if something would occur.
+I do numbers, just so I could idnetify them if something would occur.
 
 25
 00:01:38,930 --> 00:01:42,250
@@ -114,23 +100,19 @@ We run that, and we got a different segfault.
 
 26
 00:01:42,249 --> 00:01:48,109
-Again because of strcpy, but this time the
-destination address looks invalid.
+Again because of strcpy, but this time the destination address looks invalid.
 
 27
 00:01:48,109 --> 00:01:53,039
-It tried to copy the string with the numbers,
-which we know is the second argument, to the
+It tried to copy the string with the numbers, which we know is the second argument, to the
 
 28
 00:01:53,040 --> 00:01:57,970
-address 46,46,46,46 which is the hexcode for
-FFFF.
+address 46,46,46,46 which is the hexcode for FFFF.
 
 29
 00:01:57,969 --> 00:02:03,319
-So whatever happened, we somehow overwrote
-an address, that is used as the destination
+So whatever happened, we somehow overwrote an address, that is used as the destination
 
 30
 00:02:03,319 --> 00:02:04,749
@@ -138,28 +120,23 @@ of the strcpy.
 
 31
 00:02:04,749 --> 00:02:10,649
-And this means we can now use the first argument
-to fully control where we want to write.
+And this means we can now use the first argument to fully control where we want to write.
 
 32
 00:02:10,649 --> 00:02:14,879
-And we can fully choose what to write, with
-the second argument.
+And we can fully choose what to write, with the second argument.
 
 33
 00:02:14,879 --> 00:02:18,489
-Now we have a lot of freedom what we want
-to overwrite.
+Now we have a lot of freedom what we want to overwrite.
 
 34
 00:02:18,489 --> 00:02:23,369
-For example we can overwrite the return pointer
-on the stack to redirect code execution, or
+For example we can overwrite the return pointer on the stack to redirect code execution, or
 
 35
 00:02:23,370 --> 00:02:28,650
-we can overwrite an entry of the global offset
-table, which I explained in a previous video,
+we can overwrite an entry of the global offset table, which I explained in a previous video,
 
 36
 00:02:28,650 --> 00:02:29,720
@@ -167,8 +144,7 @@ to achieve the same.
 
 37
 00:02:29,720 --> 00:02:34,060
-Let’s do the latter one, it’s usually
-more reliable than the stack - which likes
+Let’s do the latter one, it’s usually more reliable than the stack - which likes
 
 38
 00:02:34,060 --> 00:02:36,420
@@ -176,18 +152,15 @@ to move around.
 
 39
 00:02:36,420 --> 00:02:39,960
-So let’s check what kind of function is
-called after the evil strcpy.
+So let’s check what kind of function is called after the evil strcpy.
 
 40
 00:02:39,959 --> 00:02:44,109
-We can peak into the source code and see that
-there is a printf, and we could assume that
+We can peak into the source code and see that there is a printf, and we could assume that
 
 41
 00:02:44,110 --> 00:02:47,690
-we want to overwrite printf on the global
-offset table, but that is deceiving.
+we want to overwrite printf on the global offset table, but that is deceiving.
 
 42
 00:02:47,689 --> 00:02:48,979
@@ -199,23 +172,19 @@ So let’s better stick to the assembly.
 
 44
 00:02:51,950 --> 00:02:56,870
-First of all we have to find the location
-from were we were calling the strcpy.
+First of all we have to find the location from were we were calling the strcpy.
 
 45
 00:02:56,870 --> 00:03:01,640
-We can use backtrace for that, which will
-look at the stack and the stored return pointers
+We can use backtrace for that, which will look at the stack and the stored return pointers
 
 46
 00:03:01,640 --> 00:03:06,750
-to figure out where we are - as a sidenote,
-if you found a bug that smashes the stack,
+to figure out where we are - as a sidenote, if you found a bug that smashes the stack,
 
 47
 00:03:06,750 --> 00:03:09,950
-then backtrace can not make much sense of
-it anymore.
+then backtrace can not make much sense of it anymore.
 
 48
 00:03:09,950 --> 00:03:11,730
@@ -223,53 +192,43 @@ So it doesn’t always work.
 
 49
 00:03:11,730 --> 00:03:18,000
-And here we can see that currently we are
-in strcpy, but we were coming from this address.
+And here we can see that currently we are in strcpy, but we were coming from this address.
 
 50
 00:03:18,000 --> 00:03:23,680
-So let’s set the disassemblu flavor to sane
-intel syntax and disasemble the address.
+So let’s set the disassemblu flavor to sane intel syntax and disasemble the address.
 
 51
 00:03:23,680 --> 00:03:27,380
-This will now disassemble the whole function
-this address belongs to.
+This will now disassemble the whole function this address belongs to.
 
 52
 00:03:27,380 --> 00:03:31,050
-Our address ended in 5a, so we are here after
-the strcpy.
+Our address ended in 5a, so we are here after the strcpy.
 
 53
 00:03:31,050 --> 00:03:35,600
-And as you can see there is a call to puts
-next.
+And as you can see there is a call to puts next.
 
 54
 00:03:35,599 --> 00:03:38,139
-Which btw is not printf like in the source
-code.
+Which btw is not printf like in the source code.
 
 55
 00:03:38,140 --> 00:03:42,820
-That’s because the compiler replaced the
-printf with puts for optimization reasons.
+That’s because the compiler replaced the printf with puts for optimization reasons.
 
 56
 00:03:42,819 --> 00:03:47,359
-Ok, so let’s overwrite the global offset
-table entry for puts.
+Ok, so let’s overwrite the global offset table entry for puts.
 
 57
 00:03:47,360 --> 00:03:52,370
-As shown in the got video we can figure out
-the address of puts by first disassembling
+As shown in the got video we can figure out the address of puts by first disassembling
 
 58
 00:03:52,370 --> 00:03:56,710
-the function trapoline in the procedure linkage
-table, which would now jump to an address
+the function trapoline in the procedure linkage table, which would now jump to an address
 
 59
 00:03:56,709 --> 00:03:58,759
@@ -277,28 +236,23 @@ stored at this address.
 
 60
 00:03:58,760 --> 00:04:03,260
-So this means this is the address of the puts
-global offset table entry.
+So this means this is the address of the puts global offset table entry.
 
 61
 00:04:03,260 --> 00:04:08,220
-So this is the target we want to write to,
-thus we place it in the first argument.
+So this is the target we want to write to, thus we place it in the first argument.
 
 62
 00:04:08,219 --> 00:04:14,249
-gdb run, but we use backticks in the first
-argument to execute /bin/echo.
+gdb run, but we use backticks in the first argument to execute /bin/echo.
 
 63
 00:04:14,250 --> 00:04:18,830
-As you know echo simply outputs whatever you
-pass to it as arguments, and we can use that
+As you know echo simply outputs whatever you pass to it as arguments, and we can use that
 
 64
 00:04:18,830 --> 00:04:21,850
-to get characters with hexvalues we can’t
-type.
+to get characters with hexvalues we can’t type.
 
 65
 00:04:21,850 --> 00:04:23,880
@@ -306,23 +260,19 @@ For example the hex value 8.
 
 66
 00:04:23,880 --> 00:04:29,830
-So echo -ne, -n because we don’t want that
-echo places a newline at the end of the output.,
+So echo -ne, -n because we don’t want that echo places a newline at the end of the output.,
 
 67
 00:04:29,830 --> 00:04:35,190
-and -e because we want echo to convert hex
-escaped numbers into the raw characters.
+and -e because we want echo to convert hex escaped numbers into the raw characters.
 
 68
 00:04:35,190 --> 00:04:40,150
-Just to make sure everything works we echo
-the whole test string up to the Fs again.
+Just to make sure everything works we echo the whole test string up to the Fs again.
 
 69
 00:04:40,150 --> 00:04:45,130
-Now echo inside of the backticks will be executed
-and the output of that will be placed inside
+Now echo inside of the backticks will be executed and the output of that will be placed inside
 
 70
 00:04:45,130 --> 00:04:46,900
@@ -330,13 +280,11 @@ of the quotes as the first argument.
 
 71
 00:04:46,900 --> 00:04:53,410
-And when we run this we get the same segfault
-as before, so all is fine.
+And when we run this we get the same segfault as before, so all is fine.
 
 72
 00:04:53,410 --> 00:04:57,820
-Next step is obviously to replace the Fs with
-the address of the puts global offset table
+Next step is obviously to replace the Fs with the address of the puts global offset table
 
 73
 00:04:57,820 --> 00:05:02,010
@@ -344,8 +292,7 @@ entry.
 
 74
 00:05:02,010 --> 00:05:08,880
-And when we now run it we get a segfault somehwere
-else, this time because of 30303030, which
+And when we now run it we get a segfault somehwere else, this time because of 30303030, which
 
 75
 00:05:08,881 --> 00:05:11,481
@@ -353,23 +300,19 @@ is ascii for 0000.
 
 76
 00:05:11,480 --> 00:05:16,540
-And when we look at the registers with info
-registers we can see that we sucessfully got
+And when we look at the registers with info registers we can see that we sucessfully got
 
 77
 00:05:16,540 --> 00:05:23,280
-control of EIP, which means we can now redirect
-code anywhere we want.
+control of EIP, which means we can now redirect code anywhere we want.
 
 78
 00:05:23,280 --> 00:05:27,980
-In this case we want to call winner, winner
-has this address here.
+In this case we want to call winner, winner has this address here.
 
 79
 00:05:27,980 --> 00:05:34,430
-So we place that into the second argument
-instead of argv2 by using echo in backticks.
+So we place that into the second argument instead of argv2 by using echo in backticks.
 
 80
 00:05:34,430 --> 00:05:38,810
@@ -381,8 +324,7 @@ Which also works great outside of gdb.
 
 82
 00:05:42,880 --> 00:05:47,160
-In summary we can say this:
-we identified a bug by guessing and playing
+In summary we can say this: we identified a bug by guessing and playing
 
 83
 00:05:47,160 --> 00:05:48,310
@@ -390,8 +332,7 @@ around with it.
 
 84
 00:05:48,310 --> 00:05:53,600
-Through gdb we learned that somehow we can
-control the destination of a strcpy, and we
+Through gdb we learned that somehow we can control the destination of a strcpy, and we
 
 85
 00:05:53,600 --> 00:05:56,660
@@ -399,8 +340,7 @@ learned we even control what we want to copy.
 
 86
 00:05:56,660 --> 00:06:02,380
-And we abused that to overwrite the function
-address of puts to redirect code execution
+And we abused that to overwrite the function address of puts to redirect code execution
 
 87
 00:06:02,380 --> 00:06:04,310
@@ -408,8 +348,7 @@ to the winner function.
 
 88
 00:06:04,310 --> 00:06:09,000
-All without knowing why this even happened
-and not even knowing that the heap was involved
+All without knowing why this even happened and not even knowing that the heap was involved
 
 89
 00:06:09,000 --> 00:06:11,020
@@ -417,13 +356,11 @@ at all.
 
 90
 00:06:11,020 --> 00:06:16,300
-Being a good security researcher we create
-a writeup, an advisory for this.
+Being a good security researcher we create a writeup, an advisory for this.
 
 91
 00:06:16,300 --> 00:06:19,900
-Providing our proof of concept exploit as
-well as some additional information that might
+Providing our proof of concept exploit as well as some additional information that might
 
 92
 00:06:19,900 --> 00:06:22,250
@@ -435,8 +372,7 @@ Now let’s change sides and become the developer.
 
 94
 00:06:28,580 --> 00:06:32,180
-We take off our black hoodie, and put on our
-grey hoodie.
+We take off our black hoodie, and put on our grey hoodie.
 
 95
 00:06:32,180 --> 00:06:33,960
@@ -444,23 +380,19 @@ Because that's what developers wear.
 
 96
 00:06:33,960 --> 00:06:38,620
-So we just got this email from this dude who
-found a bug in our program.
+So we just got this email from this dude who found a bug in our program.
 
 97
 00:06:38,620 --> 00:06:41,240
-He even provided a Proof of Concept exploit
-with it.
+He even provided a Proof of Concept exploit with it.
 
 98
 00:06:41,240 --> 00:06:45,600
-Now we want to figure out why and how this
-happened, so we can fix it.
+Now we want to figure out why and how this happened, so we can fix it.
 
 99
 00:06:45,600 --> 00:06:49,040
-In the advisory it says that it has to do
-something with strcpy.
+In the advisory it says that it has to do something with strcpy.
 
 100
 00:06:49,040 --> 00:06:51,010
@@ -468,13 +400,11 @@ So we read the manual about strcpy.
 
 101
 00:06:51,010 --> 00:06:55,530
-And have this “oh shit” moment when we
-realized we didn’t even read the documentation
+And have this “oh shit” moment when we realized we didn’t even read the documentation
 
 102
 00:06:55,530 --> 00:06:58,040
-that would have told us what a bad idea that
-was.
+that would have told us what a bad idea that was.
 
 103
 00:06:58,040 --> 00:06:59,830
@@ -482,8 +412,7 @@ So now we could fix that.
 
 104
 00:06:59,830 --> 00:07:05,080
-For example using strncpy or use strlen to
-check the length before we copy it and then
+For example using strncpy or use strlen to check the length before we copy it and then
 
 105
 00:07:05,080 --> 00:07:06,910
@@ -491,8 +420,7 @@ exit.
 
 106
 00:07:06,910 --> 00:07:11,180
-But because we are a good developer we try
-to learn from this advisory and try to understand
+But because we are a good developer we try to learn from this advisory and try to understand
 
 107
 00:07:11,180 --> 00:07:13,070
@@ -500,8 +428,7 @@ how the exploit exactly works.
 
 108
 00:07:13,070 --> 00:07:18,330
-In the last video, the heap malloc introduction
-video, we already thought about how the heap
+In the last video, the heap malloc introduction video, we already thought about how the heap
 
 109
 00:07:18,330 --> 00:07:20,080
@@ -513,18 +440,15 @@ So let’s see how it looks in reality.
 
 111
 00:07:23,160 --> 00:07:26,650
-To do this let’s set a breakpoint after
-each malloc and strcpy.
+To do this let’s set a breakpoint after each malloc and strcpy.
 
 112
 00:07:26,650 --> 00:07:33,650
-We dissasemble main and look for all those
-calls and set breakpoints afterwards.
+We dissasemble main and look for all those calls and set breakpoints afterwards.
 
 113
 00:07:33,650 --> 00:07:36,570
-Then we run it with the proof of concept exploit
-arguments.
+Then we run it with the proof of concept exploit arguments.
 
 114
 00:07:36,570 --> 00:07:39,120
@@ -536,13 +460,11 @@ So now the first malloc happened.
 
 116
 00:07:40,210 --> 00:07:44,130
-So we are currently here in the assembler
-code and the result of malloc is in eax.
+So we are currently here in the assembler code and the result of malloc is in eax.
 
 117
 00:07:44,130 --> 00:07:49,330
-So eax contains the address on the heap where
-we have enough space for the internet struct
+So eax contains the address on the heap where we have enough space for the internet struct
 
 118
 00:07:49,330 --> 00:07:50,330
@@ -550,13 +472,11 @@ i1.
 
 119
 00:07:50,330 --> 00:07:54,930
-And we can look at this address and we can
-see it’s simply 0.
+And we can look at this address and we can see it’s simply 0.
 
 120
 00:07:54,930 --> 00:07:59,840
-With info proc mappings we can see the memory
-segments, and there is also the heap and we
+With info proc mappings we can see the memory segments, and there is also the heap and we
 
 121
 00:07:59,840 --> 00:08:01,570
@@ -564,8 +484,7 @@ can have a look at that.
 
 122
 00:08:01,570 --> 00:08:08,110
-Oh, maybe it’s a good idea to add this heap
-output as a gdb hook as well.
+Oh, maybe it’s a good idea to add this heap output as a gdb hook as well.
 
 123
 00:08:08,110 --> 00:08:11,470
@@ -573,8 +492,7 @@ So we see it automatically at each breakpoint.
 
 124
 00:08:11,470 --> 00:08:15,500
-define hook-stop
-x/64wx 0x
+define hook-stop x/64wx 0x
 
 125
 00:08:15,500 --> 00:08:16,690
@@ -582,8 +500,7 @@ end
 
 126
 00:08:16,690 --> 00:08:25,210
-So if we now continue we should set the priority
-of i1 to 1, and then malloc for the name.
+So if we now continue we should set the priority of i1 to 1, and then malloc for the name.
 
 127
 00:08:25,210 --> 00:08:27,960
@@ -595,8 +512,7 @@ So as we learned the i1 variable points here.
 
 129
 00:08:31,330 --> 00:08:35,740
-So this is where the struct starts and you
-can se that the first attribute, which is
+So this is where the struct starts and you can se that the first attribute, which is
 
 130
 00:08:35,740 --> 00:08:37,900
@@ -604,13 +520,11 @@ the priority is set to 1.
 
 131
 00:08:37,899 --> 00:08:42,659
-And before that we have the heap metadata,
-the chunk header, which contains the lnegth
+And before that we have the heap metadata, the chunk header, which contains the lnegth
 
 132
 00:08:42,659 --> 00:08:48,339
-of this chunk, including the last bit set
-to 1 which means that the previous block is
+of this chunk, including the last bit set to 1 which means that the previous block is
 
 133
 00:08:48,339 --> 00:08:49,339
@@ -622,8 +536,7 @@ It’s in use.
 
 135
 00:08:50,339 --> 00:08:56,509
-And what we see is what we expected, we see
-here two chunks of 8 bytes, including the
+And what we see is what we expected, we see here two chunks of 8 bytes, including the
 
 136
 00:08:56,509 --> 00:08:59,259
@@ -631,8 +544,7 @@ headers it’s obviously 16 bytes.
 
 137
 00:08:59,260 --> 00:09:04,290
-Another cool thing we can do is to define
-a variable i1 in gdb and set it to the address
+Another cool thing we can do is to define a variable i1 in gdb and set it to the address
 
 138
 00:09:04,290 --> 00:09:05,420
@@ -640,13 +552,11 @@ of this object.
 
 139
 00:09:05,420 --> 00:09:09,990
-Aaand we can even add the type of this variable
-which is “struct internet”.
+Aaand we can even add the type of this variable which is “struct internet”.
 
 140
 00:09:09,990 --> 00:09:15,320
-Now we can print this variable i1 and gdb
-can display us the attributes priority and
+Now we can print this variable i1 and gdb can display us the attributes priority and
 
 141
 00:09:15,319 --> 00:09:16,319
@@ -654,18 +564,15 @@ name.
 
 142
 00:09:16,319 --> 00:09:21,179
-And we can see that priority is 1, and name
-is still zero, because we have allocated memory
+And we can see that priority is 1, and name is still zero, because we have allocated memory
 
 143
 00:09:21,180 --> 00:09:24,860
-for the name but not yet assigned it to the
-i1 attribute name.
+for the name but not yet assigned it to the i1 attribute name.
 
 144
 00:09:24,860 --> 00:09:30,580
-If we continue to the next breakpoint the
-address of the name got assigned and the i2
+If we continue to the next breakpoint the address of the name got assigned and the i2
 
 145
 00:09:30,580 --> 00:09:32,190
@@ -673,8 +580,7 @@ object got allocated.
 
 146
 00:09:32,189 --> 00:09:37,639
-And the result of malloc is again in eax,
-that’s the address of the i2 object.
+And the result of malloc is again in eax, that’s the address of the i2 object.
 
 147
 00:09:37,639 --> 00:09:40,149
@@ -682,18 +588,15 @@ So we can also define the variable i2 in gdb.
 
 148
 00:09:40,149 --> 00:09:43,029
-And when we print that we can see that it’s
-still empty.
+And when we print that we can see that it’s still empty.
 
 149
 00:09:43,029 --> 00:09:50,109
-Now if we continue the priority of i2 should
-be set to two, which we can verify by looking
+Now if we continue the priority of i2 should be set to two, which we can verify by looking
 
 150
 00:09:50,110 --> 00:09:55,430
-at the heap memory as well when we print the
-i2 object.
+at the heap memory as well when we print the i2 object.
 
 151
 00:09:55,430 --> 00:09:59,500
@@ -701,8 +604,7 @@ Also all of our 4 mallocs are done now.
 
 152
 00:09:59,500 --> 00:10:03,820
-And if we compare that to what we expected
-in the earlier video, we can see that it fits
+And if we compare that to what we expected in the earlier video, we can see that it fits
 
 153
 00:10:03,819 --> 00:10:05,049
@@ -710,8 +612,7 @@ perfectly.
 
 154
 00:10:05,050 --> 00:10:11,390
-There is only one thing that we didn’t talk
-about yet, and that’s this big value after
+There is only one thing that we didn’t talk about yet, and that’s this big value after
 
 155
 00:10:11,389 --> 00:10:13,719
@@ -719,8 +620,7 @@ all chunks at the end.
 
 156
 00:10:13,720 --> 00:10:18,640
-Well this area down here is all free memory
-and in exploitation terms this is often referred
+Well this area down here is all free memory and in exploitation terms this is often referred
 
 157
 00:10:18,639 --> 00:10:19,989
@@ -728,18 +628,15 @@ to as the wilderness.
 
 158
 00:10:19,990 --> 00:10:23,740
-This is number is the remaining size of the
-heap.
+This is number is the remaining size of the heap.
 
 159
 00:10:23,740 --> 00:10:29,170
-This whole thing is basically a huge heap
-chunk, and that number is its length.
+This whole thing is basically a huge heap chunk, and that number is its length.
 
 160
 00:10:29,170 --> 00:10:35,850
-I made a three part video about the cookbook
-challenge from a ctf, and that exploit abuses
+I made a three part video about the cookbook challenge from a ctf, and that exploit abuses
 
 161
 00:10:35,850 --> 00:10:37,670
@@ -759,18 +656,15 @@ Anyway.
 
 165
 00:10:41,290 --> 00:10:44,130
-Right now the name of i1 is still an empty
-string.
+Right now the name of i1 is still an empty string.
 
 166
 00:10:44,129 --> 00:10:47,149
-But this is about to change with the next
-breakpoint.
+But this is about to change with the next breakpoint.
 
 167
 00:10:47,149 --> 00:10:51,919
-Because we are about to execute the first
-strcpy, which copies this super long first
+Because we are about to execute the first strcpy, which copies this super long first
 
 168
 00:10:51,920 --> 00:10:52,920
@@ -782,13 +676,11 @@ Continue.
 
 170
 00:10:53,920 --> 00:10:56,800
-Now first thing we notice is here in the heap
-memory.
+Now first thing we notice is here in the heap memory.
 
 171
 00:10:56,800 --> 00:11:01,270
-Those ascii characters appear and it looks
-like they have overwritten a lot of stuf on
+Those ascii characters appear and it looks like they have overwritten a lot of stuf on
 
 172
 00:11:01,269 --> 00:11:02,269
@@ -796,18 +688,15 @@ the heap.
 
 173
 00:11:02,269 --> 00:11:07,809
-What earlier was supposed to be chunk header
-metadata, like the size is now 44444444.
+What earlier was supposed to be chunk header metadata, like the size is now 44444444.
 
 174
 00:11:07,810 --> 00:11:11,820
-Let’s have a look at the objects i1 and
-i2.
+Let’s have a look at the objects i1 and i2.
 
 175
 00:11:11,819 --> 00:11:16,409
-So i1 looks fine, i1 has still priority 1
-and name with the string that we passed to
+So i1 looks fine, i1 has still priority 1 and name with the string that we passed to
 
 176
 00:11:16,410 --> 00:11:18,400
@@ -827,28 +716,23 @@ Priority is now a super huge number.
 
 180
 00:11:23,110 --> 00:11:25,900
-In fact that’s just 45454545 in decimal,
-and that’s the Es.
+In fact that’s just 45454545 in decimal, and that’s the Es.
 
 181
 00:11:25,899 --> 00:11:26,899
-And the name is 46464646, which we know are
-Fs.
+And the name is 46464646, which we know are Fs.
 
 182
 00:11:26,899 --> 00:11:27,899
-And yeah, we seem to have overwritten a lot
-of stuff on the heap.
+And yeah, we seem to have overwritten a lot of stuff on the heap.
 
 183
 00:11:27,899 --> 00:11:32,039
-Infact we have overwritten the next chunk
-on the heap after the i1 name.
+Infact we have overwritten the next chunk on the heap after the i1 name.
 
 184
 00:11:32,040 --> 00:11:37,770
-And now the next strcpy will take i2-&gt;name,
-which is pointing to some bad memory and try
+And now the next strcpy will take i2-&gt;name, which is pointing to some bad memory and try
 
 185
 00:11:37,769 --> 00:11:40,049
@@ -860,23 +744,19 @@ Really frckn awesome.
 
 187
 00:11:42,320 --> 00:11:46,130
-So this challenge showed one aspect of heap
-exploits.
+So this challenge showed one aspect of heap exploits.
 
 188
 00:11:46,130 --> 00:11:51,070
-It doesn’t attack the heap algorithm itself,
-it attacks the application, which uses objects
+It doesn’t attack the heap algorithm itself, it attacks the application, which uses objects
 
 189
 00:11:51,069 --> 00:11:56,149
-on the heap that we can modify by overwriting
-stuff.
+on the heap that we can modify by overwriting stuff.
 
 190
 00:11:56,149 --> 00:11:59,229
-And those modified objects then bend the execution
-flow.
+And those modified objects then bend the execution flow.
 
 191
 00:11:59,230 --> 00:11:59,910

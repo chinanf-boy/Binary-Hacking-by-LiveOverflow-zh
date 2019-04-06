@@ -1,7 +1,6 @@
 1
 00:00:00,089 --> 00:00:05,279
-Let’s have a look at format level 4 from
-exploit-exercises protostar on a current ubuntu
+Let’s have a look at format level 4 from exploit-exercises protostar on a current ubuntu
 
 2
 00:00:05,280 --> 00:00:06,280
@@ -9,13 +8,11 @@ machine.
 
 3
 00:00:06,280 --> 00:00:10,640
-And this time I thought instead of building
-the complete exploit from the ground up, we
+And this time I thought instead of building the complete exploit from the ground up, we
 
 4
 00:00:10,640 --> 00:00:16,090
-take the old exploit that we developed for
-the 32bit linux image, and see if it still
+take the old exploit that we developed for the 32bit linux image, and see if it still
 
 5
 00:00:16,090 --> 00:00:17,090
@@ -23,8 +20,7 @@ works.
 
 6
 00:00:17,090 --> 00:00:29,940
-Probably it won’t but then we debug it and
-slowly make it work on this 64bit ubuntu.
+Probably it won’t but then we debug it and slowly make it work on this 64bit ubuntu.
 
 7
 00:00:29,939 --> 00:00:32,579
@@ -32,33 +28,27 @@ Okay so here is the source code again.
 
 8
 00:00:32,580 --> 00:00:39,860
-We have a 512 byte large buffer on the stack,
-which is used to read data from standard input.
+We have a 512 byte large buffer on the stack, which is used to read data from standard input.
 
 9
 00:00:39,860 --> 00:00:45,270
-But it only reads up to 512 bytes, so there
-is no buffer overflow.
+But it only reads up to 512 bytes, so there is no buffer overflow.
 
 10
 00:00:45,270 --> 00:00:50,970
-But then this buffer is passed directly to
-printf, so we have a format string exploit.
+But then this buffer is passed directly to printf, so we have a format string exploit.
 
 11
 00:00:50,970 --> 00:00:57,350
-Our goal is it to redirect code execution
-to the hello() function.
+Our goal is it to redirect code execution to the hello() function.
 
 12
 00:00:57,350 --> 00:01:01,530
-Notice how here after the printf() we find
-an exit?
+Notice how here after the printf() we find an exit?
 
 13
 00:01:01,530 --> 00:01:07,450
-Well that was intentionally placed here because
-exit is part of libc, so there will be a global
+Well that was intentionally placed here because exit is part of libc, so there will be a global
 
 14
 00:01:07,450 --> 00:01:11,440
@@ -66,38 +56,31 @@ offset table entry for it which we can overwrite.
 
 15
 00:01:11,439 --> 00:01:17,179
-Then when we call exit here, our overwritten
-function would be executed instead.
+Then when we call exit here, our overwritten function would be executed instead.
 
 16
 00:01:17,179 --> 00:01:21,839
-So it’s actually a pretty straight forward
-format string exploit.
+So it’s actually a pretty straight forward format string exploit.
 
 17
 00:01:21,840 --> 00:01:26,070
-Just write to the exit GOT entry the address
-of hello and you are done.
+Just write to the exit GOT entry the address of hello and you are done.
 
 18
 00:01:26,069 --> 00:01:32,829
-Hello() and the GOT table have fixed addresses
-and are not affected by ASLR.
+Hello() and the GOT table have fixed addresses and are not affected by ASLR.
 
 19
 00:01:32,829 --> 00:01:37,259
-At least on this ubuntu version because of
-the default compiler options.
+At least on this ubuntu version because of the default compiler options.
 
 20
 00:01:37,259 --> 00:01:43,979
-I received several comments that wrote that
-on their system they default to PIE.
+I received several comments that wrote that on their system they default to PIE.
 
 21
 00:01:43,979 --> 00:01:49,329
-So there the GOT address and the functions
-will be affected by ASLR and then I don’t
+So there the GOT address and the functions will be affected by ASLR and then I don’t
 
 22
 00:01:49,329 --> 00:01:53,039
@@ -105,8 +88,7 @@ think these simple cases are exploitable anymore.
 
 23
 00:01:53,040 --> 00:01:57,880
-We would require a little bit more complex
-examples, with more interactions, where we
+We would require a little bit more complex examples, with more interactions, where we
 
 24
 00:01:57,880 --> 00:02:01,140
@@ -122,8 +104,7 @@ Let’s not rush too quickly into those topics.
 
 27
 00:02:06,270 --> 00:02:11,560
-So we compile this now on our ubuntu machine
-and we get the old exploit code.
+So we compile this now on our ubuntu machine and we get the old exploit code.
 
 28
 00:02:11,560 --> 00:02:14,380
@@ -131,18 +112,15 @@ Man this was episode 0x13…
 
 29
 00:02:14,379 --> 00:02:20,319
-August 2016… holy shit that is a long time
-ago.
+August 2016… holy shit that is a long time ago.
 
 30
 00:02:20,319 --> 00:02:27,249
-When I started I thought I would have very
-quickly a complete series on all the basics...
+When I started I thought I would have very quickly a complete series on all the basics...
 
 31
 00:02:27,250 --> 00:02:30,480
-and we still haven’t reached ROP and ASLR.
-mhmhm…
+and we still haven’t reached ROP and ASLR. mhmhm…
 
 32
 00:02:30,480 --> 00:02:31,480
@@ -162,8 +140,7 @@ Looks good.
 
 36
 00:02:35,950 --> 00:02:42,010
-Now I write it into a file - `exp` and then
-we can start gdb with format4 and execute
+Now I write it into a file - `exp` and then we can start gdb with format4 and execute
 
 37
 00:02:42,010 --> 00:02:43,100
@@ -171,18 +148,15 @@ it.
 
 38
 00:02:43,099 --> 00:02:48,159
-Run and then we pipe in the exp file as input
-to the program.
+Run and then we pipe in the exp file as input to the program.
 
 39
 00:02:48,159 --> 00:02:54,479
-Uh we print a lot of character, that looks
-good but we get a segfault.
+Uh we print a lot of character, that looks good but we get a segfault.
 
 40
 00:02:54,480 --> 00:03:02,130
-We are attempting to write the value in r15,
-0x84b4 to the address in rax.
+We are attempting to write the value in r15, 0x84b4 to the address in rax.
 
 41
 00:03:02,129 --> 00:03:04,529
@@ -198,13 +172,11 @@ So this is the %n part of the exploit.
 
 44
 00:03:10,599 --> 00:03:14,869
-0x84b4 is the amount of characters already
-printed, that’s all this empty space here,
+0x84b4 is the amount of characters already printed, that’s all this empty space here,
 
 45
 00:03:14,870 --> 00:03:21,440
-and it tried to write to the 4th value, and
-that turned out to be not the address anymore.
+and it tried to write to the 4th value, and that turned out to be not the address anymore.
 
 46
 00:03:21,440 --> 00:03:23,470
@@ -212,8 +184,7 @@ So two things.
 
 47
 00:03:23,469 --> 00:03:29,029
-First of all obviously the amount of characters
-that we are writing with %n are wrong, we
+First of all obviously the amount of characters that we are writing with %n are wrong, we
 
 48
 00:03:29,030 --> 00:03:31,790
@@ -221,28 +192,23 @@ don’t even know yet what we want to write.
 
 49
 00:03:31,790 --> 00:03:36,960
-And most importantly, we are not writing to
-the address we have specified in the exploit.
+And most importantly, we are not writing to the address we have specified in the exploit.
 
 50
 00:03:36,959 --> 00:03:41,009
-Now with the format string offset we hit our
-padding.
+Now with the format string offset we hit our padding.
 
 51
 00:03:41,010 --> 00:03:45,550
-Okay so let’s use this opportunity and get
-the correct addresses first.
+Okay so let’s use this opportunity and get the correct addresses first.
 
 52
 00:03:45,549 --> 00:03:50,899
-We need the address of the exit GOT entry,
-we do this by looking where it is called.
+We need the address of the exit GOT entry, we do this by looking where it is called.
 
 53
 00:03:50,900 --> 00:03:56,260
-Then we simply disassemble the few instructions
-that jump to the GOT entry, that’s the PLT
+Then we simply disassemble the few instructions that jump to the GOT entry, that’s the PLT
 
 54
 00:03:56,260 --> 00:03:58,010
@@ -254,8 +220,7 @@ And here it references the exit GOT entry.
 
 56
 00:04:01,299 --> 00:04:05,889
-You can see it will jump to whatever address
-is written there, so we have to overwrite
+You can see it will jump to whatever address is written there, so we have to overwrite
 
 57
 00:04:05,889 --> 00:04:08,519
@@ -267,8 +232,7 @@ And here is the address of hello.
 
 59
 00:04:10,900 --> 00:04:16,890
-You can see again that only the last 2 bytes
-of the current exit GOT entry and our desired
+You can see again that only the last 2 bytes of the current exit GOT entry and our desired
 
 60
 00:04:16,889 --> 00:04:18,919
@@ -276,13 +240,11 @@ hello address are different.
 
 61
 00:04:18,919 --> 00:04:23,869
-Which means we only have to overwrite those
-last two bytes.
+Which means we only have to overwrite those last two bytes.
 
 62
 00:04:23,870 --> 00:04:28,450
-So let’s place these two new addresses in
-our exploit code and we can also throw away
+So let’s place these two new addresses in our exploit code and we can also throw away
 
 63
 00:04:28,450 --> 00:04:29,560
@@ -290,18 +252,15 @@ the old format modifiers.
 
 64
 00:04:29,560 --> 00:04:30,700
-The amount of characters we print is wrong
-and the offset doesn’t match anymore either.
+The amount of characters we print is wrong and the offset doesn’t match anymore either.
 
 65
 00:04:30,699 --> 00:04:35,899
-And instead we just add a bunch of %p, to
-find our new stack offset.
+And instead we just add a bunch of %p, to find our new stack offset.
 
 66
 00:04:35,900 --> 00:04:42,450
-So we write it again to a file, start gdb
-and pipe the file in as input.
+So we write it again to a file, start gdb and pipe the file in as input.
 
 67
 00:04:42,450 --> 00:04:45,920
@@ -317,8 +276,7 @@ Where are the addresses we leak with %p?
 
 70
 00:04:51,830 --> 00:04:56,300
-These are the small things that can be really
-frustrating and this actually happened to
+These are the small things that can be really frustrating and this actually happened to
 
 71
 00:04:56,300 --> 00:04:58,750
@@ -326,18 +284,15 @@ me when I was preparing this episode.
 
 72
 00:04:58,750 --> 00:05:01,860
-I was going crazy trying to understand what
-the heck is happening.
+I was going crazy trying to understand what the heck is happening.
 
 73
 00:05:01,860 --> 00:05:07,330
-I’m just executing it over and over again,
-hoping the computer would do something else.
+I’m just executing it over and over again, hoping the computer would do something else.
 
 74
 00:05:07,330 --> 00:05:13,390
-I’m debugging it to break before the printf
-and see that my input is passed to printf.
+I’m debugging it to break before the printf and see that my input is passed to printf.
 
 75
 00:05:13,389 --> 00:05:14,839
@@ -353,8 +308,7 @@ But it will not.
 
 78
 00:05:19,210 --> 00:05:23,320
-If it’s not doing what i want it to do,
-I made a mistake.
+If it’s not doing what i want it to do, I made a mistake.
 
 79
 00:05:23,319 --> 00:05:24,489
@@ -362,8 +316,7 @@ I am the problem.
 
 80
 00:05:24,490 --> 00:05:30,860
-I need to calm down, take a step back and
-try to figure out a way to figure out my stupid
+I need to calm down, take a step back and try to figure out a way to figure out my stupid
 
 81
 00:05:30,860 --> 00:05:32,230
@@ -375,8 +328,7 @@ So what exactly is the output we get.
 
 83
 00:05:35,229 --> 00:05:41,879
-I pipe the exploit output into hexdump and
-see that it stops after three characters.
+I pipe the exploit output into hexdump and see that it stops after three characters.
 
 84
 00:05:41,879 --> 00:05:44,699
@@ -384,13 +336,11 @@ And that is our address but cut off.
 
 85
 00:05:44,699 --> 00:05:48,829
-The other address and the format string is
-missing.
+The other address and the format string is missing.
 
 86
 00:05:48,830 --> 00:05:55,800
-But when I then also did the hexdump of the
-exploit I noticed the obvious mistake.
+But when I then also did the hexdump of the exploit I noticed the obvious mistake.
 
 87
 00:05:55,800 --> 00:05:58,300
@@ -410,8 +360,7 @@ Godam I’m so dumb.
 
 91
 00:06:04,699 --> 00:06:10,679
-This was not an issue for the 32bit exploit,
-because there our address had also 4 bytes
+This was not an issue for the 32bit exploit, because there our address had also 4 bytes
 
 92
 00:06:10,680 --> 00:06:13,370
@@ -419,18 +368,15 @@ and thus no null-byte.
 
 93
 00:06:13,370 --> 00:06:16,380
-Now on 64bit the default address is only 3
-bytes.
+Now on 64bit the default address is only 3 bytes.
 
 94
 00:06:16,379 --> 00:06:22,109
-So our next step is - we move the address
-at the end of our exploit.
+So our next step is - we move the address at the end of our exploit.
 
 95
 00:06:22,110 --> 00:06:25,100
-They still get placed on the stack with the
-nullbytes.
+They still get placed on the stack with the nullbytes.
 
 96
 00:06:25,099 --> 00:06:27,159
@@ -438,18 +384,15 @@ fgets will read nullbytes.
 
 97
 00:06:27,159 --> 00:06:31,379
-Just the printf format vulnerability part
-must not have a null-byte.
+Just the printf format vulnerability part must not have a null-byte.
 
 98
 00:06:31,379 --> 00:06:37,139
-When we move it to the end we want it to be
-in a fixed location, so we add padding to
+When we move it to the end we want it to be in a fixed location, so we add padding to
 
 99
 00:06:37,140 --> 00:06:41,720
-our format string and then make sure we leave
-enough space for the two addresses at the
+our format string and then make sure we leave enough space for the two addresses at the
 
 100
 00:06:41,720 --> 00:06:42,720
@@ -457,8 +400,7 @@ end.
 
 101
 00:06:42,720 --> 00:06:48,220
-We are on 64bit, so we have 2 times 8 bytes,
-so we need 16 characters.
+We are on 64bit, so we have 2 times 8 bytes, so we need 16 characters.
 
 102
 00:06:48,220 --> 00:06:49,470
@@ -482,8 +424,7 @@ Let’s actually have a lot more %p.
 
 107
 00:06:59,919 --> 00:07:04,139
-How about 100, that fits easily in the 512
-bytes.
+How about 100, that fits easily in the 512 bytes.
 
 108
 00:07:04,139 --> 00:07:06,949
@@ -507,13 +448,11 @@ But it’s pretty clear what happened.
 
 113
 00:07:15,289 --> 00:07:19,709
-We forgot to also encode the addresses for
-64bit.
+We forgot to also encode the addresses for 64bit.
 
 114
 00:07:19,710 --> 00:07:26,240
-Struct pack I packs the integer in 4 bytes,
-but we want it packed in 8 bytes.
+Struct pack I packs the integer in 4 bytes, but we want it packed in 8 bytes.
 
 115
 00:07:26,240 --> 00:07:28,470
@@ -553,23 +492,19 @@ There it is.
 
 124
 00:07:42,960 --> 00:07:48,160
-So now, we just have to print the correct
-amount of characters to write the two bytes.
+So now, we just have to print the correct amount of characters to write the two bytes.
 
 125
 00:07:48,159 --> 00:07:52,019
-Actually, we don’t need two writes, we should
-be able to do that in one.
+Actually, we don’t need two writes, we should be able to do that in one.
 
 126
 00:07:52,020 --> 00:07:57,000
-So we add another format string with a padding
-of the amount of characters we want to write.
+So we add another format string with a padding of the amount of characters we want to write.
 
 127
 00:07:57,000 --> 00:08:02,350
-That would be 0x676, minus the characters
-we already printed before that.
+That would be 0x676, minus the characters we already printed before that.
 
 128
 00:08:02,349 --> 00:08:03,419
@@ -577,8 +512,7 @@ So basically minus 8.
 
 129
 00:08:03,419 --> 00:08:07,999
-And then we should also remove the spaces
-before the %n that would be another character
+And then we should also remove the spaces before the %n that would be another character
 
 130
 00:08:08,000 --> 00:08:09,000
@@ -602,8 +536,7 @@ Damn…
 
 135
 00:08:14,340 --> 00:08:18,940
-So when I was recording all of this I really
-thought it should work right away.
+So when I was recording all of this I really thought it should work right away.
 
 136
 00:08:18,940 --> 00:08:21,210
@@ -615,8 +548,7 @@ Really confused me.
 
 138
 00:08:22,349 --> 00:08:25,299
-And that would be again something I could
-obsess about.
+And that would be again something I could obsess about.
 
 139
 00:08:25,300 --> 00:08:27,320
@@ -624,8 +556,7 @@ Why did that happen?
 
 140
 00:08:27,319 --> 00:08:31,519
-But after I stopped recording and literally
-started to write down what I just did, in
+But after I stopped recording and literally started to write down what I just did, in
 
 141
 00:08:31,520 --> 00:08:32,520
@@ -645,8 +576,7 @@ I realized I wrote a whole integer.
 
 145
 00:08:39,570 --> 00:08:44,970
-But I meant to write only two bytes, so I
-would have required %hn.
+But I meant to write only two bytes, so I would have required %hn.
 
 146
 00:08:44,970 --> 00:08:47,000
@@ -666,8 +596,7 @@ Segfault at address 0x676.
 
 150
 00:08:52,460 --> 00:08:57,320
-We wrote a whole integer, so we overwrote
-the higher bytes that were already stored
+We wrote a whole integer, so we overwrote the higher bytes that were already stored
 
 151
 00:08:57,320 --> 00:08:59,130
@@ -687,23 +616,19 @@ It writes two bytes.
 
 155
 00:09:05,780 --> 00:09:09,450
-And that worked!
-code execution redirected! you win
+And that worked! code execution redirected! you win
 
 156
 00:09:09,450 --> 00:09:13,300
-You see the exploit is different from the
-original 32bit version.
+You see the exploit is different from the original 32bit version.
 
 157
 00:09:13,300 --> 00:09:20,210
-It required quite some changes but it also
-kinda is still the same thing.
+It required quite some changes but it also kinda is still the same thing.
 
 158
 00:09:20,210 --> 00:09:22,350
-Definitely not a hard challenge on a modern
-system.
+Definitely not a hard challenge on a modern system.
 
 159
 00:09:22,350 --> 00:09:25,130

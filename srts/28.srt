@@ -1,22 +1,18 @@
 1
 00:00:00,110 --> 00:00:05,340
-Last episode we did our first networking challenge
-were we first reverse engineered how the server
+Last episode we did our first networking challenge were we first reverse engineered how the server
 
 2
 00:00:05,340 --> 00:00:09,150
-is listening on a port and then we connected
-to it with netcat.
+is listening on a port and then we connected to it with netcat.
 
 3
 00:00:09,150 --> 00:00:14,060
-This video we want to go one layer deeper
-and have a look at the TCP protocol.
+This video we want to go one layer deeper and have a look at the TCP protocol.
 
 4
 00:00:14,059 --> 00:00:18,069
-This will be the first time that we have a
-look at what it means to send a packet over
+This will be the first time that we have a look at what it means to send a packet over
 
 5
 00:00:18,070 --> 00:00:25,600
@@ -28,38 +24,31 @@ We have used netcat now multiple times.
 
 7
 00:00:27,950 --> 00:00:31,620
-We used it in CTFs and last video to connect
-to challenges.
+We used it in CTFs and last video to connect to challenges.
 
 8
 00:00:31,620 --> 00:00:35,250
-And in the web security series we used it
-to talk to a real webserver.
+And in the web security series we used it to talk to a real webserver.
 
 9
 00:00:35,250 --> 00:00:41,000
-So you know that netcat is a very handy tool
-to send tcp packets over the network.
+So you know that netcat is a very handy tool to send tcp packets over the network.
 
 10
 00:00:41,000 --> 00:00:45,190
-So I suggest we download wireshark to analyse
-packets we send with netcat.
+So I suggest we download wireshark to analyse packets we send with netcat.
 
 11
 00:00:45,190 --> 00:00:50,890
-When we open wireshark we select the network
-interface we want to capture packets.
+When we open wireshark we select the network interface we want to capture packets.
 
 12
 00:00:50,890 --> 00:00:55,770
-In this case our traffic doesn’t leave the
-machine thus we can select the loopback interface.
+In this case our traffic doesn’t leave the machine thus we can select the loopback interface.
 
 13
 00:00:55,770 --> 00:01:00,480
-Loopback is more like a virtual network interface,
-it’s not a real physical network card stuck
+Loopback is more like a virtual network interface, it’s not a real physical network card stuck
 
 14
 00:01:00,480 --> 00:01:01,750
@@ -67,18 +56,15 @@ in your PC.
 
 15
 00:01:01,750 --> 00:01:06,940
-Through this interface will go all our traffic
-that we send around on our local machine.
+Through this interface will go all our traffic that we send around on our local machine.
 
 16
 00:01:06,940 --> 00:01:13,570
-And as you may know, the own machine is always
-identified as localhost or IP 127.0.0.1.
+And as you may know, the own machine is always identified as localhost or IP 127.0.0.1.
 
 17
 00:01:13,570 --> 00:01:19,290
-Now let’s use two terminal windows and in
-one window we start netcat in listening mode
+Now let’s use two terminal windows and in one window we start netcat in listening mode
 
 18
 00:01:19,290 --> 00:01:20,970
@@ -86,13 +72,11 @@ and we select a port.
 
 19
 00:01:20,970 --> 00:01:25,720
-In the other window we can then execute netstat,
-like in the last video, and we can list all
+In the other window we can then execute netstat, like in the last video, and we can list all
 
 20
 00:01:25,720 --> 00:01:29,080
-processes that are currently listening on
-a port.
+processes that are currently listening on a port.
 
 21
 00:01:29,080 --> 00:01:31,240
@@ -100,8 +84,7 @@ And here is our netcat process.
 
 22
 00:01:31,240 --> 00:01:35,280
-You know what, let’s execute our netcat
-server with strace, so we can see all the
+You know what, let’s execute our netcat server with strace, so we can see all the
 
 23
 00:01:35,280 --> 00:01:39,100
@@ -109,23 +92,19 @@ syscalls that netcat uses to establish a server.
 
 24
 00:01:39,100 --> 00:01:45,500
-So it will first create a socket, set some
-options, then bind the port 1234, is now listening
+So it will first create a socket, set some options, then bind the port 1234, is now listening
 
 25
 00:01:45,500 --> 00:01:49,770
-on that port and is now waiting for a connection
-to be established with accept.
+on that port and is now waiting for a connection to be established with accept.
 
 26
 00:01:49,770 --> 00:01:54,530
-It’s basically exactly what we reverse engineered
-in last video.
+It’s basically exactly what we reverse engineered in last video.
 
 27
 00:01:54,530 --> 00:01:58,280
-We can also quickly check wireshark, and we
-don’t see any packet being sent over the
+We can also quickly check wireshark, and we don’t see any packet being sent over the
 
 28
 00:01:58,280 --> 00:01:59,320
@@ -137,13 +116,11 @@ Ok.
 
 30
 00:02:00,320 --> 00:02:04,210
-Now let’s use the second window to connect
-to this netcat server.
+Now let’s use the second window to connect to this netcat server.
 
 31
 00:02:04,210 --> 00:02:09,010
-You can see on the server that accept now
-returned, because a client conencted to the
+You can see on the server that accept now returned, because a client conencted to the
 
 32
 00:02:09,009 --> 00:02:10,009
@@ -163,53 +140,43 @@ Let’s quickly have a look at those.
 
 36
 00:02:19,070 --> 00:02:23,110
-As you can see in the lowest window, a packet
-is just some binary data.
+As you can see in the lowest window, a packet is just some binary data.
 
 37
 00:02:23,110 --> 00:02:28,730
-And that binary data has meaning which wireshark
-can parse and display us nicely.
+And that binary data has meaning which wireshark can parse and display us nicely.
 
 38
 00:02:28,730 --> 00:02:33,680
-So above it we can see the decoded packet
-and it’s divided by layers.
+So above it we can see the decoded packet and it’s divided by layers.
 
 39
 00:02:33,680 --> 00:02:38,890
-Because this packet didn’t leave our machine
-the ethernet layer is just all zeroes.
+Because this packet didn’t leave our machine the ethernet layer is just all zeroes.
 
 40
 00:02:38,890 --> 00:02:43,200
-Usually you would find here your mac address
-and the mac address from your switch or router.
+Usually you would find here your mac address and the mac address from your switch or router.
 
 41
 00:02:43,200 --> 00:02:47,200
-So that layer is only used between two direct
-connections.
+So that layer is only used between two direct connections.
 
 42
 00:02:47,200 --> 00:02:50,770
-Besides the Mac addresses, this layer also
-contains a TYPE.
+Besides the Mac addresses, this layer also contains a TYPE.
 
 43
 00:02:50,770 --> 00:02:57,550
-And the type is set to hex 800, which indicates
-that the next layer is an IPv4 layer.
+And the type is set to hex 800, which indicates that the next layer is an IPv4 layer.
 
 44
 00:02:57,550 --> 00:03:00,500
-Wireshark sees that and knows now how to decode
-the next bytes.
+Wireshark sees that and knows now how to decode the next bytes.
 
 45
 00:03:00,500 --> 00:03:05,640
-When you click on the next layer, wireshark
-will highlight which bytes of the packet belong
+When you click on the next layer, wireshark will highlight which bytes of the packet belong
 
 46
 00:03:05,640 --> 00:03:06,780
@@ -217,8 +184,7 @@ to that layer.
 
 47
 00:03:06,780 --> 00:03:12,630
-And you can then see how it is decided that
-it is an IP v4, version 4 layer, because the
+And you can then see how it is decided that it is an IP v4, version 4 layer, because the
 
 48
 00:03:12,629 --> 00:03:16,759
@@ -226,28 +192,23 @@ first 4 bits of this byte is 4.
 
 49
 00:03:16,760 --> 00:03:21,440
-You can also see here the source and destination
-IP, which in this case is the same.
+You can also see here the source and destination IP, which in this case is the same.
 
 50
 00:03:21,440 --> 00:03:26,830
-So while the ethernet layer with mac addresses
-was about direct connections, the IP layer
+So while the ethernet layer with mac addresses was about direct connections, the IP layer
 
 51
 00:03:26,830 --> 00:03:31,260
-can contain an address very far away on the
-internet, and the switches will make sure
+can contain an address very far away on the internet, and the switches will make sure
 
 52
 00:03:31,260 --> 00:03:36,440
-that this packet is forwarded until you reach
-that machine.
+that this packet is forwarded until you reach that machine.
 
 53
 00:03:36,440 --> 00:03:41,290
-This layer also contains information about
-the layer afterwards, and that is the protocol
+This layer also contains information about the layer afterwards, and that is the protocol
 
 54
 00:03:41,290 --> 00:03:42,290
@@ -255,33 +216,27 @@ identifier.
 
 55
 00:03:42,290 --> 00:03:47,370
-In this case it’s 6, which means the content
-of this IP layer is a TCP header.
+In this case it’s 6, which means the content of this IP layer is a TCP header.
 
 56
 00:03:47,370 --> 00:03:52,450
-IP and TCP are usually always together, it’s
-very common, thus you have probably heard
+IP and TCP are usually always together, it’s very common, thus you have probably heard
 
 57
 00:03:52,450 --> 00:03:57,790
-of TCP/IP before, which just says that there
-is a TCP layer over an IP layer.
+of TCP/IP before, which just says that there is a TCP layer over an IP layer.
 
 58
 00:03:57,790 --> 00:04:02,500
-So the ethernet layer helped to get from machine
-to machine, the IP layer helped to identify
+So the ethernet layer helped to get from machine to machine, the IP layer helped to identify
 
 59
 00:04:02,500 --> 00:04:07,900
-which machine is the real destination of this,
-the TCP layer will now help identify which
+which machine is the real destination of this, the TCP layer will now help identify which
 
 60
 00:04:07,900 --> 00:04:12,040
-program or process on this machine should
-handle this packet.
+program or process on this machine should handle this packet.
 
 61
 00:04:12,040 --> 00:04:14,500
@@ -289,13 +244,11 @@ And that is identified with the port number.
 
 62
 00:04:14,500 --> 00:04:18,650
-You can see here that the destination port
-is set to 1234.
+You can see here that the destination port is set to 1234.
 
 63
 00:04:18,650 --> 00:04:24,210
-You can also see here a source port, which
-is required so you can receive answers from
+You can also see here a source port, which is required so you can receive answers from
 
 64
 00:04:24,210 --> 00:04:25,480
@@ -303,8 +256,7 @@ this server.
 
 65
 00:04:25,479 --> 00:04:29,859
-So when the server responds with a packet,
-it will use this port, so that the client
+So when the server responds with a packet, it will use this port, so that the client
 
 66
 00:04:29,860 --> 00:04:33,330
@@ -316,8 +268,7 @@ And that’s usually a random high port number.
 
 68
 00:04:35,999 --> 00:04:41,059
-Anyhow, now we understand how a full TCP packet
-is constructed, now let’s have a look at
+Anyhow, now we understand how a full TCP packet is constructed, now let’s have a look at
 
 69
 00:04:41,060 --> 00:04:42,530
@@ -325,23 +276,19 @@ the protocol.
 
 70
 00:04:42,529 --> 00:04:48,379
-A Protocol just refers to a set of rules on
-how to talk to another computer.
+A Protocol just refers to a set of rules on how to talk to another computer.
 
 71
 00:04:48,380 --> 00:04:53,940
-If a client and server agree on how to send
-data back and forth, it will work.
+If a client and server agree on how to send data back and forth, it will work.
 
 72
 00:04:53,940 --> 00:05:00,160
-So What we will see now is just what somebody
-came up with in order to create a data connection.
+So What we will see now is just what somebody came up with in order to create a data connection.
 
 73
 00:05:00,159 --> 00:05:05,509
-Just remember, at the moment we have not sent
-any data with netcat, so far we only established
+Just remember, at the moment we have not sent any data with netcat, so far we only established
 
 74
 00:05:05,509 --> 00:05:06,649
@@ -353,13 +300,11 @@ Ok, so we see that 3 packets were exchanged.
 
 76
 00:05:10,909 --> 00:05:15,459
-First the client sent a so called SYN packet,
-a synchronize packet.
+First the client sent a so called SYN packet, a synchronize packet.
 
 77
 00:05:15,460 --> 00:05:19,230
-And then the server responded with an SYN,ACK
-packet.
+And then the server responded with an SYN,ACK packet.
 
 78
 00:05:19,229 --> 00:05:22,079
@@ -367,23 +312,19 @@ Meaning I acknowledge that I received it.
 
 79
 00:05:22,080 --> 00:05:25,650
-This is important because maybe the initial
-packet didn’t arrive.
+This is important because maybe the initial packet didn’t arrive.
 
 80
 00:05:25,650 --> 00:05:30,860
-So when you as a client get a response, you
-know that the server got your message.
+So when you as a client get a response, you know that the server got your message.
 
 81
 00:05:30,860 --> 00:05:35,200
-This means the client knows now that the connection
-works.
+This means the client knows now that the connection works.
 
 82
 00:05:35,199 --> 00:05:40,199
-But from the perspective of the server the
-server doesn’t know yet if the sending the
+But from the perspective of the server the server doesn’t know yet if the sending the
 
 83
 00:05:40,199 --> 00:05:42,129
@@ -391,18 +332,15 @@ packet was successful.
 
 84
 00:05:42,129 --> 00:05:45,179
-Maybe the server can only receive but not
-send packets.
+Maybe the server can only receive but not send packets.
 
 85
 00:05:45,180 --> 00:05:51,260
-Thus the client will respond to the SYN,ACK
-packet with an ACK packet, acknowledging that
+Thus the client will respond to the SYN,ACK packet with an ACK packet, acknowledging that
 
 86
 00:05:51,259 --> 00:05:57,989
-it got the servers answer and now both parties
-are sure, YES I successfully exchanged packets
+it got the servers answer and now both parties are sure, YES I successfully exchanged packets
 
 87
 00:05:57,990 --> 00:06:01,140
@@ -414,13 +352,11 @@ And this is all done transparently.
 
 89
 00:06:03,490 --> 00:06:06,520
-You didn’t have to construct these packets
-yourself.
+You didn’t have to construct these packets yourself.
 
 90
 00:06:06,520 --> 00:06:09,500
-You simply opened a socket and waited for
-a connection.
+You simply opened a socket and waited for a connection.
 
 91
 00:06:09,499 --> 00:06:10,499
@@ -428,13 +364,11 @@ Ok.
 
 92
 00:06:10,499 --> 00:06:13,889
-Now let’s send some data from the client
-to the server.
+Now let’s send some data from the client to the server.
 
 93
 00:06:13,889 --> 00:06:18,249
-You can see that immediately the server was
-able to read the line you sent.
+You can see that immediately the server was able to read the line you sent.
 
 94
 00:06:18,250 --> 00:06:19,940
@@ -446,23 +380,19 @@ We see two new packets.
 
 96
 00:06:23,499 --> 00:06:27,619
-A PSH packet from the client to the server,
-and an ack packet back.
+A PSH packet from the client to the server, and an ack packet back.
 
 97
 00:06:27,619 --> 00:06:31,369
-The packet from the client also now has an
-additional DATA layer.
+The packet from the client also now has an additional DATA layer.
 
 98
 00:06:31,369 --> 00:06:35,259
-And that data layer just contains the raw
-bytes we sent.
+And that data layer just contains the raw bytes we sent.
 
 99
 00:06:35,259 --> 00:06:39,919
-And the server responds with an ack, to inform
-the client that the packet was succesfully
+And the server responds with an ack, to inform the client that the packet was succesfully
 
 100
 00:06:39,919 --> 00:06:40,919
@@ -474,8 +404,7 @@ Now let’s send a response from the server.
 
 102
 00:06:43,159 --> 00:06:49,399
-You see, the server simply wrote the text
-to the filedescriptor 4, which is the filedescriptor
+You see, the server simply wrote the text to the filedescriptor 4, which is the filedescriptor
 
 103
 00:06:49,401 --> 00:06:50,771
@@ -483,8 +412,7 @@ that accept returned.
 
 104
 00:06:50,770 --> 00:06:56,470
-As you can see, an application simply writes
-to that paseudo file, that socket, and the
+As you can see, an application simply writes to that paseudo file, that socket, and the
 
 105
 00:06:56,470 --> 00:06:59,460
@@ -492,13 +420,11 @@ magic below sent that over the network.
 
 106
 00:06:59,459 --> 00:07:04,389
-Now let’s have a look what it did,
-It also just sent a PSH packet and the client
+Now let’s have a look what it did, It also just sent a PSH packet and the client
 
 107
 00:07:04,389 --> 00:07:07,969
-acknwoledged the arrival with an ack packet
-back.
+acknwoledged the arrival with an ack packet back.
 
 108
 00:07:07,969 --> 00:07:09,359
@@ -510,8 +436,7 @@ Obviously the size of a packet is limited.
 
 110
 00:07:11,979 --> 00:07:16,709
-So what happens when you send a lot of data,
-let’s say you upload a huge file somewhere,
+So what happens when you send a lot of data, let’s say you upload a huge file somewhere,
 
 111
 00:07:16,709 --> 00:07:18,759
@@ -519,43 +444,35 @@ how will that work?
 
 112
 00:07:18,760 --> 00:07:21,280
-Let’s just copy a bunch of characters and
-send them.
+Let’s just copy a bunch of characters and send them.
 
 113
 00:07:21,279 --> 00:07:25,569
-Ahhh, see, now there are more than just two
-packets.
+Ahhh, see, now there are more than just two packets.
 
 114
 00:07:25,569 --> 00:07:30,069
-You don’t see it when you develop an application,
-but somwhere in the kernel, network card or
+You don’t see it when you develop an application, but somwhere in the kernel, network card or
 
 115
 00:07:30,069 --> 00:07:33,099
-driver, I don’t really know, it got split
-up.
+driver, I don’t really know, it got split up.
 
 116
 00:07:33,099 --> 00:07:37,339
-You can also see that the second packet was
-not sent along with the first one, the second
+You can also see that the second packet was not sent along with the first one, the second
 
 117
 00:07:37,339 --> 00:07:41,639
-packet was only sent out once the server acknowledges
-the first one.
+packet was only sent out once the server acknowledges the first one.
 
 118
 00:07:41,639 --> 00:07:44,279
-Let’s see what happens when you kill the
-client.
+Let’s see what happens when you kill the client.
 
 119
 00:07:44,279 --> 00:07:49,909
-Even though we just ctrl+c netcat, we can
-see in wireshark, that FIN packet was sent
+Even though we just ctrl+c netcat, we can see in wireshark, that FIN packet was sent
 
 120
 00:07:49,909 --> 00:07:53,219
@@ -563,18 +480,15 @@ out, do indicate we are done with this channel.
 
 121
 00:07:53,219 --> 00:07:57,939
-You can free up your resources and you don’t
-have to expect more packets from this connection.
+You can free up your resources and you don’t have to expect more packets from this connection.
 
 122
 00:07:57,940 --> 00:08:01,330
-And like during setup, there are 3 packets
-exchanged.
+And like during setup, there are 3 packets exchanged.
 
 123
 00:08:01,330 --> 00:08:06,320
-The server acknowledges the fin by the client,
-now the client knows, that the server knows
+The server acknowledges the fin by the client, now the client knows, that the server knows
 
 124
 00:08:06,319 --> 00:08:07,799
@@ -582,8 +496,7 @@ that it is done.
 
 125
 00:08:07,800 --> 00:08:13,140
-but the server doesn’t know yet if the client
-knows that it knows it’s done, so it also
+but the server doesn’t know yet if the client knows that it knows it’s done, so it also
 
 126
 00:08:13,139 --> 00:08:14,439
@@ -595,43 +508,35 @@ Now both now that it’s over.
 
 128
 00:08:16,740 --> 00:08:21,130
-Now this whole exchange is referred to as
-a TCP stream.
+Now this whole exchange is referred to as a TCP stream.
 
 129
 00:08:21,129 --> 00:08:26,849
-We established a connection, then exchanged
-data back and forth, and then quit the connection.
+We established a connection, then exchanged data back and forth, and then quit the connection.
 
 130
 00:08:26,849 --> 00:08:32,619
-And wireshark allows us to investigate this
-stream, for example with Follow TCP stream.
+And wireshark allows us to investigate this stream, for example with Follow TCP stream.
 
 131
 00:08:32,620 --> 00:08:37,070
-Here only the data is visible and color coded
-who sent what.
+Here only the data is visible and color coded who sent what.
 
 132
 00:08:37,070 --> 00:08:41,500
-And now you should watch my HTTP protocol
-video from the web security series because
+And now you should watch my HTTP protocol video from the web security series because
 
 133
 00:08:41,500 --> 00:08:46,160
-you will understand now much better what it
-means to have a server and client.
+you will understand now much better what it means to have a server and client.
 
 134
 00:08:46,160 --> 00:08:51,080
-And that HTTP is just data sent over TCP,
-exactly how we sent these messages.
+And that HTTP is just data sent over TCP, exactly how we sent these messages.
 
 135
 00:08:51,079 --> 00:08:56,469
-A browser and a webserver are just special
-programs that do special things with special
+A browser and a webserver are just special programs that do special things with special
 
 136
 00:08:56,470 --> 00:08:57,860

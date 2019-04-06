@@ -1,12 +1,10 @@
 1
 00:00:00,560 --> 00:00:06,800
-So the public disclosure of dirtyc0w or CVE-2016-5195
-just happened.
+So the public disclosure of dirtyc0w or CVE-2016-5195 just happened.
 
 2
 00:00:06,800 --> 00:00:11,700
-This vulnerability is ancient, and allows
-a regular user on a system to perform a local
+This vulnerability is ancient, and allows a regular user on a system to perform a local
 
 3
 00:00:11,700 --> 00:00:13,940
@@ -14,23 +12,19 @@ privilege escalation and become root.
 
 4
 00:00:13,940 --> 00:00:21,670
-I want to show it to you, explore how it works
-and generally talk about it.
+I want to show it to you, explore how it works and generally talk about it.
 
 5
 00:00:21,669 --> 00:00:29,539
-Let’s cut right to the chase and start by
-looking at the provided proof-of-concept exploit.
+Let’s cut right to the chase and start by looking at the provided proof-of-concept exploit.
 
 6
 00:00:29,539 --> 00:00:34,859
-I have here a vulnerable Ubuntu system where
-I can downloa and compile the exploit.
+I have here a vulnerable Ubuntu system where I can downloa and compile the exploit.
 
 7
 00:00:34,860 --> 00:00:40,360
-Then I create a file owned by root to that
-I as a normal user can’t write to.
+Then I create a file owned by root to that I as a normal user can’t write to.
 
 8
 00:00:40,360 --> 00:00:42,800
@@ -38,18 +32,15 @@ I can read it, but not write.
 
 9
 00:00:42,800 --> 00:00:47,390
-This is true for many files on the file system
-like for example the ping binary.
+This is true for many files on the file system like for example the ping binary.
 
 10
 00:00:47,390 --> 00:00:50,570
-ping belongs to root and has the setuid bit
-set.
+ping belongs to root and has the setuid bit set.
 
 11
 00:00:50,570 --> 00:00:56,080
-This means anybody can execute it and it will
-run as root, but ping doesn’t do much except
+This means anybody can execute it and it will run as root, but ping doesn’t do much except
 
 12
 00:00:56,080 --> 00:00:57,760
@@ -57,28 +48,23 @@ sending out some networking traffic.
 
 13
 00:00:57,760 --> 00:01:02,350
-So our root file we just created resembles
-a file or binary like ping.
+So our root file we just created resembles a file or binary like ping.
 
 14
 00:01:02,350 --> 00:01:04,770
-It’s owned by root and we can’t write
-to it.
+It’s owned by root and we can’t write to it.
 
 15
 00:01:04,769 --> 00:01:09,839
-Now, when we execute dirtyc0w, and pass it
-the root file and specify a string we want
+Now, when we execute dirtyc0w, and pass it the root file and specify a string we want
 
 16
 00:01:09,840 --> 00:01:14,120
-to write, we can observe, that the string
-got written to the file.
+to write, we can observe, that the string got written to the file.
 
 17
 00:01:14,119 --> 00:01:19,739
-We, as a regular user of the system, have
-written to a root file, that we don’t have
+We, as a regular user of the system, have written to a root file, that we don’t have
 
 18
 00:01:19,740 --> 00:01:20,860
@@ -90,8 +76,7 @@ This is insane.
 
 20
 00:01:22,200 --> 00:01:26,700
-Now imagine we would have written a backdoor
-into the ping binary, we could become root
+Now imagine we would have written a backdoor into the ping binary, we could become root
 
 21
 00:01:26,700 --> 00:01:27,700
@@ -103,18 +88,15 @@ Without knowing the password of root.
 
 23
 00:01:29,250 --> 00:01:32,360
-Now let’s try to understand the exploit
-code.
+Now let’s try to understand the exploit code.
 
 24
 00:01:32,360 --> 00:01:35,930
-Let’s check out main() first where the code
-starts.
+Let’s check out main() first where the code starts.
 
 25
 00:01:35,929 --> 00:01:40,079
-So first it opens the file we want to write
-to as READ_ONLY.
+So first it opens the file we want to write to as READ_ONLY.
 
 26
 00:01:40,079 --> 00:01:42,049
@@ -122,13 +104,11 @@ Next comes a call to mmap().
 
 27
 00:01:42,049 --> 00:01:47,369
-Mmap is used to create a new mapped memory
-segment in the current process.
+Mmap is used to create a new mapped memory segment in the current process.
 
 28
 00:01:47,369 --> 00:01:51,769
-One of these parameters can be a file descriptor
-and in this case it’s the READ_ONLY file
+One of these parameters can be a file descriptor and in this case it’s the READ_ONLY file
 
 29
 00:01:51,770 --> 00:01:53,150
@@ -136,13 +116,11 @@ owned by root.
 
 30
 00:01:53,149 --> 00:01:57,169
-This means it maps the file into a new memory
-area.
+This means it maps the file into a new memory area.
 
 31
 00:01:57,170 --> 00:02:01,570
-Also the permission flags show, that this
-new memory area is READ_ONLY.
+Also the permission flags show, that this new memory area is READ_ONLY.
 
 32
 00:02:01,569 --> 00:02:02,979
@@ -150,13 +128,11 @@ So far so good.
 
 33
 00:02:02,979 --> 00:02:06,899
-The other important flag is the MAP_PRIVATE
-flag.
+The other important flag is the MAP_PRIVATE flag.
 
 34
 00:02:06,899 --> 00:02:11,259
-The comment here is copied from the man page
-of mmap and it states, that this creates a
+The comment here is copied from the man page of mmap and it states, that this creates a
 
 35
 00:02:11,260 --> 00:02:13,390
@@ -168,13 +144,11 @@ Or short C.O.W, cow.
 
 37
 00:02:15,980 --> 00:02:18,830
-This is where one part of the name for this
-vulnerability is from.
+This is where one part of the name for this vulnerability is from.
 
 38
 00:02:18,830 --> 00:02:24,240
-With this flag, mmap doesn’t copy the whole
-content of the file into memory, mmap maps
+With this flag, mmap doesn’t copy the whole content of the file into memory, mmap maps
 
 39
 00:02:24,239 --> 00:02:25,919
@@ -182,8 +156,7 @@ the file into your memory.
 
 40
 00:02:25,920 --> 00:02:29,850
-This is awesome because you don’t need huge
-amounts of RAM to load a copy of the file,
+This is awesome because you don’t need huge amounts of RAM to load a copy of the file,
 
 41
 00:02:29,850 --> 00:02:33,340
@@ -191,13 +164,11 @@ you just directly read from the file on disk.
 
 42
 00:02:33,340 --> 00:02:37,350
-Or relatively directly, we will learn more
-about memory in a second
+Or relatively directly, we will learn more about memory in a second
 
 43
 00:02:37,349 --> 00:02:41,899
-And copy-on-write means, that if you were
-to write to this memory segment, you would
+And copy-on-write means, that if you were to write to this memory segment, you would
 
 44
 00:02:41,900 --> 00:02:43,500
@@ -205,8 +176,7 @@ then create a copy of it.
 
 45
 00:02:43,500 --> 00:02:48,380
-So eventhough the file was mapped as READ_ONLY,
-because of the private mapping we can write
+So eventhough the file was mapped as READ_ONLY, because of the private mapping we can write
 
 46
 00:02:48,380 --> 00:02:50,340
@@ -214,18 +184,15 @@ to a copy of it.
 
 47
 00:02:50,340 --> 00:02:55,100
-So the important takeaway here is, that mmap
-will map the root file directly into your
+So the important takeaway here is, that mmap will map the root file directly into your
 
 48
 00:02:55,100 --> 00:03:00,330
-memory, and you can read the content of the
-file, or write to a COPY of it.
+memory, and you can read the content of the file, or write to a COPY of it.
 
 49
 00:03:00,330 --> 00:03:04,520
-The changes to your copy should not be propagated
-to the real underlaying file.
+The changes to your copy should not be propagated to the real underlaying file.
 
 50
 00:03:04,520 --> 00:03:07,010
@@ -233,23 +200,19 @@ It’s just for you
 
 51
 00:03:07,010 --> 00:03:09,830
-Next we start two threads that will run in
-parallel.
+Next we start two threads that will run in parallel.
 
 52
 00:03:09,830 --> 00:03:15,300
-Dirtyc0w is a race condition vulnerability,
-this means certain events have to occur in
+Dirtyc0w is a race condition vulnerability, this means certain events have to occur in
 
 53
 00:03:15,300 --> 00:03:19,890
-a specific order, that are fairly unlikely
-to happen under normal circumstances.
+a specific order, that are fairly unlikely to happen under normal circumstances.
 
 54
 00:03:19,890 --> 00:03:23,490
-So you try to race against the probability
-of it not happenign.
+So you try to race against the probability of it not happenign.
 
 55
 00:03:23,489 --> 00:03:25,379
@@ -269,13 +232,11 @@ The first thread is the madviseThread.
 
 59
 00:03:33,180 --> 00:03:38,520
-This thread uses the syscall madvise, which
-probably doesn’t stand for memory advise,
+This thread uses the syscall madvise, which probably doesn’t stand for memory advise,
 
 60
 00:03:38,520 --> 00:03:43,460
-but mad advise, I think the marketing department
-failed here, naming this vulerability not
+but mad advise, I think the marketing department failed here, naming this vulerability not
 
 61
 00:03:43,459 --> 00:03:45,159
@@ -287,33 +248,27 @@ Ok. done with the dad jokes.
 
 63
 00:03:46,530 --> 00:03:50,030
-So this syscall can be used for optimization
-reasons.
+So this syscall can be used for optimization reasons.
 
 64
 00:03:50,030 --> 00:03:56,240
-You can provide the kernel some information
-on how you intend to use a memory mapped area,
+You can provide the kernel some information on how you intend to use a memory mapped area,
 
 65
 00:03:56,240 --> 00:04:01,110
-because there are different techniques how
-you handle caching, look ahead and so forth.
+because there are different techniques how you handle caching, look ahead and so forth.
 
 66
 00:04:01,109 --> 00:04:07,059
-And the one advise we give the kernel is,
-that the memory area where we mapped the file
+And the one advise we give the kernel is, that the memory area where we mapped the file
 
 67
 00:04:07,060 --> 00:04:11,930
-to, or at least the first 100 byte, is probably
-not needed anytime soon.
+to, or at least the first 100 byte, is probably not needed anytime soon.
 
 68
 00:04:11,930 --> 00:04:16,740
-We say that with the MADV_DONTNEED flag, which
-stands for:
+We say that with the MADV_DONTNEED flag, which stands for:
 
 69
 00:04:16,739 --> 00:04:19,839
@@ -321,8 +276,7 @@ Do not expect access in the near future.
 
 70
 00:04:19,840 --> 00:04:24,190
-(For the time being, the application is finished
-with the given range, so the kernel can free
+(For the time being, the application is finished with the given range, so the kernel can free
 
 71
 00:04:24,190 --> 00:04:26,550
@@ -330,13 +284,11 @@ resources associated with it.)
 
 72
 00:04:26,550 --> 00:04:31,970
-Subsequent accesses of pages in this range
-will succeed, but will result in reloading
+Subsequent accesses of pages in this range will succeed, but will result in reloading
 
 73
 00:04:31,970 --> 00:04:34,760
-of the memory contents from the underlying
-mapped file.
+of the memory contents from the underlying mapped file.
 
 74
 00:04:34,759 --> 00:04:37,549
@@ -348,13 +300,11 @@ Otherwise not much else happening here.
 
 76
 00:04:39,449 --> 00:04:43,659
-The other thread, procselfmemThread, opens
-the file /proc/self/mem.
+The other thread, procselfmemThread, opens the file /proc/self/mem.
 
 77
 00:04:43,660 --> 00:04:47,980
-This is a special file and I try to explain
-really quick.
+This is a special file and I try to explain really quick.
 
 78
 00:04:47,979 --> 00:04:51,259
@@ -362,38 +312,31 @@ So /proc is a so called pseudo filesystem.
 
 79
 00:04:51,259 --> 00:04:55,969
-In fact most resources on linux are managed
-as “files”.
+In fact most resources on linux are managed as “files”.
 
 80
 00:04:55,970 --> 00:05:00,530
-So you should always see “files” in quotation
-marks when talking about them.
+So you should always see “files” in quotation marks when talking about them.
 
 81
 00:05:00,530 --> 00:05:03,970
-Imagine a file just to be something, you can
-read from, or write to.
+Imagine a file just to be something, you can read from, or write to.
 
 82
 00:05:03,970 --> 00:05:08,430
-So this could be printer, and writing to the
-printer “file” could result in an actual
+So this could be printer, and writing to the printer “file” could result in an actual
 
 83
 00:05:08,430 --> 00:05:12,420
-physical printer printing the string on a
-piece of paper.
+physical printer printing the string on a piece of paper.
 
 84
 00:05:12,420 --> 00:05:15,930
-So /proc does not really contain “files”
-in the common sense.
+So /proc does not really contain “files” in the common sense.
 
 85
 00:05:15,930 --> 00:05:19,870
-They refer to something more general, most
-importantly for our case, something you can
+They refer to something more general, most importantly for our case, something you can
 
 86
 00:05:19,870 --> 00:05:21,360
@@ -401,8 +344,7 @@ read and write to.
 
 87
 00:05:21,360 --> 00:05:27,670
-So in this case /proc/self refers to special
-“files” provided for the current process.
+So in this case /proc/self refers to special “files” provided for the current process.
 
 88
 00:05:27,670 --> 00:05:29,820
@@ -410,8 +352,7 @@ So every process will have it’s own /proc/self.
 
 89
 00:05:29,819 --> 00:05:35,609
-And in there is a “file” called mem, which
-is a representation of the current process’s
+And in there is a “file” called mem, which is a representation of the current process’s
 
 90
 00:05:35,610 --> 00:05:36,610
@@ -419,18 +360,15 @@ memory.
 
 91
 00:05:36,610 --> 00:05:42,050
-So you could theoretically read your own process’s
-memory by reading from this file.
+So you could theoretically read your own process’s memory by reading from this file.
 
 92
 00:05:42,050 --> 00:05:46,830
-Now in this case, the exploit WRITES to this
-file in a loop.
+Now in this case, the exploit WRITES to this file in a loop.
 
 93
 00:05:46,830 --> 00:05:51,350
-So first it performs a seek, which moves the
-current cursors to the start of the file that
+So first it performs a seek, which moves the current cursors to the start of the file that
 
 94
 00:05:51,349 --> 00:05:53,059
@@ -438,23 +376,19 @@ we mapped into memory.
 
 95
 00:05:53,060 --> 00:05:57,790
-And then it writes the string we pass via
-the program arguments to it.
+And then it writes the string we pass via the program arguments to it.
 
 96
 00:05:57,790 --> 00:06:03,340
-So this will trigger a copy of the memory,
-so that we can write to it and see these changes.
+So this will trigger a copy of the memory, so that we can write to it and see these changes.
 
 97
 00:06:03,340 --> 00:06:07,690
-But remember, we will not write to the real
-underlaying file.
+But remember, we will not write to the real underlaying file.
 
 98
 00:06:07,690 --> 00:06:12,600
-So if you would do these things once, or just
-isolated from eachother, probably nothing
+So if you would do these things once, or just isolated from eachother, probably nothing
 
 99
 00:06:12,599 --> 00:06:13,629
@@ -466,23 +400,19 @@ Because that would be the expected result.
 
 101
 00:06:16,910 --> 00:06:21,550
-But because there is a race condition issue
-somewhere, trying this over and over again
+But because there is a race condition issue somewhere, trying this over and over again
 
 102
 00:06:21,550 --> 00:06:27,250
-will create a weird edgecase, that usually
-doesn’t occur, but in this case tricks the
+will create a weird edgecase, that usually doesn’t occur, but in this case tricks the
 
 103
 00:06:27,250 --> 00:06:30,970
-kernel into actually writing to the underlaying
-file.
+kernel into actually writing to the underlaying file.
 
 104
 00:06:30,970 --> 00:06:34,070
-Now let’s have a look at the patch, because
-I think this is very interesting and not very
+Now let’s have a look at the patch, because I think this is very interesting and not very
 
 105
 00:06:34,070 --> 00:06:35,070
@@ -490,28 +420,23 @@ big.
 
 106
 00:06:35,070 --> 00:06:37,660
-So in the commit message the author states
-that
+So in the commit message the author states that
 
 107
 00:06:37,660 --> 00:06:42,370
-This is an ancient bug that was actually attempted
-to be fixed once (badly) by me eleven years
+This is an ancient bug that was actually attempted to be fixed once (badly) by me eleven years
 
 108
 00:06:42,370 --> 00:06:44,140
-ago in commit 4ceb5db9757a ("Fix get_user_pages()
-race for write access") but that was then
+ago in commit 4ceb5db9757a ("Fix get_user_pages() race for write access") but that was then
 
 109
 00:06:44,139 --> 00:06:46,999
-undone due to problems on s390 by commit f33ea7f404e5
-("fix get_user_pages bug").
+undone due to problems on s390 by commit f33ea7f404e5 ("fix get_user_pages bug").
 
 110
 00:06:47,000 --> 00:06:51,410
-So I’m a little bit disappointed here at
-my IBM friends, because they almost have a
+So I’m a little bit disappointed here at my IBM friends, because they almost have a
 
 111
 00:06:51,410 --> 00:06:52,640
@@ -519,8 +444,7 @@ partial guilt here.
 
 112
 00:06:52,639 --> 00:06:56,329
-S390 is the architecture used by IBM mainfraimes,
-system z.
+S390 is the architecture used by IBM mainfraimes, system z.
 
 113
 00:06:56,330 --> 00:06:58,700
@@ -528,28 +452,23 @@ Anyhow, let’s have a quick look.
 
 114
 00:06:58,699 --> 00:07:04,439
-The file that is patched belongs to the linux
-memory manager, hence the mm directory.
+The file that is patched belongs to the linux memory manager, hence the mm directory.
 
 115
 00:07:04,439 --> 00:07:08,249
-And the file itself is called GUP, which stands
-for get_user_pages.
+And the file itself is called GUP, which stands for get_user_pages.
 
 116
 00:07:08,250 --> 00:07:13,110
-Vm stands for virtual memory and pte for page
-table entry.
+Vm stands for virtual memory and pte for page table entry.
 
 117
 00:07:13,110 --> 00:07:15,880
-I think that should help a little bit to understand
-the code.
+I think that should help a little bit to understand the code.
 
 118
 00:07:15,880 --> 00:07:20,950
-So when you want to write to this mapped memory,
-the kernel has to copy it, because you are
+So when you want to write to this mapped memory, the kernel has to copy it, because you are
 
 119
 00:07:20,950 --> 00:07:23,440
@@ -561,8 +480,7 @@ But a copy takes time.
 
 121
 00:07:26,030 --> 00:07:30,930
-Now usually you do the copy once and you are
-fine, but in this case we call madvise with
+Now usually you do the copy once and you are fine, but in this case we call madvise with
 
 122
 00:07:30,930 --> 00:07:33,710
@@ -574,8 +492,7 @@ Let’s look this up in the code.
 
 124
 00:07:35,849 --> 00:07:39,279
-So if this flag is used, this function is
-executed.
+So if this flag is used, this function is executed.
 
 125
 00:07:39,280 --> 00:07:42,340
@@ -587,13 +504,11 @@ Application no longer needs these pages.
 
 127
 00:07:44,610 --> 00:07:48,010
-If the pages are dirty, it's OK to just throw
-them away.
+If the pages are dirty, it's OK to just throw them away.
 
 128
 00:07:48,010 --> 00:07:50,610
-The app will be more careful about data it
-wants to keep.
+The app will be more careful about data it wants to keep.
 
 129
 00:07:50,610 --> 00:07:51,610
@@ -605,13 +520,11 @@ I guess I quickly explain dirty.
 
 131
 00:07:52,720 --> 00:07:53,720
-This is also where the other part of the name
-is from.
+This is also where the other part of the name is from.
 
 132
 00:07:53,720 --> 00:07:57,610
-When you read and write to disk you never
-do this directly, that would be wayyy to slow.
+When you read and write to disk you never do this directly, that would be wayyy to slow.
 
 133
 00:07:57,610 --> 00:07:59,410
@@ -619,8 +532,7 @@ So you cache, or buffer them.
 
 134
 00:07:59,409 --> 00:08:03,409
-This means you hold this data somewhere and
-at some point in time you write it to the
+This means you hold this data somewhere and at some point in time you write it to the
 
 135
 00:08:03,410 --> 00:08:04,410
@@ -632,8 +544,7 @@ Ok.
 
 137
 00:08:05,410 --> 00:08:08,760
-So if you read data from disk into memory
-you can just leave it there in the cache for
+So if you read data from disk into memory you can just leave it there in the cache for
 
 138
 00:08:08,760 --> 00:08:09,760
@@ -641,13 +552,11 @@ further reads.
 
 139
 00:08:09,760 --> 00:08:14,710
-BUT, if you want to write to the disk, you
-write it into this cache/buffer, but now you
+BUT, if you want to write to the disk, you write it into this cache/buffer, but now you
 
 140
 00:08:14,710 --> 00:08:18,850
-have to tell the system, that this buffer
-got touched and is dirty now.
+have to tell the system, that this buffer got touched and is dirty now.
 
 141
 00:08:18,849 --> 00:08:20,969
@@ -655,8 +564,7 @@ It’s not clean fresh memory anymore.
 
 142
 00:08:20,970 --> 00:08:26,200
-In this case the system has to make sure that
-the change is properly propagated to the underlaying
+In this case the system has to make sure that the change is properly propagated to the underlaying
 
 143
 00:08:26,200 --> 00:08:27,200
@@ -668,8 +576,7 @@ Let it be a file on disk or flash memory.
 
 145
 00:08:30,919 --> 00:08:36,409
-So in this case, if you wrote to the copied
-mmaped memory, the memory page got flagged
+So in this case, if you wrote to the copied mmaped memory, the memory page got flagged
 
 146
 00:08:36,409 --> 00:08:37,409
@@ -677,13 +584,11 @@ dirty.
 
 147
 00:08:37,409 --> 00:08:41,259
-And because you tell the kernel now, that
-the page is not needed anymore, this means
+And because you tell the kernel now, that the page is not needed anymore, this means
 
 148
 00:08:41,260 --> 00:08:43,690
-you don’t care that the dirty page has not
-been written yet.
+you don’t care that the dirty page has not been written yet.
 
 149
 00:08:43,690 --> 00:08:44,910
@@ -691,28 +596,23 @@ You just toss it.
 
 150
 00:08:44,910 --> 00:08:50,010
-So this madvise call causes the throwing away
-of this memory.
+So this madvise call causes the throwing away of this memory.
 
 151
 00:08:50,010 --> 00:08:54,180
-This means it’s not in any of the memory
-caches anymore.
+This means it’s not in any of the memory caches anymore.
 
 152
 00:08:54,180 --> 00:08:57,960
-This is important for this exploit, because
-this means, everytime when we try to write
+This is important for this exploit, because this means, everytime when we try to write
 
 153
 00:08:57,959 --> 00:09:01,859
-to it again, the copy of the memory might
-have been tossed.
+to it again, the copy of the memory might have been tossed.
 
 154
 00:09:01,860 --> 00:09:06,250
-So we have to re load a new copy from memory
-so we can write to it.
+So we have to re load a new copy from memory so we can write to it.
 
 155
 00:09:06,250 --> 00:09:08,340
@@ -720,13 +620,11 @@ And creating this copy takes time.
 
 156
 00:09:08,340 --> 00:09:12,620
-And this is the race condition, if the copy-on-write
-cycle is not complete yet.
+And this is the race condition, if the copy-on-write cycle is not complete yet.
 
 157
 00:09:12,620 --> 00:09:16,310
-The patch added this function that checks
-if the copy-on-write is complete yet, and
+The patch added this function that checks if the copy-on-write is complete yet, and
 
 158
 00:09:16,310 --> 00:09:18,670
@@ -734,8 +632,7 @@ only then allows writing to it.
 
 159
 00:09:18,670 --> 00:09:23,370
-To be honest, I don’t understand this code
-really to tell you why this snippet makes
+To be honest, I don’t understand this code really to tell you why this snippet makes
 
 160
 00:09:23,370 --> 00:09:25,600
@@ -743,33 +640,27 @@ sure that the copy on write is complete.
 
 161
 00:09:25,600 --> 00:09:30,390
-But it added some additional checks, so I
-assume now it’s fine.
+But it added some additional checks, so I assume now it’s fine.
 
 162
 00:09:30,390 --> 00:09:32,910
-So here is the mental picture of our race
-condition.
+So here is the mental picture of our race condition.
 
 163
 00:09:32,910 --> 00:09:37,730
-We constantly use madvise to drop any cached
-copy of the mapped file.
+We constantly use madvise to drop any cached copy of the mapped file.
 
 164
 00:09:37,730 --> 00:09:42,420
-And at the same time we try to write to it,
-which causes a copy of that memory.
+And at the same time we try to write to it, which causes a copy of that memory.
 
 165
 00:09:42,420 --> 00:09:47,290
-Now in some rare condition, that can be hit
-very reliably by just trying over and over
+Now in some rare condition, that can be hit very reliably by just trying over and over
 
 166
 00:09:47,290 --> 00:09:52,510
-again, we perform the write to the memory,
-before the page table is updated to point
+again, we perform the write to the memory, before the page table is updated to point
 
 167
 00:09:52,510 --> 00:09:54,340
@@ -777,13 +668,11 @@ us to our copied version.
 
 168
 00:09:54,339 --> 00:09:58,169
-And we write to the real file instead of the
-copied memory.
+And we write to the real file instead of the copied memory.
 
 169
 00:09:58,170 --> 00:10:03,050
-So the crazy thing about this vulnerability
-is, that it has been in the kernel for a very
+So the crazy thing about this vulnerability is, that it has been in the kernel for a very
 
 170
 00:10:03,050 --> 00:10:05,240
@@ -791,8 +680,7 @@ long time.
 
 171
 00:10:05,240 --> 00:10:09,950
-And it was even a known issue, according to
-the patch author, that had been attempted
+And it was even a known issue, according to the patch author, that had been attempted
 
 172
 00:10:09,950 --> 00:10:11,880
@@ -800,8 +688,7 @@ to be patched before.
 
 173
 00:10:11,880 --> 00:10:17,810
-So over time this apparently theoretical race
-condition got viable because our systems got
+So over time this apparently theoretical race condition got viable because our systems got
 
 174
 00:10:17,810 --> 00:10:19,240
@@ -809,8 +696,7 @@ faster and faster.
 
 175
 00:10:19,240 --> 00:10:23,360
-And Petr Matousek also states, that this was
-an 0day exploit used in the wild.
+And Petr Matousek also states, that this was an 0day exploit used in the wild.
 
 176
 00:10:23,360 --> 00:10:25,680
@@ -822,8 +708,7 @@ Now a bit of controversy.
 
 178
 00:10:27,190 --> 00:10:32,910
-And this goes into the unresolved debate that
-has been going on for decates how to do vulnerability
+And this goes into the unresolved debate that has been going on for decates how to do vulnerability
 
 179
 00:10:32,910 --> 00:10:33,910
@@ -831,8 +716,7 @@ disclosure.
 
 180
 00:10:33,910 --> 00:10:38,840
-If you were the person who found this exploit
-in the wild, what would you do?
+If you were the person who found this exploit in the wild, what would you do?
 
 181
 00:10:38,839 --> 00:10:41,539
@@ -840,8 +724,7 @@ The obvious arguments are:
 
 182
 00:10:41,540 --> 00:10:46,230
-Full disclosure, because it was actively exploited,
-fully disclosing it right away would have
+Full disclosure, because it was actively exploited, fully disclosing it right away would have
 
 183
 00:10:46,230 --> 00:10:49,170
@@ -849,8 +732,7 @@ not given advanced attackers anything new.
 
 184
 00:10:49,170 --> 00:10:53,040
-But the knowledge would have allowed system
-administrators to immediately patch their
+But the knowledge would have allowed system administrators to immediately patch their
 
 185
 00:10:53,040 --> 00:10:54,040
@@ -858,38 +740,31 @@ systems.
 
 186
 00:10:54,040 --> 00:10:57,390
-But on the other hand it is such an easy and
-widespread vulnerability, that a full disclosure
+But on the other hand it is such an easy and widespread vulnerability, that a full disclosure
 
 187
 00:10:57,389 --> 00:11:01,729
-would have allowed armies of less skilled
-hackers to take advantage of it, until less
+would have allowed armies of less skilled hackers to take advantage of it, until less
 
 188
 00:11:01,730 --> 00:11:04,710
-professional sysadmins or private people could
-patch it.
+professional sysadmins or private people could patch it.
 
 189
 00:11:04,710 --> 00:11:10,130
-On the otherside we have the responsible disclosure
-where you first contact the developers, create
+On the otherside we have the responsible disclosure where you first contact the developers, create
 
 190
 00:11:10,131 --> 00:11:13,571
-a fix, try to roll it out and then tell people
-afterwards.
+a fix, try to roll it out and then tell people afterwards.
 
 191
 00:11:13,570 --> 00:11:19,420
-The obvious arguments here are, you stopped
-professional sysadmins for hotpatching their
+The obvious arguments here are, you stopped professional sysadmins for hotpatching their
 
 192
 00:11:19,420 --> 00:11:23,300
-system quickly and leave them exposed for
-the ongoing attacks.
+system quickly and leave them exposed for the ongoing attacks.
 
 193
 00:11:23,300 --> 00:11:26,500
@@ -905,18 +780,15 @@ And it entirely depends on your threat model.
 
 196
 00:11:31,589 --> 00:11:35,919
-In general I lean slightly more towards full
-disclosure, because I like information to
+In general I lean slightly more towards full disclosure, because I like information to
 
 197
 00:11:35,920 --> 00:11:41,260
-be free, though I myself do responsible disclosure
-because I’m a hypocrite.
+be free, though I myself do responsible disclosure because I’m a hypocrite.
 
 198
 00:11:41,260 --> 00:11:45,080
-I hope you liked this kind of exploit walkthrough
-video and that I could show you something
+I hope you liked this kind of exploit walkthrough video and that I could show you something
 
 199
 00:11:45,079 --> 00:11:46,639
@@ -924,18 +796,15 @@ new and interesting.
 
 200
 00:11:46,639 --> 00:11:51,409
-If I said something wrong or you have additional
-info on why this exploit has to be triggered
+If I said something wrong or you have additional info on why this exploit has to be triggered
 
 201
 00:11:51,410 --> 00:11:56,920
-through a write to /proc/ mem and not directly
-writing to the address, please correct me
+through a write to /proc/ mem and not directly writing to the address, please correct me
 
 202
 00:11:56,920 --> 00:12:02,130
-or post additional info in the comments below,
-so that other attentive viewers can benefit
+or post additional info in the comments below, so that other attentive viewers can benefit
 
 203
 00:12:02,130 --> 00:12:03,130

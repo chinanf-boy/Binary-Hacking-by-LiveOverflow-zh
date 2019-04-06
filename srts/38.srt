@@ -1,7 +1,6 @@
 1
 00:00:00,149 --> 00:00:06,409
-Last weeks video was about revisiting format
-level 0 from exploit-exercises/protostar on
+Last weeks video was about revisiting format level 0 from exploit-exercises/protostar on
 
 2
 00:00:06,410 --> 00:00:08,370
@@ -9,8 +8,7 @@ a modern ubuntu system.
 
 3
 00:00:08,370 --> 00:00:12,790
-And we played around with it to see if we
-can figure out a way to exploit it, but in
+And we played around with it to see if we can figure out a way to exploit it, but in
 
 4
 00:00:12,789 --> 00:00:15,329
@@ -18,8 +16,7 @@ the end I wasn’t able to solve it.
 
 5
 00:00:15,329 --> 00:00:22,139
-But lucky for me a user with the name wcbowling
-on reddit thought it was fun too and actually
+But lucky for me a user with the name wcbowling on reddit thought it was fun too and actually
 
 6
 00:00:22,140 --> 00:00:24,660
@@ -35,8 +32,7 @@ So here is wcbowlings post:
 
 9
 00:00:35,450 --> 00:00:40,250
-I love going back to old challenged like this
-:) Managed to get a fairly reliable exploit,
+I love going back to old challenged like this :) Managed to get a fairly reliable exploit,
 
 10
 00:00:40,250 --> 00:00:43,320
@@ -44,18 +40,15 @@ normally under 500 iterations.
 
 11
 00:00:43,320 --> 00:00:46,750
-And there is a highlevel description on how
-it works:
+And there is a highlevel description on how it works:
 
 12
 00:00:46,750 --> 00:00:52,550
-Overwrite the GOT entry for __stack_chk_fail
-with an address so we jump there instead.
+Overwrite the GOT entry for __stack_chk_fail with an address so we jump there instead.
 
 13
 00:00:52,550 --> 00:00:59,390
-The address can be passed in via argv, we
-cant use nulls but we can use blank strings
+The address can be passed in via argv, we cant use nulls but we can use blank strings
 
 14
 00:00:59,390 --> 00:01:00,930
@@ -63,8 +56,7 @@ instead.
 
 15
 00:01:00,930 --> 00:01:07,050
-As the argv location is semi random, it takes
-around 500 iterations which is pretty reasonable
+As the argv location is semi random, it takes around 500 iterations which is pretty reasonable
 
 16
 00:01:07,050 --> 00:01:09,440
@@ -72,8 +64,7 @@ for 64bit
 
 17
 00:01:09,440 --> 00:01:14,740
-So obviously I didn’t manage to figure that
-out, which means I didn’t know something
+So obviously I didn’t manage to figure that out, which means I didn’t know something
 
 18
 00:01:14,740 --> 00:01:17,480
@@ -85,28 +76,23 @@ So I’m not going to pretend I knew this.
 
 20
 00:01:19,590 --> 00:01:25,300
-For whatever reason I never noticed that __stack_chk_fail
-is in the global offset table.
+For whatever reason I never noticed that __stack_chk_fail is in the global offset table.
 
 21
 00:01:25,300 --> 00:01:31,620
-And the reason for that might be, that I never
-encountered a challenge with these constraints?
+And the reason for that might be, that I never encountered a challenge with these constraints?
 
 22
 00:01:31,620 --> 00:01:37,810
-We have A) a format string exploit that generally
-allows us to write anything anywhere B)
+We have A) a format string exploit that generally allows us to write anything anywhere B)
 
 23
 00:01:37,810 --> 00:01:42,830
-No libc function after the format string vuln
-that we could overwrite in the global offset
+No libc function after the format string vuln that we could overwrite in the global offset
 
 24
 00:01:42,830 --> 00:01:47,000
-table
-And C) where we also have a buffer overflow
+table And C) where we also have a buffer overflow
 
 25
 00:01:47,000 --> 00:01:49,540
@@ -114,23 +100,19 @@ with a stack cookie.
 
 26
 00:01:49,540 --> 00:01:54,320
-So I really like this challenge now, because
-the solution is so clever.
+So I really like this challenge now, because the solution is so clever.
 
 27
 00:01:54,320 --> 00:01:57,680
-So the function that is being called when
-the stack cookie got overwritten through a
+So the function that is being called when the stack cookie got overwritten through a
 
 28
 00:01:57,680 --> 00:02:01,100
-buffer overflow is also on the global offset
-table.
+buffer overflow is also on the global offset table.
 
 29
 00:02:01,100 --> 00:02:07,130
-Which means our goal is to redirect code execution
-to our winning message by overwrite the GOT
+Which means our goal is to redirect code execution to our winning message by overwrite the GOT
 
 30
 00:02:07,130 --> 00:02:08,970
@@ -138,28 +120,23 @@ entry for __stack_chk_fail.
 
 31
 00:02:08,970 --> 00:02:13,110
-And then do a buffer overflow, to trigger
-that function.
+And then do a buffer overflow, to trigger that function.
 
 32
 00:02:13,109 --> 00:02:17,649
-To write to that global offset table entry,
-we have to get the address somewhere onto
+To write to that global offset table entry, we have to get the address somewhere onto
 
 33
 00:02:17,650 --> 00:02:22,700
-the stack, so that we can use %n with the
-format string vulnerability.
+the stack, so that we can use %n with the format string vulnerability.
 
 34
 00:02:22,700 --> 00:02:29,840
-And the issue is that it contains nullbytes
-which we can’t pass in via the arguments.
+And the issue is that it contains nullbytes which we can’t pass in via the arguments.
 
 35
 00:02:29,840 --> 00:02:34,030
-I think the arguments are string copied onto
-the stack?
+I think the arguments are string copied onto the stack?
 
 36
 00:02:34,030 --> 00:02:36,400
@@ -167,23 +144,19 @@ So we can’t enter arbitrary nullbytes.
 
 37
 00:02:36,400 --> 00:02:42,380
-But wcbowling had a cool trick with empty
-strings as arguments.
+But wcbowling had a cool trick with empty strings as arguments.
 
 38
 00:02:42,379 --> 00:02:47,579
-Because a string ends with a nullbyte, so
-an empty string is just null.
+Because a string ends with a nullbyte, so an empty string is just null.
 
 39
 00:02:47,580 --> 00:02:52,100
-I think I had a super early video to talk
-about the environment and arguments on the
+I think I had a super early video to talk about the environment and arguments on the
 
 40
 00:02:52,099 --> 00:02:58,189
-stack, but quick recap, you have the argv[]
-char pointer array, so it’s a list with
+stack, but quick recap, you have the argv[] char pointer array, so it’s a list with
 
 41
 00:02:58,189 --> 00:03:00,819
@@ -191,28 +164,23 @@ addresses that point to the strings.
 
 42
 00:03:00,819 --> 00:03:03,349
-And then you just have memory with all the
-strings.
+And then you just have memory with all the strings.
 
 43
 00:03:03,349 --> 00:03:08,729
-And so this way you can get the address with
-null-bytes on to the stack.
+And so this way you can get the address with null-bytes on to the stack.
 
 44
 00:03:08,730 --> 00:03:11,610
-Pretty clever, I never thought about this
-before.
+Pretty clever, I never thought about this before.
 
 45
 00:03:11,609 --> 00:03:15,639
-And now you basically just have to put everything
-together.
+And now you basically just have to put everything together.
 
 46
 00:03:15,639 --> 00:03:20,349
-Wcbowling uses pwnlib to implement the exploit,
-it’s a very useful python library, check
+Wcbowling uses pwnlib to implement the exploit, it’s a very useful python library, check
 
 47
 00:03:20,349 --> 00:03:21,519
@@ -220,8 +188,7 @@ it out.
 
 48
 00:03:21,519 --> 00:03:26,919
-And so here the magic format string is built
-with a large offset into the stack that hopefully
+And so here the magic format string is built with a large offset into the stack that hopefully
 
 49
 00:03:26,919 --> 00:03:30,649
@@ -237,8 +204,7 @@ Why are only two bytes written?
 
 52
 00:03:36,269 --> 00:03:41,549
-well the GOT already contains an address that
-is almost the target address, except the last
+well the GOT already contains an address that is almost the target address, except the last
 
 53
 00:03:41,549 --> 00:03:42,549
@@ -250,13 +216,11 @@ So you can just reuse most of it.
 
 55
 00:03:45,840 --> 00:03:50,610
-Then this is being executed in a loop until
-the winning message is shown.
+Then this is being executed in a loop until the winning message is shown.
 
 56
 00:03:50,610 --> 00:03:55,430
-The stack has some randomized offsets, thus
-you have to try it a few times.
+The stack has some randomized offsets, thus you have to try it a few times.
 
 57
 00:03:55,430 --> 00:03:57,880
@@ -264,38 +228,31 @@ Here is the asciicinema recording by wcbowling.
 
 58
 00:03:57,879 --> 00:04:03,259
-By the way, if you have a problem with a challenge
-and you write me an email, you could use that
+By the way, if you have a problem with a challenge and you write me an email, you could use that
 
 59
 00:04:03,260 --> 00:04:09,170
-to record a screencast so I can actually see
-how you debug it and what the problem is.
+to record a screencast so I can actually see how you debug it and what the problem is.
 
 60
 00:04:09,169 --> 00:04:14,459
-So while I understand now the basic idea,
-I still wanted to implement it myself.
+So while I understand now the basic idea, I still wanted to implement it myself.
 
 61
 00:04:14,459 --> 00:04:20,329
-There are a few challenges that you have to
-solve like, what is good offset into the stack
+There are a few challenges that you have to solve like, what is good offset into the stack
 
 62
 00:04:20,329 --> 00:04:25,879
-to hit the arguments, and the alignment of
-the address through the arguments.
+to hit the arguments, and the alignment of the address through the arguments.
 
 63
 00:04:25,879 --> 00:04:31,909
-And while I was doing that and struggling
-with exactly those details, I had an epiphany.
+And while I was doing that and struggling with exactly those details, I had an epiphany.
 
 64
 00:04:31,910 --> 00:04:37,630
-And I’m sooo grateful that wcbowling shared
-this exploit, because it pushed me into discovering
+And I’m sooo grateful that wcbowling shared this exploit, because it pushed me into discovering
 
 65
 00:04:37,629 --> 00:04:38,749
@@ -303,8 +260,7 @@ this.
 
 66
 00:04:38,750 --> 00:04:44,050
-So I actually found a 100% reliable exploit
-for this challenge, and you can’t believe
+So I actually found a 100% reliable exploit for this challenge, and you can’t believe
 
 67
 00:04:44,050 --> 00:04:46,160
@@ -312,13 +268,11 @@ how excited that makes me.
 
 68
 00:04:46,159 --> 00:04:50,739
-Though I have to admit, that it might only
-work on my compiled binary, and for somebody
+Though I have to admit, that it might only work on my compiled binary, and for somebody
 
 69
 00:04:50,740 --> 00:04:54,660
-else it might not work, you will see in a
-second why.
+else it might not work, you will see in a second why.
 
 70
 00:04:54,660 --> 00:04:55,990
@@ -330,18 +284,15 @@ That’s all.
 
 72
 00:04:56,990 --> 00:05:02,570
-And when we execute it, you can see it gets
-into an execution loop of the winning message.
+And when we execute it, you can see it gets into an execution loop of the winning message.
 
 73
 00:05:02,569 --> 00:05:07,609
-And while it looks like a simple format string
-vulnerability with the padding to increase
+And while it looks like a simple format string vulnerability with the padding to increase
 
 74
 00:05:07,610 --> 00:05:14,140
-the amount of printed characters, an address
-and a %n or %hn to write to an address, there
+the amount of printed characters, an address and a %n or %hn to write to an address, there
 
 75
 00:05:14,139 --> 00:05:17,559
@@ -349,8 +300,7 @@ are quite a few beautiful puzzle pieces here.
 
 76
 00:05:17,560 --> 00:05:22,810
-So the basic idea came, when I was playing
-around with overwriting the GOT entry for
+So the basic idea came, when I was playing around with overwriting the GOT entry for
 
 77
 00:05:22,810 --> 00:05:24,060
@@ -358,13 +308,11 @@ __stack_check_fail.
 
 78
 00:05:24,060 --> 00:05:30,050
-wcbowling had two writes and placed the address
-in the arguments, which made it so unreliable.
+wcbowling had two writes and placed the address in the arguments, which made it so unreliable.
 
 79
 00:05:30,050 --> 00:05:36,330
-I thought, maybe we get lucky if we place
-the address into our string, like I did in
+I thought, maybe we get lucky if we place the address into our string, like I did in
 
 80
 00:05:36,330 --> 00:05:37,870
@@ -376,8 +324,7 @@ But there is one problem.
 
 82
 00:05:40,030 --> 00:05:45,330
-The string that is printed is coming from
-the arguments, which has an unpredictable
+The string that is printed is coming from the arguments, which has an unpredictable
 
 83
 00:05:45,330 --> 00:05:46,520
@@ -385,8 +332,7 @@ position.
 
 84
 00:05:46,520 --> 00:05:51,240
-But the string is formatted with sprintf into
-a buffer, which will have a fixed relative
+But the string is formatted with sprintf into a buffer, which will have a fixed relative
 
 85
 00:05:51,240 --> 00:05:52,920
@@ -394,8 +340,7 @@ position on our stack.
 
 86
 00:05:52,919 --> 00:06:00,359
-So basically the format string will be evaluated,
-so first it handles the %d with the 1640 character
+So basically the format string will be evaluated, so first it handles the %d with the 1640 character
 
 87
 00:06:00,360 --> 00:06:03,290
@@ -403,18 +348,15 @@ padding and places it into the buffer.
 
 88
 00:06:03,289 --> 00:06:07,259
-Then comes the raw bytes of the address, and
-places it.
+Then comes the raw bytes of the address, and places it.
 
 89
 00:06:07,259 --> 00:06:11,459
-And then comes the format modifier to write
-to an address on the stack.
+And then comes the format modifier to write to an address on the stack.
 
 90
 00:06:11,460 --> 00:06:17,300
-So now the position of this address that was
-just written onto the buffer is at a fixed
+So now the position of this address that was just written onto the buffer is at a fixed
 
 91
 00:06:17,300 --> 00:06:21,140
@@ -423,8 +365,7 @@ offset location and we always get it with
 
 92
 00:06:21,139 --> 00:06:27,009
-Though the problem is, we can’t have an
-arbitrary amount of bytes padding.
+Though the problem is, we can’t have an arbitrary amount of bytes padding.
 
 93
 00:06:27,010 --> 00:06:29,710
@@ -432,13 +373,11 @@ Because the address has to be 8byte alligned.
 
 94
 00:06:29,710 --> 00:06:35,100
-So we can only increase or decrease the padding
-in 8 byte steps.
+So we can only increase or decrease the padding in 8 byte steps.
 
 95
 00:06:35,099 --> 00:06:37,699
-Which affects the amounts of bytes we can
-write.
+Which affects the amounts of bytes we can write.
 
 96
 00:06:37,699 --> 00:06:38,699
@@ -450,8 +389,7 @@ It’s always in these 8 steps.
 
 98
 00:06:42,389 --> 00:06:48,499
-So we don’t have an write anything condition,
-but we can write something close to the wiining
+So we don’t have an write anything condition, but we can write something close to the wiining
 
 99
 00:06:48,500 --> 00:06:49,500
@@ -463,13 +401,11 @@ Now there are two challenges.
 
 101
 00:06:51,180 --> 00:06:57,010
-First, the stack is fairly small, and the
-format result is written into buffer on the
+First, the stack is fairly small, and the format result is written into buffer on the
 
 102
 00:06:57,009 --> 00:07:03,669
-stack, so if we use too much padding, to write
-a large number with %n, we run out of stack
+stack, so if we use too much padding, to write a large number with %n, we run out of stack
 
 103
 00:07:03,669 --> 00:07:05,709
@@ -477,8 +413,7 @@ memory and get a segfault.
 
 104
 00:07:05,710 --> 00:07:12,130
-But wcbowling’s trick has made me realize,
-that we can in fact increase the size of the
+But wcbowling’s trick has made me realize, that we can in fact increase the size of the
 
 105
 00:07:12,129 --> 00:07:14,869
@@ -486,23 +421,19 @@ stack by just using more arguments.
 
 106
 00:07:14,870 --> 00:07:19,400
-It will add entries to the argv array and
-increase it.
+It will add entries to the argv array and increase it.
 
 107
 00:07:19,400 --> 00:07:25,570
-The second problem is, that the address is
-only written with 3 bytes, so if the location
+The second problem is, that the address is only written with 3 bytes, so if the location
 
 108
 00:07:25,569 --> 00:07:29,409
-on the stack had other values in it, it won’t
-work.
+on the stack had other values in it, it won’t work.
 
 109
 00:07:29,409 --> 00:07:34,519
-We need to write our address onto the stack
-where there was a zero, or generally a small
+We need to write our address onto the stack where there was a zero, or generally a small
 
 110
 00:07:34,520 --> 00:07:36,410
@@ -510,13 +441,11 @@ number before.
 
 111
 00:07:36,410 --> 00:07:41,110
-And here is also where the arguments help
-us again, because we can groom the stack,
+And here is also where the arguments help us again, because we can groom the stack,
 
 112
 00:07:41,110 --> 00:07:47,330
-by adding or remove entries in the argv array,
-so that the stack is large enough, and we
+by adding or remove entries in the argv array, so that the stack is large enough, and we
 
 113
 00:07:47,330 --> 00:07:49,660
@@ -528,33 +457,27 @@ have a zero at the correct spot.
 
 115
 00:07:52,520 --> 00:07:57,810
-So now we know how to groom the stack to write
-to the GOT entry, but we still have the issue
+So now we know how to groom the stack to write to the GOT entry, but we still have the issue
 
 116
 00:07:57,810 --> 00:08:03,010
-that we are not sure what to write because
-of our multiples of 8 restrictions.
+that we are not sure what to write because of our multiples of 8 restrictions.
 
 117
 00:08:03,009 --> 00:08:08,179
-I wrote a simple python function that generates
-me valid exploit arguments with different
+I wrote a simple python function that generates me valid exploit arguments with different
 
 118
 00:08:08,180 --> 00:08:12,700
-paddings and adjusts the amount of arguments
-and the write offset accordingly.
+paddings and adjusts the amount of arguments and the write offset accordingly.
 
 119
 00:08:12,699 --> 00:08:17,399
-And I started by looking around the printing
-of the winning message.
+And I started by looking around the printing of the winning message.
 
 120
 00:08:17,400 --> 00:08:24,500
-So ideally we would like to write 0x670, that’s
-1648, but becuase of our alignment restrictions
+So ideally we would like to write 0x670, that’s 1648, but becuase of our alignment restrictions
 
 121
 00:08:24,499 --> 00:08:25,899
@@ -562,8 +485,7 @@ that doesn’t work.
 
 122
 00:08:25,900 --> 00:08:31,740
-Anyway, I was then just trying them, to see
-if anything interesting would come from it.
+Anyway, I was then just trying them, to see if anything interesting would come from it.
 
 123
 00:08:31,740 --> 00:08:34,760
@@ -571,8 +493,7 @@ And luckily this one worked.
 
 124
 00:08:34,760 --> 00:08:40,460
-Let me debug this with gdb, I set a breakpoint
-after the sprintf, before we check the stack
+Let me debug this with gdb, I set a breakpoint after the sprintf, before we check the stack
 
 125
 00:08:40,460 --> 00:08:41,460
@@ -584,8 +505,7 @@ Let’s look at the stack.
 
 127
 00:08:43,530 --> 00:08:49,210
-So this is the %d padding with spaces, to
-print the amount of characters we want to
+So this is the %d padding with spaces, to print the amount of characters we want to
 
 128
 00:08:49,210 --> 00:08:50,660
@@ -593,8 +513,7 @@ write to.
 
 129
 00:08:50,660 --> 00:08:54,480
-And then here at the end is the target address
-we want to write to.
+And then here at the end is the target address we want to write to.
 
 130
 00:08:54,480 --> 00:08:56,250
@@ -602,8 +521,7 @@ The GOT address.
 
 131
 00:08:56,250 --> 00:09:00,170
-We can also look now what value has been written
-there.
+We can also look now what value has been written there.
 
 132
 00:09:00,170 --> 00:09:03,550
@@ -611,8 +529,7 @@ So we will jump to 0x40066b.
 
 133
 00:09:03,550 --> 00:09:08,450
-Let’s look at the disassembly and see where
-that would be.
+Let’s look at the disassembly and see where that would be.
 
 134
 00:09:08,450 --> 00:09:09,450
@@ -632,8 +549,7 @@ It’s in between the compare and the jump-not-equal.
 
 138
 00:09:17,760 --> 00:09:25,180
-Let’s use x to print 3 instructions, instead
-of the disassemble command.
+Let’s use x to print 3 instructions, instead of the disassemble command.
 
 139
 00:09:25,180 --> 00:09:26,240
@@ -649,13 +565,11 @@ What the heck?
 
 142
 00:09:31,440 --> 00:09:34,850
-Welcome to intel assembler and more advanced
-ROP.
+Welcome to intel assembler and more advanced ROP.
 
 143
 00:09:34,850 --> 00:09:39,980
-This kind of property was called the geometry
-of intel assembler, in the famous ROP paper,
+This kind of property was called the geometry of intel assembler, in the famous ROP paper,
 
 144
 00:09:39,980 --> 00:09:42,280
@@ -663,23 +577,19 @@ but never heard anybody using that term.
 
 145
 00:09:42,280 --> 00:09:48,770
-Anyway, we jump in between the bytes of the
-intended instruction, and the CPU is dumb,
+Anyway, we jump in between the bytes of the intended instruction, and the CPU is dumb,
 
 146
 00:09:48,770 --> 00:09:52,090
-it will just read those bytes and interpret
-them as assembler.
+it will just read those bytes and interpret them as assembler.
 
 147
 00:09:52,090 --> 00:09:59,900
-And so in this case, the cmp and jne turned
-into two simple moves.
+And so in this case, the cmp and jne turned into two simple moves.
 
 148
 00:09:59,900 --> 00:10:06,010
-Which means, now there is no check for deadbeef
-and we run into the printf to print the winning
+Which means, now there is no check for deadbeef and we run into the printf to print the winning
 
 149
 00:10:06,010 --> 00:10:07,850
@@ -687,13 +597,11 @@ message.
 
 150
 00:10:07,850 --> 00:10:13,250
-When we single step forward now, we get into
-the procedure linkage table for stack_check_fail,
+When we single step forward now, we get into the procedure linkage table for stack_check_fail,
 
 151
 00:10:13,250 --> 00:10:19,390
-we jump to the GOT entry, which is our weird
-address into vuln, we execute the mov, and
+we jump to the GOT entry, which is our weird address into vuln, we execute the mov, and
 
 152
 00:10:19,390 --> 00:10:22,440

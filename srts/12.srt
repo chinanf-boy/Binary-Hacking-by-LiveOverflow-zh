@@ -1,7 +1,6 @@
 1
 00:00:06,950 --> 00:00:12,260
-In past videos we have learned how the CPU
-works, how to read assembler and how to reverse
+In past videos we have learned how the CPU works, how to read assembler and how to reverse
 
 2
 00:00:12,260 --> 00:00:15,180
@@ -9,28 +8,23 @@ engineer the functionality of a simple program.
 
 3
 00:00:15,180 --> 00:00:19,720
-In the upcoming videos I want to go a little
-bit deeper and explore how we can exploit
+In the upcoming videos I want to go a little bit deeper and explore how we can exploit
 
 4
 00:00:19,720 --> 00:00:23,090
-a program when we have the ability to corrupt
-memory.
+a program when we have the ability to corrupt memory.
 
 5
 00:00:23,090 --> 00:00:27,220
-This first video will be more about how to
-setup and get everything running.
+This first video will be more about how to setup and get everything running.
 
 6
 00:00:27,220 --> 00:00:31,090
-So we can focus on the technical part in the
-next videos.
+So we can focus on the technical part in the next videos.
 
 7
 00:00:31,090 --> 00:00:35,390
-The title of this video is inspired by the
-famous phrack article “Smashing The Stack
+The title of this video is inspired by the famous phrack article “Smashing The Stack
 
 8
 00:00:35,390 --> 00:00:38,370
@@ -38,18 +32,15 @@ For Fun And Profit” from 1996.
 
 9
 00:00:38,370 --> 00:00:41,240
-You can imagine that a lot of stuff has changed
-since then.
+You can imagine that a lot of stuff has changed since then.
 
 10
 00:00:41,240 --> 00:00:45,890
-Though, we first have to learn about the basics,
-before we can have a look at modern techniques.
+Though, we first have to learn about the basics, before we can have a look at modern techniques.
 
 11
 00:00:45,890 --> 00:00:52,100
-We will kind of follow the timeline of exploitation
-technique discovery and attempted mitigations.
+We will kind of follow the timeline of exploitation technique discovery and attempted mitigations.
 
 12
 00:00:52,100 --> 00:00:55,700
@@ -57,8 +48,7 @@ Like DEP or ASLR, just to name two.
 
 13
 00:00:55,700 --> 00:01:00,100
-As basis for the next couple of videos, I
-will use challenges included in the Linux
+As basis for the next couple of videos, I will use challenges included in the Linux
 
 14
 00:01:00,100 --> 00:01:03,250
@@ -66,23 +56,19 @@ images provided by exploit-exercises.com.
 
 15
 00:01:03,250 --> 00:01:07,670
-This allows you to set up this system as well,
-which I highly recommend.
+This allows you to set up this system as well, which I highly recommend.
 
 16
 00:01:07,670 --> 00:01:12,360
-With protostar you will start with simple
-memory corruption and modification, function
+With protostar you will start with simple memory corruption and modification, function
 
 17
 00:01:12,359 --> 00:01:15,779
-redirection, and finally executing custom
-shellcode.
+redirection, and finally executing custom shellcode.
 
 18
 00:01:15,780 --> 00:01:21,090
-In order to make this as easy as possible
-to introduce, ASLR and Non-Executable memory
+In order to make this as easy as possible to introduce, ASLR and Non-Executable memory
 
 19
 00:01:21,090 --> 00:01:23,730
@@ -90,13 +76,11 @@ has been disabled.
 
 20
 00:01:23,729 --> 00:01:33,199
-So first download the protostar .iso and boot
-from it in the VMWare Player.
+So first download the protostar .iso and boot from it in the VMWare Player.
 
 21
 00:01:33,200 --> 00:01:37,660
-As you can see it doesn’t start with a nice
-graphical user-interface like our Ubuntu system
+As you can see it doesn’t start with a nice graphical user-interface like our Ubuntu system
 
 22
 00:01:37,659 --> 00:01:38,659
@@ -104,18 +88,15 @@ does.
 
 23
 00:01:38,659 --> 00:01:42,539
-But don’t panic, you learned how to use
-the command-line from the very first episode.
+But don’t panic, you learned how to use the command-line from the very first episode.
 
 24
 00:01:42,539 --> 00:01:48,679
-Now, I will use this moment to introduce you
-to `ssh`, which stands for secure shell and
+Now, I will use this moment to introduce you to `ssh`, which stands for secure shell and
 
 25
 00:01:48,679 --> 00:01:54,419
-is a program that allows us to connect to
-a system over a network, that has an ssh server
+is a program that allows us to connect to a system over a network, that has an ssh server
 
 26
 00:01:54,420 --> 00:01:55,420
@@ -123,8 +104,7 @@ running.
 
 27
 00:01:55,420 --> 00:01:58,980
-This would be the kind of access you get when
-you have to administrate servers that run
+This would be the kind of access you get when you have to administrate servers that run
 
 28
 00:01:58,979 --> 00:02:00,049
@@ -132,43 +112,35 @@ for example a website.
 
 29
 00:02:00,049 --> 00:02:05,129
-That’s the reason why I introduced you to
-the command line in the very first episode,
+That’s the reason why I introduced you to the command line in the very first episode,
 
 30
 00:02:05,130 --> 00:02:08,100
-because you really really have to know how
-to use it.
+because you really really have to know how to use it.
 
 31
 00:02:08,099 --> 00:02:11,229
-You can also tell that I run windows as a
-host OS.
+You can also tell that I run windows as a host OS.
 
 32
 00:02:11,230 --> 00:02:15,570
-I think I haven’t mentioned it before, but
-the main reason here is, that I imagine the
+I think I haven’t mentioned it before, but the main reason here is, that I imagine the
 
 33
 00:02:15,569 --> 00:02:21,349
-majority of people start out on Windows, which
-means it’s the best way to reach more people.
+majority of people start out on Windows, which means it’s the best way to reach more people.
 
 34
 00:02:21,350 --> 00:02:24,700
-We don’t want to be excluding like so many
-other parts of our societies.
+We don’t want to be excluding like so many other parts of our societies.
 
 35
 00:02:24,700 --> 00:02:30,360
-At least for me, hacking conveys a spirit
-to be open and share knowledge.
+At least for me, hacking conveys a spirit to be open and share knowledge.
 
 36
 00:02:30,360 --> 00:02:34,960
-So that’s why I have to download PuTTY for
-Windows now, which is a windows client for
+So that’s why I have to download PuTTY for Windows now, which is a windows client for
 
 37
 00:02:34,959 --> 00:02:35,959
@@ -176,13 +148,11 @@ ssh.
 
 38
 00:02:35,959 --> 00:02:40,629
-To use it to connect to this machine we have
-to find the IP address of it.
+To use it to connect to this machine we have to find the IP address of it.
 
 39
 00:02:40,630 --> 00:02:44,910
-The username and password for the protostar
-image is just “user”.
+The username and password for the protostar image is just “user”.
 
 40
 00:02:44,909 --> 00:02:45,999
@@ -190,8 +160,7 @@ So use that to login.
 
 41
 00:02:46,000 --> 00:02:51,900
-And then execute the command `ip addr`, to
-find the assigned IP and then copy it into
+And then execute the command `ip addr`, to find the assigned IP and then copy it into
 
 42
 00:02:51,900 --> 00:02:55,600
@@ -199,18 +168,15 @@ putty, save this session and press Open.
 
 43
 00:02:55,599 --> 00:02:58,499
-You have to login again, but this is much
-better now.
+You have to login again, but this is much better now.
 
 44
 00:02:58,500 --> 00:03:02,830
-We can copy data back and forth and we can
-have multiple connections.
+We can copy data back and forth and we can have multiple connections.
 
 45
 00:03:02,830 --> 00:03:12,400
-The equivalent for Mac and Linux is just simply
-`ssh`, the username “user” at the ip address.
+The equivalent for Mac and Linux is just simply `ssh`, the username “user” at the ip address.
 
 46
 00:03:12,400 --> 00:03:13,560
@@ -222,13 +188,11 @@ At the moment our shell is /bin/sh.
 
 48
 00:03:14,930 --> 00:03:18,880
-And as you can see, tab-completion doesn’t
-work.
+And as you can see, tab-completion doesn’t work.
 
 49
 00:03:18,880 --> 00:03:23,530
-But we can execute `/bin/bash` instead, which
-makes the command-line a bit nicer.
+But we can execute `/bin/bash` instead, which makes the command-line a bit nicer.
 
 50
 00:03:23,530 --> 00:03:25,710
@@ -236,8 +200,7 @@ So what do we have here.
 
 51
 00:03:25,709 --> 00:03:31,489
-With uname -a we can get some system information
-and we can see that we have a 32bit linux
+With uname -a we can get some system information and we can see that we have a 32bit linux
 
 52
 00:03:31,489 --> 00:03:34,129
@@ -249,8 +212,7 @@ So how does this work now.
 
 54
 00:03:35,760 --> 00:03:41,580
-On the website it says: The levels to be exploited
-can be found in the /opt/protostar/bin directory.
+On the website it says: The levels to be exploited can be found in the /opt/protostar/bin directory.
 
 55
 00:03:41,579 --> 00:03:43,599
@@ -262,8 +224,7 @@ Let’s have a look.
 
 57
 00:03:47,099 --> 00:03:50,979
-Immediately you will notice this weird red
-background color for the filenames.
+Immediately you will notice this weird red background color for the filenames.
 
 58
 00:03:50,980 --> 00:03:53,520
@@ -271,8 +232,7 @@ Let’s have a closer look.
 
 59
 00:03:53,519 --> 00:03:58,919
-With `files` we can check the filetype and
-it tells us that it is a setuid ELF 32bit
+With `files` we can check the filetype and it tells us that it is a setuid ELF 32bit
 
 60
 00:03:58,920 --> 00:04:00,070
@@ -280,28 +240,23 @@ executable.
 
 61
 00:04:00,069 --> 00:04:05,469
-From earlier videos you may remember that
-we have never encountered `setuid` before.
+From earlier videos you may remember that we have never encountered `setuid` before.
 
 62
 00:04:05,469 --> 00:04:09,859
-As always, if we want to know something in
-linux, we can look in the linux manual.
+As always, if we want to know something in linux, we can look in the linux manual.
 
 63
 00:04:09,860 --> 00:04:14,840
-Though, the man page for setuid is actually
-about the setuid function provided by libc.
+Though, the man page for setuid is actually about the setuid function provided by libc.
 
 64
 00:04:14,840 --> 00:04:18,940
-But that doesn’t bother us, because it might
-be related.
+But that doesn’t bother us, because it might be related.
 
 65
 00:04:18,940 --> 00:04:21,650
-So let’s see what it says here about this
-function.
+So let’s see what it says here about this function.
 
 66
 00:04:21,650 --> 00:04:25,130
@@ -309,18 +264,15 @@ setuid stands for set user identity.
 
 67
 00:04:25,130 --> 00:04:29,760
-And… setuid sets the effective user ID of
-the calling process.
+And… setuid sets the effective user ID of the calling process.
 
 68
 00:04:29,760 --> 00:04:34,610
-mhh… with cat /etc/passwd we can see all
-users on this system.
+mhh… with cat /etc/passwd we can see all users on this system.
 
 69
 00:04:34,610 --> 00:04:37,450
-Remember our user is called user so we have
-the id 1001.
+Remember our user is called user so we have the id 1001.
 
 70
 00:04:37,451 --> 00:04:42,031
@@ -328,8 +280,7 @@ And the root user has id 0.
 
 71
 00:04:42,030 --> 00:04:47,310
-So does that mean, that we can simply write
-a C program as our unprivileged user and execute
+So does that mean, that we can simply write a C program as our unprivileged user and execute
 
 72
 00:04:47,310 --> 00:04:49,800
@@ -345,13 +296,11 @@ That would be horrible.
 
 75
 00:04:52,930 --> 00:04:58,350
-Further down it tells us about possible errors
-like EPERM which says that the user is not
+Further down it tells us about possible errors like EPERM which says that the user is not
 
 76
 00:04:58,350 --> 00:05:02,830
-privileged and the uid does not match the
-real uid of the calling process.
+privileged and the uid does not match the real uid of the calling process.
 
 77
 00:05:02,830 --> 00:05:05,890
@@ -359,18 +308,15 @@ Ok… then… what can it be used for?
 
 78
 00:05:05,890 --> 00:05:11,280
-An example usage is, that a root process might
-want to drop privileges to an unprivileged
+An example usage is, that a root process might want to drop privileges to an unprivileged
 
 79
 00:05:11,280 --> 00:05:16,440
-user, that in case the process gets exploited,
-the attacker does not gain root privileges.
+user, that in case the process gets exploited, the attacker does not gain root privileges.
 
 80
 00:05:16,440 --> 00:05:21,480
-So if you have a process that has to start
-as root but then doesn’t need it anymore,
+So if you have a process that has to start as root but then doesn’t need it anymore,
 
 81
 00:05:21,480 --> 00:05:23,530
@@ -382,13 +328,11 @@ Anyway.
 
 83
 00:05:24,530 --> 00:05:26,880
-What does this have to do with our setuid
-binary?
+What does this have to do with our setuid binary?
 
 84
 00:05:26,880 --> 00:05:32,100
-Let’s open a second ssh session to look
-at all running processes.
+Let’s open a second ssh session to look at all running processes.
 
 85
 00:05:32,100 --> 00:05:34,600
@@ -400,8 +344,7 @@ Something simple like a vim editor.
 
 87
 00:05:36,550 --> 00:05:42,940
-And then we can use the other shell to execute
-`ps aux` to list all running processes.
+And then we can use the other shell to execute `ps aux` to list all running processes.
 
 88
 00:05:42,940 --> 00:05:45,500
@@ -409,18 +352,15 @@ Now we have to search a bit, but here it is.
 
 89
 00:05:45,500 --> 00:05:49,000
-The first column tells us the user of the
-running process.
+The first column tells us the user of the running process.
 
 90
 00:05:49,000 --> 00:05:54,380
-And because we as “user” have executed
-vim, it will run with our privileges.
+And because we as “user” have executed vim, it will run with our privileges.
 
 91
 00:05:54,380 --> 00:05:59,050
-So no let’s execute one of those setuid
-binaries and do the same.
+So no let’s execute one of those setuid binaries and do the same.
 
 92
 00:05:59,050 --> 00:06:02,360
@@ -452,8 +392,7 @@ Let’s have a look again at the file permissions.
 
 99
 00:06:12,550 --> 00:06:18,310
-Ok first of all `r` `dash` `x` means that
-anybody on the system can read this file and
+Ok first of all `r` `dash` `x` means that anybody on the system can read this file and
 
 100
 00:06:18,310 --> 00:06:19,310
@@ -461,23 +400,19 @@ execute it.
 
 101
 00:06:19,310 --> 00:06:22,940
-The next 3 permissions are the same and refer
-to the permissions for the group.
+The next 3 permissions are the same and refer to the permissions for the group.
 
 102
 00:06:22,940 --> 00:06:26,880
-A group is just an id, that multiple users
-could share.
+A group is just an id, that multiple users could share.
 
 103
 00:06:26,880 --> 00:06:29,640
-So we are in the group that is also called
-user.
+So we are in the group that is also called user.
 
 104
 00:06:29,640 --> 00:06:33,460
-But theoretically you could group multiple
-users together.
+But theoretically you could group multiple users together.
 
 105
 00:06:33,460 --> 00:06:35,080
@@ -489,8 +424,7 @@ Now it get’s interesting.
 
 107
 00:06:36,460 --> 00:06:38,760
-The first character indicates if a file is
-a directory.
+The first character indicates if a file is a directory.
 
 108
 00:06:38,760 --> 00:06:40,080
@@ -498,8 +432,7 @@ Well it’s not.
 
 109
 00:06:40,080 --> 00:06:44,260
-So the remaining 3 permissions are for the
-owner of the file.
+So the remaining 3 permissions are for the owner of the file.
 
 110
 00:06:44,260 --> 00:06:46,180
@@ -507,8 +440,7 @@ The owner of the file is root.
 
 111
 00:06:46,180 --> 00:06:50,990
-And the owner has the permissions to read,
-write and … S?
+And the owner has the permissions to read, write and … S?
 
 112
 00:06:50,990 --> 00:06:56,010
@@ -520,13 +452,11 @@ This is called the setuid bit.
 
 114
 00:06:57,730 --> 00:07:02,490
-We have already looked at the running process,
-so you can guess what this does.
+We have already looked at the running process, so you can guess what this does.
 
 115
 00:07:02,490 --> 00:07:07,960
-When this bit is set, and I as a regular user
-execute it, Linux will actually execute it
+When this bit is set, and I as a regular user execute it, Linux will actually execute it
 
 116
 00:07:07,960 --> 00:07:10,590
@@ -550,13 +480,11 @@ First, you may know sudo.
 
 121
 00:07:19,670 --> 00:07:24,300
-Which is a program that allows you to run
-something as root if you are a normal user.
+Which is a program that allows you to run something as root if you are a normal user.
 
 122
 00:07:24,300 --> 00:07:29,860
-So how can sudo execute a program as root,
-even though you typed in the command?
+So how can sudo execute a program as root, even though you typed in the command?
 
 123
 00:07:29,860 --> 00:07:33,130
@@ -568,8 +496,7 @@ Another great example is the ping program.
 
 125
 00:07:35,860 --> 00:07:39,450
-Ping will also run as root, because it has
-the setuid bit set.
+Ping will also run as root, because it has the setuid bit set.
 
 126
 00:07:39,450 --> 00:07:40,740
@@ -577,18 +504,15 @@ Why you ask?
 
 127
 00:07:40,740 --> 00:07:45,180
-Because ping wants to send an ICMP packet
-which is a fairly low layer.
+Because ping wants to send an ICMP packet which is a fairly low layer.
 
 128
 00:07:45,180 --> 00:07:50,620
-And linux generally doesn’t allow normal
-users to create such raw packets.
+And linux generally doesn’t allow normal users to create such raw packets.
 
 129
 00:07:50,620 --> 00:07:55,610
-But because ping is not evil, somebody created
-a setuid binary, to allow normal users to
+But because ping is not evil, somebody created a setuid binary, to allow normal users to
 
 130
 00:07:55,610 --> 00:07:57,550
@@ -596,8 +520,7 @@ send ICMP packets.
 
 131
 00:07:57,550 --> 00:08:02,110
-What if there is an exploit for a program
-like ping, that would allow you to execute
+What if there is an exploit for a program like ping, that would allow you to execute
 
 132
 00:08:02,110 --> 00:08:04,030
@@ -605,8 +528,7 @@ arbitrary code as root, right?
 
 133
 00:08:04,030 --> 00:08:08,300
-So it’s clear, that setuid can be really
-dangerous.
+So it’s clear, that setuid can be really dangerous.
 
 134
 00:08:08,300 --> 00:08:09,310
@@ -614,23 +536,19 @@ Well.
 
 135
 00:08:09,310 --> 00:08:11,340
-And that’s the whole point of the challenges
-from protostar.
+And that’s the whole point of the challenges from protostar.
 
 136
 00:08:11,340 --> 00:08:17,150
-If we can exploit one of these programs here,
-we can escalate privileges and gain root.
+If we can exploit one of these programs here, we can escalate privileges and gain root.
 
 137
 00:08:17,150 --> 00:08:21,850
-This is basically like jailbreaking on iPhones
-or rooting on android devices.
+This is basically like jailbreaking on iPhones or rooting on android devices.
 
 138
 00:08:21,850 --> 00:08:27,890
-You try to find a vulnerability that allows
-you to execute arbitrary code in a privileged
+You try to find a vulnerability that allows you to execute arbitrary code in a privileged
 
 139
 00:08:27,890 --> 00:08:28,890
@@ -638,13 +556,11 @@ mode.
 
 140
 00:08:28,890 --> 00:08:33,690
-Well, on those real devices, especially iOS
-this is extremely fucking complicated, and
+Well, on those real devices, especially iOS this is extremely fucking complicated, and
 
 141
 00:08:33,690 --> 00:08:39,130
-a lot more layers are involved, but now you
-get a better imagination of the whole thing.
+a lot more layers are involved, but now you get a better imagination of the whole thing.
 
 142
 00:08:39,130 --> 00:08:42,170
@@ -656,8 +572,7 @@ You know that you can debug programs, right?
 
 144
 00:08:44,620 --> 00:08:47,430
-For example you can use strace to spy on the
-system calls.
+For example you can use strace to spy on the system calls.
 
 145
 00:08:47,430 --> 00:08:48,860
@@ -669,8 +584,7 @@ And gdb allows you to modify memory.
 
 147
 00:08:52,170 --> 00:08:57,270
-So you could just open this setuid binary
-in gdb, modify the code and execute whatever
+So you could just open this setuid binary in gdb, modify the code and execute whatever
 
 148
 00:08:57,270 --> 00:08:58,350
@@ -686,8 +600,7 @@ Ok it seems to run.
 
 151
 00:09:02,080 --> 00:09:05,150
-So let’s rerun it and look at the process
-list.
+So let’s rerun it and look at the process list.
 
 152
 00:09:05,150 --> 00:09:08,460
@@ -695,26 +608,21 @@ As you can see it doesn’t run as root anymore.
 
 153
 00:09:08,460 --> 00:09:13,350
-The reason is, that gdb could not debug a
-process that runs as another user.
+The reason is, that gdb could not debug a process that runs as another user.
 
 154
 00:09:13,350 --> 00:09:19,810
-So gdb actually forces the binary to NOT run
-as root so it can actually debug it.
+So gdb actually forces the binary to NOT run as root so it can actually debug it.
 
 155
 00:09:19,810 --> 00:09:24,660
-So good idea, but unfortunately… or maybe
-fortunately it’s not that simple.
+So good idea, but unfortunately… or maybe fortunately it’s not that simple.
 
 156
 00:09:24,660 --> 00:09:28,760
-I guess we have to rely on good old exploiting
-techniques.
+I guess we have to rely on good old exploiting techniques.
 
 157
 00:09:28,760 --> 00:09:31,440
-See you in the next video when we start with
-the first challenge.
+See you in the next video when we start with the first challenge.
 
