@@ -8,6 +8,8 @@
 
 > `video_add_sub.sh`放着`ffmpeg`烧字幕的脚本（来自`get_p.js`)，一般不需要，因需要原视频文件才能起作用。
 
+> 前几个，翻译的很难受，因为（知识）会了，却还要搞就挺烦的 :P
+
 #### 生活
 
 [If help, **buy** me coffee —— 营养跟不上了，给我来瓶营养快线吧! 💰](https://github.com/chinanf-boy/live-need-money)
