@@ -32,8 +32,8 @@ console.log('# 由 `node get_p.js > video_add_sub.sh` 生成')
 Object.keys(Obj).forEach(index => {
   index &&
     console.log(
-      `ffmpeg -i "../${Obj[index]}" -vf subtitles="./srts/${two(
+      `ffmpeg -i "../Source/${Obj[index]}" -vf subtitles="./srts/${two(
         index
-      )}.zh.srt" "${addZh(Obj[index])}"`
+      )}.zh.srt" "../Zh/${addZh(Obj[index])}"`
     );
 });
