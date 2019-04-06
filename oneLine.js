@@ -16,7 +16,13 @@ const onlyNum = n => {
 };
 
 if (process.argv[2] && process.argv[3]) {
-  let data = fs.readFileSync(path.resolve(process.argv[2]), 'utf-8');
+  let fPath = process.argv[2];
+  let spaceOr = '';
+  if (!fPath.endsWith('zh.srt')) {
+    spaceOr = ' ';
+  }
+
+  let data = fs.readFileSync(path.resolve(fPath), 'utf-8');
   let dataList = data.split('\n');
   let newData = [];
   let STR = false; // has text
@@ -31,11 +37,15 @@ if (process.argv[2] && process.argv[3]) {
         newData.push(d);
       } else {
         let lastIdx = newData.length - 1;
-        newData[lastIdx] += ` ${d}`;
+        let last = newData[lastIdx];
+        newData[lastIdx] = `${last.trimEnd()}${spaceOr}${d}`;
       }
       STR = true;
     }
   });
-  
-  fs.writeFileSync(path.join(process.cwd(), process.argv[3]), newData.join('\n'));
+
+  fs.writeFileSync(
+    path.join(process.cwd(), process.argv[3]),
+    newData.join('\n')
+  );
 }
