@@ -248,7 +248,7 @@ The first part is the current user. After the @ is the computer or host name. Af
 
 63
 00:05:14,060 --> 00:05:21,300
-the colon you can find the current location. And the tilde is an alias for your users home
+the colon you can find the current location. And the ~ is an alias for your users home
 
 64
 00:05:21,300 --> 00:05:27,110
@@ -344,7 +344,7 @@ have to know all those weird features that are different in every program.
 
 87
 00:07:17,460 --> 00:07:22,440
-Now execute ls with the option L to display the files as a list which also provides more
+Now execute ls with the option l to display the files as a list which also provides more
 
 88
 00:07:22,440 --> 00:07:27,310
@@ -412,7 +412,7 @@ to the top of the hierarchical filesystem which starts at slash. Now you can als
 
 104
 00:08:39,069 --> 00:08:43,339
-that the tilde changed to the slash, which is our new current location.
+that the ~ changed to the slash, which is our new current location.
 
 105
 00:08:43,339 --> 00:08:47,999
@@ -424,7 +424,7 @@ location. If you have a slash, it will be an absolute path. So here are just som
 
 107
 00:08:52,199 --> 00:08:55,749
-Maybe you notice the dots and double dots that I am using. If you look at the ls output
+If you look at the ls output
 
 108
 00:08:55,749 --> 00:09:01,049

@@ -53,7 +53,7 @@ Object.keys(Obj).forEach(index => {
   index &&
     (Rs[two(index)] = `ffmpeg -y -i "../Source/${Obj[index]}" -vf "${srts(
       index
-    )}" "../Zh/${addZh(Obj[index])}"`);
+    )}" "../Zh/${addZh(Obj[index])}" && echo "../Zh/${addZh(Obj[index])}"`);
 });
 
 if (process.argv[3]) {
