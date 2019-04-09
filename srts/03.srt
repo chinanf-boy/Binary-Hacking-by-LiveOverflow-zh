@@ -132,19 +132,17 @@ Now let’s dive in.
 
 34
 00:02:57,419 --> 00:02:59,999
-C is over 40 years old and despite it’s age it’s still used a lot. Its strength
+C is over 40 years old and despite it’s age it’s still used a lot.
 
 35
 00:02:59,998 --> 00:03:00,998
-is its simplicity - by that I mean that there are not too many language features and thus
 
 36
 00:03:00,998 --> 00:03:03,718
-makes it easy to understand - at least once you understand how a CPU works. Many beginners
 
 37
 00:03:03,719 --> 00:03:09,649
-feel that C is hard, because it feels unintuitive and too low level at first, but you will notice
+Many beginners feel that C is hard, because it feels unintuitive and too low level at first, but you will notice
 
 38
 00:03:09,650 --> 00:03:14,750
@@ -507,10 +505,10 @@ I remove the export command again, because I don’t want to have the home folde
 the PATH. Go to the line and press d two times - you have to be in command mode, so hit ESC
 
 128
-00:12:00,709 --> 00:12:05,479
-if you are still in the insert mode. And now I have to use the full path for our
+00:12:00,709 --> 00:12:02,560
+if you are still in the insert mode. 
 
 129
-00:12:05,480 --> 00:12:05,560
-program.
+00:12:02,560 --> 00:12:05,560
+And now I have to use the full path for our program.
 
