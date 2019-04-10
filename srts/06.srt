@@ -510,7 +510,7 @@ Let’s figure out together the basic concepts of a CPU.
 00:08:55,160 --> 00:08:56,160
 Computers have different memory to store stuff - so first we need something to store the
 
-129
+1
 00:08:56,160 --> 00:08:57,160
 machine code in.
 
@@ -523,7 +523,7 @@ Let’s take a spreadsheet and imagine that this is memory.
 You can store values in it and each memory cell has an address, which is the number on
 
 132
-00:08:59,160 --> 00:09:00,160
+00:08:59,12960 --> 00:09:00,160
 the left.
 
 133
