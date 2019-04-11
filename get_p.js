@@ -3,9 +3,9 @@ const fs = require('fs');
 const data = fs.readFileSync('../.list', 'utf-8');
 
 const zhStyle = f =>
-  `subtitles=${f}:force_style='Fontsize=15,MarginV=18,BorderStyle=1,Outline=1,Shadow=0,PrimaryColour=&HFFFFFF&,OutlineColour=&H853F1B&,Spacing=3'`;
+  `subtitles=${f}:force_style='Fontsize=14,MarginV=18,BorderStyle=1,Bold=-1,Outline=1,Shadow=0,PrimaryColour=&HFFFFFF&,OutlineColour=&H853F1B&,Spacing=1'`;
 const enStyle = f =>
-  `subtitles=${f}:force_style='Fontsize=8,MarginV=8,BorderStyle=0,Outline=1,Shadow=0,PrimaryColour=&HFFFFFF&,OutlineColour=&H5A6A83&,Spacing=1'`;
+  `subtitles=${f}:force_style='Fontsize=8,MarginV=8,BorderStyle=0,Bold=-1,Outline=1,Shadow=0,PrimaryColour=&HF2F2F2&,OutlineColour=&H5A6A83&,Spacing=0'`;
 
 function addPrefix(filename, en = false) {
   if (en) {
@@ -53,11 +53,11 @@ Object.keys(Obj).forEach(index => {
   index &&
     (Rs[two(index)] = `ffmpeg -y -i "../Source/${Obj[index]}" -vf "${srts(
       index
-    )}" "../Zh/${addZh(Obj[index])}" && echo "../Zh/${addZh(Obj[index])}"`);
+    )}" -vcodec libx264 -crf 24 -c:a copy "../Zh/${addZh(Obj[index])}" && echo "../Zh/${addZh(Obj[index])}"`);
 });
 
 if (process.argv[3]) {
-  Obejct.keys(Rs).forEach(r => console.log(r));
+  Object.keys(Rs).forEach(r => console.log(Rs[r]));
 } else if (process.argv[2]) {
   console.log(Rs[two('P' + process.argv[2])]);
 }
