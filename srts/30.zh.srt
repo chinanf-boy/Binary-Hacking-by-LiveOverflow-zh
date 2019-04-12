@@ -1,78 +1,78 @@
 1
 00:00:00,110 --> 00:00:03,990
-让我们进入最后一级的剥削练习。原恒星
+Let’s head into the final levels of exploit-exercises protostar.
 
 2
 00:00:03,989 --> 00:00:10,279
-这些水平有点高而且是在一个非常容易的层面上。
+这些级别稍微有点发达，而且是在非常简单的可编程级别上。
 
 3
 00:00:10,280 --> 00:00:14,140
-CTF的挑战。
+CTF challenges.
 
 4
 00:00:14,139 --> 00:00:18,099
-让我们来看看最后的0级。
+Let’s have a look at final level 0.
 
 5
 00:00:18,100 --> 00:00:22,190
-网络设置基本相同从以前的挑战，所以如果你是
+网络设置基本上与以前的挑战相同，因此如果您是
 
 6
 00:00:22,189 --> 00:00:26,369
-不熟悉这些自定义函数应该看之前的视频
+不熟悉这些自定义功能，您应该在
 
 7
 00:00:26,370 --> 00:00:27,900
-弄清楚他们在做什么。
+figure out what they do.
 
 8
 00:00:27,900 --> 00:00:33,340
-因此，当客户机连接到此服务时在端口2995上运行，它将调用此函数
+因此，当客户端连接到运行在端口2995上的服务时，它将调用此函数
 
 9
 00:00:33,340 --> 00:00:35,290
-GETUsUrNeNeX。
+get_username.
 
 10
 00:00:35,290 --> 00:00:41,190
-此函数具有本地512字节大缓冲区将被0覆盖。
+This function has a local 512 byte big buffer which is overwritten with 0.
 
 11
 00:00:41,190 --> 00:00:45,190
-然后gets用于从用户读取数据进入缓冲区。
+Then gets is used to read data from the user into the buffer.
 
 12
 00:00:45,190 --> 00:00:50,330
-正如我们之前学到的，获取是一个危险的函数。
+And as we have learned many episodes ago, gets is a dangerous function.
 
 13
 00:00:50,329 --> 00:00:53,319
-这显然是我们的缓冲区溢出。
+So this is obviously our buffer overflow.
 
 14
 00:00:53,320 --> 00:00:57,970
-然后检查是否有新线或车厢返回，如果是，将用覆盖它
+然后它检查是否有换行符或回车符，如果有，它将用覆盖换行符或回车符
 
 15
 00:00:57,970 --> 00:00:59,690
-A 0。
+a 0.
 
 16
 00:00:59,690 --> 00:01:06,180
-之后是一个循环，它将通过缓冲并对每个字符调用toupper。
+After that is a loop, which will go over the buffer and call toupper on every character.
 
 17
 00:01:06,180 --> 00:01:08,110
-然后函数返回。
+Then the function returns.
 
 18
 00:01:08,110 --> 00:01:13,400
-这意味着我们应该能够覆盖此函数的返回指针并重定向
+这意味着我们应该能够覆盖这个函数的返回指针并重定向
 
 19
 00:01:13,400 --> 00:01:15,340
-代码执行。
+code execution.
 
 20
 00:01:15,340 --> 00:01:20,680
@@ -80,151 +80,151 @@ A 0。
 
 21
 00:01:20,680 --> 00:01:22,360
-大写字母。
+to uppercase.
 
 22
 00:01:22,360 --> 00:01:26,770
-这意味着我们的外壳代码和地址我们用来覆盖指令指针
+这意味着我们的外壳代码，以及我们用来覆盖指令指针的地址。
 
 23
 00:01:26,770 --> 00:01:31,070
-在烟囱上不需要改变时使用。
+on the stack have to not change when toupper is used.
 
 24
 00:01:31,070 --> 00:01:34,420
-也就是说，不能使用小写的ASCII字符。
+Meaning, you cannot use lower-case ascii characters.
 
 25
 00:01:34,420 --> 00:01:39,130
-或者有什么办法可以让我们到处转转吗？这个限制？
+或者有没有一个技巧可以让我们绕过这个限制？
 
 26
 00:01:39,130 --> 00:01:42,740
-让我们考虑一下，按我们的方式向后的。
+Let’s think about this and work our way backwards.
 
 27
 00:01:42,740 --> 00:01:49,730
-那么，什么条件必须是正确的呢？我们的意见中没有使用那个混蛋。
+So what condition has to be true in order that toupper is not used on our input.
 
 28
 00:01:49,729 --> 00:01:56,129
-for循环使用strlen来确定它将执行此操作的字节数。
+Well the for loop uses strlen to determine on how many bytes it will do this.
 
 29
 00:01:56,130 --> 00:01:59,200
-strlen计算所有字节直到in find空字节。
+And strlen counts all bytes until in finds a null byte.
 
 30
 00:01:59,200 --> 00:02:05,340
-所以如果我们设法得到一个空字节在实际溢出和shellcode之前，
+所以如果我们设法在实际溢出和shellcode之前得到一个空字节，
 
 31
 00:02:05,340 --> 00:02:07,480
-我们会没事的。
+we would be fine.
 
 32
 00:02:07,479 --> 00:02:11,059
-好吧，我们怎么能得到一个空字节呢？
+Ok, how could we get a null byte in there.
 
 33
 00:02:11,060 --> 00:02:16,350
-如果您查看Gets的手册页，您将看，它能读取所有的信息直到
+如果你查看Gets的手册页，你会看到，它会读取所有内容，直到
 
 34
 00:02:16,349 --> 00:02:18,079
-换行或EOF。
+newline or EOF.
 
 35
 00:02:18,080 --> 00:02:21,690
-这意味着GeT不会有阅读问题。空字节。
+This means gets will have no issue of reading a null-byte.
 
 36
 00:02:21,690 --> 00:02:22,690
-容易的。
+Easy.
 
 37
 00:02:22,690 --> 00:02:25,490
-所以我们可以完全忽略to大写东西。
+So we can completly ignore the to uppercase stuff.
 
 38
 00:02:25,490 --> 00:02:30,200
-出于创造性的原因，你可以还滥用空字节替换
+出于创造性的原因，您还可以滥用
 
 39
 00:02:30,200 --> 00:02:31,200
-回车。
+carriage return.
 
 40
 00:02:31,200 --> 00:02:36,650
-假设输入将使用strcpy，因此同时以空字节停止，可以使用
+假设输入将使用strcpy，因此也将以空字节停止，您可以使用
 
 41
 00:02:36,650 --> 00:02:41,740
-一辆马车返回，然后然后被一个空字节替换。
+a carriage return instead, which will then afterwards get replaced by a null byte.
 
 42
 00:02:41,740 --> 00:02:44,150
-所以这也是可行的。
+So that would also work.
 
 43
 00:02:44,150 --> 00:02:49,260
-缓冲区是512字节大，所以让我们使用克诺沃利奇创造了一个简单的证据
+缓冲区是512字节大，所以让我们使用knwoledge创建一个简单的
 
 44
 00:02:49,260 --> 00:02:51,210
-概念缓冲区溢出。
+concept buffer overflow.
 
 45
 00:02:51,209 --> 00:02:56,899
-我们可以使用python和-c直接编写参数中的简短脚本。
+We can use python with -c, to directly write a short script in the argument.
 
 46
 00:02:56,900 --> 00:03:02,810
-所以我们可以打印510个小写字母A，和然后我们可以看到这些被修改了
+所以我们可以打印510个小写字母A，然后我们可以看到它们被修改了。
 
 47
 00:03:02,810 --> 00:03:04,710
-大写。
+to be uppercase.
 
 48
 00:03:04,709 --> 00:03:10,149
-然后我们附加一个空字节并继续一个典型的字母表，这样我们就可以识别
+然后我们附加一个空字节，继续使用一个典型的字母表，这样我们就可以识别
 
 49
 00:03:10,150 --> 00:03:12,150
-使指令指针溢出。
+to overflow the instruction pointer.
 
 50
 00:03:12,150 --> 00:03:17,780
-我们也可以将字母表改为小写，以证明它不会转换为大写的证据
+我们也可以把字母表改成小写，以证明它不会被转换成大写。
 
 51
 00:03:17,780 --> 00:03:20,320
-在空字节之后。
+after the nullbyte.
 
 52
 00:03:20,320 --> 00:03:25,090
-就像以前的网络挑战一样我们可以连接到2995端口的服务
+和以前的网络挑战一样，我们可以连接到端口2995上的服务
 
 53
 00:03:25,090 --> 00:03:26,380
-使用NETCAT。
+with netcat.
 
 54
 00:03:26,379 --> 00:03:31,909
-所以我们可以简单地通过管道传输python的输出还有一条到Netcat的线路。
+So we can simply pipe the output of our python one-liner to netcat as well.
 
 55
 00:03:31,909 --> 00:03:36,259
-我们看不到输出"没有这样的用户…"就像以前一样。
+We don’t see the output “No such user… “ like before.
 
 56
 00:03:36,260 --> 00:03:42,760
-代码显示它将被打印出来在回归之后，我们可以假设
+代码告诉我们，它将在主返回之后被打印，因此我们可以假设
 
 57
 00:03:42,760 --> 00:03:47,770
-我们成功地改写了指令指针并使程序崩溃。
+we successfully overwrote the instruction pointer and crashed the program.
 
 58
 00:03:47,769 --> 00:03:50,399
@@ -232,27 +232,27 @@ strlen计算所有字节直到in find空字节。
 
 59
 00:03:50,400 --> 00:03:54,920
-如果你看一下原星虚拟机，你会在这里看到一个标题
+如果你看一下原恒星虚拟机的描述，你会在这里看到一个标题。
 
 60
 00:03:54,920 --> 00:03:56,980
-称为核心文件。
+called core files.
 
 61
 00:03:56,980 --> 00:04:00,910
-文件名模式设置为/TMP/什么。
+It says that the filename pattern is set to /tmp/ something.
 
 62
 00:04:00,909 --> 00:04:04,139
-这意味着核心转储存储在TMP中。
+This means that core dumps are stored in tmp.
 
 63
 00:04:04,140 --> 00:04:10,030
-当我们看到/tmp/我们将看到一个刚生成的核心文件。
+And when we have a look at the content of /tmp/ we will see a core file we just produced.
 
 64
 00:04:10,030 --> 00:04:14,080
-它们属于根目录，所以我们切换到根，这样我们可以和他们一起工作。
+They belong to root, so let’s switch to root so we can work with them.
 
 65
 00:04:14,080 --> 00:04:15,700
@@ -260,51 +260,51 @@ strlen计算所有字节直到in find空字节。
 
 66
 00:04:15,700 --> 00:04:19,620
-让我们用"man core"来询问Linux手册。
+Let’s ask the linux manual with `man core`.
 
 67
 00:04:19,620 --> 00:04:25,020
-某些信号的默认动作是使进程终止并生成
+某些信号的默认动作是使进程终止并产生
 
 68
 00:04:25,020 --> 00:04:30,990
-核心转储文件，包含当时进程内存的图像
+核心转储文件，包含进程内存图像的磁盘文件。
 
 69
 00:04:30,990 --> 00:04:32,000
-终止的。
+of termination.
 
 70
 00:04:31,999 --> 00:04:37,559
-如果我们得到当它崩溃的时候，我们应该能够
+这听起来不错，如果我们得到了它崩溃时的记忆状态，我们应该能够
 
 71
 00:04:37,559 --> 00:04:41,599
-获取关于缓冲区的大量信息溢出。
+to get a lot of information about our buffer overflow.
 
 72
 00:04:41,599 --> 00:04:47,009
-此图像可以在调试器中使用（例如，gdb（1））检查程序状态
+此图像可在调试器（例如，gdb（1））中用于检查程序的状态。
 
 73
 00:04:47,009 --> 00:04:48,949
-在它终止的时候。
+at the time that it terminated.
 
 74
 00:04:48,949 --> 00:04:54,209
-哦，哇，我们可以用gdb看看这些我们区已经非常熟悉如何
+哦，哇，我们可以用gdb来看看这些，我们已经非常熟悉如何
 
 75
 00:04:54,210 --> 00:04:56,080
-使用GDB。
+use gdb.
 
 76
 00:04:56,080 --> 00:05:02,270
-引起过程的信号列表可在信号（7）中找到卸载堆芯。
+A list of the signals which cause a process to dump core can be found in signal(7).
 
 77
 00:05:02,270 --> 00:05:04,010
-好的，很有趣。
+Ok, interesting.
 
 78
 00:05:04,009 --> 00:05:09,999
@@ -312,257 +312,257 @@ strlen计算所有字节直到in find空字节。
 
 79
 00:05:10,000 --> 00:05:13,530
-为了正确理解这一点，我们还需要试着理解什么是信号。
+So to understand this properly, let’s also try to understand what signals are.
 
 80
 00:05:13,529 --> 00:05:17,779
-注意信号后括号中的7，这参考正确的页面很重要
+注意信号后括号中的7，这对于参考正确的页面很重要。
 
 81
 00:05:17,779 --> 00:05:19,489
-关于手册中的信号。
+about signal in the manual.
 
 82
 00:05:19,490 --> 00:05:21,500
-所以"曼7信号"。
+so `man 7 signal`.
 
 83
 00:05:21,500 --> 00:05:25,480
-让我们看看标准信号再往下走。
+Let’s have a look at the standard signals further down.
 
 84
 00:05:25,479 --> 00:05:29,009
-Linux支持列出的标准信号下面。
+Linux supports the standard signals listed below.
 
 85
 00:05:29,009 --> 00:05:34,599
-有几个信号号与体系结构有关，如"值"栏所示。
+Several signal numbers are architecture-dependent, as indicated in the "Value" column.
 
 86
 00:05:34,599 --> 00:05:38,539
-mhh，所以信号在不同的体系结构。
+Mhh, so signals can be different on different architectures.
 
 87
 00:05:38,539 --> 00:05:43,779
-因此，如果它是Intel、ARM或SPARC处理器这可能会有所不同，bug通常
+因此，如果它是一个Intel、ARM或SPARC处理器，这可能会有所不同，bug通常
 
 88
 00:05:43,779 --> 00:05:49,649
-这告诉我们，信号可能有一些处理非常低级别的CPU和硬件
+这告诉我们，信号可能与非常低级别的CPU和硬件有关。
 
 89
 00:05:49,649 --> 00:05:50,649
-特征。
+features.
 
 90
 00:05:50,649 --> 00:05:53,219
-让我们看看信号列表。
+Let’s have a look at the list of signals.
 
 91
 00:05:53,219 --> 00:05:58,939
-例如，sigint是您使用的信号很多次，这是来自
+例如，sigint是一个多次使用的信号，它是来自
 
 92
 00:05:58,940 --> 00:06:02,720
-键盘，当你按下控制+C
+the keyboard, this happens when you press control+C.
 
 93
 00:06:02,719 --> 00:06:07,709
-或者记住你有时怎么会犯法当您跳转到无效代码时的指令，
+或者记住，当你跳入无效的代码时，你有时是如何得到非法指令的，
 
 94
 00:06:07,710 --> 00:06:10,440
-一个信号，这也是一个信号。
+a SIGILL, that’s also a signal.
 
 95
 00:06:10,439 --> 00:06:14,939
-很明显是由无法理解的CPU
+很明显，这一定是由CPU触发的，它无法理解
 
 96
 00:06:14,939 --> 00:06:15,939
-指令。
+instruction.
 
 97
 00:06:15,939 --> 00:06:19,679
-或者我们最喜欢的系统调用，sigsegv，一个segfault。
+Or our favorite syscall, SIGSEGV, a segfault.
 
 98
 00:06:19,679 --> 00:06:24,219
-从一个illegel记忆参考中导出，例如，当您跳转到不存在的
+从illigel内存引用触发，例如当您跳转到不存在的
 
 99
 00:06:24,219 --> 00:06:25,219
-记忆。
+memory.
 
 100
 00:06:25,219 --> 00:06:27,719
-或者尝试写入不存在的内存。
+Or try to write to non existing memory.
 
 101
 00:06:27,720 --> 00:06:33,990
-这显然也是由低水平触发的硬件当你试图执行坏的东西。
+Which obviously is also triggered by low level hardware when you try to execute bad stuff.
 
 102
 00:06:33,990 --> 00:06:39,560
-这里的这条线也很有趣：信号Sigkill和SigStop无法捕获、阻止，
+这里的这一行也很有趣：信号sigkill和sigstop不能被捕获、阻止，
 
 103
 00:06:39,559 --> 00:06:40,779
-或者忽略。
+or ignored.
 
 104
 00:06:40,779 --> 00:06:44,839
-这意味着这些信号中的大部分都能被捕捉到通过这个过程。
+This means most of these signals can be caught by the process.
 
 105
 00:06:44,839 --> 00:06:51,329
-你以前也有过这样的经历，当你在gdb中运行一个进程时，你忘记了
+在GDB中运行一个进程时，您实际上也经历过这种情况，但是您忘记了
 
 106
 00:06:51,330 --> 00:06:56,260
-设置断点的过程运行时，可以使用ctrl+c返回
+若要设置断点且进程正在运行，可以使用ctrl+c返回
 
 107
 00:06:56,259 --> 00:06:57,259
-进入GDB。
+into gdb.
 
 108
 00:06:57,259 --> 00:07:02,309
-您向进程发送了一个sigint，退出时，将信号处理程序设置为
+您向进程发送了一个sigint，该进程将信号处理程序设置为
 
 109
 00:07:02,309 --> 00:07:05,219
-抓住它并执行不同的操作。
+catch it and perform a different action.
 
 110
 00:07:05,220 --> 00:07:09,780
-所以信号有点像中断由内核处理。
+So signals are kind of like interrupts for processes by the kernel.
 
 111
 00:07:09,779 --> 00:07:15,349
-某些事件，如内存访问失败，按ctrl+c或同时终止进程会导致
+某些事件（如内存访问失败、按ctrl+c或同时终止进程）会导致
 
 112
 00:07:15,349 --> 00:07:18,469
-向进程发送信号的内核。
+the kernel to send a signal to a process.
 
 113
 00:07:18,469 --> 00:07:23,589
-未处理的信号通常会导致进程去死，但一个过程也可以设置信号
+未处理的信号通常会导致进程死亡，但进程也可以设置信号
 
 114
 00:07:23,589 --> 00:07:28,059
-处理程序在执行某些操作时接收这些信号。
+handlers to perform certain actions when it receives these signals.
 
 115
 00:07:28,059 --> 00:07:29,059
-所以。
+So.
 
 116
 00:07:29,059 --> 00:07:35,099
-在我们的例子中，当我们溢出栈上的EIP时，函数返回一个分段错误
+在我们的例子中，当我们在堆栈上溢出EIP时，函数返回一个分段错误
 
 117
 00:07:35,099 --> 00:07:38,019
-发出并触发信号。
+is raised and a signal is triggered.
 
 118
 00:07:38,020 --> 00:07:41,050
-进程无法处理，因此被终止通过内核。
+The process doesn’t handle it and is killed by the kernel.
 
 119
 00:07:41,050 --> 00:07:46,430
-同时创建核心转储文件保存导致
+同时创建一个核心转储文件来保存导致
 
 120
 00:07:46,429 --> 00:07:47,649
-这个信号。
+this signal.
 
 121
 00:07:47,649 --> 00:07:50,599
-现在让我们用gdb来看看发生了什么。
+So now let’s use gdb to see what happened.
 
 122
 00:07:50,599 --> 00:07:57,469
-就像在您简单地指定二进制文件之前作为第一个参数，但是你要把核心
+像前面一样，只需将二进制文件指定为第一个参数，然后添加核心文件
 
 123
 00:07:57,469 --> 00:07:58,539
-文件作为第二个参数。
+file as a second argument.
 
 124
 00:07:58,539 --> 00:08:04,439
-当gdb打开时，你会立刻看到进程因以下原因终止的消息
+当gdb打开时，会立即看到进程由于
 
 125
 00:08:04,439 --> 00:08:07,499
-信号11，分段故障。
+signal 11, a segmentation fault.
 
 126
 00:08:07,499 --> 00:08:11,449
-我们还可以查看寄存器并查看EIP的值。
+We can also look at the registers and see the value of eip.
 
 127
 00:08:11,449 --> 00:08:14,199
-这些绝对是我们的角色已经进入。
+And those are definitely our characters we have entered.
 
 128
 00:08:14,199 --> 00:08:17,849
-我们还可以通过检查堆栈指针。
+We can also explore the stack with examining the stack pointer.
 
 129
 00:08:17,849 --> 00:08:22,779
-你可以看到拥有这些核心文件非常有用。
+You can see that having these core files is extremely useful.
 
 130
 00:08:22,780 --> 00:08:27,720
-现在我们知道哪些字符导致了溢出现在我们可以计算到
+现在我们知道哪些字符导致了溢出，现在我们可以计算到
 
 131
 00:08:27,719 --> 00:08:30,249
-堆栈上的指令指针。
+instruction pointer on the stack.
 
 132
 00:08:30,249 --> 00:08:35,729
-另一种进一步调试的方法是使用要附加到已运行的进程的gdb。
+Another way to debug this further is to use gdb to attach to the already running process.
 
 133
 00:08:35,729 --> 00:08:37,749
-确保你是根。
+Make sure you are root.
 
 134
 00:08:37,750 --> 00:08:42,430
-只需找到进程ID并使用-P和PID。
+Simply find the process id and call gdb with -p and the pid.
 
 135
 00:08:42,430 --> 00:08:48,080
-如您所见，进程当前处于接受等待客户端连接。
+As you can see the process is currently in accept waiting for a client to connect.
 
 136
 00:08:48,079 --> 00:08:51,169
-但是当我们发送POC溢出时，我们不会参见SigFault。
+But when we send our PoC overflow, we don’t see a segfault.
 
 137
 00:08:51,170 --> 00:08:55,500
-那是因为如果你记得，这个过程创建一个新进程fork以处理
+这是因为如果您还记得，这个过程会创建一个分叉，一个新的过程，来处理
 
 138
 00:08:55,500 --> 00:08:56,500
-客户端。
+client.
 
 139
 00:08:56,500 --> 00:08:58,330
-我们总是呆在父母身边。
+And we always stay in the parent.
 
 140
 00:08:58,329 --> 00:09:03,559
-但是我们可以在gdb中设置follow fork模式给孩子，当我们现在继续发送
+但是我们可以在gdb中将follow fork模式设置为child，当我们现在继续并发送
 
 141
 00:09:03,560 --> 00:09:05,970
-长的输入，我们得到了segfault。
+the long input, we get the segfault.
 
 142
 00:09:05,970 --> 00:09:10,400
-太棒了，现在一切都准备就绪了充分开发。
+Awesome, now you have everything in place to develop the full exploit.
 

@@ -1,531 +1,531 @@
 1
 00:00:06,270 --> 00:00:10,630
-在我制作的第一集中，我说过我们将使用Linux，因为它允许我们拥有
+在我写的第一集里，我说我们将使用Linux，因为它允许我们
 
 2
 00:00:10,630 --> 00:00:12,920
-看看Linux内核源代码。
+a look at the Linux Kernel source code.
 
 3
 00:00:12,920 --> 00:00:15,390
-在本视频中，我们将了解系统调用是。
+In this video we will learn what syscalls are.
 
 4
 00:00:15,390 --> 00:00:20,630
-我们将尝试了解用户模式和内核模式意味着，看看
+我们将通过观察来了解用户模式和内核模式的含义。
 
 5
 00:00:20,630 --> 00:00:24,280
-特定的内核函数copy_from_user。
+a specific kernel function copy_from_user.
 
 6
 00:00:24,280 --> 00:00:28,390
-如果你曾经想过它意味着什么拥有更技术性的操作系统
+如果你曾经想知道拥有一个技术性更强的操作系统意味着什么
 
 7
 00:00:28,390 --> 00:00:31,670
-方式，我希望我能告诉你一些非常有趣的事情东西。
+way, I hope I can show you some very interesting stuff.
 
 8
 00:00:31,670 --> 00:00:35,550
-您可能已经看过用户模式的图片和内核模式。
+You may have seen pictures where it says user-mode and kernel-mode.
 
 9
 00:00:35,550 --> 00:00:38,350
-或者那些带有ring-0，ring-1等的圈子向前。
+Or those circles with ring-0, ring-1 and so forth.
 
 10
 00:00:38,350 --> 00:00:43,440
-他们在学校甚至是在学校介绍这些东西作为一个知道如何编程的孩子，我没有
+他们在学校介绍这些东西，即使是一个知道如何编程的孩子，我也没有
 
 11
 00:00:43,440 --> 00:00:46,030
-想象一下这究竟意味着什么。
+imagination of what that actually means.
 
 12
 00:00:46,030 --> 00:00:50,930
-你甚至可能听说过系统调用这两个世界之间的界面......
+You may even have heard that syscalls are an interface between those two worlds...
 
 13
 00:00:50,930 --> 00:00:53,860
-那么让我们先来看看是什么类型的系统调用存在。
+So let’s start by looking at what kind of syscalls exist.
 
 14
 00:00:53,860 --> 00:00:57,220
-再次，您可以阅读有关系统调用的内容linux手册。
+And again, you can read about syscalls in the linux manual.
 
 15
 00:00:57,220 --> 00:00:58,280
-所以'man syscalls'。
+So ‘man syscalls’.
 
 16
 00:00:58,280 --> 00:01:03,810
-它在这里说，"系统调用是基础应用程序和Linux之间的接口
+这里说，“系统调用是应用程序和Linux之间的基本接口
 
 17
 00:01:03,809 --> 00:01:10,539
-内核。"和"通常是系统调用不是直接调用，而是通过包装器调用
+内核。“和”系统调用通常不是直接调用的，而是通过包装器调用的。
 
 18
 00:01:10,540 --> 00:01:12,070
-glibc中的函数"。
+functions in glibc”.
 
 19
 00:01:12,070 --> 00:01:16,910
-"通常，glibc包装器功能非常好瘦，除了复制之外做很少的工作
+“通常glibc包装器函数很薄，除了复制之外几乎不做任何工作。
 
 20
 00:01:16,909 --> 00:01:21,509
-调用之前的正确寄存器的参数系统调用"。
+arguments to the right registers before invoking the system call”.
 
 21
 00:01:21,509 --> 00:01:23,089
-调用系统调用。
+Invoking the system call.
 
 22
 00:01:23,090 --> 00:01:24,090
-Mhhh ...
+Mhhh...
 
 23
 00:01:24,090 --> 00:01:26,740
-我们很快就会发现这意味着什么。
+We will find out what that means soon.
 
 24
 00:01:26,740 --> 00:01:30,320
-再向下，我们找到了一个巨大的可用列表系统调用。
+Further down we find a huge list of available system calls.
 
 25
 00:01:30,320 --> 00:01:36,370
-我在之前的视频中提到了libc功能printf，只是一个花哨的包装
+我在前面的视频中提到libc函数printf只是一个花哨的包装
 
 26
 00:01:36,369 --> 00:01:37,639
-系统调用写。
+the syscall write.
 
 27
 00:01:37,639 --> 00:01:42,799
-你可以看到，当我们使用该程序时strace跟踪所有系统调用。
+And you can see that, when we use the program strace to trace all system calls.
 
 28
 00:01:42,799 --> 00:01:46,529
-它没有显示printf，而是向我们展示了写作。
+Instead of showing printf, it shows us write.
 
 29
 00:01:46,530 --> 00:01:50,410
-写的联机帮助页说它需要3个参数。
+The manpage of write says it takes 3 parameters.
 
 30
 00:01:50,409 --> 00:01:54,649
-首先是文件描述符，然后是地址到缓冲区和计数。
+First the file descriptor, then an address to a buffer and a count.
 
 31
 00:01:54,649 --> 00:01:58,399
-那么让我们创建一个简单的C程序调用此功能。
+So let’s create a simple C program that calls this function.
 
 32
 00:01:58,399 --> 00:02:01,159
-第一个参数是文件描述符。
+The first parameter is a file descriptor.
 
 33
 00:02:01,159 --> 00:02:05,089
-我们将在另一个视频中讨论这个价值，但我们希望它是1。
+We will talk about that value in another video, but we want it to be 1.
 
 34
 00:02:05,090 --> 00:02:10,400
-这是标准的文件描述符输出。
+Which is the file descriptor for the standard output.
 
 35
 00:02:10,399 --> 00:02:15,049
-对于第二个参数，我们需要一个地址在内存中指向一个字符串。
+For the second parameter we want an address in memory that points to a string.
 
 36
 00:02:15,050 --> 00:02:20,060
-我们可以在这里编写我们的字符串，即编译器会为它和地方找到一个记忆的地方
+我们可以在这里简单地编写字符串，编译器会在内存中为它找到一个位置并放置
 
 37
 00:02:20,060 --> 00:02:22,310
-这里的地址。
+the address of it here.
 
 38
 00:02:22,310 --> 00:02:24,530
-最后一个参数将是长度。
+And the last parameter will be the length.
 
 39
 00:02:24,530 --> 00:02:29,920
-所以在我们的案例中5。
+So in our case 5.
 
 40
 00:02:29,920 --> 00:02:33,980
-现在用-d打开它以调试它。
+Now open it in radare with -d to debug it.
 
 41
 00:02:33,980 --> 00:02:37,070
-分析所有并寻求main 函数。
+Analyse all and seek to the main function.
 
 42
 00:02:37,070 --> 00:02:42,310
-然后打印该函数并放置一个断点用db编写。
+Then print the function and place a breakpoint at the write with db.
 
 43
 00:02:42,310 --> 00:02:48,540
-然后直流启动程序并切换到V！的视觉视图。
+Then dc to start the program and switch to a visual view with V!.
 
 44
 00:02:48,540 --> 00:02:52,150
-使用s，您现在可以遵循此写入功能。
+With s you can now follow this write function.
 
 45
 00:02:52,150 --> 00:02:54,230
-我们遵循一些奇怪的东西。
+We follow some weird stuff.
 
 46
 00:02:54,230 --> 00:02:56,290
-这是程序链接表。
+This is the Procedure Linkage Table.
 
 47
 00:02:56,290 --> 00:02:57,410
-plt部分。
+The plt section.
 
 48
 00:02:57,410 --> 00:02:59,940
-它有时也被称为功能蹦床。
+It’s also sometimes called function trampoline.
 
 49
 00:02:59,940 --> 00:03:00,940
-再次。
+Again.
 
 50
 00:03:00,940 --> 00:03:02,560
-另一个视频的主题。
+A topic for another video.
 
 51
 00:03:02,560 --> 00:03:05,790
-现在，我们在某些时候会获得更多代码。
+Now at some point we reach some more code.
 
 52
 00:03:05,790 --> 00:03:08,900
-这是libc的实际代码图书馆。
+This is now the actual code from the libc library.
 
 53
 00:03:08,900 --> 00:03:12,120
-现在按s来逐步完成这笔巨款代码
+Now press s to step through this huge amount of code.
 
 54
 00:03:12,120 --> 00:03:14,240
-我快进并切了一下。
+I fast forward and cut a bit.
 
 55
 00:03:14,240 --> 00:03:17,010
-这个libc包装器里有很多东西。
+There is sooo much stuff in this libc wrapper.
 
 56
 00:03:17,010 --> 00:03:21,430
-但到了最后它到达了有趣的部分。
+But at some point in the end it reaches the interesting part.
 
 57
 00:03:21,430 --> 00:03:22,430
-这里是。
+Here it is.
 
 58
 00:03:22,430 --> 00:03:27,760
-它将1移入eax寄存器然后来自系统调用指令。
+It moves 1 into the eax register and then comes the syscall instruction.
 
 59
 00:03:27,760 --> 00:03:33,570
-进入intel汇编程序参考的高峰告诉我们，这是"快速致电特权
+英特尔汇编程序引用的峰值告诉我们，这是“对特权的快速调用”
 
 60
 00:03:33,570 --> 00:03:35,790
-0级系统程序。"
+0级系统程序。”
 
 61
 00:03:35,790 --> 00:03:39,200
-并拥有操作码0f 05。
+and has the opcode 0f 05.
 
 62
 00:03:39,200 --> 00:03:45,790
-它还说"它是通过加载RIP来实现的来自IA32_LSTAR MSR"。
+It also says “It does so by loading RIP from the IA32_LSTAR MSR”.
 
 63
 00:03:45,790 --> 00:03:49,300
-MSR代表模型特定寄存器。
+MSR stands for model specific register.
 
 64
 00:03:49,300 --> 00:03:54,610
-就像将RIP设置为另一个的跳转一样在其他地方继续执行的价值，
+所以就像一个跳转，该跳转将集拆分为另一个值，以便在其他地方继续执行，
 
 65
 00:03:54,610 --> 00:03:58,470
-它从特定于模型的寄存器加载RIP（MSR）。
+it loads RIP from a model specific register (MSR).
 
 66
 00:03:58,470 --> 00:04:04,200
-此地址是在此特殊配置中配置的在启动期间的某个时刻注册
+这个地址是在启动
 
 67
 00:04:04,200 --> 00:04:07,510
-系统通过WRMSR指令。
+system through the WRMSR instruction.
 
 68
 00:04:07,510 --> 00:04:12,540
-但要使用此指令，您必须这样做在特权级别0。
+But to use this instruction you have to be in privilege level 0.
 
 69
 00:04:12,540 --> 00:04:17,150
-所以你不能从一个简单的C程序设置它，因为你处于用户模式，哪个
+所以你不能从一个简单的C程序来设置它，因为你在用户模式下，它
 
 70
 00:04:17,150 --> 00:04:19,180
-是特权等级3。
+is privilege level 3.
 
 71
 00:04:19,180 --> 00:04:24,710
-如果你现在想知道如何进入等级0来自等级3，然后是答案
+如果你现在想知道你如何从3级进入0级，那么答案是
 
 72
 00:04:24,710 --> 00:04:27,160
-是，通过像syscall这样的指令。
+is, through instructions like syscall.
 
 73
 00:04:27,160 --> 00:04:31,400
-但是你无法控制将要执行的内容当你切换到0级。
+But then you cannot control what will be executed when you switch to level 0.
 
 74
 00:04:31,400 --> 00:04:34,280
-因为它会跳转到预定义的地址。
+Because it will jump to a predefined address.
 
 75
 00:04:34,279 --> 00:04:39,529
-所以你现在得到了不同的意义特权模式，级别或环？
+那么你现在明白拥有不同的特权模式、级别或环意味着什么了吗？
 
 76
 00:04:39,530 --> 00:04:44,080
-当您打开计算机时，CPU会启动在0级。
+When you turn on your computer the CPU starts in level 0.
 
 77
 00:04:44,080 --> 00:04:50,720
-然后内核可以配置像IA32_LSTAR MSR注册地址通过
+然后，内核可以通过一个地址配置诸如ia32 lstar msr寄存器之类的东西。
 
 78
 00:04:50,719 --> 00:04:55,859
-WRMSR指令。
+the WRMSR instruction.
 
 79
 00:04:55,860 --> 00:05:00,170
-然后将CPU权限下放到级别
+然后将CPU的特权降低到级别
 3.
 
 80
 00:05:00,169 --> 00:05:03,149
-现在硬件被锁定了。
+Now the hardware is kinda locked down.
 
 81
 00:05:03,150 --> 00:05:06,020
-我们无法重新配置此寄存器。
+We cannot reconfigure this register.
 
 82
 00:05:06,020 --> 00:05:07,820
-我们无法重新配置硬件。
+We cannot reconfigure the hardware.
 
 83
 00:05:07,819 --> 00:05:14,199
-我们只能通过a再次输入0级系统调用，但我们无法控制将会是什么
+我们只能通过系统调用再次输入0级，但不能控制
 
 84
 00:05:14,199 --> 00:05:17,659
-执行，因为该地址是固定的。
+executed, because that address is fixed.
 
 85
 00:05:17,660 --> 00:05:19,420
-是否有意义？
+这有道理吗？
 
 86
 00:05:19,419 --> 00:05:20,419
-所以aaaanyway ...
+So aaaanyway...
 
 87
 00:05:20,419 --> 00:05:23,019
-让我们回到syscall调用。
+Let’s come back to the syscall invocation.
 
 88
 00:05:23,020 --> 00:05:28,850
-我们做的是，我们在寄存器中加载一个数字，在我们的例子中它是1，然后我们系统调用
+我们要做的是，在寄存器中加载一个数字，在我们的情况下是1，然后我们进行系统调用
 
 89
 00:05:28,849 --> 00:05:33,489
-通过跳转到a进入权限级别0内核中的固定地址。
+to enter privilege level 0 by jumping to a fixed address in the kernel.
 
 90
 00:05:33,490 --> 00:05:36,390
-并且内核从寄存器中获取数字。
+And the kernel takes the number from the register.
 
 91
 00:05:36,389 --> 00:05:38,829
-它知道是哪个系统调用。
+And it knows which syscall that is.
 
 92
 00:05:38,830 --> 00:05:43,300
-所以这张漂亮的桌子向我们展示了write syscall的编号为1。
+So this nice table here shows us that the write syscall has the number 1.
 
 93
 00:05:43,300 --> 00:05:48,850
-所以内核从这样的表中知道，它必须执行什么。
+So the kernel knows from a table like this, what it has to execute.
 
 94
 00:05:48,849 --> 00:05:52,419
-它在源代码文件中实现read_write.c
+它在源代码文件read-write.c中实现。
 
 95
 00:05:52,419 --> 00:05:55,759
-在这里。
+And here it is.
 
 96
 00:05:55,759 --> 00:06:00,019
-这就是将在内核中执行的内容当你调用write syscall时。
+So that is what will be executed in the kernel when you invoke the write syscall.
 
 97
 00:06:00,020 --> 00:06:05,620
-有一本很棒的免费书叫做Linux设备驱动程序，详细介绍
+有一本很棒的免费书叫做Linux设备驱动程序，详细介绍了
 
 98
 00:06:05,620 --> 00:06:07,390
-内核是如何工作的。
+how the Kernel works.
 
 99
 00:06:07,389 --> 00:06:11,199
-特别是如何编写设备驱动程序和内核模块。
+Especially how to write a device driver and kernel modules.
 
 100
 00:06:11,199 --> 00:06:16,339
-在第3章第7节中，它的内容如下："scull需要读写的代码
+在第3章第7节中，它写道：“用于读写scull需求的代码
 
 101
 00:06:16,340 --> 00:06:21,550
-将整段数据复制到或从中复制用户地址空间。
+to copy a whole segment of data to or from the user address space.
 
 102
 00:06:21,550 --> 00:06:26,790
-此功能由以下提供内核函数，它复制任意一个
+此功能由以下内核函数提供，这些函数复制任意
 
 103
 00:06:26,789 --> 00:06:32,019
-字节数组，坐在最核心的位置读写实现"
+字节数组，位于大多数读写实现的核心”
 
 104
 00:06:32,020 --> 00:06:36,460
-首先，用户地址空间意味着什么。
+So first, what does user address space mean.
 
 105
 00:06:36,460 --> 00:06:41,320
-也许当你调试一些程序时gdb，你想知道它是怎样的，每一个
+也许当你用gdb调试一些程序时，你想知道它是怎样的，每一个
 
 106
 00:06:41,319 --> 00:06:44,529
-程序似乎使用相同的地址。
+program seems to use the same addresses.
 
 107
 00:06:44,530 --> 00:06:46,420
-代码始终位于相同的地址。
+Code is always at the same addresses.
 
 108
 00:06:46,419 --> 00:06:48,059
-堆栈始终位于相同的地址。
+Stack is always at the same addresses.
 
 109
 00:06:48,059 --> 00:06:49,789
-这没有意义。
+That doesn’t make sense.
 
 110
 00:06:49,790 --> 00:06:52,470
-所有程序如何使用相同的地址在记忆中？
+所有程序如何使用内存中相同的地址？
 
 111
 00:06:52,469 --> 00:06:55,549
-他们不会互相覆盖吗？
+它们不会互相覆盖吗？
 
 112
 00:06:55,550 --> 00:06:57,570
-这就是我们拥有MMU的原因。
+This is why we have a MMU.
 
 113
 00:06:57,569 --> 00:06:59,439
-内存管理单元。
+A Memory Management Unit.
 
 114
 00:06:59,439 --> 00:07:04,399
-内核使用特殊CPU设置MMU指令和配置寄存器和
+内核使用特殊的CPU指令和配置寄存器设置MMU，并且
 
 115
 00:07:04,400 --> 00:07:05,570
-等等。
+so forth.
 
 116
 00:07:05,569 --> 00:07:09,709
-这告诉MMU如何翻译虚拟和物理地址。
+And this tells the MMU how to translate between virtual and physical addresses.
 
 117
 00:07:09,710 --> 00:07:16,040
-所以当你使用mov eax指令时，[0x08004200]在您的C程序中，MMU将知道如何操作
+因此，当您在C程序中使用指令mov eax，[0x08004200]时，mmu将知道如何
 
 118
 00:07:16,039 --> 00:07:21,939
-为给定的流程翻译此地址到RAM中的实际物理地址。
+translate this address for a given process to an actual physical address in your RAM.
 
 119
 00:07:21,939 --> 00:07:24,369
-所以它可能会请求地址0x7f527320。
+So it might request address 0x7f527320.
 
 120
 00:07:24,370 --> 00:07:29,310
-但你不必关心这一点。
+But you don’t have to care about that.
 
 121
 00:07:29,310 --> 00:07:32,370
-魔术发生在硬件内部。
+The magic happens deep inside the hardware.
 
 122
 00:07:32,369 --> 00:07:37,319
-这允许我们在没有的情况下编写程序考虑哪些地址仍然是免费的。
+This allows us to write programs without having to think about which addresses are still free.
 
 123
 00:07:37,319 --> 00:07:41,549
-所以，当你进入内核时，你有了你可能想要用系统调用进入它
+因此，当您在内核中时，在使用系统调用输入后，您可能需要
 
 124
 00:07:41,550 --> 00:07:46,950
-从用户地址空间复制一些数据，例如，把它写在别的地方。
+to copy some data from user address space, for example to write it somewhere else.
 
 125
 00:07:46,949 --> 00:07:50,559
-为此，您可以使用copy_from_user功能。
+To do this you can use the copy_from_user function.
 
 126
 00:07:50,559 --> 00:07:54,509
-我认为这可能是一个有趣的功能跟踪内核源代码
+我认为通过内核源代码跟踪到
 
 127
 00:07:54,509 --> 00:07:58,859
-感受一下如何操作的代码系统看起来像。
+get a feeling how the code of an operating system looks like.
 
 128
 00:07:58,860 --> 00:08:03,100
-那么让我们使用Linux Cross Reference，因为它可以让我们轻松搜索
+所以让我们使用Linux交叉引用，因为它允许我们轻松地搜索
 
 129
 00:08:03,099 --> 00:08:04,099
-标签。
+labels.
 
 130
 00:08:04,099 --> 00:08:08,489
-所以让我们从寻找功能开始吧调用copy_from_user。
+So let’s start by looking for the function copy_from_user.
 
 131
 00:08:08,490 --> 00:08:11,910
-我们得到一个包含多个地方的列表功能已定义。
+And we get a list with multiple places this function is defined.
 
 132
 00:08:11,909 --> 00:08:13,999
-那太奇怪了。
+That is so weird.
 
 133
 00:08:14,000 --> 00:08:16,780
@@ -533,325 +533,325 @@ WRMSR指令。
 
 134
 00:08:16,780 --> 00:08:22,270
-好吧，如果仔细观察文件路径，你会注意到每个不同的CPU架构
+如果仔细观察文件路径，就会发现每个不同的CPU体系结构
 
 135
 00:08:22,270 --> 00:08:24,150
-有它自己的文件夹。
+has it’s own folder.
 
 136
 00:08:24,150 --> 00:08:27,650
-所以你可以在这里看到ARM，适用于您可以在其中找到的处理器
+所以你可以在这里看到ARM，对于你可以在
 
 137
 00:08:27,650 --> 00:08:31,030
-手机或Playstation使用的POWERPC
+由PlayStation使用的智能手机或PowerPC
 
 138
 00:08:31,030 --> 00:08:36,700
-3或任天堂Wii和x86，其中可能是您计算机的架构
+3或者任天堂Wii和x86，这可能是你电脑的架构。
 
 139
 00:08:36,700 --> 00:08:38,140
-马上。
+right now.
 
 140
 00:08:38,140 --> 00:08:40,410
-所以代码变得非常疯狂。
+So the code get’s pretty crazy.
 
 141
 00:08:40,410 --> 00:08:42,020
-我不太了解它。
+And I don’t know a lot about it.
 
 142
 00:08:42,020 --> 00:08:45,710
-但是，让我们按照main 函数在这里，忽略检查和周围的东西
+但是，让我们按照这里的主要功能，忽略检查和周围的东西。
 
 143
 00:08:45,710 --> 00:08:46,940
-它。
+it.
 
 144
 00:08:46,940 --> 00:08:50,900
-因此copy_from_user调用下划线copy_from_user。
+So copy_from_user calls an underscore copy_from_user.
 
 145
 00:08:50,900 --> 00:08:56,940
-该函数调用from上的access_ok参数，是用户指定的地址，
+该函数调用来自参数的access_ok，该参数是用户指定的地址，
 
 146
 00:08:56,940 --> 00:09:01,250
-在我们的例子中，我们想要的字符串的地址来写。
+in our case the address of the string we wanted to write.
 
 147
 00:09:01,250 --> 00:09:06,970
-并检查这个特定的过程被允许从地址读取。
+And this checks if this particular process is allowed to read from the address.
 
 148
 00:09:06,970 --> 00:09:11,350
-想象一下，如果该过程试图阅读一些来自另一个过程的秘密。
+Imagine if the process tries to read some secrets from another process.
 
 149
 00:09:11,350 --> 00:09:15,850
-如果一切都很好，它会调用下划线下划线copy_from_user。
+And if everything is fine it calls underscore underscore copy_from_user.
 
 150
 00:09:15,850 --> 00:09:20,200
-呃...现在它似乎分裂了32位或64位。
+Uhh… now it seems to split up in either 32bit or 64bit.
 
 151
 00:09:20,200 --> 00:09:25,070
-而且因为我们有一个64位的ubuntu linux，让我们走这条路。
+And because we have a 64bit ubuntu linux, let’s follow that path.
 
 152
 00:09:25,070 --> 00:09:28,940
-这看起来就像是copy_from_user_nocheck的包装器。
+This looks like just a wrapper around copy_from_user_nocheck.
 
 153
 00:09:28,940 --> 00:09:32,620
-表示以下功能不会再次检查访问权限。
+Indicating that the following functions won’t check the access rights again.
 
 154
 00:09:32,620 --> 00:09:34,870
-但幸运的是，内核已经做到了。
+But luckily the kernel already did that.
 
 155
 00:09:34,870 --> 00:09:39,700
-好的，我们遵循这一点，我们到达一个漂亮功能强大。
+Ok we follow that and we arrive at a pretty big function.
 
 156
 00:09:39,700 --> 00:09:45,080
-所以这里有一个很大的switch-case语句似乎检查我们想要读取的大小
+所以这里有一个很大的开关盒语句，它似乎检查了我们想要读取的大小
 
 157
 00:09:45,080 --> 00:09:46,770
-用户空间。
+the user space.
 
 158
 00:09:46,770 --> 00:09:50,520
-所以我们假设我们只想读取1个字节来自用户空间。
+So let’s say we just wanted to read 1 byte from userspace.
 
 159
 00:09:50,520 --> 00:09:53,830
-我们将在这种情况下1：在这里。
+We would be in this case 1: here.
 
 160
 00:09:53,830 --> 00:09:57,710
-所以get_user_asm是一个预处理器宏。
+So get_user_asm is a preprocessor macro.
 
 161
 00:09:57,710 --> 00:10:00,810
-这是如何编译C文件的分阶段。
+This get’s into how a C file is compiled in stages.
 
 162
 00:10:00,810 --> 00:10:02,150
-但它实际上非常简单。
+But it’s actually very simple.
 
 163
 00:10:02,150 --> 00:10:05,050
-这个陈述只是一个简单的复制和替换。
+This statement is just a simple copy and replace.
 
 164
 00:10:05,050 --> 00:10:09,940
-所以这意味着定义了这个代码在这里，只是简单地复制在该位置
+所以这意味着这里定义的代码只是简单地复制在
 
 165
 00:10:09,940 --> 00:10:14,830
-它是在编译器启动之前使用的将其编译为机器代码。
+it was used earlier, before the compiler starts to compile it to machine code.
 
 166
 00:10:14,830 --> 00:10:18,600
-所以你基本上可以像标准一样阅读它C功能。
+So you can basically just read it like a standard C function.
 
 167
 00:10:18,600 --> 00:10:22,670
-get_user_asm定义了一些实际的CPU指令。
+And get_user_asm defines some actual CPU instructions.
 
 168
 00:10:22,670 --> 00:10:28,320
-这一举动就是指令将数据从用户空间移动到变量中
+这里的移动是将数据从用户空间移动到变量中的指令
 
 169
 00:10:28,320 --> 00:10:29,380
-这里。
+here.
 
 170
 00:10:29,380 --> 00:10:32,490
-所以itype和rtype来自参数上面这儿。
+So itype and rtype are from the parameters up here.
 
 171
 00:10:32,490 --> 00:10:34,880
-并且他们被设置为"b"为单一字节。
+And they were set to “b” for a single byte.
 
 172
 00:10:34,880 --> 00:10:39,690
-并且在那些预处理器声明的方式工作，你只需用b替换这个文本。
+And in the way how those preprocessor statements work, you just replace this text with b.
 
 173
 00:10:39,690 --> 00:10:44,430
-所以实际的指令看起来像'movb％2，％b1'。
+So the actual instruction would look like ‘movb %2,%b1’.
 
 174
 00:10:44,430 --> 00:10:53,070
-嗯所以这是＆amp; t汇编语法所以它意味着它移动％2进入％b1。
+Eh so this is at&amp;t assembler syntax so it means it moves whatever %2 is into %b1.
 
 175
 00:10:53,070 --> 00:10:57,280
-现在这是C inline汇编语法和它指的是定义的变量
+现在这是C内联汇编程序语法，它引用定义的变量
 
 176
 00:10:57,280 --> 00:10:58,450
-在这里
+down here.
 
 177
 00:10:58,450 --> 00:11:01,720
-所以百分比2指的是第三个参数。
+So percentage 2 refers to the third parameter.
 
 178
 00:11:01,720 --> 00:11:03,590
-0,1,2。
+0, 1, 2.
 
 179
 00:11:03,590 --> 00:11:06,400
-哪个是我们要移动数据的地址从。
+Which is the address we want to move data from.
 
 180
 00:11:06,400 --> 00:11:10,250
-我们想把它移到％1，即x。
+And we want to move it into %1, which is x.
 
 181
 00:11:10,250 --> 00:11:15,080
-这就是我们想要移动它的位置至。
+And that is the location we want to move it to.
 
 182
 00:11:15,080 --> 00:11:21,920
-此举包含了STAC和CLAC代表设置和清除交流寄存器。
+The move is wrapped with STAC and CLAC, which stands for set and clear ac register.
 
 183
 00:11:21,920 --> 00:11:25,790
-它与SMAP有关，这是一种反剥削特征。
+And it has to do with SMAP, an anti exploitation feature.
 
 184
 00:11:25,790 --> 00:11:28,760
-并且有来自该指令的原始操作码。
+And there are the raw opcodes from that instruction.
 
 185
 00:11:28,760 --> 00:11:34,030
-在移动的下方，我们看到有关节的内容fixup和汇编器异常表。
+And below the move we see something with section fixup and assembler exception table.
 
 186
 00:11:34,030 --> 00:11:39,270
-这涉及到内核如何处理硬件例外。
+That goes into how the kernel handles hardware exception.
 
 187
 00:11:39,270 --> 00:11:42,960
-但是我找到了很好的文档你可以完全阅读它的作用：
+但我发现了一个很好的文档，您可以准确地阅读它的功能：
 
 188
 00:11:42,960 --> 00:11:43,960
-无论如何。
+Anyhow.
 
 189
 00:11:43,960 --> 00:11:48,780
-如您所见，没有代码可以以某种方式翻译用户提供的虚拟
+如您所见，没有任何代码可以以某种方式转换用户提供的虚拟
 
 190
 00:11:48,780 --> 00:11:51,310
-地址到真实的物理地址。
+address to a real physical address.
 
 191
 00:11:51,310 --> 00:11:53,020
-它只是执行一个mov。
+It just executes a mov.
 
 192
 00:11:53,020 --> 00:11:56,730
-那是因为魔法发生在某个地方其他。
+That is because the magic happens somewhere else.
 
 193
 00:11:56,730 --> 00:12:01,090
-当内核执行此指令时，它会导致页面错误，因为它会尝试
+当内核执行此指令时，它将导致页面错误，因为它尝试
 
 194
 00:12:01,090 --> 00:12:03,440
-访问虚拟地址。
+to access a virtual address.
 
 195
 00:12:03,440 --> 00:12:08,100
-这是一个中断，这意味着CPU将跳转到另一个预定义的代码位置
+这是一个中断，这意味着CPU将跳转到另一个预定义的代码位置。
 
 196
 00:12:08,100 --> 00:12:11,670
-在内核中将出现此异常处理。
+in the kernel where this exception will be handled.
 
 197
 00:12:11,670 --> 00:12:16,110
-非常类似于syscall指令让我们跳到预定义的地址。
+Pretty similar how the syscall instruction made us jump to a predefined address.
 
 198
 00:12:16,110 --> 00:12:20,930
-在内核中的那个页面错误处理程序中，MMU的所有地址魔法都会发生。
+And in that page fault handler in the kernel, all the address magic with the MMU will happen.
 
 199
 00:12:20,930 --> 00:12:25,820
-我不会进入那个，因为它已经存在了现在有足够的信息。
+I will not go into that, because it’s already enough information for now.
 
 200
 00:12:25,820 --> 00:12:31,010
-但我希望这随机潜入内核代码很有趣，甚至可能是开眼界。
+But I hope this random dive into the kernel code was interesting and maybe even eye opening.
 
 201
 00:12:31,010 --> 00:12:35,370
-这么多聪明人一起创作这样一个复杂而神奇的平台。
+So many smart people worked together on creating such a complex and amazing platform.
 
 202
 00:12:35,370 --> 00:12:39,610
-几乎让我情绪化地思考如何媒体庆祝新的iPhone应用程序
+几乎让我想到媒体是如何庆祝新的iPhone应用程序的，而
 
 203
 00:12:39,610 --> 00:12:41,830
-真正的魔法发生在这里。
+the real magic happens down here.
 
 204
 00:12:41,830 --> 00:12:44,570
-如果你不了解一切，不要担心。
+Don’t worry if you didn’t understand everything.
 
 205
 00:12:44,570 --> 00:12:46,870
-天啊，我甚至不理解很多它。
+Hell, I even didn’t understand a lot of it.
 
 206
 00:12:46,870 --> 00:12:50,750
-但重要的是潜入一些人偶尔会有一些不为人知的东西，并获得第一个
+但是，偶尔潜入一些未知的事物中并获得第一个是很重要的。
 
 207
 00:12:50,750 --> 00:12:52,280
-瞥见那里有什么。
+glimpse of what is there.
 
 208
 00:12:52,280 --> 00:12:57,250
-而且我确信至少在潜意识里你现在对这意味着什么感觉
+我相信，至少在潜意识里，你现在对它意味着什么有了一种感觉。
 
 209
 00:12:57,250 --> 00:12:58,250
-有一个内核。
+have a Kernel.
 
 210
 00:12:58,250 --> 00:13:02,730
-我开始担心我可能会忘记解释一些看似清楚的事情
+我开始有点担心，我可能会忘记解释某些看起来很清楚的事情。
 
 211
 00:13:02,730 --> 00:13:04,870
-我和你们迷路了。
+me and that you guys get lost.
 
 212
 00:13:04,870 --> 00:13:10,120
-那么请给我第一个反馈这个系列的几个视频都适合你。
+So please give me feedback on how the first couple of videos of the series were for you.
 
 213
 00:13:10,120 --> 00:13:11,590
-目前还不清楚。
+And what is still unclear.
 
 214
 00:13:11,590 --> 00:13:14,820
-所以我可以改进并制作有用的内容尽可能多的人。
+So I can improve and make content that helps as many people as possible.
 

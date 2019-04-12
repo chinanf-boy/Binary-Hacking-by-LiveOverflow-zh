@@ -1,628 +1,628 @@
 1
 00:00:06,950 --> 00:00:12,260
-在过去的视频中我们学习了CPU有效，如何阅读汇编程序以及如何反转
+在过去的视频中，我们学习了CPU的工作原理、如何读取汇编程序以及如何反转
 
 2
 00:00:12,260 --> 00:00:15,180
-设计一个简单程序的功能。
+engineer the functionality of a simple program.
 
 3
 00:00:15,180 --> 00:00:19,720
-在即将发布的视频中，我想要一点点更深入，探索我们如何利用
+在接下来的视频中，我想更深入地探讨我们如何利用
 
 4
 00:00:19,720 --> 00:00:23,090
-当我们有能力腐败时的程序记忆。
+a program when we have the ability to corrupt memory.
 
 5
 00:00:23,090 --> 00:00:27,220
-第一个视频将更多关于如何设置并使一切运行。
+This first video will be more about how to setup and get everything running.
 
 6
 00:00:27,220 --> 00:00:31,090
-所以我们可以专注于技术部分下一个视频。
+So we can focus on the technical part in the next videos.
 
 7
 00:00:31,090 --> 00:00:35,390
-这个视频的标题灵感来自于着名的帕克文章"粉碎堆栈
+这个视频的标题是受著名的短语文章“粉碎堆栈”的启发
 
 8
 00:00:35,390 --> 00:00:38,370
-从1996年开始的"乐趣和利润"。
+For Fun And Profit” from 1996.
 
 9
 00:00:38,370 --> 00:00:41,240
-你可以想象很多东西都发生了变化自那时候起。
+You can imagine that a lot of stuff has changed since then.
 
 10
 00:00:41,240 --> 00:00:45,890
-虽然，我们首先要了解基础知识，在我们看看现代技术之前。
+Though, we first have to learn about the basics, before we can have a look at modern techniques.
 
 11
 00:00:45,890 --> 00:00:52,100
-我们将遵循剥削的时间表技术发现和尝试缓解。
+We will kind of follow the timeline of exploitation technique discovery and attempted mitigations.
 
 12
 00:00:52,100 --> 00:00:55,700
-就像DEP或ASLR一样，仅举两个例子。
+Like DEP or ASLR, just to name two.
 
 13
 00:00:55,700 --> 00:01:00,100
-作为下一对视频的基础，我将使用Linux中包含的挑战
+作为接下来几段视频的基础，我将使用Linux中包含的挑战
 
 14
 00:01:00,100 --> 00:01:03,250
-图片由exploit-exercises.com提供。
+images provided by exploit-exercises.com.
 
 15
 00:01:03,250 --> 00:01:07,670
-这允许您也设置此系统，我强烈推荐。
+This allows you to set up this system as well, which I highly recommend.
 
 16
 00:01:07,670 --> 00:01:12,360
-使用protostar，您将从简单开始内存损坏和修改，功能
+使用ProtoStar，您将从简单的内存损坏和修改开始，函数
 
 17
 00:01:12,359 --> 00:01:15,779
-重定向，最后执行自定义的shellcode。
+redirection, and finally executing custom shellcode.
 
 18
 00:01:15,780 --> 00:01:21,090
-为了使这个尽可能简单介绍，ASLR和非可执行内存
+为了尽可能容易地引入ASLR和非可执行内存
 
 19
 00:01:21,090 --> 00:01:23,730
-已被禁用。
+has been disabled.
 
 20
 00:01:23,729 --> 00:01:33,199
-首先下载protostar .iso并启动从它在VMWare播放器中。
+So first download the protostar .iso and boot from it in the VMWare Player.
 
 21
 00:01:33,200 --> 00:01:37,660
-正如你所看到的，它并不是一个好的开始像我们的Ubuntu系统一样的图形用户界面
+正如你所看到的，它并不像我们的Ubuntu系统那样从一个良好的图形用户界面开始。
 
 22
 00:01:37,659 --> 00:01:38,659
-确实。
+does.
 
 23
 00:01:38,659 --> 00:01:42,539
-但是不要惊慌，你学会了如何使用第一集的命令行。
+But don’t panic, you learned how to use the command-line from the very first episode.
 
 24
 00:01:42,539 --> 00:01:48,679
-现在，我将利用这一时刻向您介绍到`ssh`，代表安全shell和
+现在，我将利用这个时刻向您介绍“ssh”，它代表安全shell和
 
 25
 00:01:48,679 --> 00:01:54,419
-是一个允许我们连接的程序网络上的系统，具有ssh服务器
+是一个允许我们通过网络连接到系统的程序，它有一个ssh服务器
 
 26
 00:01:54,420 --> 00:01:55,420
-运行。
+running.
 
 27
 00:01:55,420 --> 00:01:58,980
-这将是您获得的访问权限你必须管理运行的服务器
+当您必须管理运行的服务器时，这将是您获得的访问权限。
 
 28
 00:01:58,979 --> 00:02:00,049
-例如一个网站。
+for example a website.
 
 29
 00:02:00,049 --> 00:02:05,129
-这就是我向你介绍的原因第一集中的命令行，
+这就是我在第一集就把你介绍给指挥部的原因，
 
 30
 00:02:05,130 --> 00:02:08,100
-因为你真的必须知道如何使用它。
+because you really really have to know how to use it.
 
 31
 00:02:08,099 --> 00:02:11,229
-你也可以告诉我运行Windows作为一个主机操作系统
+You can also tell that I run windows as a host OS.
 
 32
 00:02:11,230 --> 00:02:15,570
-我想我之前没有提过，但是这里的主要原因是，我想象的是
+我想我以前没提过，但主要原因是，我认为
 
 33
 00:02:15,569 --> 00:02:21,349
-大多数人都是从Windows开始的意味着它是接触更多人的最佳方式。
+majority of people start out on Windows, which means it’s the best way to reach more people.
 
 34
 00:02:21,350 --> 00:02:24,700
-我们不想像这么多人那样被排除在外我们社会的其他部分。
+We don’t want to be excluding like so many other parts of our societies.
 
 35
 00:02:24,700 --> 00:02:30,360
-至少对我来说，黑客传达了一种精神开放和分享知识。
+At least for me, hacking conveys a spirit to be open and share knowledge.
 
 36
 00:02:30,360 --> 00:02:34,960
-所以这就是我必须下载PuTTY的原因Windows现在，这是一个Windows客户端
+这就是为什么我现在必须下载Putty for Windows，它是Windows客户端
 
 37
 00:02:34,959 --> 00:02:35,959
-SSH。
+ssh.
 
 38
 00:02:35,959 --> 00:02:40,629
-要使用它连接到这台机器，我们有找到它的IP地址。
+To use it to connect to this machine we have to find the IP address of it.
 
 39
 00:02:40,630 --> 00:02:44,910
-protostar的用户名和密码图像只是"用户"。
+The username and password for the protostar image is just “user”.
 
 40
 00:02:44,909 --> 00:02:45,999
-所以用它来登录。
+So use that to login.
 
 41
 00:02:46,000 --> 00:02:51,900
-然后执行命令`ip addr`，to找到分配的IP，然后将其复制到
+然后执行命令“ip addr”，找到分配的IP，然后将其复制到
 
 42
 00:02:51,900 --> 00:02:55,600
-putty，保存此会话并按Open。
+putty, save this session and press Open.
 
 43
 00:02:55,599 --> 00:02:58,499
-你必须再次登录，但这很多现在好点了。
+You have to login again, but this is much better now.
 
 44
 00:02:58,500 --> 00:03:02,830
-我们可以来回复制数据，我们可以有多个联系。
+We can copy data back and forth and we can have multiple connections.
 
 45
 00:03:02,830 --> 00:03:12,400
-Mac和Linux的等价物很简单`ssh`，ip地址的用户名"user"。
+The equivalent for Mac and Linux is just simply `ssh`, the username “user” at the ip address.
 
 46
 00:03:12,400 --> 00:03:13,560
-好。
+Ok.
 
 47
 00:03:13,560 --> 00:03:14,930
-目前我们的shell是/ bin / sh。
+At the moment our shell is /bin/sh.
 
 48
 00:03:14,930 --> 00:03:18,880
-正如您所看到的，tab补全不会工作。
+And as you can see, tab-completion doesn’t work.
 
 49
 00:03:18,880 --> 00:03:23,530
-但是我们可以执行`/ bin / bash`使命令行更好一点。
+But we can execute `/bin/bash` instead, which makes the command-line a bit nicer.
 
 50
 00:03:23,530 --> 00:03:25,710
-那我们在这里有什么
+So what do we have here.
 
 51
 00:03:25,709 --> 00:03:31,489
-使用uname -a，我们可以获得一些系统信息我们可以看到我们有一个32位的Linux
+有了uname-a，我们可以获得一些系统信息，并且可以看到我们有一个32位的Linux
 
 52
 00:03:31,489 --> 00:03:34,129
-使用2.6.32内核。
+with a 2.6.32 kernel.
 
 53
 00:03:34,129 --> 00:03:35,759
-那么现在如何运作呢。
+So how does this work now.
 
 54
 00:03:35,760 --> 00:03:41,580
-在网站上它说：要被利用的水平可以在/ opt / protostar / bin目录中找到。
+On the website it says: The levels to be exploited can be found in the /opt/protostar/bin directory.
 
 55
 00:03:41,579 --> 00:03:43,599
-我们来看一下。
+Let’s have a look.
 
 56
 00:03:43,599 --> 00:03:47,099
-`Ls`列出该目录中的所有文件。
+`Ls` to list all files in this directory.
 
 57
 00:03:47,099 --> 00:03:50,979
-你马上会注意到这种奇怪的红色文件名的背景颜色。
+Immediately you will notice this weird red background color for the filenames.
 
 58
 00:03:50,980 --> 00:03:53,520
-让我们仔细看看。
+Let’s have a closer look.
 
 59
 00:03:53,519 --> 00:03:58,919
-使用`files`，我们可以检查文件类型和它告诉我们它是一个setuid ELF 32bit
+使用“files”，我们可以检查文件类型，它告诉我们它是setuid elf 32位
 
 60
 00:03:58,920 --> 00:04:00,070
-可执行文件。
+executable.
 
 61
 00:04:00,069 --> 00:04:05,469
-从早期的视频中你可能会记得我们之前从未见过`setuid`。
+From earlier videos you may remember that we have never encountered `setuid` before.
 
 62
 00:04:05,469 --> 00:04:09,859
-和往常一样，如果我们想知道一些事情linux，我们可以在linux手册中查看。
+As always, if we want to know something in linux, we can look in the linux manual.
 
 63
 00:04:09,860 --> 00:04:14,840
-虽然，setuid的手册页实际上是关于libc提供的setuid函数。
+Though, the man page for setuid is actually about the setuid function provided by libc.
 
 64
 00:04:14,840 --> 00:04:18,940
-但这并不会打扰我们，因为它可能会相关的。
+But that doesn’t bother us, because it might be related.
 
 65
 00:04:18,940 --> 00:04:21,650
-那么让我们看看它在这里所说的内容功能。
+So let’s see what it says here about this function.
 
 66
 00:04:21,650 --> 00:04:25,130
-setuid代表设置用户身份。
+setuid stands for set user identity.
 
 67
 00:04:25,130 --> 00:04:29,760
-并且... setuid设置有效用户ID调用过程。
+And… setuid sets the effective user ID of the calling process.
 
 68
 00:04:29,760 --> 00:04:34,610
-嗯...用cat / etc / passwd我们可以看到所有这个系统上的用户。
+mhh… with cat /etc/passwd we can see all users on this system.
 
 69
 00:04:34,610 --> 00:04:37,450
-记住我们的用户被称为用户，所以我们有id 1001。
+Remember our user is called user so we have the id 1001.
 
 70
 00:04:37,451 --> 00:04:42,031
-root用户的id为0。
+And the root user has id 0.
 
 71
 00:04:42,030 --> 00:04:47,310
-那是否意味着我们可以简单地写一个C程序作为我们无特权的用户并执行
+这是否意味着，我们可以简单地以非特权用户的身份编写C程序并执行
 
 72
 00:04:47,310 --> 00:04:49,800
-setuid的id为0，成为root？
+将ID为0的setuid变为根？
 
 73
 00:04:49,800 --> 00:04:51,200
-显然不是。
+Obviously not.
 
 74
 00:04:51,200 --> 00:04:52,930
-那太可怕了。
+That would be horrible.
 
 75
 00:04:52,930 --> 00:04:58,350
-再向下，它告诉我们可能的错误像EPERM那样说用户不是
+再往下讲，它告诉我们可能的错误，比如说，eperm说用户不是
 
 76
 00:04:58,350 --> 00:05:02,830
-特权和uid不匹配调用过程的真实uid。
+privileged and the uid does not match the real uid of the calling process.
 
 77
 00:05:02,830 --> 00:05:05,890
-好的...然后......它可以用于什么？
+好的……那么……它能用来做什么？
 
 78
 00:05:05,890 --> 00:05:11,280
-一个示例用法是，根进程可能想要将权限下放给没有特权的人
+一个示例用法是，根进程可能希望将特权删除到非特权
 
 79
 00:05:11,280 --> 00:05:16,440
-用户，以防过程被利用，攻击者无法获得root权限。
+user, that in case the process gets exploited, the attacker does not gain root privileges.
 
 80
 00:05:16,440 --> 00:05:21,480
-所以如果你有一个必须开始的过程作为root但不再需要它，
+所以，如果你有一个必须从根开始的过程，但不再需要它，
 
 81
 00:05:21,480 --> 00:05:23,530
-放弃它们是件好事。
+it’s good to drop them.
 
 82
 00:05:23,530 --> 00:05:24,530
-无论如何。
+Anyway.
 
 83
 00:05:24,530 --> 00:05:26,880
-这与我们的setuid有什么关系二进制？
+这与我们的setuid二进制有什么关系？
 
 84
 00:05:26,880 --> 00:05:32,100
-让我们打开第二个ssh会话在所有运行过程中。
+Let’s open a second ssh session to look at all running processes.
 
 85
 00:05:32,100 --> 00:05:34,600
-现在打开一个继续运行的进程。
+Now open a process that keeps running.
 
 86
 00:05:34,600 --> 00:05:36,550
-简单的像vim编辑器。
+Something simple like a vim editor.
 
 87
 00:05:36,550 --> 00:05:42,940
-然后我们可以使用其他shell来执行`ps aux`列出所有正在运行的进程。
+And then we can use the other shell to execute `ps aux` to list all running processes.
 
 88
 00:05:42,940 --> 00:05:45,500
-现在我们要搜索一下，但现在就是。
+Now we have to search a bit, but here it is.
 
 89
 00:05:45,500 --> 00:05:49,000
-第一列告诉我们的用户运行过程。
+The first column tells us the user of the running process.
 
 90
 00:05:49,000 --> 00:05:54,380
-而且因为我们作为"用户"已经执行了vim，它将以我们的特权运行。
+And because we as “user” have executed vim, it will run with our privileges.
 
 91
 00:05:54,380 --> 00:05:59,050
-所以不要让我们执行其中一个setuid二进制文件并做同样的事情。
+So no let’s execute one of those setuid binaries and do the same.
 
 92
 00:05:59,050 --> 00:06:02,360
-我们来搜索程序名称。
+Let’s search the program name.
 
 93
 00:06:02,360 --> 00:06:03,650
-这里是。
+Here it is.
 
 94
 00:06:03,650 --> 00:06:05,350
-但是你看到了第一行吗？
+但是你看到第一行了吗？
 
 95
 00:06:05,350 --> 00:06:07,800
-它说它以root身份运行。
+It says it’s running as root.
 
 96
 00:06:07,800 --> 00:06:08,800
-什么他妈的？
+卧槽？
 
 97
 00:06:08,800 --> 00:06:09,930
-怎么可能？
+这怎么可能？
 
 98
 00:06:09,930 --> 00:06:12,550
-让我们再看看文件权限。
+Let’s have a look again at the file permissions.
 
 99
 00:06:12,550 --> 00:06:18,310
-好吧首先，`r`` dash``x`意味着系统上的任何人都可以读取此文件
+好的，首先，`r``dash``x`表示系统中的任何人都可以读取此文件，并且
 
 100
 00:06:18,310 --> 00:06:19,310
-执行它。
+execute it.
 
 101
 00:06:19,310 --> 00:06:22,940
-接下来的3个权限是相同的并且引用到组的权限。
+The next 3 permissions are the same and refer to the permissions for the group.
 
 102
 00:06:22,940 --> 00:06:26,880
-一个组只是一个id，即多个用户可以分享。
+A group is just an id, that multiple users could share.
 
 103
 00:06:26,880 --> 00:06:29,640
-所以我们也在这个叫做的小组中用户。
+So we are in the group that is also called user.
 
 104
 00:06:29,640 --> 00:06:33,460
-但理论上你可以组合多个用户在一起。
+But theoretically you could group multiple users together.
 
 105
 00:06:33,460 --> 00:06:35,080
-好。
+Ok.
 
 106
 00:06:35,080 --> 00:06:36,460
-现在它变得有趣了。
+Now it get’s interesting.
 
 107
 00:06:36,460 --> 00:06:38,760
-第一个字符表示文件是否是一个目录。
+The first character indicates if a file is a directory.
 
 108
 00:06:38,760 --> 00:06:40,080
-嗯，不是。
+Well it’s not.
 
 109
 00:06:40,080 --> 00:06:44,260
-所以剩下的3个权限是为了文件的所有者。
+So the remaining 3 permissions are for the owner of the file.
 
 110
 00:06:44,260 --> 00:06:46,180
-该文件的所有者是root。
+The owner of the file is root.
 
 111
 00:06:46,180 --> 00:06:50,990
-并且所有者有权阅读，写和... S？
+并且所有者有读、写和…的权限？
 
 112
 00:06:50,990 --> 00:06:56,010
-所以s替换了应该是x的可执行文件。
+So the s replaced what should be x for executable.
 
 113
 00:06:56,010 --> 00:06:57,730
-这称为setuid位。
+This is called the setuid bit.
 
 114
 00:06:57,730 --> 00:07:02,490
-我们已经看过了运行过程，所以你可以猜到这是做什么的。
+We have already looked at the running process, so you can guess what this does.
 
 115
 00:07:02,490 --> 00:07:07,960
-设置此位时，我作为普通用户执行它，Linux将实际执行它
+当设置了这个位，并且我作为一个普通用户执行它时，Linux将实际执行它。
 
 116
 00:07:07,960 --> 00:07:10,590
-拥有所有者的特权。
+with the privileges of the owner.
 
 117
 00:07:10,590 --> 00:07:13,380
-所以在这种情况下它将以root身份运行。
+So in this case it will run as root.
 
 118
 00:07:13,380 --> 00:07:15,250
-为什么有人会这样做呢？
+为什么会有人这么做？
 
 119
 00:07:15,250 --> 00:07:17,410
-有两个很好的例子。
+There are two good examples.
 
 120
 00:07:17,410 --> 00:07:19,670
-首先，你可能知道sudo。
+First, you may know sudo.
 
 121
 00:07:19,670 --> 00:07:24,300
-哪个程序允许您运行如果您是普通用户，则以root身份登录。
+Which is a program that allows you to run something as root if you are a normal user.
 
 122
 00:07:24,300 --> 00:07:29,860
-那么sudo如何以root身份执行程序，即使你输入命令？
+那么，即使您输入了命令，sudo如何以根用户身份执行程序呢？
 
 123
 00:07:29,860 --> 00:07:33,130
-那么它也有setuid位。
+Well it also has the setuid bit.
 
 124
 00:07:33,130 --> 00:07:35,860
-另一个很好的例子是ping程序。
+Another great example is the ping program.
 
 125
 00:07:35,860 --> 00:07:39,450
-Ping也将以root身份运行，因为它具有setuid位设置。
+Ping will also run as root, because it has the setuid bit set.
 
 126
 00:07:39,450 --> 00:07:40,740
-你为什么问？
+你为什么要问？
 
 127
 00:07:40,740 --> 00:07:45,180
-因为ping想要发送ICMP数据包这是一个相当低的层。
+Because ping wants to send an ICMP packet which is a fairly low layer.
 
 128
 00:07:45,180 --> 00:07:50,620
-而linux一般不允许正常用户创建这样的原始数据包。
+And linux generally doesn’t allow normal users to create such raw packets.
 
 129
 00:07:50,620 --> 00:07:55,610
-但是因为ping不是邪恶的，所以有人创造了一个setuid二进制文件，允许普通用户访问
+但是，由于ping并不邪恶，有人创建了setuid二进制文件，允许普通用户
 
 130
 00:07:55,610 --> 00:07:57,550
-发送ICMP数据包。
+send ICMP packets.
 
 131
 00:07:57,550 --> 00:08:02,110
-如果程序有漏洞怎么办？像ping一样，这将允许你执行
+如果有一个像ping这样的程序的漏洞可以让您执行
 
 132
 00:08:02,110 --> 00:08:04,030
-任意代码为root，对吗？
+任意代码为根，对吗？
 
 133
 00:08:04,030 --> 00:08:08,300
-所以很明显，setuid可以是真的危险的。
+So it’s clear, that setuid can be really dangerous.
 
 134
 00:08:08,300 --> 00:08:09,310
-好。
+Well.
 
 135
 00:08:09,310 --> 00:08:11,340
-这就是挑战的重点来自protostar。
+And that’s the whole point of the challenges from protostar.
 
 136
 00:08:11,340 --> 00:08:17,150
-如果我们可以在这里利用其中一个程序，我们可以升级特权并获得根。
+If we can exploit one of these programs here, we can escalate privileges and gain root.
 
 137
 00:08:17,150 --> 00:08:21,850
-这基本上就像iPhone上的越狱一样或者在Android设备上生根。
+This is basically like jailbreaking on iPhones or rooting on android devices.
 
 138
 00:08:21,850 --> 00:08:27,890
-您试图找到允许的漏洞您可以在特权中执行任意代码
+您试图找到一个漏洞，允许您在特权中执行任意代码。
 
 139
 00:08:27,890 --> 00:08:28,890
-模式。
+mode.
 
 140
 00:08:28,890 --> 00:08:33,690
-好吧，在那些真正的设备上，尤其是iOS这非常他妈的复杂，而且
+嗯，在那些真正的设备上，尤其是iOS上，这是非常复杂的，而且
 
 141
 00:08:33,690 --> 00:08:39,130
-涉及更多层，但现在你对整个事物有更好的想象力。
+a lot more layers are involved, but now you get a better imagination of the whole thing.
 
 142
 00:08:39,130 --> 00:08:42,170
-在我们开始挑战之前的最后一件事。
+One last thing before we start with the challenges.
 
 143
 00:08:42,170 --> 00:08:44,620
-你知道你可以调试程序吗？
+你知道你可以调试程序，对吗？
 
 144
 00:08:44,620 --> 00:08:47,430
-例如，你可以使用strace监视系统调用。
+For example you can use strace to spy on the system calls.
 
 145
 00:08:47,430 --> 00:08:48,860
-或者只是使用gdb。
+Or simply use gdb.
 
 146
 00:08:48,860 --> 00:08:52,170
-并且gdb允许您修改内存。
+And gdb allows you to modify memory.
 
 147
 00:08:52,170 --> 00:08:57,270
-所以你可以打开这个setuid二进制文件在gdb中，修改代码并执行任何操作
+所以您可以在gdb中打开这个setuid二进制文件，修改代码并执行任何
 
 148
 00:08:57,270 --> 00:08:58,350
-你想成为根？
+你想要根？
 
 149
 00:08:58,350 --> 00:09:00,160
-我们来试试吧。
+let’s try it.
 
 150
 00:09:00,160 --> 00:09:02,080
-好吧它似乎运行。
+Ok it seems to run.
 
 151
 00:09:02,080 --> 00:09:05,150
-所以让我们重新运行它并查看过程名单。
+So let’s rerun it and look at the process list.
 
 152
 00:09:05,150 --> 00:09:08,460
-正如您所看到的，它不再以root身份运行。
+As you can see it doesn’t run as root anymore.
 
 153
 00:09:08,460 --> 00:09:13,350
-原因是，gdb无法调试以另一个用户身份运行的进程。
+The reason is, that gdb could not debug a process that runs as another user.
 
 154
 00:09:13,350 --> 00:09:19,810
-所以gdb实际上强制二进制文件不运行以root身份实际调试它。
+So gdb actually forces the binary to NOT run as root so it can actually debug it.
 
 155
 00:09:19,810 --> 00:09:24,660
-好主意，但不幸的是......或者也许幸运的是，事情并非那么简单。
+So good idea, but unfortunately… or maybe fortunately it’s not that simple.
 
 156
 00:09:24,660 --> 00:09:28,760
-我想我们必须依靠良好的老剥削技术。
+I guess we have to rely on good old exploiting techniques.
 
 157
 00:09:28,760 --> 00:09:31,440
-我们开始时会在下一个视频中与您联系第一个挑战。
+See you in the next video when we start with the first challenge.
 

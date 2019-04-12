@@ -1,230 +1,230 @@
 1
 00:00:00,329 --> 00:00:05,139
-我们已经走了很长的路了解我们如何利用程序
+我们在试图理解如何利用程序方面已经走了很长的路。
 
 2
 00:00:05,140 --> 00:00:07,170
-通过内存损坏。
+through memory corruption.
 
 3
 00:00:07,169 --> 00:00:11,999
-我们已经介绍了各种各样的例子，包括基本缓冲区溢出、格式字符串
+我们已经介绍了各种各样的示例，包括基本缓冲区溢出、格式字符串
 
 4
 00:00:12,000 --> 00:00:14,250
-利用，甚至堆利用。
+exploits and even heap exploits.
 
 5
 00:00:14,250 --> 00:00:17,510
-很多人可能已经发现了复杂的。
+And a lot of you might already find it quite complex.
 
 6
 00:00:17,510 --> 00:00:23,130
-但如果你把它放到历史的背景下我们仍然落后16年。
+But if you put it into the context of history we are still like 16 years behind.
 
 7
 00:00:23,130 --> 00:00:28,940
-我们在exploit-exercises.com上探讨的最后一个例子引进最先进的技术
+我们在exploit-exercises.com上探讨的最后一个例子介绍了最先进的技术
 
 8
 00:00:28,940 --> 00:00:29,940
-比如2001。
+in like 2001.
 
 9
 00:00:29,940 --> 00:00:35,500
-但它仍然直接适用于垃圾廉价的嵌入式设备，比如物联网，
+虽然它仍然直接适用于廉价的嵌入式设备，比如一些物联网设备，
 
 10
 00:00:35,500 --> 00:00:38,100
-打基础是很重要的。
+it’s very important to lay a foundation.
 
 11
 00:00:38,100 --> 00:00:42,180
-但在我们开始讨论这些之前现代开发缓解措施和我们如何
+但在我们开始谈论所有这些现代剥削缓解措施和我们如何才能
 
 12
 00:00:42,180 --> 00:00:47,460
-绕过他们，我想这是个好主意尝试把我们学到的更多
+绕过他们，我认为把我们学到的东西多放一点是个好主意。
 
 13
 00:00:47,460 --> 00:00:48,910
-抽象术语。
+abstract terms.
 
 14
 00:00:48,910 --> 00:00:55,910
-试着感受或直觉利用二进制文件。
+And try to get a feeling or an intuition about exploiting binaries.
 
 15
 00:00:55,910 --> 00:01:03,050
-让我们试着创造一个剥削的心理模型。
+Let’s try to create a mental model of exploitation.
 
 16
 00:01:03,050 --> 00:01:07,450
-但首先让我们介绍一些限制条件，否则就太抽象了。
+But let’s first introduce some constraints, otherwise it will be too abstract.
 
 17
 00:01:07,450 --> 00:01:10,930
-让我们把重点放在我们互动过的程序上。以前。
+Let’s focus on programs like we have interacted before.
 
 18
 00:01:10,930 --> 00:01:13,800
-这意味着Intel体系结构和Linux。
+this means intel architecture and on linux.
 
 19
 00:01:13,800 --> 00:01:14,800
-好啊。
+Ok.
 
 20
 00:01:14,800 --> 00:01:16,540
-让我们从头开始。
+Let’s start at the beginning.
 
 21
 00:01:16,540 --> 00:01:19,260
-我们希望程序在我们的CPU上执行。
+We want programs to execute on our CPU.
 
 22
 00:01:19,260 --> 00:01:23,280
-这就是程序包含汇编程序的原因代码-机器代码。
+That’s why a program contains assembler code - machine code.
 
 23
 00:01:23,280 --> 00:01:26,500
-机器代码和其他数据一样在我们的电脑里。
+And machine code is just like any other data in our computers.
 
 24
 00:01:26,500 --> 00:01:28,280
-基本上只是一点点。
+It’s basically just bits.
 
 25
 00:01:28,280 --> 00:01:29,930
-0和1s。
+0 and 1s.
 
 26
 00:01:29,930 --> 00:01:32,250
-很多时候我们把它们组合成字节。
+A lot of times we combine them into bytes.
 
 27
 00:01:32,250 --> 00:01:35,850
-CPU可以将一个字节解释为一条指令。
+And a CPU can interpret a byte as an instruction.
 
 28
 00:01:35,850 --> 00:01:39,050
-或者多个字节可以解释为指令。
+Or multiple bytes can be interpreted as an instruction.
 
 29
 00:01:39,050 --> 00:01:44,730
-和一些疯狂的数字硬件魔法CPU知道这个特定的值
+CPU中一些疯狂的数字硬件魔法知道这个特殊的价值
 
 30
 00:01:44,729 --> 00:01:49,879
-对于"添加存储在两个寄存器中的值并将结果放入第一个寄存器。
+for “add the values stored in two registers and put the result in the first register.
 
 31
 00:01:49,880 --> 00:01:56,050
-寄存器就像小的记忆单元在CPU中，实现了不同的目的。
+And registers are just like small memory cells in the CPU, which fullfil different purposes.
 
 32
 00:01:56,050 --> 00:02:00,480
-不同的架构可能有不同的为不同目的注册。
+And different architectures might have different registers for different purposes.
 
 33
 00:02:00,479 --> 00:02:05,629
-但是在英特尔公司，我们有像EAX和EBX这样的目的寄存器
+但是在Intel上，我们有一些通用寄存器，例如EAX和EBX，它们
 
 34
 00:02:05,631 --> 00:02:08,831
-程序员可以随心所欲地使用去。
+a programmer is free to use however he wants to.
 
 35
 00:02:08,830 --> 00:02:12,800
-但是也有一些特殊的寄存器，比如EIP，指令指针。
+But there are also special registers, like EIP, the instruction pointer.
 
 36
 00:02:12,800 --> 00:02:17,240
-那个只包含地址指向内存，其中下一条指令
+它只包含地址，地址指向内存，下一条指令
 
 37
 00:02:17,240 --> 00:02:18,240
-将。
+will be.
 
 38
 00:02:18,240 --> 00:02:23,300
-还有这个堆栈指针esp，哪个指向堆栈的顶部，以及
+还有这个堆栈指针esp，指向堆栈的顶部，以及
 
 39
 00:02:23,300 --> 00:02:28,080
-基本指针EBP，它与堆栈指针定义堆栈帧。
+the base pointer EBP, which together with the stack pointer define a stack frame.
 
 40
 00:02:28,080 --> 00:02:30,850
-对于初学者来说，这可能已经感觉到了复杂的。
+And for beginners this might already feel complicated.
 
 41
 00:02:30,849 --> 00:02:35,029
-有代码，有数据，有堆栈，有一堆。
+There is code, there is data, there is a stack, there is a heap.
 
 42
 00:02:35,030 --> 00:02:36,450
-您可以调用一些函数。
+There are functions you can call.
 
 43
 00:02:36,450 --> 00:02:37,670
-函数可以返回。
+Functions can return.
 
 44
 00:02:37,670 --> 00:02:41,090
-不知怎么的，就像一个返回指针可以用缓冲区覆盖的堆栈
+不知何故，在堆栈上有一个返回指针，您可以用缓冲区覆盖它。
 
 45
 00:02:41,090 --> 00:02:42,090
-溢出。
+overflow.
 
 46
 00:02:42,090 --> 00:02:43,900
-我们有很多不同的术语使用。
+There are a lot of different terms that we use.
 
 47
 00:02:43,900 --> 00:02:47,780
-但听起来不那么复杂。
+But it’s a lot less complex as it may sound.
 
 48
 00:02:47,780 --> 00:02:51,080
-因为本质上只有两部分那很重要
+因为本质上只有两个部分很重要
 
 49
 00:02:51,080 --> 00:02:56,840
-我们有记忆，这只是一个胡鲁格可以是1或0的位空间。
+we have memory, which is just a huuuuuuge space of bits that can be 1 or 0.
 
 50
 00:02:56,840 --> 00:02:58,710
-通常我们用字节或单词对它们进行分组。
+Usually we group them in bytes or words.
 
 51
 00:02:58,709 --> 00:03:05,079
-还有一个CPU，它有一个定义良好的对其进行操作的确定性行为
+还有一个CPU，它有一个定义良好的确定性行为，可以对它进行操作。
 
 52
 00:03:05,080 --> 00:03:06,100
-记忆。
+memory.
 
 53
 00:03:06,100 --> 00:03:08,290
-这真的很简单。
+It’s really that simple.
 
 54
 00:03:08,290 --> 00:03:09,290
-好。
+Well.
 
 55
 00:03:09,290 --> 00:03:13,640
-魔鬼在实际的细节中，但是基本上，当CPU打开时，
+关键在于实际细节，但本质上，当CPU打开时，它
 
 56
 00:03:13,640 --> 00:03:15,350
-将从某个定义的地址开始。
+will start at some defined address.
 
 57
 00:03:15,349 --> 00:03:19,509
-这可以是0，但也可以定义成为其他人。
+This could be 0, but could also be defined to be something else.
 
 58
 00:03:19,510 --> 00:03:24,170
@@ -232,163 +232,163 @@ CPU可以将一个字节解释为一条指令。
 
 59
 00:03:24,170 --> 00:03:29,100
-并根据任何该值表示。
+and performs the action according to whatever that value represents.
 
 60
 00:03:29,099 --> 00:03:33,509
-现在，当我们要执行一个程序时，您不能直接将代码写入
+现在，当我们要执行一个程序时，不能直接将代码写入
 
 61
 00:03:33,510 --> 00:03:36,130
-RAM，并在地址0处重新启动CPU。
+RAM, and restart the CPU at address 0.
 
 62
 00:03:36,130 --> 00:03:39,820
-因为如果你的程序会导致一个无穷无尽的循环，整个系统将停止工作。
+Because if your program would cause an endless loop, the whole system would stop working.
 
 63
 00:03:39,820 --> 00:03:44,400
-但是当你编程一个Arduino时，微控制器，基本上就是你
+但是当你编程一个Arduino，一个小微控制器时，基本上就是你
 
 64
 00:03:44,400 --> 00:03:45,400
-做。
+do.
 
 65
 00:03:45,400 --> 00:03:49,320
-但这就是为什么有些人发展出就像Linux内核。
+But that’s why some people developed something like the Linux kernel.
 
 66
 00:03:49,320 --> 00:03:53,910
-它将直接硬件抽象为你要确保如果你的计划失败，
+它为您抽象出直接的硬件，并确保如果您的程序不好，
 
 67
 00:03:53,910 --> 00:03:55,170
-你不会杀死整个系统。
+you don’t kill the whole system.
 
 68
 00:03:55,170 --> 00:04:01,070
-这就是为什么程序不仅仅是简单的汇编代码，但它是一种相当复杂的文件格式。
+That’s why a program is not just plain assembler code, but it’s a fairly complex file format.
 
 69
 00:04:01,069 --> 00:04:02,099
-一个ELF文件。
+An ELF file.
 
 70
 00:04:02,100 --> 00:04:05,710
-它包含您的原始代码，但是很多其他信息。
+Which does contain your raw code, but also a lot of other information.
 
 71
 00:04:05,709 --> 00:04:11,879
-当你执行这个程序时，Linux系统将实际打开ELF文件，读取
+当你执行这个程序时，Linux系统会打开elf文件，读取
 
 72
 00:04:11,879 --> 00:04:17,319
-并解释所有必要的元数据和为您设置执行环境，以及
+并解释所有必要的元数据并为您设置执行环境，以及
 
 73
 00:04:17,319 --> 00:04:20,189
-然后跳到实际代码的开头。
+then jumps to the start of your actual code.
 
 74
 00:04:20,189 --> 00:04:23,409
-那么执行环境看起来如何喜欢吗？
+那么执行环境是什么样子的呢？
 
 75
 00:04:23,409 --> 00:04:28,929
-这很重要，因为在那种环境下，你试图利用一个程序，
+这一点很重要，因为在这种环境中，你试图利用程序，
 
 76
 00:04:28,930 --> 00:04:31,030
-你需要理解它。
+you need to understand it.
 
 77
 00:04:31,030 --> 00:04:33,400
-从某种意义上说，这很简单。
+And in some way it’s actyually very simple.
 
 78
 00:04:33,400 --> 00:04:37,020
-再说一次，魔鬼在实际的细节中，但这是有道理的。
+Again, the devil is in the practical details, but it will make sense.
 
 79
 00:04:37,020 --> 00:04:41,570
-假设CPU即将执行你的第一条指令。
+Let’s say the CPU is just about to execute your first instruction.
 
 80
 00:04:41,569 --> 00:04:45,529
-这意味着内核和硬件的魔力已经设置了所有内容。
+This means the kernel and the hardware magic has already set up everything.
 
 81
 00:04:45,530 --> 00:04:46,890
-这就是它的样子。
+And this is how it looks like.
 
 82
 00:04:46,889 --> 00:04:49,509
-你的记忆力很强。
+You have a big blob of memory.
 
 83
 00:04:49,509 --> 00:04:53,339
-范围从0到ffffff。
+It ranges from 0, to ffffff.
 
 84
 00:04:53,339 --> 00:04:58,609
-实际上你没有那么多内存，这就是我们称之为虚拟内存的原因。
+In reality you don’t really have that much memory, that’s why we call it virtual memory.
 
 85
 00:04:58,610 --> 00:05:03,050
-看起来你拥有所有的记忆，但是硬件魔术只会让你觉得你有
+看起来你拥有所有的内存，但是硬件的魔力只会让你觉得你拥有
 
 86
 00:05:03,050 --> 00:05:04,050
-它。
+it.
 
 87
 00:05:04,050 --> 00:05:09,700
-但是无论如何，CPU现在执行你的程序在那巨大的记忆中。
+But in anyway, the CPU now executes your program which is somewhere in that huge memory.
 
 88
 00:05:09,699 --> 00:05:13,919
-让我们看看这个记忆是怎样的在一个真正的程序中分裂。
+Let’s have a look at how this memory is divided up in a real program.
 
 89
 00:05:13,919 --> 00:05:19,289
-例如这里，我们从这里看到起始地址，到此结束地址，您的
+例如，在这里，我们看到从这个起始地址到这个结束地址，
 
 90
 00:05:19,289 --> 00:05:21,019
-程序已映射。
+program is mapped.
 
 91
 00:05:21,020 --> 00:05:26,460
-我们说是地图，因为它不是真正的身体在这个地址，但如果你愿意的话，就在那里
+我们说是映射的，因为它实际上不在这个地址，但如果你愿意的话，它就在那里。
 
 92
 00:05:26,460 --> 00:05:30,150
-从该地址读取值，在汇编代码。
+read the value from that address, in your assembler code.
 
 93
 00:05:30,150 --> 00:05:35,370
-所以忽略了底层的物质现实，只需接受有这么大的范围
+所以忽略了底层的物质现实，只是接受了这个巨大的范围
 
 94
 00:05:35,369 --> 00:05:37,299
-你能用的记忆。
+of memory you can work with.
 
 95
 00:05:37,300 --> 00:05:39,330
-事实上，堆栈也就在这里。
+And infact the stack is also just here.
 
 96
 00:05:39,330 --> 00:05:42,930
-它也被定义为从这个地址和结束于这个地址。
+It’s also just defined as starting from this address and ends at this address.
 
 97
 00:05:42,930 --> 00:05:47,780
-所以这个堆栈并没有真正的增长或收缩，那只是计算机理论模型
+所以堆栈并没有真正的增长或收缩，这只是计算机理论模型。
 
 98
 00:05:47,779 --> 00:05:48,779
-堆栈的
+of a stack.
 
 99
 00:05:48,779 --> 00:05:51,329
@@ -396,15 +396,15 @@ RAM，并在地址0处重新启动CPU。
 
 100
 00:05:51,330 --> 00:05:56,900
-CPU有堆栈寄存器，esp，它将包含一个指向
+CPU有堆栈寄存器esp，它将包含一个指向
 
 101
 00:05:56,899 --> 00:05:58,529
-这里是这个地区。
+this area here.
 
 102
 00:05:58,530 --> 00:06:01,830
-你能不能把堆栈指针指向在别的地方。
+So could you just point the stack pointer somewhere else.
 
 103
 00:06:01,830 --> 00:06:02,930
@@ -416,7 +416,7 @@ CPU有堆栈寄存器，esp，它将包含一个指向
 
 105
 00:06:03,930 --> 00:06:04,930
-你完全可以。
+You absolutely could.
 
 106
 00:06:04,930 --> 00:06:08,950
@@ -424,175 +424,175 @@ CPU有堆栈寄存器，esp，它将包含一个指向
 
 107
 00:06:08,949 --> 00:06:11,499
-它可以包含任何地址。
+and it could contain any address.
 
 108
 00:06:11,499 --> 00:06:18,229
-使esp真正与众不同的是它根据指示做一些花哨的事情。
+What makes ESP actually special is just that it does some fancy stuff based on instructions.
 
 109
 00:06:18,229 --> 00:06:24,869
-例如pop eax指令查找存储在该位置的值
+例如，pop eax指令将查找存储在该位置的值
 
 110
 00:06:24,869 --> 00:06:28,979
-esp指向的地方，通常是堆叠，但不必。
+where ESP points to, usually that’s the stack, but doesn’t have to.
 
 111
 00:06:28,979 --> 00:06:33,089
-然后从该位置写入值进入EAX寄存器。
+And then writes the value from that location into the eax register.
 
 112
 00:06:33,089 --> 00:06:37,249
-你完全可以在剥削中滥用它。
+And you can absolutely abuse that in an exploit.
 
 113
 00:06:37,249 --> 00:06:41,169
-例如，如果您发现允许将堆栈指针设置为
+例如，如果您发现一个bug，它允许您将堆栈指针设置为
 
 114
 00:06:41,169 --> 00:06:47,139
-值，您可以在堆起来，然后指向那里。
+value, you could create a fake stack on the heap, and just point ESP there.
 
 115
 00:06:47,139 --> 00:06:49,849
-通常被称为堆栈轴心。
+Often times referred to as a stack pivot.
 
 116
 00:06:49,849 --> 00:06:54,999
-因此，失去一个不断增长的堆栈的精神图像缩小你在计算机科学中所学的范围，
+因此，失去你在计算机科学中所学的一堆不断增长和缩小的精神图像，
 
 117
 00:06:54,999 --> 00:06:57,039
-想想它到底是什么。
+and just think of it what it really is.
 
 118
 00:06:57,039 --> 00:07:01,359
-只是一个记忆，电除尘器在那里注册。指向。
+It’s just some memory where the ESP register points to.
 
 119
 00:07:01,360 --> 00:07:04,530
-指令会产生有趣的效果基于那个寄存器。
+And instructions cause interesting effects based on that register.
 
 120
 00:07:04,529 --> 00:07:08,809
-在同样的意义上，指令指针不是特别的。
+And in the same sense the instruction pointer is not special.
 
 121
 00:07:08,809 --> 00:07:12,089
-通常它指向您的代码，但它不指向不得不。
+Usually it points into your code, but it doesn’t have to.
 
 122
 00:07:12,089 --> 00:07:16,749
-如果你设法控制EIP，你可以直接指向其他内存。
+If you manage to control EIP somehow, you can just point it to other memory.
 
 123
 00:07:16,749 --> 00:07:20,379
-例如，我们使用的堆栈在以前的剥削中。
+For example the stack, which we have used in previous exploits.
 
 124
 00:07:20,379 --> 00:07:24,369
-因为我们放置的数据实际上是有效的将代码汇编到堆栈上。
+Because we placed data that is actually valid assembler code onto the stack.
 
 125
 00:07:24,369 --> 00:07:25,669
-你知道它是shellcode。
+You know it as shellcode.
 
 126
 00:07:25,669 --> 00:07:27,729
-CPU不关心。
+The CPU doesn’t care.
 
 127
 00:07:27,729 --> 00:07:33,069
-EIP寄存器指向一些内存，CPU很乐意做那些值
+EIP寄存器指向一些内存，CPU很高兴地完成这些值。
 
 128
 00:07:33,069 --> 00:07:34,069
-说。
+say.
 
 129
 00:07:34,069 --> 00:07:36,659
-好吧，这只是半真半假。
+And well, that is just half true.
 
 130
 00:07:36,660 --> 00:07:41,670
-因为正如你所知，在现代系统中堆栈不再可执行，因此
+因为正如您可能知道的，在现代系统中，堆栈不再是可执行的，所以
 
 131
 00:07:41,669 --> 00:07:43,109
-CPU有点在意，但也不是真的。
+CPU does kinda care, but also not really.
 
 132
 00:07:43,110 --> 00:07:48,050
-它只是意味着记忆中的某些区域可以具有不同的权限。
+It just means that certain areas in this memory can have different permissions.
 
 133
 00:07:48,050 --> 00:07:53,300
-某些区域具有可执行标志，其中意味着CPU允许EIP指向那里，并且
+某些区域具有可执行标记，这意味着CPU允许EIP指向该区域，并且
 
 134
 00:07:53,300 --> 00:07:57,800
-很乐意将这些值解释为指令，但其他区域，如堆栈没有
+乐于将这些值解释为指令，但堆栈等其他区域没有
 
 135
 00:07:57,800 --> 00:07:58,800
-它。
+it.
 
 136
 00:07:58,800 --> 00:08:01,860
-然后CPU拒绝将其解释为指令。
+And then the CPU refuses to interpret it as instructions.
 
 137
 00:08:01,860 --> 00:08:07,030
-现在，当我们靠近什么类型的时候数据包含在所有这些不同的
+现在，当我们更接近于所有这些不同的数据中包含了什么类型的数据时
 
 138
 00:08:07,030 --> 00:08:12,520
-记忆区，我们可以尝试创造如何滥用的方法。
+memory areas, we can try to come up with creative ways of how to abuse the.
 
 139
 00:08:12,520 --> 00:08:15,580
-一个例子是典型的堆栈结构。
+One example is the typical stack structure.
 
 140
 00:08:15,580 --> 00:08:21,470
-当CPU执行调用指令时，放置当前指令指针值
+当CPU执行一条调用指令时，它将放置当前指令指针值
 
 141
 00:08:21,469 --> 00:08:23,919
-在堆栈指针指向的地址去。
+at the address where the stack pointer points to.
 
 142
 00:08:23,919 --> 00:08:26,559
-它将它放在堆栈的顶部。
+It places it ontop of the stack.
 
 143
 00:08:26,560 --> 00:08:30,840
-当函数返回时，堆栈指针指向和的值
+当函数返回时，它获取堆栈指针指向和的值。
 
 144
 00:08:30,839 --> 00:08:33,409
-设置指向它的指令指针。
+sets the instruction pointer to it.
 
 145
 00:08:33,410 --> 00:08:38,220
-所以如果你设法修改这个值在堆栈上，您可以控制EIP
+因此，如果您设法在堆栈上修改这个值，您可以控制到什么EIP
 
 146
 00:08:38,220 --> 00:08:42,490
-当函数返回时，这样你就可以决定要执行什么
+将设置为函数返回的时间，因此您可以决定执行什么操作
 
 147
 00:08:42,490 --> 00:08:43,490
-下一步。
+next.
 
 148
 00:08:43,490 --> 00:08:44,880
-这是典型的缓冲区溢出。
+That’s a classical buffer overflow.
 
 149
 00:08:44,880 --> 00:08:49,870
-另一个有趣的数据结构是全局偏移表，基本上只是
+另一个有趣的数据结构是全局偏移表，它基本上只是
 
 150
 00:08:49,870 --> 00:08:56,620
@@ -600,51 +600,51 @@ CPU有点在意，但也不是真的。
 
 151
 00:08:56,620 --> 00:09:01,610
-控制如果函数是从引用地址的
+控制如果调用的函数引用的地址来自
 
 152
 00:09:01,610 --> 00:09:02,610
-这张桌子。
+this table.
 
 153
 00:09:02,610 --> 00:09:06,750
-我的意思是通常你不能直接覆盖这些价值观，但这仅仅意味着
+我的意思是，通常你不能直接覆盖这些值，但这只是意味着你有
 
 154
 00:09:06,750 --> 00:09:08,680
-变得有创造力。
+to become creative.
 
 155
 00:09:08,680 --> 00:09:11,400
-例如，考虑堆上的两个对象。
+For example think of two objects on the heap.
 
 156
 00:09:11,400 --> 00:09:15,870
-一个用户对象和一个名称对象，以及用户对象有指向名称对象的指针。
+A user object and a name object, and the user object has a pointer to the name object.
 
 157
 00:09:15,870 --> 00:09:20,070
-当你想改变这个名字的时候用户，代码将跟随指针
+当您想更改这个用户的名称时，代码将跟随指针并
 
 158
 00:09:20,070 --> 00:09:26,030
-将新名称写入该位置，其中意思是如果你能以某种方式覆盖指针，
+将新名称写入该位置，这意味着如果您可以以某种方式覆盖该指针，
 
 159
 00:09:26,030 --> 00:09:29,120
-你可以控制它写名字的位置去。
+you can control where it would write the name to.
 
 160
 00:09:29,120 --> 00:09:33,020
-所以我们可以用覆盖名称指针栈上的地址，当我们写
+所以我们可以用堆栈上的地址覆盖名称指针，当我们写
 
 161
 00:09:33,021 --> 00:09:37,411
-用户的新名称，我们将覆盖上的存储指令指针
+用户的新名称，我们将实际覆盖存储的指令指针
 
 162
 00:09:37,410 --> 00:09:38,430
-堆栈。
+the stack.
 
 163
 00:09:38,430 --> 00:09:39,680
@@ -652,101 +652,101 @@ CPU有点在意，但也不是真的。
 
 164
 00:09:39,680 --> 00:09:42,260
-内存中包含数据。
+There is memory that contains data.
 
 165
 00:09:42,260 --> 00:09:47,830
-一些限制适用，如某些内存区域不可写，其他区域不可执行。
+Some restrictions apply, like certain memory areas are not writeable, others are not executable.
 
 166
 00:09:47,830 --> 00:09:53,250
-还有一个非常愚蠢的CPU执行EIP指向的任何操作。
+And there is a CPU that is very dumb and just executes whatever EIP points to.
 
 167
 00:09:53,250 --> 00:09:57,020
-内存中有一个程序，CPU执行。
+And there is a program in the memory, which the CPU executes.
 
 168
 00:09:57,020 --> 00:10:00,170
-这段代码使用内存来做任何事情应该是这样的。
+And this code uses the memory to do whatever it is supposed to do.
 
 169
 00:10:00,170 --> 00:10:04,500
-它相信内存中的数据。
+And it trusts in a certain integrity of the data in memory.
 
 170
 00:10:04,500 --> 00:10:08,590
-但是如果有一个bug，它允许你更改内存中的值，程序
+但是如果有一个bug，它允许你改变内存中的一个值，程序
 
 171
 00:10:08,590 --> 00:10:12,700
-不打算修改，神奇的东西可能会发生。
+did not intend to be modifiable, amazing things could happen.
 
 172
 00:10:12,700 --> 00:10:18,120
-可能发生的事情，只是有限的通过你的创造力和想象力。
+And what can happen, that’s just limited by your creativity and imagination.
 
 173
 00:10:18,120 --> 00:10:23,910
-内存中的一个更改的字节可能导致一段代码，用于写入意外的
+内存中的一个更改的字节可能会导致某段代码意外写入
 
 174
 00:10:23,910 --> 00:10:28,410
-覆盖函数指针的位置一个对象，代码的另一部分
+覆盖对象的函数指针的位置，代码的另一部分
 
 175
 00:10:28,410 --> 00:10:33,570
-想要使用，突然执行某个非常不同。
+wanted to use, and suddenly executes something very different.
 
 176
 00:10:33,570 --> 00:10:38,630
-所有这些技术我们都指定了名字去，如堆缓冲区溢出，堆风水，
+我们将这些技术命名为堆栈缓冲区溢出、堆风水，
 
 177
 00:10:38,630 --> 00:10:44,940
-免费使用ROP，都是有创意的如何处理内存中的数据以及如何处理
+免费使用ROP，都是解决内存中数据问题的创造性方法
 
 178
 00:10:44,940 --> 00:10:48,760
-CPU执行的程序对它。
+the program executed by the CPU reacts to it.
 
 179
 00:10:48,760 --> 00:10:54,020
-我知道这一集可能没有包含实际有用的信息。
+I understand that this episode might not have contained actual useful information to you.
 
 180
 00:10:54,020 --> 00:10:58,440
-但我有点想把它弄出去，因为也许有人不太喜欢看电视程序
+但我有点想把它拿出来，因为也许有人不太喜欢看电视节目
 
 181
 00:10:58,440 --> 00:11:00,310
-以这种方式进行剥削。
+and exploits in this way.
 
 182
 00:11:00,310 --> 00:11:03,080
-但我希望你能以这种方式看到它的价值考虑一下。
+But I hope you can see the value in this way of thinking about it.
 
 183
 00:11:03,080 --> 00:11:07,350
-我想这消除了一些恐惧一切看起来都很复杂。
+I think it takes some away some of the fear that it all looks so complicated.
 
 184
 00:11:07,350 --> 00:11:11,200
-我真的很想听听你的批评对此的看法。
+I’m really interested to hear your critical opinion about this.
 
 185
 00:11:11,200 --> 00:11:13,930
-所以请在YouTube或Reddit上发表评论下面链接的线程。
+So comment here on youtube or on the reddit thread linked below.
 
 186
 00:11:13,930 --> 00:11:17,850
-但如果你喜欢或不喜欢，我们将很快继续我们的学习之路
+但无论你是否喜欢，我们很快就会继续我们的学习之路
 
 187
 00:11:17,850 --> 00:11:19,850
-更高级的内存损坏技术。
+more advanced memory corruption techniques.
 
 188
 00:11:19,850 --> 00:11:21,890
-所以，保持好奇，下次见。
+So, stay curious, and see you next time.
 

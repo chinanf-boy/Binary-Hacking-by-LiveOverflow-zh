@@ -1,274 +1,274 @@
 1
 00:00:06,500 --> 00:00:10,910
-在这一集中，我们开始有所收获更接近完整的缓冲区溢出。
+In this episode we start to get a little bit closer to a full buffer overflow.
 
 2
 00:00:10,910 --> 00:00:15,370
-在上一集中，我们学会了如何缓冲区溢出可以更改局部变量，
+在上一集中，我们学习了缓冲区溢出如何改变局部变量，
 
 3
 00:00:15,370 --> 00:00:17,230
-它们存储在堆栈中。
+which are stored on the stack.
 
 4
 00:00:17,230 --> 00:00:21,000
-现在我们来看看堆栈级别3，这是非常相似的。
+Now we will have a look at stack level 3, which is very similar.
 
 5
 00:00:21,000 --> 00:00:25,470
-如果你忘记了我们如何解决堆栈问题等级0，你应该回去再看一遍。
+If you forgot how we were able to solve stack level 0, you should go back and watch it again.
 
 6
 00:00:25,470 --> 00:00:29,600
-当我们查看此代码时，我们会看到它基本相同。
+When we look at this code, we see that it is basically the same.
 
 7
 00:00:29,600 --> 00:00:34,830
-唯一的区别是名称，而不是一个修改过的变量，我们有fp变量，
+唯一的区别是名称，而不是修改过的变量，我们有fp变量，
 
 8
 00:00:34,830 --> 00:00:37,110
-它被定义为函数指针。
+which is defined as a function pointer.
 
 9
 00:00:37,110 --> 00:00:42,970
-语法看起来有点难看，但是如果你检查一下如果是这种情况，它只是检查fp是否不是
+语法看起来有点难看，但是如果检查if大小写，它只检查fp是否不是。
 
 10
 00:00:42,970 --> 00:00:46,770
-零，然后只是调用fp，就好像它一样一个功能。
+zero, and then just calls fp, as if it were a function.
 
 11
 00:00:46,770 --> 00:00:50,350
-现在你知道一个函数有一个地址记忆中的位置。
+Now you know that a function has an address location in memory.
 
 12
 00:00:50,350 --> 00:00:54,470
-所以它基本上会调用任何地址存储在fp中。
+So it will basically call whatever address is stored in fp.
 
 13
 00:00:54,470 --> 00:00:59,810
-现在像stack0中的修改变量一样函数指针fp设置为0和
+现在像stack0中的修改变量一样，函数指针fp被设置为0，并且
 
 14
 00:00:59,810 --> 00:01:04,050
-在获取功能之后，它将被检查如果它不再是零。
+after the gets function it will be checked if it’s not zero anymore.
 
 15
 00:01:04,050 --> 00:01:07,900
-所以我们知道fp也必须存储在堆栈。
+So we know that fp must also be stored on the stack.
 
 16
 00:01:07,900 --> 00:01:12,360
-作为提示它说，我们可以使用gdb或objhump确定win（）函数的位置
+提示是，我们可以使用gdb或objhump来确定win（）函数的位置。
 
 17
 00:01:12,360 --> 00:01:15,100
-在于记忆。
+lies in memory.
 
 18
 00:01:15,100 --> 00:01:20,490
-首先让我们使用gdb，你可以使用检查或打印以获取胜利的地址。
+So first let’s use gdb and you can use examine or print to get the address of win.
 
 19
 00:01:20,490 --> 00:01:24,250
-然后将反汇编风格设置为intel和拆卸主体。
+Then set the disassembly flavor to intel and disassemble main.
 
 20
 00:01:24,250 --> 00:01:30,120
-完全像stack0，我们可以看到它堆栈上六角形60字节的空间。
+Exactly like stack0, we can see that it makes space for hex 60 bytes on the stack.
 
 21
 00:01:30,119 --> 00:01:36,279
-然后我们将esp offset 5c设置为0，这样就可以了fp变量的位置。
+Then we set esp offset 5c to 0, so that is the location of the fp variable.
 
 22
 00:01:36,280 --> 00:01:41,790
-获得之后，我们比较它的值仍然是0，如果不是这样，
+在gets之后，我们比较值，如果它仍然是0，如果不是，
 
 23
 00:01:41,790 --> 00:01:46,310
-我们在这里将值加载到eax中，并且叫那个地址。
+we load the value into eax down here, and call that address.
 
 24
 00:01:46,310 --> 00:01:48,860
-所以让我们在这次通话中设置一个断点。
+So let’s set a breakpoint at this call.
 
 25
 00:01:48,860 --> 00:01:53,800
-现在执行它并输入足够的字符覆盖堆栈上的这个值。
+Now execute it and enter enough characters to overwrite this value on the stack.
 
 26
 00:01:53,799 --> 00:01:55,769
-完全像上一个视频。
+Exactly like last video.
 
 27
 00:01:55,770 --> 00:02:00,140
-好的，我们打破了断点，让我们来看看寄存器，我们可以看到，我们有
+好的，我们点击断点，让我们看看寄存器，我们可以看到
 
 28
 00:02:00,140 --> 00:02:06,870
-成功地将eax设置为41414141，这是资本A的ascii值。
+succesfully set eax to 41414141, which is the ascii value of capital A.
 
 29
 00:02:06,869 --> 00:02:09,749
-并且下一条指令试图调用它地址。
+And the next instruction tries to call this address.
 
 30
 00:02:09,750 --> 00:02:11,590
-所以基本上跳到那里。
+So basically jump there.
 
 31
 00:02:11,590 --> 00:02:16,950
-但那显然是无效的记忆，我们得到分段错误。
+But that is obviously invalid memory, se we get a Segmentation fault.
 
 32
 00:02:16,950 --> 00:02:19,080
-现在打开第二个ssh会话。
+Now open a second ssh session.
 
 33
 00:02:19,080 --> 00:02:22,120
-并创建一个python脚本，这将是我们的利用。
+And create a python script, that will be our exploit.
 
 34
 00:02:22,120 --> 00:02:26,040
-所以让我们首先尝试找出哪个偏移量控制eax。
+So let’s first try to figure out which offset controls eax.
 
 35
 00:02:26,040 --> 00:02:28,070
-因此，只需打印一个可识别的模式。
+So simply print a recognizable pattern.
 
 36
 00:02:28,070 --> 00:02:30,120
-例如字母表。
+For example the alphabet.
 
 37
 00:02:30,120 --> 00:02:31,740
-好。
+Ok. cool.
 
 38
 00:02:31,739 --> 00:02:33,089
-凉。
+So pipe this output in a file.
 
 39
 00:02:33,090 --> 00:02:36,390
-因此，将此输出传递到文件中。
+Now you can use this file in gdb as input.
 
 40
 00:02:36,390 --> 00:02:41,760
-现在您可以在gdb中将此文件用作输入。所以我们不必每次都输入它，它会
+So we dont have to type it everytime, it will use the content of that file as input.
 
 41
 00:02:41,760 --> 00:02:46,900
-使用该文件的内容作为输入。现在"运行"并使用左箭头重定向
+现在“运行”并使用左箭头重定向标准输入中的文件内容
 
 42
 00:02:46,900 --> 00:02:48,500
-标准输入中的文件内容
+the program.
 
 43
 00:02:48,500 --> 00:02:53,920
-该程序。好吧，所以eax它是十六进制51，这是一个资本
+Ok so eax it’s hex 51, and that is a capital Q.
 
 44
 00:02:53,920 --> 00:02:56,700
-Q.
+So now we know which offset modifies eax.
 
 45
 00:02:56,700 --> 00:02:58,700
-所以现在我们知道哪个偏移修改了eax。
+let’s rewrite the code a little bit.
 
 46
 00:02:58,700 --> 00:03:01,970
-让我们重写一下代码。让我们把这部分称为"Qs"
+Let’s call this part up to the “Qs” - padding.
 
 47
 00:03:01,970 --> 00:03:06,740
-- 填充。所以现在我们要写这里的地址
+So now we want to write here the address of the win function.
 
 48
 00:03:06,740 --> 00:03:11,040
-胜利功能。因此，只需使用反斜杠x作为十六进制转义
+So simply use backslash x as hex escape for those byte values.
 
 49
 00:03:11,040 --> 00:03:13,080
-那些字节值。
+Oh oops.
 
 50
 00:03:13,080 --> 00:03:14,080
-哦，哎呀。
+That doesn fit.
 
 51
 00:03:14,080 --> 00:03:16,170
-那不合适。
+There is a leading 0 missing.
 
 52
 00:03:16,170 --> 00:03:17,980
-有一个领先的0失踪。
+Save, write the file.
 
 53
 00:03:17,980 --> 00:03:19,880
-保存，写入文件。
+And check it in gdb.
 
 54
 00:03:19,879 --> 00:03:20,879
-并在gdb中检查它。
+嗯？
 
 55
 00:03:20,879 --> 00:03:22,179
-咦？
+分离故障？
 
 56
 00:03:22,180 --> 00:03:24,270
-分裂错？
+The address looks a bit weird.
 
 57
 00:03:24,269 --> 00:03:25,929
-地址看起来有点奇怪。
+看来是走错了路？
 
 58
 00:03:25,930 --> 00:03:28,300
-那是因为结束了。
+Well, that is because of the endianess.
 
 59
 00:03:28,300 --> 00:03:31,910
-所以数值基本上就是其他方式。
+So the numerical value will be basically the other way around.
 
 60
 00:03:31,909 --> 00:03:32,909
-凉。
+cool.
 
 61
 00:03:32,909 --> 00:03:34,589
-Eax现在看起来很好。
+Eax looks fine now.
 
 62
 00:03:34,590 --> 00:03:41,160
-让我们继续，我们成功地获得代码流变了！
+让我们继续，我们成功地更改了代码流！
 
 63
 00:03:41,159 --> 00:03:43,729
-现在让我们快速解决下一个级别好。
+Now let’s quickly solve the next level as well.
 
 64
 00:03:43,730 --> 00:03:47,430
-这个级别是我们的第一个缓冲区溢出，其中我们利用堆栈布局。
+This level is our first buffer overflow, where we take advantage of the stack layout.
 
 65
 00:03:47,430 --> 00:03:49,610
-代码不多。
+The code doesn’t contain much.
 
 66
 00:03:49,610 --> 00:03:52,210
-我们没有函数指针变量覆盖。
+There is no function pointer variable we could overwrite.
 
 67
 00:03:52,209 --> 00:03:54,159
-现在修改了变量。
+And now modified variable.
 
 68
 00:03:54,160 --> 00:03:56,350
-但它仍然希望我们执行胜利。
+But it still wants us to execute win.
 
 69
 00:03:56,350 --> 00:03:57,940
@@ -276,221 +276,221 @@ Eax现在看起来很好。
 
 70
 00:03:57,940 --> 00:04:01,080
-现在你还记得堆栈的样子吗？从上一个视频？
+现在你还记得上一个视频中的堆栈是什么样子的吗？
 
 71
 00:04:01,080 --> 00:04:03,390
-这是一个快速回顾：
+下面是一个简短的概括：
 
 72
 00:04:03,390 --> 00:04:05,890
-所以在左边你可以看到汇编程序码。
+So here on the left you can see the assembler code.
 
 73
 00:04:05,890 --> 00:04:10,130
-在右边，我将说明堆栈。与3个重要的寄存器，指令
+在右边，我将展示这个堆栈。使用3个重要寄存器，指令
 
 74
 00:04:10,129 --> 00:04:16,949
-指针EIP，堆栈指针ESP和基指针EBP。
+pointer EIP, the stack pointer ESP and the base pointer EBP.
 
 75
 00:04:16,950 --> 00:04:20,280
-所以首先它通过'呼叫从其他地方开始主要'。
+So first it starts somewhere else with a ‘call main’.
 
 76
 00:04:20,280 --> 00:04:24,970
-调用将推动理论上的下一条指令指针到堆栈上。
+Call will push the theoretically next instruction pointer onto the stack.
 
 77
 00:04:24,970 --> 00:04:26,870
-然后跳转到我们的main 函数。
+And then jump to our main function.
 
 78
 00:04:26,870 --> 00:04:31,960
-如你所见，当下一个地址指令被推，堆栈指针
+如您所见，当按下下一条指令的地址时，堆栈指针
 
 79
 00:04:31,960 --> 00:04:36,000
-得到增加，地址放在那里。
+got incremented and the address placed there.
 
 80
 00:04:36,000 --> 00:04:38,940
-所以现在我们推动EBP。
+So now comes our push EBP.
 
 81
 00:04:38,940 --> 00:04:42,660
-我们现在怎么知道从哪里返回主要？
+我们现在怎么知道从梅因返回哪里？
 
 82
 00:04:42,660 --> 00:04:47,800
-好吧，如果你还记得，打电话推了一下地址通话后的指令。
+Well if you remember, call pushed the address of the instruction after the call.
 
 83
 00:04:47,800 --> 00:04:51,800
-所以堆栈的下一个值就是我们所处的位置想回去。
+So the next value on the stack is where we want to return to.
 
 84
 00:04:51,800 --> 00:04:55,780
-ret指令基本上就是将此地址弹出到指令中
+ret指令基本上就是把这个地址输入指令
 
 85
 00:04:55,780 --> 00:04:56,960
-指针。
+pointer.
 
 86
 00:04:56,960 --> 00:04:59,560
-从而跳回我们来自的地方。
+And thus jumping back where we came from.
 
 87
 00:04:59,560 --> 00:05:04,030
-正如您所看到的，当调用函数时，我们想要回到的地址，将会
+如你所见，当一个函数被调用时，我们想要返回的地址，将
 
 88
 00:05:04,030 --> 00:05:05,810
-存储在堆栈中。
+be stored on the stack.
 
 89
 00:05:05,810 --> 00:05:10,000
-所以不是溢出局部变量，我们可以简单地溢出返回指针
+因此，我们可以简单地溢出返回指针，而不是溢出局部变量
 
 90
 00:05:10,000 --> 00:05:11,320
-在堆栈上。
+on the stack.
 
 91
 00:05:11,320 --> 00:05:17,090
-当主要回来时，它会读错误的值而是跳到那里。
+And when main would return, it would read the wrong value and jump there instead.
 
 92
 00:05:17,090 --> 00:05:20,410
-所以让我们使用我们刚才拥有的代码写了，稍微修改一下。
+So let’s use the code that we have just written, and modify it a bit.
 
 93
 00:05:20,410 --> 00:05:29,390
-让我们使有效载荷更长一些简单地把它扔在gdb中的这个程序中。
+Let’s make the payload a bit longer and simply throw it at this program in gdb.
 
 94
 00:05:29,389 --> 00:05:35,769
-分裂错误在十六进制54，所以我们succsefully重定向代码执行，到坏内存。
+Segmentationfault in hex 54, so we succsefully redirected code execution, to bad memory.
 
 95
 00:05:35,770 --> 00:05:40,530
-如果仔细观察，你也可以发现basepointer是十六进制53。
+And if you look closely you can also spot that the basepointer is hex 53.
 
 96
 00:05:40,530 --> 00:05:45,450
-因此，一个人也被覆盖了如果你记得上一个视频，旧的basepointer
+所以那个也被覆盖了，因为如果你记得上一个视频，旧的basepointer
 
 97
 00:05:45,449 --> 00:05:49,919
-之前也存储在堆栈中指令指针。
+is also stored on the stack, right before the instruction pointer.
 
 98
 00:05:49,919 --> 00:05:55,109
-并且hex 54是T.所以T允许我们控制指令指针。
+And hex 54 is T. So T allows us to control the instruction pointer.
 
 99
 00:05:55,110 --> 00:05:59,210
-这次让我们用objdump找到胜利功能的地址。
+This time let’s use objdump to find the address of the win function.
 
 100
 00:05:59,210 --> 00:06:03,540
-用-t我们得到所有符号，然后我们就可以赢得胜利。
+With -t we get all symbols, and then we can grep for win.
 
 101
 00:06:03,539 --> 00:06:04,539
-所以有我们的地址。
+So there is our address.
 
 102
 00:06:04,539 --> 00:06:05,539
-现在让我们修改我们的漏洞利用代码。
+Now let’s modify our exploit code.
 
 103
 00:06:05,539 --> 00:06:08,989
-让我们删除一切到S的所有内容，因为这是基指针。
+Let’s remove everything up to the S, because that is the base pointer.
 
 104
 00:06:08,990 --> 00:06:12,180
-现在创建两个变量ebp和eip。
+Now create two variables ebp and eip.
 
 105
 00:06:12,180 --> 00:06:15,110
-我们不关心EBP所以我们可以设置它到我们想要的任何东西。
+We don’t care about EBP so we can just set it to whatever we want.
 
 106
 00:06:15,110 --> 00:06:18,240
-接下来我们要设置指令指针。
+And next we want to set the instruction pointer.
 
 107
 00:06:18,240 --> 00:06:21,820
-但是让我展示一种更好的编码方式地址为字符串。
+But let me show a better way to encode the address as a string.
 
 108
 00:06:21,820 --> 00:06:23,250
-所以导入结构。
+So import struct.
 
 109
 00:06:23,250 --> 00:06:27,880
-然后你可以使用struct.pack进行转换地址从整数到a
+然后可以使用struct.pack将地址从整数转换为
 
 110
 00:06:27,880 --> 00:06:29,550
-二进制字符串
+binary string.
 
 111
 00:06:29,550 --> 00:06:33,480
-然后打印填充并附加ebp和eip变量。
+Then print the padding and append the ebp and eip variable.
 
 112
 00:06:33,479 --> 00:06:37,949
-所以让我们执行这个漏洞并管道它进入stack4级别。
+so let’s execute this exploit and pipe it into the stack4 level.
 
 113
 00:06:37,949 --> 00:06:40,449
-Codeflow已成功更改！
+代码流已成功更改！
 
 114
 00:06:40,449 --> 00:06:41,639
-惊人。
+Amazing.
 
 115
 00:06:41,639 --> 00:06:43,979
-我们粉碎了堆栈并控制了指令指针。
+We smashed the stack and controlled the instruction pointer.
 
 116
 00:06:43,979 --> 00:06:47,339
-但是你仍然会出现分裂错误？
+但你还是会有分离的错误吗？
 
 117
 00:06:47,340 --> 00:06:51,530
-原因是，胜利之后功能完成后，它会尝试返回
+原因是，在Win函数完成后，它试图返回到
 
 118
 00:06:51,530 --> 00:06:56,130
-堆栈上的下一个值，现在是一些胡言乱语，可能不是有效的
+堆栈上的下一个值，现在有些乱七八糟，可能不在有效的
 
 119
 00:06:56,130 --> 00:06:57,520
-代码区。
+code area.
 
 120
 00:06:57,520 --> 00:06:59,490
-所以它最终会崩溃。
+So it will crash eventually.
 
 121
 00:06:59,490 --> 00:07:02,070
-但我们不在乎，因为我们执行了什么我们要。
+But we don’t care, because we executed what we wanted.
 
 122
 00:07:02,070 --> 00:07:06,380
-在下一个视频中，我们将首先编写缓冲区溢出shellcode，将会
+在下一个视频中，我们将用shellcode编写第一个缓冲区溢出，它将
 
 123
 00:07:06,380 --> 00:07:09,290
-向您展示缓冲区溢出有多强大是。
+show you how powerful a buffer overflow can be.
 
 124
 00:07:09,290 --> 00:07:13,020
-这将是我们的第一次利用获得root权限。
+And it will be our first exploit that will get us root privileges.
 
