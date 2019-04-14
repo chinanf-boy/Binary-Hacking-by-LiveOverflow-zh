@@ -4,7 +4,7 @@
 
 2
 00:00:03,520 --> 00:00:12,620
-Those are questions we try to answer in this video.
+这些是我们在这段视频中试图回答的问题。
 
 3
 00:00:12,620 --> 00:00:17,000
@@ -12,7 +12,7 @@ Those are questions we try to answer in this video.
 
 4
 00:00:17,000 --> 00:00:22,340
-the heap, by allocating memory with malloc and if you are done you free it again.
+堆，通过使用malloc分配内存，如果完成了，就可以再次释放它。
 
 5
 00:00:22,340 --> 00:00:26,740
@@ -20,7 +20,7 @@ the heap, by allocating memory with malloc and if you are done you free it again
 
 6
 00:00:26,740 --> 00:00:28,100
-more memory or give it back.
+更多的记忆或者把它还给我。
 
 7
 00:00:28,100 --> 00:00:32,320
@@ -28,15 +28,15 @@ more memory or give it back.
 
 8
 00:00:32,320 --> 00:00:33,750
-in the first place.
+首先。
 
 9
 00:00:33,750 --> 00:00:36,800
-This is done via mmap or brk.
+这是通过mmap或brk完成的。
 
 10
 00:00:36,800 --> 00:00:40,370
-Those are system calls, which means we ask the kernel directly.
+这些是系统调用，这意味着我们直接询问内核。
 
 11
 00:00:40,370 --> 00:00:46,000
@@ -44,7 +44,7 @@ mmap请求内核给我们一些新的虚拟地址空间，基本上请求一个�
 
 12
 00:00:46,000 --> 00:00:47,000
-memory segment.
+内存段。
 
 13
 00:00:47,000 --> 00:00:52,900
@@ -52,11 +52,11 @@ memory segment.
 
 14
 00:00:52,899 --> 00:00:53,899
-memory segment.
+内存段。
 
 15
 00:00:53,899 --> 00:00:55,899
-This is real fucking magic.
+这是真正的魔法。
 
 16
 00:00:55,900 --> 00:01:00,860
@@ -68,7 +68,7 @@ This is real fucking magic.
 
 18
 00:01:04,789 --> 00:01:05,789
-have enough RAM.
+有足够的内存。
 
 19
 00:01:05,789 --> 00:01:11,139
@@ -80,7 +80,7 @@ have enough RAM.
 
 21
 00:01:15,419 --> 00:01:22,909
-- and transparent in this context means, “doesn’t have to know anything about it”.
+-在这种情况下，透明意味着“不必知道任何事情”。
 
 22
 00:01:22,909 --> 00:01:28,729
@@ -88,11 +88,11 @@ have enough RAM.
 
 23
 00:01:28,729 --> 00:01:30,349
-up the processes memory regions.
+处理内存区域。
 
 24
 00:01:30,350 --> 00:01:34,690
-And near the end it uses brk to setup the heap.
+最后，它使用brk来设置堆。
 
 25
 00:01:34,689 --> 00:01:40,269
@@ -108,19 +108,19 @@ And near the end it uses brk to setup the heap.
 
 28
 00:01:51,130 --> 00:01:52,310
-for us.
+对我们来说。
 
 29
 00:01:52,310 --> 00:01:54,720
-And does much more.
+做得更多。
 
 30
 00:01:54,719 --> 00:02:00,689
-Malloc will call mmap or brk to get more memory if the heap doesn’t exist or is too small.
+如果堆不存在或太小，malloc将调用mmap或brk以获取更多内存。
 
 31
 00:02:00,689 --> 00:02:06,539
-But on top of that it will help us to organize and manage that memory.
+但除此之外，它将帮助我们组织和管理记忆。
 
 32
 00:02:06,539 --> 00:02:11,479
@@ -128,7 +128,7 @@ But on top of that it will help us to organize and manage that memory.
 
 33
 00:02:11,480 --> 00:02:15,640
-so little, that we won’t see any additional memory mapped regions.
+如此之少，我们将看不到任何额外的内存映射区域。
 
 34
 00:02:15,640 --> 00:02:21,430
@@ -136,15 +136,15 @@ so little, that we won’t see any additional memory mapped regions.
 
 35
 00:02:21,430 --> 00:02:23,140
-mapped memory.
+映射内存。
 
 36
 00:02:23,140 --> 00:02:26,110
-And we can do in this memory whatever we want.
+在这个记忆中，我们可以做任何我们想做的事。
 
 37
 00:02:26,110 --> 00:02:31,330
-So when we refer to the heap, we actually mean this memory region.
+所以当我们提到堆时，实际上是指这个内存区域。
 
 38
 00:02:31,330 --> 00:02:34,970
@@ -152,19 +152,19 @@ So when we refer to the heap, we actually mean this memory region.
 
 39
 00:02:34,970 --> 00:02:38,090
-Let’s explore this abstractly first.
+让我们先抽象地探讨一下这个问题。
 
 40
 00:02:38,090 --> 00:02:40,600
-We want to allocate 8 bytes.
+我们要分配8个字节。
 
 41
 00:02:40,599 --> 00:02:42,879
-So we call malloc with 8.
+所以我们用8来称呼malloc。
 
 42
 00:02:42,880 --> 00:02:46,310
-This means we block 8 bytes on the heap.
+这意味着我们在堆上阻塞了8个字节。
 
 43
 00:02:46,310 --> 00:02:50,900
@@ -172,23 +172,23 @@ This means we block 8 bytes on the heap.
 
 44
 00:02:50,900 --> 00:02:54,990
-with this address we know where we can write our 8 bytes to.
+有了这个地址，我们就知道在哪里可以写入8个字节。
 
 45
 00:02:54,989 --> 00:03:00,499
-So we can now write the string “AAAABBBB” to that address.
+现在我们可以将字符串“aaaabbb”写入该地址。
 
 46
 00:03:00,500 --> 00:03:03,420
-Now we allocate two more times.
+现在我们再分配两次。
 
 47
 00:03:03,420 --> 00:03:06,730
-malloc(8), malloc(8).
+malloc（8），malloc（8）。
 
 48
 00:03:06,730 --> 00:03:07,920
-This begs the question what does blocking mean.
+这就引出了一个问题：阻塞意味着什么。
 
 49
 00:03:07,920 --> 00:03:09,310
@@ -200,23 +200,23 @@ Malloc如何知道返回的地址？
 
 51
 00:03:10,760 --> 00:03:11,880
-safely for different sizes, you could come up with a working solution.
+对于不同的尺寸，您可以安全地提出一个有效的解决方案。
 
 52
 00:03:11,879 --> 00:03:13,189
-And if you would implement that you would have created your own heap algorithm.
+如果您实现了这一点，那么您将创建自己的堆算法。
 
 53
 00:03:13,190 --> 00:03:16,150
-So there are many different ways one could implement that.
+所以有很多不同的方法可以实现它。
 
 54
 00:03:16,150 --> 00:03:20,170
-Though most commonly used is an implementation called DLmalloc.
+尽管最常用的是一个名为dlmalloc的实现。
 
 55
 00:03:20,170 --> 00:03:23,790
-Because a dude with the name Douglas Lea wrote it.
+因为是一个叫道格拉斯·李的家伙写的。
 
 56
 00:03:23,790 --> 00:03:28,540
@@ -224,19 +224,19 @@ malloc算法将为它所阻塞的每个块存储块的大小。
 
 57
 00:03:28,540 --> 00:03:29,540
-before it.
+在它之前。
 
 58
 00:03:29,540 --> 00:03:34,240
-And it will also keep 4 bytes before that empty for how the free is implemented.
+它还将保留4个字节，以表示自由是如何实现的。
 
 59
 00:03:34,240 --> 00:03:36,330
-But we will only focus on malloc for now.
+但我们现在只关注malloc。
 
 60
 00:03:36,329 --> 00:03:40,439
-Let’s do the mallocs again, and let’s think like a computer.
+让我们再做一次mallocs，让我们像计算机一样思考。
 
 61
 00:03:40,439 --> 00:03:44,839
@@ -244,7 +244,7 @@ Let’s do the mallocs again, and let’s think like a computer.
 
 62
 00:03:44,840 --> 00:03:45,950
-the heap.
+堆。
 
 63
 00:03:45,950 --> 00:03:50,510
@@ -252,7 +252,7 @@ the heap.
 
 64
 00:03:50,510 --> 00:03:53,830
-part, that is usable by the programmer, starts.
+程序员可以使用的部分启动。
 
 65
 00:03:53,830 --> 00:03:58,310
@@ -264,11 +264,11 @@ part, that is usable by the programmer, starts.
 
 67
 00:03:59,319 --> 00:04:02,079
-Not that we write over our previously allocated area.
+不是说我们重写了以前分配的区域。
 
 68
 00:04:02,079 --> 00:04:06,679
-Well we obviously have to kinda memorize where our free region begins.
+很明显，我们必须记住自由区的起点。
 
 69
 00:04:06,680 --> 00:04:10,770
@@ -276,23 +276,23 @@ Well we obviously have to kinda memorize where our free region begins.
 
 70
 00:04:10,769 --> 00:04:15,189
-of the heap, by adding the size of the chunk we allocated to it.
+通过添加我们分配给堆的块的大小。
 
 71
 00:04:15,189 --> 00:04:17,129
-And this happens every malloc.
+每一个malloc都会发生这种情况。
 
 72
 00:04:17,130 --> 00:04:22,760
-So there is a pointer somewhere, that will always point to free memory.
+所以在某个地方有一个指针，它总是指向空闲内存。
 
 73
 00:04:22,760 --> 00:04:24,670
-Cool.
+酷。
 
 74
 00:04:24,670 --> 00:04:26,140
-Just for understanding purposes.
+只是为了理解目的。
 
 75
 00:04:26,140 --> 00:04:29,760
@@ -300,11 +300,11 @@ Just for understanding purposes.
 
 76
 00:04:29,760 --> 00:04:34,090
-Well, this pointer points to the start where we can write data to.
+好吧，这个指针指向我们可以写入数据的起点。
 
 77
 00:04:34,090 --> 00:04:39,030
-So if we look at the address just before that, we can read the size of the current chunk.
+因此，如果我们在这之前查看地址，就可以读取当前块的大小。
 
 78
 00:04:39,030 --> 00:04:43,540
@@ -312,19 +312,19 @@ So if we look at the address just before that, we can read the size of the curre
 
 79
 00:04:43,540 --> 00:04:44,890
-the heap.
+堆。
 
 80
 00:04:44,890 --> 00:04:47,390
-Where we can do the same again.
+我们可以再这样做。
 
 81
 00:04:47,390 --> 00:04:51,290
-Now let’s have a look at the heap level 1 challenge from protostar.
+现在让我们来看看来自原恒星的堆级别1挑战。
 
 82
 00:04:51,290 --> 00:04:54,890
-We will use that example to look at how malloc works in real-life.
+我们将用这个例子来看看malloc在现实生活中是如何工作的。
 
 83
 00:04:54,890 --> 00:04:59,360
@@ -332,19 +332,19 @@ We will use that example to look at how malloc works in real-life.
 
 84
 00:04:59,360 --> 00:05:00,520
-look like.
+看起来像。
 
 85
 00:05:00,520 --> 00:05:04,000
-And then next video we actually do that practically.
+下一个视频我们实际上是这么做的。
 
 86
 00:05:04,000 --> 00:05:06,340
-The objective here seems to call winner().
+这里的目标似乎称为winner（）。
 
 87
 00:05:06,340 --> 00:05:10,500
-So we somehow have to redirect code execution to that function.
+所以我们必须以某种方式将代码执行重定向到该函数。
 
 88
 00:05:10,500 --> 00:05:15,380
@@ -352,7 +352,7 @@ So we somehow have to redirect code execution to that function.
 
 89
 00:05:15,380 --> 00:05:16,380
-integer.
+整数。
 
 90
 00:05:16,380 --> 00:05:22,030
@@ -360,15 +360,15 @@ integer.
 
 91
 00:05:22,030 --> 00:05:24,500
-to a string somewhere else.
+到其他地方的字符串。
 
 92
 00:05:24,500 --> 00:05:25,780
-Structs are like classes.
+结构类似于类。
 
 93
 00:05:25,780 --> 00:05:30,570
-At least in terms of providing a structure with multiple different member attributes.
+至少在提供具有多个不同成员属性的结构方面。
 
 94
 00:05:30,570 --> 00:05:36,030
@@ -376,11 +376,11 @@ At least in terms of providing a structure with multiple different member attrib
 
 95
 00:05:36,030 --> 00:05:37,030
-are used.
+被使用。
 
 96
 00:05:37,030 --> 00:05:39,850
-I guess a leftover from creating this level.
+我想这是创建这个级别的剩余部分。
 
 97
 00:05:39,850 --> 00:05:45,450
@@ -388,23 +388,23 @@ I guess a leftover from creating this level.
 
 98
 00:05:45,450 --> 00:05:46,450
-on the stack.
+在堆栈上。
 
 99
 00:05:46,450 --> 00:05:52,500
-Only the addresses, the pointer, to those objects are stored in i1, i2 and i3.
+只有指向这些对象的地址（指针）存储在i1、i2和i3中。
 
 100
 00:05:52,500 --> 00:05:56,900
-Anyhow, then it starts allocating those objects on the heap.
+无论如何，然后它开始在堆上分配这些对象。
 
 101
 00:05:56,900 --> 00:06:01,550
-It first calls malloc with enough space for the i1 object.
+它首先调用malloc，为i1对象提供足够的空间。
 
 102
 00:06:01,550 --> 00:06:05,630
-Sizeof will return the number of bytes this struct requires.
+sizeof将返回此结构所需的字节数。
 
 103
 00:06:05,630 --> 00:06:10,920
@@ -412,19 +412,19 @@ Sizeof will return the number of bytes this struct requires.
 
 104
 00:06:10,920 --> 00:06:13,290
-which is an address, is also 4 bytes.
+它是一个地址，也是4个字节。
 
 105
 00:06:13,290 --> 00:06:16,270
-Because we are on a 32bit machine.
+因为我们在32位机器上。
 
 106
 00:06:16,270 --> 00:06:20,250
-And we know that malloc returns the address on the heap that we can now use.
+我们知道malloc返回堆中我们现在可以使用的地址。
 
 107
 00:06:20,250 --> 00:06:25,550
-So i1 points to the start of 8 bytes in memory.
+所以I1指向内存中8个字节的开头。
 
 108
 00:06:25,550 --> 00:06:30,620
@@ -432,7 +432,7 @@ So i1 points to the start of 8 bytes in memory.
 
 109
 00:06:30,620 --> 00:06:32,310
-area.
+面积。
 
 110
 00:06:32,310 --> 00:06:36,930
@@ -440,11 +440,11 @@ area.
 
 111
 00:06:36,930 --> 00:06:38,520
-pointer name.
+指针名称。
 
 112
 00:06:38,520 --> 00:06:42,300
-Which is at offset +4 of the i1 object.
+它位于i1对象的偏移量+4处。
 
 113
 00:06:42,300 --> 00:06:50,310
@@ -456,7 +456,7 @@ Which is at offset +4 of the i1 object.
 
 115
 00:06:56,090 --> 00:06:57,770
-char pointer name.
+字符指针名称。
 
 116
 00:06:57,770 --> 00:07:04,090
@@ -464,35 +464,35 @@ char pointer name.
 
 117
 00:07:04,090 --> 00:07:06,000
-just allocated.
+刚刚分配。
 
 118
 00:07:06,000 --> 00:07:10,910
-Those 8 bytes are intended to store a list of characters, a string - the name.
+这8个字节用于存储字符列表，一个字符串——名称。
 
 119
 00:07:10,910 --> 00:07:12,700
-Then the same is done over again for i2.
+然后对I2再次进行同样的操作。
 
 120
 00:07:12,700 --> 00:07:15,040
-We make space for the struct i2.
+我们为结构I2腾出空间。
 
 121
 00:07:15,040 --> 00:07:16,910
-We set its priority to 2.
+我们把它的优先级设置为2。
 
 122
 00:07:16,910 --> 00:07:20,860
-And we allocate another 8 byte for the name string.
+我们为名称字符串分配了另外8个字节。
 
 123
 00:07:20,860 --> 00:07:26,920
-So basically we have now two objects allocated on the heap that we can work with.
+所以基本上我们在堆上分配了两个对象，我们可以使用它们。
 
 124
 00:07:26,920 --> 00:07:29,500
-Next come two strcpys.
+接下来是两条街道。
 
 125
 00:07:29,500 --> 00:07:34,500
@@ -500,7 +500,7 @@ Next come two strcpys.
 
 126
 00:07:34,500 --> 00:07:37,490
-we can potentially write more than we have space.
+我们可能写得比空间还多。
 
 127
 00:07:37,490 --> 00:07:42,770
@@ -508,11 +508,11 @@ we can potentially write more than we have space.
 
 128
 00:07:42,770 --> 00:07:45,620
-over those 8 bytes and really screw up stuff.
+超过了8字节，真的搞砸了。
 
 129
 00:07:45,620 --> 00:07:51,810
-Anyhow, the strcpy will copy the first argument to the name of the i1 object.
+无论如何，strcpy会将第一个参数复制到i1对象的名称中。
 
 130
 00:07:51,810 --> 00:07:58,400
@@ -520,7 +520,7 @@ I1指向I1对象的开始，偏移量+4（即名称）是地址
 
 131
 00:07:58,400 --> 00:08:02,120
-of the free 8 bytes that were allocated for the string.
+为字符串分配的可用8个字节。
 
 132
 00:08:02,120 --> 00:08:07,590
@@ -528,19 +528,19 @@ of the free 8 bytes that were allocated for the string.
 
 133
 00:08:07,590 --> 00:08:09,020
-location.
+位置。
 
 134
 00:08:09,020 --> 00:08:11,420
-And the same thing is happening for the second argument with i2 object.
+同样的事情也发生在第二个关于I2对象的争论中。
 
 135
 00:08:11,421 --> 00:08:13,021
-It will take the address stored at +4 of i2, and attempt to copy there our string.
+它将获取存储在i2的+4的地址，并尝试将字符串复制到该地址。
 
 136
 00:08:13,020 --> 00:08:15,830
-After that, we will printf and then quit the program.
+之后，我们将打印f，然后退出程序。
 
 137
 00:08:15,830 --> 00:08:20,700
@@ -548,43 +548,43 @@ After that, we will printf and then quit the program.
 
 138
 00:08:20,700 --> 00:08:27,280
-how the heap looks in real-life and how we can work with it in gdb.
+堆在现实生活中的外观以及我们如何在gdb中使用它。
 
 139
 00:08:27,280 --> 00:08:30,460
-Oh by the way.
+哦，顺便说一下。
 
 140
 00:08:30,460 --> 00:08:31,460
-I lied.
+我撒谎了。
 
 141
 00:08:31,460 --> 00:08:34,300
-I said the second word would contain the size of the chunk.
+我说第二个词将包含块的大小。
 
 142
 00:08:34,300 --> 00:08:40,490
-Well it does, but also the lowest bit is used to indicate that the PREVIOUS chunk is used.
+是的，但最低的位也用来表示使用了前一个块。
 
 143
 00:08:40,490 --> 00:08:41,520
-Not free.
+不是免费的。
 
 144
 00:08:41,520 --> 00:08:44,170
-That becomes more important for the free() algorithm.
+对于free（）算法来说，这变得更加重要。
 
 145
 00:08:44,170 --> 00:08:48,600
-Thus in our example those numbers values would all be hex 11.
+因此在我们的示例中，这些数值都是十六进制11。
 
 146
 00:08:48,600 --> 00:08:52,540
-I just want to put a small disclaimer here at the end.
+我只想在最后写一个小小的免责声明。
 
 147
 00:08:52,540 --> 00:08:55,750
-I simplified the heap and malloc a lot.
+我把堆和malloc简化了很多。
 
 148
 00:08:55,750 --> 00:09:00,770
@@ -592,7 +592,7 @@ I simplified the heap and malloc a lot.
 
 149
 00:09:00,770 --> 00:09:02,940
-is obviously way more to this.
+很明显，这是更重要的。
 
 150
 00:09:02,940 --> 00:09:08,780
@@ -600,7 +600,7 @@ is obviously way more to this.
 
 151
 00:09:08,780 --> 00:09:11,140
-than 15 years ago - like 2001-ish.
+比15年前——比如2001年的ISH。
 
 152
 00:09:11,140 --> 00:09:16,820
@@ -608,7 +608,7 @@ than 15 years ago - like 2001-ish.
 
 153
 00:09:16,820 --> 00:09:18,440
-is also different.
+也是不同的。
 
 154
 00:09:18,440 --> 00:09:24,280
@@ -616,11 +616,11 @@ is also different.
 
 155
 00:09:24,280 --> 00:09:28,000
-anymore - now its usually referred to as ptmalloc.
+现在它通常被称为ptmalloc。
 
 156
 00:09:28,000 --> 00:09:30,440
-And my goal here is to teach you the fundamentals.
+我的目标是教你基础知识。
 
 157
 00:09:30,440 --> 00:09:36,580
@@ -628,5 +628,5 @@ And my goal here is to teach you the fundamentals.
 
 158
 00:09:36,580 --> 00:09:41,230
-what to look for and you can transfer this knowledge to any heap implementation.
+要查找的内容，您可以将这些知识转移到任何堆实现中。
 

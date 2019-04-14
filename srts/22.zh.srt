@@ -4,15 +4,15 @@
 
 2
 00:00:04,480 --> 00:00:15,450
-this to heap level 1 from exploit-exercsies protostar to solve it.
+这是为了将1级从剥削堆到原始星来解决它。
 
 3
 00:00:15,450 --> 00:00:17,320
-Actually I want try something.
+实际上我想试试。
 
 4
 00:00:17,320 --> 00:00:18,460
-We do some roleplaying.
+我们做一些角色扮演。
 
 5
 00:00:18,460 --> 00:00:23,220
@@ -20,23 +20,23 @@ We do some roleplaying.
 
 6
 00:00:23,220 --> 00:00:24,600
-binary.
+二元的。
 
 7
 00:00:24,600 --> 00:00:29,680
-Afterwards we play developer trying to understand the exploit to fix the issue.
+之后，我们扮演开发人员的角色，试图理解解决问题的漏洞。
 
 8
 00:00:29,680 --> 00:00:36,440
-所以我们穿上黑色的连帽衫开始……首先我们在gdb中打开binary heap1，然后
+所以我们穿上黑色的连帽衫开始…首先我们在gdb中打开二进制堆1
 
 9
 00:00:36,440 --> 00:00:37,500
-execute it.
+执行它。
 
 10
 00:00:37,499 --> 00:00:38,499
-We get a segfault.
+我们得到一个SegFault。
 
 11
 00:00:38,499 --> 00:00:43,829
@@ -48,7 +48,7 @@ We get a segfault.
 
 13
 00:00:49,539 --> 00:00:51,679
-memory - so it crashes.
+内存-所以它崩溃了。
 
 14
 00:00:51,679 --> 00:00:56,699
@@ -56,11 +56,11 @@ memory - so it crashes.
 
 15
 00:00:56,699 --> 00:01:00,369
-require some input and we try the arguments.
+需要一些输入，我们尝试参数。
 
 16
 00:01:00,369 --> 00:01:03,069
-Run with aaaa.
+和AAAA一起跑步。
 
 17
 00:01:03,069 --> 00:01:07,679
@@ -72,11 +72,11 @@ Run with aaaa.
 
 19
 00:01:13,820 --> 00:01:16,800
-we guess that it requires another argument.
+我们认为这需要另一个论点。
 
 20
 00:01:16,799 --> 00:01:21,359
-And this time the program runs through without errors.
+这一次程序运行无误。
 
 21
 00:01:21,360 --> 00:01:26,270
@@ -84,7 +84,7 @@ And this time the program runs through without errors.
 
 22
 00:01:26,270 --> 00:01:29,330
-at the program and see if something happens.
+在程序中查看是否发生了什么。
 
 23
 00:01:29,329 --> 00:01:34,209
@@ -92,15 +92,15 @@ at the program and see if something happens.
 
 24
 00:01:34,210 --> 00:01:38,930
-I do numbers, just so I could idnetify them if something would occur.
+我做数字，只是为了在有事情发生的时候能识别它们。
 
 25
 00:01:38,930 --> 00:01:42,250
-We run that, and we got a different segfault.
+我们运行它，得到一个不同的segfault。
 
 26
 00:01:42,249 --> 00:01:48,109
-Again because of strcpy, but this time the destination address looks invalid.
+同样是因为strcpy，但这次目标地址看起来无效。
 
 27
 00:01:48,109 --> 00:01:53,039
@@ -108,7 +108,7 @@ Again because of strcpy, but this time the destination address looks invalid.
 
 28
 00:01:53,040 --> 00:01:57,970
-address 46,46,46,46 which is the hexcode for FFFF.
+地址46,46,46,46，它是ffff的十六进制代码。
 
 29
 00:01:57,969 --> 00:02:03,319
@@ -116,19 +116,19 @@ address 46,46,46,46 which is the hexcode for FFFF.
 
 30
 00:02:03,319 --> 00:02:04,749
-of the strcpy.
+对的。
 
 31
 00:02:04,749 --> 00:02:10,649
-And this means we can now use the first argument to fully control where we want to write.
+这意味着我们现在可以使用第一个参数来完全控制我们想写的地方。
 
 32
 00:02:10,649 --> 00:02:14,879
-And we can fully choose what to write, with the second argument.
+通过第二个论点，我们可以完全选择要写什么。
 
 33
 00:02:14,879 --> 00:02:18,489
-Now we have a lot of freedom what we want to overwrite.
+现在我们有了很多自由，我们想要覆盖的东西。
 
 34
 00:02:18,489 --> 00:02:23,369
@@ -140,7 +140,7 @@ Now we have a lot of freedom what we want to overwrite.
 
 36
 00:02:28,650 --> 00:02:29,720
-to achieve the same.
+达到同样的效果。
 
 37
 00:02:29,720 --> 00:02:34,060
@@ -148,11 +148,11 @@ to achieve the same.
 
 38
 00:02:34,060 --> 00:02:36,420
-to move around.
+四处走动
 
 39
 00:02:36,420 --> 00:02:39,960
-So let’s check what kind of function is called after the evil strcpy.
+那么让我们检查一下在邪恶的strcpy之后调用了什么类型的函数。
 
 40
 00:02:39,959 --> 00:02:44,109
@@ -160,19 +160,19 @@ So let’s check what kind of function is called after the evil strcpy.
 
 41
 00:02:44,110 --> 00:02:47,690
-we want to overwrite printf on the global offset table, but that is deceiving.
+我们想覆盖全局偏移表上的printf，但这是欺骗。
 
 42
 00:02:47,689 --> 00:02:48,979
-That’s not the case.
+事实并非如此。
 
 43
 00:02:48,980 --> 00:02:51,950
-So let’s better stick to the assembly.
+所以我们最好还是坚持到大会上吧。
 
 44
 00:02:51,950 --> 00:02:56,870
-First of all we have to find the location from were we were calling the strcpy.
+首先，我们要找到的位置是我们打电话给strcpy。
 
 45
 00:02:56,870 --> 00:03:01,640
@@ -184,43 +184,43 @@ First of all we have to find the location from were we were calling the strcpy.
 
 47
 00:03:06,750 --> 00:03:09,950
-then backtrace can not make much sense of it anymore.
+那么回溯就不再有什么意义了。
 
 48
 00:03:09,950 --> 00:03:11,730
-So it doesn’t always work.
+所以它并不总是有效的。
 
 49
 00:03:11,730 --> 00:03:18,000
-And here we can see that currently we are in strcpy, but we were coming from this address.
+在这里我们可以看到我们现在在Strcpy，但我们来自这个地址。
 
 50
 00:03:18,000 --> 00:03:23,680
-So let’s set the disassemblu flavor to sane intel syntax and disasemble the address.
+因此，让我们设置disassemblu风格，使英特尔语法正常，并分解地址。
 
 51
 00:03:23,680 --> 00:03:27,380
-This will now disassemble the whole function this address belongs to.
+这将分解这个地址所属的整个函数。
 
 52
 00:03:27,380 --> 00:03:31,050
-Our address ended in 5a, so we are here after the strcpy.
+我们的地址以5a结尾，所以我们在strcpy后面。
 
 53
 00:03:31,050 --> 00:03:35,600
-And as you can see there is a call to puts next.
+正如你所看到的，接下来有一个电话要拨。
 
 54
 00:03:35,599 --> 00:03:38,139
-Which btw is not printf like in the source code.
+在源代码中，btw与printf不同。
 
 55
 00:03:38,140 --> 00:03:42,820
-That’s because the compiler replaced the printf with puts for optimization reasons.
+这是因为编译器出于优化的原因用puts替换了printf。
 
 56
 00:03:42,819 --> 00:03:47,359
-Ok, so let’s overwrite the global offset table entry for puts.
+好的，那么让我们覆盖Puts的全局偏移表条目。
 
 57
 00:03:47,360 --> 00:03:52,370
@@ -232,19 +232,19 @@ Ok, so let’s overwrite the global offset table entry for puts.
 
 59
 00:03:56,709 --> 00:03:58,759
-stored at this address.
+存储在这个地址。
 
 60
 00:03:58,760 --> 00:04:03,260
-So this means this is the address of the puts global offset table entry.
+这意味着这是Puts全局偏移表条目的地址。
 
 61
 00:04:03,260 --> 00:04:08,220
-So this is the target we want to write to, thus we place it in the first argument.
+所以这是我们要写的目标，所以我们把它放在第一个论点中。
 
 62
 00:04:08,219 --> 00:04:14,249
-gdb run, but we use backticks in the first argument to execute /bin/echo.
+gdb运行，但我们在第一个参数中使用backticks来执行/bin/echo。
 
 63
 00:04:14,250 --> 00:04:18,830
@@ -252,11 +252,11 @@ gdb run, but we use backticks in the first argument to execute /bin/echo.
 
 64
 00:04:18,830 --> 00:04:21,850
-to get characters with hexvalues we can’t type.
+要获取十六进制值的字符，我们不能键入。
 
 65
 00:04:21,850 --> 00:04:23,880
-For example the hex value 8.
+例如十六进制值8。
 
 66
 00:04:23,880 --> 00:04:29,830
@@ -264,11 +264,11 @@ For example the hex value 8.
 
 67
 00:04:29,830 --> 00:04:35,190
-and -e because we want echo to convert hex escaped numbers into the raw characters.
+和-e，因为我们希望echo将十六进制转义数转换为原始字符。
 
 68
 00:04:35,190 --> 00:04:40,150
-Just to make sure everything works we echo the whole test string up to the Fs again.
+为了确保一切正常，我们再次将整个测试字符串回送到fs。
 
 69
 00:04:40,150 --> 00:04:45,130
@@ -276,11 +276,11 @@ Just to make sure everything works we echo the whole test string up to the Fs ag
 
 70
 00:04:45,130 --> 00:04:46,900
-of the quotes as the first argument.
+作为第一个参数。
 
 71
 00:04:46,900 --> 00:04:53,410
-And when we run this we get the same segfault as before, so all is fine.
+当我们运行这个程序时，会得到和以前一样的segfault，所以一切都很好。
 
 72
 00:04:53,410 --> 00:04:57,820
@@ -288,7 +288,7 @@ And when we run this we get the same segfault as before, so all is fine.
 
 73
 00:04:57,820 --> 00:05:02,010
-entry.
+条目。
 
 74
 00:05:02,010 --> 00:05:08,880
@@ -296,7 +296,7 @@ entry.
 
 75
 00:05:08,881 --> 00:05:11,481
-is ascii for 0000.
+是ASCII表示0000。
 
 76
 00:05:11,480 --> 00:05:16,540
@@ -304,23 +304,23 @@ is ascii for 0000.
 
 77
 00:05:16,540 --> 00:05:23,280
-control of EIP, which means we can now redirect code anywhere we want.
+控制EIP，这意味着我们现在可以将代码重定向到我们想要的任何地方。
 
 78
 00:05:23,280 --> 00:05:27,980
-In this case we want to call winner, winner has this address here.
+在这种情况下，我们要打电话给Winner，Winner在这里有这个地址。
 
 79
 00:05:27,980 --> 00:05:34,430
-So we place that into the second argument instead of argv2 by using echo in backticks.
+所以我们把它放在第二个参数中，而不是argv2中，在backticks中使用echo。
 
 80
 00:05:34,430 --> 00:05:38,810
-We execute it and we get winner.
+我们执行它，我们就获得了胜利。
 
 81
 00:05:38,810 --> 00:05:42,880
-Which also works great outside of gdb.
+它在gdb之外也很有效。
 
 82
 00:05:42,880 --> 00:05:47,160
@@ -328,7 +328,7 @@ Which also works great outside of gdb.
 
 83
 00:05:47,160 --> 00:05:48,310
-around with it.
+围绕着它。
 
 84
 00:05:48,310 --> 00:05:53,600
@@ -336,7 +336,7 @@ around with it.
 
 85
 00:05:53,600 --> 00:05:56,660
-learned we even control what we want to copy.
+学会了我们甚至控制我们想要复制的东西。
 
 86
 00:05:56,660 --> 00:06:02,380
@@ -344,7 +344,7 @@ learned we even control what we want to copy.
 
 87
 00:06:02,380 --> 00:06:04,310
-to the winner function.
+到Winner函数。
 
 88
 00:06:04,310 --> 00:06:09,000
@@ -352,11 +352,11 @@ to the winner function.
 
 89
 00:06:09,000 --> 00:06:11,020
-at all.
+完全。
 
 90
 00:06:11,020 --> 00:06:16,300
-Being a good security researcher we create a writeup, an advisory for this.
+作为一名优秀的安全研究员，我们为此撰写了一份报告和建议。
 
 91
 00:06:16,300 --> 00:06:19,900
@@ -364,39 +364,39 @@ Being a good security researcher we create a writeup, an advisory for this.
 
 92
 00:06:19,900 --> 00:06:22,250
-help the developer.
+帮助开发者。
 
 93
 00:06:22,250 --> 00:06:28,580
-Now let’s change sides and become the developer.
+现在让我们改变立场，成为开发者。
 
 94
 00:06:28,580 --> 00:06:32,180
-We take off our black hoodie, and put on our grey hoodie.
+我们脱下黑色的连帽衫，穿上灰色的连帽衫。
 
 95
 00:06:32,180 --> 00:06:33,960
-Because that's what developers wear.
+因为开发人员就是这么穿的。
 
 96
 00:06:33,960 --> 00:06:38,620
-So we just got this email from this dude who found a bug in our program.
+所以我们刚收到这个家伙发来的邮件，他在我们的程序中发现了一个错误。
 
 97
 00:06:38,620 --> 00:06:41,240
-He even provided a Proof of Concept exploit with it.
+他甚至用它提供了概念利用的证据。
 
 98
 00:06:41,240 --> 00:06:45,600
-Now we want to figure out why and how this happened, so we can fix it.
+现在我们想知道为什么会发生这种情况，以及如何发生，这样我们就可以解决它了。
 
 99
 00:06:45,600 --> 00:06:49,040
-In the advisory it says that it has to do something with strcpy.
+在公告中，它说它与strcpy有关。
 
 100
 00:06:49,040 --> 00:06:51,010
-So we read the manual about strcpy.
+所以我们读了关于strcpy的手册。
 
 101
 00:06:51,010 --> 00:06:55,530
@@ -404,11 +404,11 @@ So we read the manual about strcpy.
 
 102
 00:06:55,530 --> 00:06:58,040
-that would have told us what a bad idea that was.
+那会告诉我们这是个多么糟糕的主意。
 
 103
 00:06:58,040 --> 00:06:59,830
-So now we could fix that.
+现在我们可以解决这个问题了。
 
 104
 00:06:59,830 --> 00:07:05,080
@@ -416,7 +416,7 @@ So now we could fix that.
 
 105
 00:07:05,080 --> 00:07:06,910
-exit.
+出口。
 
 106
 00:07:06,910 --> 00:07:11,180
@@ -424,7 +424,7 @@ exit.
 
 107
 00:07:11,180 --> 00:07:13,070
-how the exploit exactly works.
+该漏洞是如何工作的。
 
 108
 00:07:13,070 --> 00:07:18,330
@@ -432,35 +432,35 @@ how the exploit exactly works.
 
 109
 00:07:18,330 --> 00:07:20,080
-should look like from this program.
+从这个程序中应该是这样的。
 
 110
 00:07:20,080 --> 00:07:23,160
-So let’s see how it looks in reality.
+让我们看看它在现实中的样子。
 
 111
 00:07:23,160 --> 00:07:26,650
-To do this let’s set a breakpoint after each malloc and strcpy.
+为此，我们在每个malloc和strcpy之后设置一个断点。
 
 112
 00:07:26,650 --> 00:07:33,650
-We dissasemble main and look for all those calls and set breakpoints afterwards.
+我们分解main并查找所有这些调用，然后设置断点。
 
 113
 00:07:33,650 --> 00:07:36,570
-Then we run it with the proof of concept exploit arguments.
+然后我们用概念证明来运行它，利用论点。
 
 114
 00:07:36,570 --> 00:07:39,120
-And we hit the first breakpoint.
+我们到达了第一个断点。
 
 115
 00:07:39,120 --> 00:07:40,210
-So now the first malloc happened.
+所以现在第一个malloc发生了。
 
 116
 00:07:40,210 --> 00:07:44,130
-So we are currently here in the assembler code and the result of malloc is in eax.
+所以我们现在在汇编代码中，malloc的结果在eax中。
 
 117
 00:07:44,130 --> 00:07:49,330
@@ -468,11 +468,11 @@ So we are currently here in the assembler code and the result of malloc is in ea
 
 118
 00:07:49,330 --> 00:07:50,330
-i1.
+I1.
 
 119
 00:07:50,330 --> 00:07:54,930
-And we can look at this address and we can see it’s simply 0.
+我们可以看到这个地址，它只是0。
 
 120
 00:07:54,930 --> 00:07:59,840
@@ -480,15 +480,15 @@ And we can look at this address and we can see it’s simply 0.
 
 121
 00:07:59,840 --> 00:08:01,570
-can have a look at that.
+可以看看那个。
 
 122
 00:08:01,570 --> 00:08:08,110
-Oh, maybe it’s a good idea to add this heap output as a gdb hook as well.
+哦，也许把这个堆输出添加为gdb挂钩也是个好主意。
 
 123
 00:08:08,110 --> 00:08:11,470
-So we see it automatically at each breakpoint.
+所以我们会在每个断点自动看到它。
 
 124
 00:08:11,470 --> 00:08:15,500
@@ -500,15 +500,15 @@ So we see it automatically at each breakpoint.
 
 126
 00:08:16,690 --> 00:08:25,210
-So if we now continue we should set the priority of i1 to 1, and then malloc for the name.
+因此，如果我们现在继续，我们应该将I1的优先级设置为1，然后将malloc设置为名称。
 
 127
 00:08:25,210 --> 00:08:27,960
-Let’s have a closer look at the heap.
+让我们仔细看看这个堆。
 
 128
 00:08:27,960 --> 00:08:31,330
-So as we learned the i1 variable points here.
+所以我们在这里学习了I1变量点。
 
 129
 00:08:31,330 --> 00:08:35,740
@@ -516,7 +516,7 @@ So as we learned the i1 variable points here.
 
 130
 00:08:35,740 --> 00:08:37,900
-the priority is set to 1.
+优先级设置为1。
 
 131
 00:08:37,899 --> 00:08:42,659
@@ -528,11 +528,11 @@ the priority is set to 1.
 
 133
 00:08:48,339 --> 00:08:49,339
-not free.
+不是免费的。
 
 134
 00:08:49,339 --> 00:08:50,339
-It’s in use.
+它正在使用中。
 
 135
 00:08:50,339 --> 00:08:56,509
@@ -540,7 +540,7 @@ It’s in use.
 
 136
 00:08:56,509 --> 00:08:59,259
-headers it’s obviously 16 bytes.
+头，显然是16字节。
 
 137
 00:08:59,260 --> 00:09:04,290
@@ -548,11 +548,11 @@ headers it’s obviously 16 bytes.
 
 138
 00:09:04,290 --> 00:09:05,420
-of this object.
+这个物体的
 
 139
 00:09:05,420 --> 00:09:09,990
-Aaand we can even add the type of this variable which is “struct internet”.
+aa我们甚至可以添加这个变量的类型“struct internet”。
 
 140
 00:09:09,990 --> 00:09:15,320
@@ -560,7 +560,7 @@ Aaand we can even add the type of this variable which is “struct internet”.
 
 141
 00:09:15,319 --> 00:09:16,319
-name.
+姓名。
 
 142
 00:09:16,319 --> 00:09:21,179
@@ -568,7 +568,7 @@ name.
 
 143
 00:09:21,180 --> 00:09:24,860
-for the name but not yet assigned it to the i1 attribute name.
+但尚未将其分配给i1属性名。
 
 144
 00:09:24,860 --> 00:09:30,580
@@ -576,19 +576,19 @@ for the name but not yet assigned it to the i1 attribute name.
 
 145
 00:09:30,580 --> 00:09:32,190
-object got allocated.
+对象已分配。
 
 146
 00:09:32,189 --> 00:09:37,639
-And the result of malloc is again in eax, that’s the address of the i2 object.
+malloc的结果再次出现在eax中，这就是i2对象的地址。
 
 147
 00:09:37,639 --> 00:09:40,149
-So we can also define the variable i2 in gdb.
+所以我们也可以在gdb中定义变量i2。
 
 148
 00:09:40,149 --> 00:09:43,029
-And when we print that we can see that it’s still empty.
+当我们打印的时候，我们可以看到它仍然是空的。
 
 149
 00:09:43,029 --> 00:09:50,109
@@ -596,11 +596,11 @@ And when we print that we can see that it’s still empty.
 
 150
 00:09:50,110 --> 00:09:55,430
-at the heap memory as well when we print the i2 object.
+当我们打印I2对象的时候，也在堆内存中。
 
 151
 00:09:55,430 --> 00:09:59,500
-Also all of our 4 mallocs are done now.
+我们的4个malloc现在都完成了。
 
 152
 00:09:59,500 --> 00:10:03,820
@@ -608,7 +608,7 @@ Also all of our 4 mallocs are done now.
 
 153
 00:10:03,819 --> 00:10:05,049
-perfectly.
+完美。
 
 154
 00:10:05,050 --> 00:10:11,390
@@ -616,7 +616,7 @@ perfectly.
 
 155
 00:10:11,389 --> 00:10:13,719
-all chunks at the end.
+最后的所有块。
 
 156
 00:10:13,720 --> 00:10:18,640
@@ -624,15 +624,15 @@ all chunks at the end.
 
 157
 00:10:18,639 --> 00:10:19,989
-to as the wilderness.
+像荒野一样。
 
 158
 00:10:19,990 --> 00:10:23,740
-This is number is the remaining size of the heap.
+这是数字，是堆的剩余大小。
 
 159
 00:10:23,740 --> 00:10:29,170
-This whole thing is basically a huge heap chunk, and that number is its length.
+这整个东西基本上是一个巨大的堆块，这个数字就是它的长度。
 
 160
 00:10:29,170 --> 00:10:35,850
@@ -640,27 +640,27 @@ This whole thing is basically a huge heap chunk, and that number is its length.
 
 161
 00:10:35,850 --> 00:10:37,670
-this number to redirect code execution.
+此数字用于重定向代码执行。
 
 162
 00:10:37,670 --> 00:10:38,670
-It’s super awesome.
+太棒了。
 
 163
 00:10:38,670 --> 00:10:40,290
-You should watch it.
+你应该看看。
 
 164
 00:10:40,290 --> 00:10:41,290
-Anyway.
+不管怎样。
 
 165
 00:10:41,290 --> 00:10:44,130
-Right now the name of i1 is still an empty string.
+现在，i1的名称仍然是一个空字符串。
 
 166
 00:10:44,129 --> 00:10:47,149
-But this is about to change with the next breakpoint.
+但这将随着下一个断点而改变。
 
 167
 00:10:47,149 --> 00:10:51,919
@@ -668,15 +668,15 @@ But this is about to change with the next breakpoint.
 
 168
 00:10:51,920 --> 00:10:52,920
-argument.
+争论。
 
 169
 00:10:52,920 --> 00:10:53,920
-Continue.
+继续。
 
 170
 00:10:53,920 --> 00:10:56,800
-Now first thing we notice is here in the heap memory.
+现在我们注意到的第一件事是堆内存中。
 
 171
 00:10:56,800 --> 00:11:01,270
@@ -684,15 +684,15 @@ Now first thing we notice is here in the heap memory.
 
 172
 00:11:01,269 --> 00:11:02,269
-the heap.
+堆。
 
 173
 00:11:02,269 --> 00:11:07,809
-What earlier was supposed to be chunk header metadata, like the size is now 44444444.
+之前应该是块头元数据，比如现在的大小是444444。
 
 174
 00:11:07,810 --> 00:11:11,820
-Let’s have a look at the objects i1 and i2.
+让我们看看对象I1和I2。
 
 175
 00:11:11,819 --> 00:11:16,409
@@ -700,7 +700,7 @@ Let’s have a look at the objects i1 and i2.
 
 176
 00:11:16,410 --> 00:11:18,400
-it.
+它。
 
 177
 00:11:18,399 --> 00:11:19,629
@@ -708,27 +708,27 @@ I2怎么样？
 
 178
 00:11:19,630 --> 00:11:21,500
-Uh… that looks fucked.
+呃……看起来他妈的。
 
 179
 00:11:21,499 --> 00:11:23,109
-Priority is now a super huge number.
+优先权现在是一个巨大的数字。
 
 180
 00:11:23,110 --> 00:11:25,900
-In fact that’s just 45454545 in decimal, and that’s the Es.
+事实上，小数点后只有454545，这就是es。
 
 181
 00:11:25,899 --> 00:11:26,899
-And the name is 46464646, which we know are Fs.
+它的名字是46464646，我们知道它是fs。
 
 182
 00:11:26,899 --> 00:11:27,899
-And yeah, we seem to have overwritten a lot of stuff on the heap.
+是的，我们似乎覆盖了堆中的很多东西。
 
 183
 00:11:27,899 --> 00:11:32,039
-Infact we have overwritten the next chunk on the heap after the i1 name.
+实际上，我们已经覆盖了堆中I1名称后面的下一个块。
 
 184
 00:11:32,040 --> 00:11:37,770
@@ -736,15 +736,15 @@ Infact we have overwritten the next chunk on the heap after the i1 name.
 
 185
 00:11:37,769 --> 00:11:40,049
-to copy there the 2nd argument.
+复制第二个参数。
 
 186
 00:11:40,050 --> 00:11:42,320
-Really frckn awesome.
+真是太棒了。
 
 187
 00:11:42,320 --> 00:11:46,130
-So this challenge showed one aspect of heap exploits.
+所以这个挑战展示了堆利用的一个方面。
 
 188
 00:11:46,130 --> 00:11:51,070
@@ -752,11 +752,11 @@ So this challenge showed one aspect of heap exploits.
 
 189
 00:11:51,069 --> 00:11:56,149
-on the heap that we can modify by overwriting stuff.
+在堆上，我们可以通过重写东西来修改。
 
 190
 00:11:56,149 --> 00:11:59,229
-And those modified objects then bend the execution flow.
+然后这些修改过的对象会弯曲执行流。
 
 191
 00:11:59,230 --> 00:11:59,910

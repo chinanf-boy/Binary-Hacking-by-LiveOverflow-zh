@@ -1,10 +1,10 @@
 1
 00:00:06,339 --> 00:00:07,669
-This is the 10th episode.
+这是第10集。
 
 2
 00:00:07,669 --> 00:00:12,689
-And as you can see in the title, I am counting the episodes in hexadecimal.
+正如你在标题中看到的，我正在以十六进制计算剧集。
 
 3
 00:00:12,690 --> 00:00:17,280
@@ -12,7 +12,7 @@ And as you can see in the title, I am counting the episodes in hexadecimal.
 
 4
 00:00:17,279 --> 00:00:18,339
-is wrong.
+是错的。
 
 5
 00:00:18,340 --> 00:00:23,180
@@ -20,23 +20,23 @@ is wrong.
 
 6
 00:00:23,180 --> 00:00:25,110
-it, when it comes to computers.
+当涉及到计算机时。
 
 7
 00:00:25,110 --> 00:00:30,350
-I will also show you how I convert values back and forth and how I often work with them.
+我还将向您展示如何来回转换值，以及如何经常使用它们。
 
 8
 00:00:30,350 --> 00:00:31,350
-Ok.
+好啊。
 
 9
 00:00:31,350 --> 00:00:32,350
-So.
+所以。
 
 10
 00:00:32,350 --> 00:00:35,230
-our computers work in binary, 0s and 1s.
+我们的计算机是二进制的，0和1。
 
 11
 00:00:35,230 --> 00:00:40,550
@@ -44,63 +44,63 @@ our computers work in binary, 0s and 1s.
 
 12
 00:00:40,550 --> 00:00:44,140
-that are like switches and they are either turned on or off.
+它们就像开关，要么打开要么关闭。
 
 13
 00:00:44,140 --> 00:00:49,790
-A single value that is either 0 or 1 is called a bit.
+一个0或1的值称为位。
 
 14
 00:00:49,790 --> 00:00:52,150
-You may know that a byte is 8 bits.
+您可能知道一个字节是8位。
 
 15
 00:00:52,149 --> 00:00:53,939
-But maybe you wonder why that is.
+但你可能想知道为什么。
 
 16
 00:00:53,940 --> 00:00:56,040
-Well, this was not always the case.
+嗯，情况并不总是这样。
 
 17
 00:00:56,040 --> 00:00:58,820
-Early computers might have had 6 bits per byte.
+早期的计算机可能每字节有6位。
 
 18
 00:00:58,820 --> 00:01:03,350
-That we use 8 bits for a byte nowadays is just how history turned out.
+我们现在用8位来表示一个字节，这正是历史的结果。
 
 19
 00:01:03,350 --> 00:01:08,330
-It was IBMs fault with the System 360 that heavily pushed for an 8-bit byte.
+这是IBM的360系统的故障，严重推动了8位字节。
 
 20
 00:01:08,329 --> 00:01:13,769
-Also some people say octad instead of byte to make clear that they mean 8 bit.
+还有一些人说八进制而不是字节来表明他们的意思是8位。
 
 21
 00:01:13,770 --> 00:01:20,480
-An interesting example is ascii, because you will notice that it actually only uses 7bit.
+一个有趣的例子是ascii，因为您会注意到它实际上只使用7bit。
 
 22
 00:01:20,479 --> 00:01:25,829
-But because we now generally use 8bit bytes, we kind of waste the first bit.
+但是因为我们现在通常使用8位字节，所以我们有点浪费第一位。
 
 23
 00:01:25,829 --> 00:01:28,259
-We humans grew up with the decimal system.
+我们人类是用十进制长大的。
 
 24
 00:01:28,259 --> 00:01:31,829
-We are used to counting with symbols from 0 to 9.
+我们习惯于用0到9的符号来计数。
 
 25
 00:01:31,829 --> 00:01:33,129
-But that is rather arbitrary.
+但这是相当武断的。
 
 26
 00:01:33,130 --> 00:01:35,160
-Sure, we have 10 fingers.
+当然，我们有10根手指。
 
 27
 00:01:35,159 --> 00:01:39,439
@@ -108,11 +108,11 @@ Sure, we have 10 fingers.
 
 28
 00:01:39,439 --> 00:01:42,169
-thumb to point to which number we are at.
+拇指指向我们所处的号码。
 
 29
 00:01:42,170 --> 00:01:46,490
-This is the Duodecimal system and we actually use it on our clock.
+这是双十进制系统，我们在时钟上使用它。
 
 30
 00:01:46,490 --> 00:01:50,450
@@ -120,23 +120,23 @@ This is the Duodecimal system and we actually use it on our clock.
 
 31
 00:01:50,450 --> 00:01:51,450
-to you.
+给你。
 
 32
 00:01:51,450 --> 00:01:55,600
-Instead of thinking of numbers as something fixed, think of it as a tool.
+不要把数字当作固定的东西，把它当作一种工具。
 
 33
 00:01:55,600 --> 00:02:00,710
-And you can use whichever number system makes sense for a particular problem.
+对于一个特定的问题，你可以使用任何一个数字系统。
 
 34
 00:02:00,709 --> 00:02:02,349
-So our computers work with bits.
+所以我们的电脑可以和比特一起工作。
 
 35
 00:02:02,350 --> 00:02:08,520
-And for our modern computers we have defined that we generally work with bytes of 8 bits.
+对于我们的现代计算机，我们已经定义了我们通常使用8位字节。
 
 36
 00:02:08,520 --> 00:02:15,220
@@ -144,7 +144,7 @@ And for our modern computers we have defined that we generally work with bytes o
 
 37
 00:02:15,219 --> 00:02:17,179
-by 8.
+到8点。
 
 38
 00:02:17,180 --> 00:02:24,480
@@ -152,63 +152,63 @@ by 8.
 
 39
 00:02:24,480 --> 00:02:27,850
-space if we display it in that way.
+如果我们以这种方式显示它的话，就是空间。
 
 40
 00:02:27,849 --> 00:02:30,959
-Maybe decimal would be a cool representation.
+也许十进制是一种很酷的表示法。
 
 41
 00:02:30,959 --> 00:02:33,949
-It certainly would take less space to display them.
+显示它们的空间肯定会减少。
 
 42
 00:02:33,950 --> 00:02:38,760
-I will use python now to show you how we can convert binary to decimal numbers.
+我现在将使用python向您展示如何将二进制数字转换为十进制数字。
 
 43
 00:02:38,760 --> 00:02:42,600
-We simply say that this string represents a number in base 2.
+我们简单地说，这个字符串表示以2为基数的数字。
 
 44
 00:02:42,599 --> 00:02:48,579
-Let’s do it for a couple of examples with a simple for loop.
+让我们用一个简单的for循环来做几个例子。
 
 45
 00:02:48,579 --> 00:02:51,199
-Ok.
+好啊。
 
 46
 00:02:51,200 --> 00:02:53,820
-Well.
+好。
 
 47
 00:02:53,819 --> 00:02:54,889
-Takes less space.
+占用更少的空间。
 
 48
 00:02:54,890 --> 00:03:01,200
-Though, it kinda bothers me that the biggest value with 8 bits, is a weird number in decimal.
+不过，8位的最大值是一个奇怪的十进制数字，这让我有点困扰。
 
 49
 00:03:01,200 --> 00:03:04,270
-A number without any interesting properties or meanings.
+一个没有任何有趣性质或意义的数字。
 
 50
 00:03:04,269 --> 00:03:07,589
-Let’s have a look at those numbers in hex.
+让我们看看那些十六进制的数字。
 
 51
 00:03:07,590 --> 00:03:14,300
-Hex numbers use symbols from 0-9 and A-F to describe a number.
+十六进制数字使用0-9和a-f中的符号来描述数字。
 
 52
 00:03:14,299 --> 00:03:17,419
-We can extend our loop in python.
+我们可以在python中扩展循环。
 
 53
 00:03:17,420 --> 00:03:24,420
-And now you can see how pretty hexadecimal numbers are to represent 8 bits.
+现在你可以看到十六进制数字代表8位有多漂亮。
 
 54
 00:03:24,420 --> 00:03:29,290
@@ -216,7 +216,7 @@ And now you can see how pretty hexadecimal numbers are to represent 8 bits.
 
 55
 00:03:29,290 --> 00:03:30,540
-digits.
+数字。
 
 56
 00:03:30,540 --> 00:03:35,940
@@ -224,7 +224,7 @@ digits.
 
 57
 00:03:35,939 --> 00:03:37,359
-character.
+性格。
 
 58
 00:03:37,359 --> 00:03:42,449
@@ -232,19 +232,19 @@ character.
 
 59
 00:03:42,450 --> 00:03:45,620
-nibbles, that means 4 bits.
+半字节，即4位。
 
 60
 00:03:45,620 --> 00:03:50,110
-So a 8 bit number in hex can be represented by 2 symbols.
+所以十六进制的8位数字可以用2个符号表示。
 
 61
 00:03:50,110 --> 00:03:53,140
-And each symbol refers to one nibble.
+每一个符号都是指一个笔尖。
 
 62
 00:03:53,139 --> 00:03:57,509
-So this makes it very very clear and easy to read.
+所以这使得它非常清晰和容易阅读。
 
 63
 00:03:57,510 --> 00:04:01,500
@@ -252,7 +252,7 @@ So this makes it very very clear and easy to read.
 
 64
 00:04:01,500 --> 00:04:03,120
-kind of stuff.
+那种东西。
 
 65
 00:04:03,120 --> 00:04:08,030
@@ -260,23 +260,23 @@ kind of stuff.
 
 66
 00:04:08,030 --> 00:04:09,650
-Well I don’t know in decimal.
+我不知道十进制。
 
 67
 00:04:09,650 --> 00:04:17,510
-I just know that 32bit is 4 times 8 bit and thus max int is 0xFFFFFFFF.
+我只知道32位是8位的4倍，因此max int是0xffffffff。
 
 68
 00:04:17,510 --> 00:04:22,070
-Now let me quickly show you some cool tricks with python to convert stuff back and forth.
+现在让我快速地向您展示一些关于Python的很酷的技巧来来回转换东西。
 
 69
 00:04:22,070 --> 00:04:25,290
-Python has some builtin functions to convert numbers.
+python有一些内置函数来转换数字。
 
 70
 00:04:25,289 --> 00:04:27,269
-For example hex() and bin().
+例如hex（）和bin（）。
 
 71
 00:04:27,270 --> 00:04:32,330
@@ -284,7 +284,7 @@ For example hex() and bin().
 
 72
 00:04:32,330 --> 00:04:34,960
-it is.
+它是。
 
 73
 00:04:34,960 --> 00:04:39,400
@@ -296,55 +296,55 @@ it is.
 
 75
 00:04:43,750 --> 00:04:46,050
-hex representation of the characters.
+字符的十六进制表示。
 
 76
 00:04:46,050 --> 00:04:49,390
-So hex 41 is a capital ‘A’ in ascii.
+所以hex 41是一个大写字母“A”，用ASCII表示。
 
 77
 00:04:49,389 --> 00:04:54,579
-A much more powerful and important functionality is offered by python structs.
+python结构提供了一个更强大、更重要的功能。
 
 78
 00:04:54,580 --> 00:04:58,570
-Which I use all the time when I deal with binary data.
+在处理二进制数据时，我一直使用它。
 
 79
 00:04:58,569 --> 00:04:59,999
-First import struct.
+第一个导入结构。
 
 80
 00:05:00,000 --> 00:05:03,980
-And then we can use struct.unpack on our data.
+然后我们可以对数据使用struct.unpack。
 
 81
 00:05:03,979 --> 00:05:07,759
-In this case I define that this data is an unsigned Integer.
+在本例中，我定义此数据是无符号整数。
 
 82
 00:05:07,759 --> 00:05:13,769
-And you can see I can convert this binary data now to an integer number.
+你可以看到我现在可以把这些二进制数据转换成一个整数。
 
 83
 00:05:13,770 --> 00:05:20,460
-If you look closely you may wonder why the capital A seems to be at the end of the number.
+如果仔细观察，你可能会想知道为什么大写字母A似乎在数字的末尾。
 
 84
 00:05:20,460 --> 00:05:24,160
-The reason for that is that we have a little-endian system.
+原因是我们有一个小的endian系统。
 
 85
 00:05:24,160 --> 00:05:26,670
-bit’s can be interpreted in two ways.
+位可以用两种方式解释。
 
 86
 00:05:26,669 --> 00:05:30,539
-Either the first or the last bit can refer to the least-significant bit.
+第一位或最后一位可以指最低有效位。
 
 87
 00:05:30,539 --> 00:05:34,149
-I think the picture on wikipedia makes this very clear.
+我认为维基百科上的图片非常清楚。
 
 88
 00:05:34,150 --> 00:05:38,190
@@ -352,7 +352,7 @@ I think the picture on wikipedia makes this very clear.
 
 89
 00:05:38,190 --> 00:05:40,570
-you have to be careful how you interpret this data.
+您必须注意如何解释这些数据。
 
 90
 00:05:40,569 --> 00:05:44,739
@@ -360,7 +360,7 @@ you have to be careful how you interpret this data.
 
 91
 00:05:44,740 --> 00:05:46,970
-to interpret this data.
+解释这些数据。
 
 92
 00:05:46,970 --> 00:05:51,540
@@ -368,19 +368,19 @@ to interpret this data.
 
 93
 00:05:51,539 --> 00:05:52,759
-a lot.
+很多。
 
 94
 00:05:52,760 --> 00:05:56,540
-Because it’s great to convert addresses and other data back and forth.
+因为来回转换地址和其他数据很好。
 
 95
 00:05:56,540 --> 00:06:00,800
-For example if we want to overwrite an address, we have to supply the data as a string.
+例如，如果我们想要覆盖一个地址，我们必须以字符串的形式提供数据。
 
 96
 00:06:00,800 --> 00:06:05,760
-So we can use struct.pack and pack a number as a binary string.
+所以我们可以使用struct.pack并将数字打包为二进制字符串。
 
 97
 00:06:05,759 --> 00:06:10,269
@@ -388,19 +388,19 @@ So we can use struct.pack and pack a number as a binary string.
 
 98
 00:06:10,270 --> 00:06:12,270
-get used to it.
+习惯了。
 
 99
 00:06:12,270 --> 00:06:14,700
-But we just talked about positive numbers.
+但我们刚刚谈到了正数。
 
 100
 00:06:14,699 --> 00:06:16,989
-From 0 to 0xFF.
+从0到0xFF。
 
 101
 00:06:16,990 --> 00:06:19,980
-But how can we represent negative numbers.
+但是我们怎样才能表示负数呢？
 
 102
 00:06:19,980 --> 00:06:24,500
@@ -408,7 +408,7 @@ But how can we represent negative numbers.
 
 103
 00:06:24,500 --> 00:06:25,500
-number or not.
+号码与否。
 
 104
 00:06:25,500 --> 00:06:30,850
@@ -416,19 +416,19 @@ number or not.
 
 105
 00:06:30,849 --> 00:06:33,479
-or negative based on the first one.
+或者根据第一个结果是否定的。
 
 106
 00:06:33,479 --> 00:06:36,739
--1 is actually 0xFF.
+-1实际上是0xff。
 
 107
 00:06:36,740 --> 00:06:41,560
-Well it does have the first bit set, but it’s not -127.
+它有第一个位集，但不是-127。
 
 108
 00:06:41,560 --> 00:06:45,200
-This wheel maybe makes it a bit more clear how negative numbers are actually interpreted.
+这个轮子也许能让我们更清楚地了解负数是如何被解释的。
 
 109
 00:06:45,199 --> 00:06:51,409
@@ -436,39 +436,39 @@ This wheel maybe makes it a bit more clear how negative numbers are actually int
 
 110
 00:06:51,409 --> 00:06:58,499
-(0xFF) to -1 is called Two’s complement, you can read that on wikipedia.
+（0xff）to-1被称为二的补码，你可以在维基百科上读到。
 
 111
 00:06:58,500 --> 00:07:08,730
-And you can also very easily negate a given number by negating all bits and adding 1.
+你也可以很容易地否定一个给定的数字，否定所有的位，然后加1。
 
 112
 00:07:08,729 --> 00:07:11,009
-Many functions return -1 on error.
+许多函数出错时返回-1。
 
 113
 00:07:11,009 --> 00:07:14,699
-At first it sounds weird, but now you know that this is just all Fs.
+起初听起来很奇怪，但现在你知道这只是所有的fs。
 
 114
 00:07:14,699 --> 00:07:21,159
-So when you read data and you only get 1s (or Fs in hex) you might read an errror.
+因此，当您读取数据，并且只获得1s（或十六进制的fs）时，您可能会读取一个错误。
 
 115
 00:07:21,159 --> 00:07:22,969
-What about numbers with a fraction.
+带分数的数字怎么样？
 
 116
 00:07:22,970 --> 00:07:23,970
-Well.
+好。
 
 117
 00:07:23,970 --> 00:07:24,970
-Don’t get me started on that.
+别让我开始这件事。
 
 118
 00:07:24,970 --> 00:07:26,600
-It get’s really ugly.
+真的很难看。
 
 119
 00:07:26,599 --> 00:07:30,779
@@ -476,7 +476,7 @@ It get’s really ugly.
 
 120
 00:07:30,780 --> 00:07:34,480
-very creative if you have only 0s and 1s.
+如果你只有0和1，就很有创造力。
 
 121
 00:07:34,480 --> 00:07:38,310
@@ -484,43 +484,43 @@ very creative if you have only 0s and 1s.
 
 122
 00:07:38,310 --> 00:07:39,640
-we start with a bit.
+我们先从一点开始。
 
 123
 00:07:39,639 --> 00:07:41,019
-0 or 1.
+0或1。
 
 124
 00:07:41,020 --> 00:07:43,140
-4 bits are a nibble.
+4位是一个半字节。
 
 125
 00:07:43,139 --> 00:07:44,829
-8 bits are a byte.
+8位是一个字节。
 
 126
 00:07:44,830 --> 00:07:48,540
-And in hexadecimal we can represent a byte with two digits.
+在十六进制中，我们可以用两位数字表示一个字节。
 
 127
 00:07:48,539 --> 00:07:53,829
-on 32bit architecture a word refers to 32bit or 4 bytes.
+在32位体系结构中，字是指32位或4个字节。
 
 128
 00:07:53,830 --> 00:07:57,080
-But on 64bit architecture a word is 64bit, or 8 bytes.
+但是在64位体系结构中，一个字是64位，或者8个字节。
 
 129
 00:07:57,080 --> 00:08:01,830
-And a double word is obviously the double amount of that.
+一个双字，显然是它的两倍。
 
 130
 00:08:01,830 --> 00:08:04,910
-As you can see, a computer only has bits.
+如你所见，计算机只有比特。
 
 131
 00:08:04,910 --> 00:08:08,420
-And how we deal with those bits is up to our interpretation.
+我们如何处理这些小问题取决于我们的解释。
 
 132
 00:08:08,419 --> 00:08:13,419
@@ -528,5 +528,5 @@ And how we deal with those bits is up to our interpretation.
 
 133
 00:08:13,419 --> 00:08:15,579
-we will dive deep and exploit our first buffer overflow.
+我们将深入研究并利用第一个缓冲区溢出。
 

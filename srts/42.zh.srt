@@ -1,6 +1,6 @@
 1
 00:00:00,149 --> 00:00:05,899
-The topic of this video is very special to me because it's the slogan of this channel.
+这个视频的主题对我来说很特别，因为它是这个频道的口号。
 
 2
 00:00:05,900 --> 00:00:11,320
@@ -16,7 +16,7 @@ The topic of this video is very special to me because it's the slogan of this ch
 
 5
 00:00:23,170 --> 00:00:27,120
-else.
+否则。
 
 6
 00:00:27,119 --> 00:00:36,019
@@ -24,7 +24,7 @@ else.
 
 7
 00:00:36,020 --> 00:00:40,340
-terrible language. But let me show you some example programs.
+糟糕的语言。但是让我给你看一些示例程序。
 
 8
 00:00:40,340 --> 00:00:45,900
@@ -49,7 +49,7 @@ terrible language. But let me show you some example programs.
 13
 00:01:07,740 --> 00:01:13,090
 RLD！并将该值存储在内存位置
-3.
+三。
 
 14
 00:01:13,090 --> 00:01:16,180
@@ -73,7 +73,7 @@ printf将被设置为0。它只是一个Hello World字符串的打印件。不�
 
 19
 00:01:37,450 --> 00:01:40,550
-format modifiers and parameters here.
+这里是格式修改器和参数。
 
 20
 00:01:40,550 --> 00:01:46,200
@@ -89,7 +89,7 @@ format modifiers and parameters here.
 
 23
 00:01:56,670 --> 00:02:02,800
-helloworld.weird, that's the source code, and the name of the outfile, so helloworld.binary.
+奇怪的是，这是源代码和外文件的名称，所以helloworld.binary。
 
 24
 00:02:02,799 --> 00:02:09,059
@@ -101,7 +101,7 @@ helloworld.weird, that's the source code, and the name of the outfile, so hellow
 
 26
 00:02:16,280 --> 00:02:23,630
-in there. HELL o WO RLD. The other values are just jibberish.
+在那里。见鬼去吧。其他的价值观只是在逃避现实。
 
 27
 00:02:23,629 --> 00:02:28,879
@@ -109,11 +109,11 @@ in there. HELL o WO RLD. The other values are just jibberish.
 
 28
 00:02:28,879 --> 00:02:36,109
-output into the interpreter, called invoice. Okay, I know the output is really confusing.
+输出到解释器中，称为发票。好吧，我知道输出很混乱。
 
 29
 00:02:36,109 --> 00:02:41,399
-but that's just part of the weird invoice program. so just ignore that invoicing menu.
+但这只是奇怪的发票计划的一部分。所以忽略开发票菜单。
 
 30
 00:02:41,400 --> 00:02:46,030
@@ -137,7 +137,7 @@ but that's just part of the weird invoice program. so just ignore that invoicing
 
 35
 00:03:05,150 --> 00:03:09,890
-and then we have to output the binary and pipe it into the input of the invoice program.
+然后我们必须输出二进制文件并将其传输到发票程序的输入中。
 
 36
 00:03:09,890 --> 00:03:14,210
@@ -157,11 +157,11 @@ and then we have to output the binary and pipe it into the input of the invoice 
 
 40
 00:03:28,379 --> 00:03:29,559
-menu around it.
+菜单在它周围。
 
 41
 00:03:29,560 --> 00:03:33,800
-Let's do another example. I'm really proud of this one.
+让我们再举一个例子。我真为这个感到骄傲。
 
 42
 00:03:33,799 --> 00:03:39,099
@@ -181,7 +181,7 @@ Let's do another example. I'm really proud of this one.
 
 46
 00:03:54,749 --> 00:03:57,319
-memory location 2.
+内存位置2。
 
 47
 00:03:57,319 --> 00:04:02,369
@@ -193,7 +193,7 @@ memory location 2.
 
 49
 00:04:07,799 --> 00:04:12,339
-the new converted integer in result to the variable 4.
+结果中新转换的整数转换为变量4。
 
 50
 00:04:12,340 --> 00:04:17,210
@@ -209,11 +209,11 @@ the new converted integer in result to the variable 4.
 
 53
 00:04:30,160 --> 00:04:36,820
-We compile the sum program. And execute it again with cat. Then we enter the first number.
+我们编制了SUM程序。再和猫一起执行。然后我们输入第一个数字。
 
 54
 00:04:36,820 --> 00:04:41,050
-Then the second number. And we get the calculated sum output.
+然后是第二个号码。我们得到了计算出的和输出。
 
 55
 00:04:41,050 --> 00:04:46,980
@@ -233,7 +233,7 @@ Then the second number. And we get the calculated sum output.
 
 59
 00:05:04,950 --> 00:05:06,830
-weird looking.
+看起来怪怪的。
 
 60
 00:05:06,830 --> 00:05:12,560
@@ -245,7 +245,7 @@ weird looking.
 
 62
 00:05:18,080 --> 00:05:24,120
-in euro and add a comment. We can add a few more to just get a feeling for the program.
+并添加评论。我们可以再加一些，让你对这个节目有一种感觉。
 
 63
 00:05:24,120 --> 00:05:29,830
@@ -253,7 +253,7 @@ in euro and add a comment. We can add a few more to just get a feeling for the p
 
 64
 00:05:29,830 --> 00:05:35,300
-and exit. After entering our name we get a nice list of our invoices.
+然后退出。在输入我们的名字后，我们得到了一份很好的发票清单。
 
 65
 00:05:35,300 --> 00:05:43,110
@@ -269,7 +269,7 @@ Soooo…等待。。。什么？这是发票管理系统？那么这个节目怎
 
 68
 00:05:53,889 --> 00:06:00,009
-输入到发票程序，所以让我们尝试复制它。也许我们也会运行它
+输入到发票程序，所以让我们尝试复制它。也许我们也会经营它
 
 69
 00:06:00,009 --> 00:06:06,189
@@ -317,11 +317,11 @@ Soooo…等待。。。什么？这是发票管理系统？那么这个节目怎
 
 80
 00:07:01,590 --> 00:07:05,200
-from his talk "What hacker research taught me".
+从他所说的“黑客研究教会了我什么”。
 
 81
 00:07:05,199 --> 00:07:15,919
-Lesson 2, is what I call "composition creates weird machines" parallel universes of computers.
+第二课，我称之为“组合创造奇怪的机器”，是计算机的平行宇宙。
 
 82
 00:07:15,919 --> 00:07:26,129
@@ -333,7 +333,7 @@ Lesson 2, is what I call "composition creates weird machines" parallel universes
 
 84
 00:07:32,600 --> 00:07:41,440
-a weird machine. Whose instructions are actually combinations of your well designed features.
+一台奇怪的机器。其说明实际上是您精心设计的功能的组合。
 
 85
 00:07:41,439 --> 00:07:52,709
@@ -345,11 +345,11 @@ a weird machine. Whose instructions are actually combinations of your well desig
 
 87
 00:07:58,650 --> 00:07:59,690
-the machine.
+机器。
 
 88
 00:07:59,690 --> 00:08:09,100
-So think of stack overflows. Think of heap overflows which are a bit more interesting.
+所以想想堆栈溢出。想想堆溢出，这有点有趣。
 
 89
 00:08:09,099 --> 00:08:18,899
@@ -361,7 +361,7 @@ So think of stack overflows. Think of heap overflows which are a bit more intere
 
 91
 00:08:28,050 --> 00:08:35,270
-that fashion. It's a whole universe of weird machines.
+那种时尚。这是一个充满奇怪机器的宇宙。
 
 92
 00:08:35,270 --> 00:08:41,230
@@ -377,7 +377,7 @@ that fashion. It's a whole universe of weird machines.
 
 95
 00:08:56,530 --> 00:09:03,760
-programming. And it took about 10 years to propagate.
+编程。它花了大约10年的时间繁殖。
 
 96
 00:09:03,760 --> 00:09:09,770
@@ -393,7 +393,7 @@ programming. And it took about 10 years to propagate.
 
 99
 00:09:22,330 --> 00:09:30,310
-you thought were your friends. Well no, they are traitors, lying and wait.
+你以为是你的朋友。不，他们是叛徒，撒谎，等等。
 
 100
 00:09:30,310 --> 00:09:40,540
@@ -405,7 +405,7 @@ you thought were your friends. Well no, they are traitors, lying and wait.
 
 102
 00:09:51,010 --> 00:09:52,680
-(assembly shellcode) is.
+（程序集外壳代码）是。
 
 103
 00:09:52,680 --> 00:09:58,390
@@ -413,7 +413,7 @@ you thought were your friends. Well no, they are traitors, lying and wait.
 
 104
 00:09:58,390 --> 00:10:04,100
-me. Thus it became the mantra ar slogan of my channel.
+我。因此，它成了我频道的口号。
 
 105
 00:10:04,100 --> 00:10:10,310
@@ -433,11 +433,11 @@ me. Thus it became the mantra ar slogan of my channel.
 
 109
 00:10:29,580 --> 00:10:37,410
-without even knowing it. A weird machine so powerful that it can execute basically anything.
+甚至不知道。一台功能强大的奇怪机器，基本上可以执行任何操作。
 
 110
 00:10:37,410 --> 00:10:44,090
-So powerful we can create a programming language that only runs on this single weird machine.
+如此强大，我们可以创建一种只在这台奇怪的机器上运行的编程语言。
 
 111
 00:10:44,090 --> 00:10:49,330
@@ -453,7 +453,7 @@ So powerful we can create a programming language that only runs on this single w
 
 114
 00:11:03,000 --> 00:11:05,680
-it's so beautiful at the same time.
+同时又很漂亮。
 
 115
 00:11:05,680 --> 00:11:10,450
@@ -473,7 +473,7 @@ it's so beautiful at the same time.
 
 119
 00:11:27,040 --> 00:11:28,140
-works.
+作品。
 
 120
 00:11:28,140 --> 00:11:31,610
@@ -485,7 +485,7 @@ works.
 
 122
 00:11:36,250 --> 00:11:37,440
-IT security papers.
+IT安全文件。
 
 123
 00:11:37,440 --> 00:11:37,700

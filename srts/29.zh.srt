@@ -4,7 +4,7 @@
 
 2
 00:00:04,340 --> 00:00:07,270
-great to do some first simple network programming.
+做一些简单的网络编程很好。
 
 3
 00:00:07,270 --> 00:00:11,590
@@ -12,7 +12,7 @@ great to do some first simple network programming.
 
 4
 00:00:11,589 --> 00:00:14,629
-these challenges too.
+这些挑战也是如此。
 
 5
 00:00:14,629 --> 00:00:16,959
@@ -28,7 +28,7 @@ these challenges too.
 
 8
 00:00:27,960 --> 00:00:30,200
-program over the network.
+通过网络编程。
 
 9
 00:00:30,199 --> 00:00:34,659
@@ -36,15 +36,15 @@ program over the network.
 
 10
 00:00:34,660 --> 00:00:37,520
-interact with a service over TCP.
+通过TCP与服务交互。
 
 11
 00:00:37,520 --> 00:00:41,010
-So the exploit you write has to do this over the network.
+所以你写的漏洞必须通过网络来实现。
 
 12
 00:00:41,010 --> 00:00:42,730
-Let’s have a look at this level.
+让我们来看看这个水平。
 
 13
 00:00:42,730 --> 00:00:46,650
@@ -52,7 +52,7 @@ Let’s have a look at this level.
 
 14
 00:00:46,650 --> 00:00:48,230
-in episode hex 19.
+在十六进制19集。
 
 15
 00:00:48,230 --> 00:00:54,550
@@ -60,7 +60,7 @@ in episode hex 19.
 
 16
 00:00:54,550 --> 00:00:57,610
-1 is running on port 2998.
+1正在端口2998上运行。
 
 17
 00:00:57,610 --> 00:01:01,330
@@ -68,15 +68,15 @@ in episode hex 19.
 
 18
 00:01:01,330 --> 00:01:03,240
-python script.
+Python脚本。
 
 19
 00:01:03,240 --> 00:01:06,370
-But let’s first have a look at the run function.
+但我们先来看一下run函数。
 
 20
 00:01:06,370 --> 00:01:13,210
-First run generates a random unsigned integer, and then we sprintf the number into fub.
+首先运行生成一个随机的无符号整数，然后我们将该数字sprintf到fub中。
 
 21
 00:01:13,210 --> 00:01:18,340
@@ -88,7 +88,7 @@ First run generates a random unsigned integer, and then we sprintf the number in
 
 23
 00:01:25,310 --> 00:01:27,800
-argument - in this case buf.
+论点-在本例中是废话。
 
 24
 00:01:27,800 --> 00:01:32,950
@@ -96,7 +96,7 @@ argument - in this case buf.
 
 25
 00:01:32,951 --> 00:01:35,791
-not contain the raw byte values.
+不包含原始字节值。
 
 26
 00:01:35,790 --> 00:01:41,830
@@ -104,19 +104,19 @@ not contain the raw byte values.
 
 27
 00:01:41,830 --> 00:01:42,830
-bytes.
+字节。
 
 28
 00:01:42,830 --> 00:01:44,790
-That’s what we saw returned by netcat.
+这就是我们看到的由netcat返回的结果。
 
 29
 00:01:44,790 --> 00:01:49,000
-After that, the program will wait for user input with fread.
+之后，程序将等待用户输入fread。
 
 30
 00:01:49,000 --> 00:01:53,900
-Once we send some data it will overwrite any newline or carriage return with a null byte.
+一旦我们发送了一些数据，它将用一个空字节覆盖任何换行符或回车符。
 
 31
 00:01:53,900 --> 00:01:58,650
@@ -124,7 +124,7 @@ Once we send some data it will overwrite any newline or carriage return with a n
 
 32
 00:01:58,650 --> 00:02:02,740
-it will include a newline at the end, because that’s the key we pressed.
+最后会有一个换行符，因为这是我们按下的键。
 
 33
 00:02:02,740 --> 00:02:06,530
@@ -132,7 +132,7 @@ it will include a newline at the end, because that’s the key we pressed.
 
 34
 00:02:06,530 --> 00:02:08,350
-stripping away the newline.
+剥去新线。
 
 35
 00:02:08,350 --> 00:02:12,260
@@ -140,11 +140,11 @@ stripping away the newline.
 
 36
 00:02:12,260 --> 00:02:13,310
-or fail.
+或者失败。
 
 37
 00:02:13,310 --> 00:02:16,260
-So, lets start to write our python script.
+所以，让我们开始编写Python脚本。
 
 38
 00:02:16,260 --> 00:02:17,260
@@ -156,11 +156,11 @@ So, lets start to write our python script.
 
 40
 00:02:23,319 --> 00:02:24,319
-the server.
+服务器。
 
 41
 00:02:24,319 --> 00:02:26,619
-So we can use strace, to trace all syscalls of netcat.
+所以我们可以使用strace跟踪netcat的所有系统调用。
 
 42
 00:02:26,620 --> 00:02:30,910
@@ -168,7 +168,7 @@ So we can use strace, to trace all syscalls of netcat.
 
 43
 00:02:30,909 --> 00:02:33,019
-implement them in python.
+在python中实现它们。
 
 44
 00:02:33,019 --> 00:02:37,209
@@ -176,7 +176,7 @@ implement them in python.
 
 45
 00:02:37,209 --> 00:02:39,159
-on how to do that in or script.
+关于如何在或脚本中实现这一点。
 
 46
 00:02:39,159 --> 00:02:44,529
@@ -184,11 +184,11 @@ on how to do that in or script.
 
 47
 00:02:44,530 --> 00:02:46,990
-in the python doc we see something very similar.
+在python文档中，我们看到一些非常相似的东西。
 
 48
 00:02:46,989 --> 00:02:49,609
-Except that it suggests to use AF_INET.
+但它建议使用af-inet。
 
 49
 00:02:49,609 --> 00:02:54,969
@@ -200,19 +200,19 @@ Except that it suggests to use AF_INET.
 
 51
 00:03:00,000 --> 00:03:03,360
-linux kernel it’s now simply defined as being the same as AF_INET.
+Linux内核现在简单地定义为与af-inet相同。
 
 52
 00:03:03,359 --> 00:03:05,829
-Ha, learned something today.
+哈，今天学到了一些东西。
 
 53
 00:03:05,830 --> 00:03:10,910
-And the python doc then uses connect to connect to a hostname, or an IP and port.
+然后，python文档使用connect连接到主机名或IP和端口。
 
 54
 00:03:10,909 --> 00:03:12,639
-Which we can also see in the strace.
+我们也可以在边栏看到。
 
 55
 00:03:12,640 --> 00:03:17,190
@@ -220,15 +220,15 @@ Which we can also see in the strace.
 
 56
 00:03:17,189 --> 00:03:20,329
-So we can also just use that.
+所以我们也可以用它。
 
 57
 00:03:20,330 --> 00:03:21,330
-Cool.
+酷。
 
 58
 00:03:21,330 --> 00:03:26,420
-And now we can use send and receive with this socket.
+现在我们可以用这个套接字来使用发送和接收。
 
 59
 00:03:26,419 --> 00:03:30,259
@@ -236,7 +236,7 @@ And now we can use send and receive with this socket.
 
 60
 00:03:30,260 --> 00:03:33,520
-to specify how much data we want to read.
+指定要读取的数据量。
 
 61
 00:03:33,519 --> 00:03:38,389
@@ -244,15 +244,15 @@ to specify how much data we want to read.
 
 62
 00:03:38,390 --> 00:03:39,510
-4 bytes.
+4字节。
 
 63
 00:03:39,510 --> 00:03:43,670
-Now let’s simply print the data we receive and then test it.
+现在，让我们简单地打印接收到的数据，然后测试它。
 
 64
 00:03:43,669 --> 00:03:44,689
-Cool.
+酷。
 
 65
 00:03:44,689 --> 00:03:50,449
@@ -264,7 +264,7 @@ Cool.
 
 67
 00:03:52,280 --> 00:03:56,980
-That’s because in the code the random number generator is seeded by the time in seconds.
+这是因为在代码中，随机数生成器的种子是以秒为单位的时间。
 
 68
 00:03:56,980 --> 00:04:01,550
@@ -272,7 +272,7 @@ That’s because in the code the random number generator is seeded by the time i
 
 69
 00:04:01,549 --> 00:04:02,549
-random number.
+随机数。
 
 70
 00:04:02,549 --> 00:04:11,219
@@ -288,7 +288,7 @@ random number.
 
 73
 00:04:20,579 --> 00:04:21,579
-we have written.
+我们已经写好了。
 
 74
 00:04:21,579 --> 00:04:25,949
@@ -296,7 +296,7 @@ we have written.
 
 75
 00:04:25,949 --> 00:04:30,019
-integer, and then send it as a string back to the server.
+整数，然后将其作为字符串发送回服务器。
 
 76
 00:04:30,020 --> 00:04:34,340
@@ -304,19 +304,19 @@ integer, and then send it as a string back to the server.
 
 77
 00:04:34,340 --> 00:04:35,340
-element.
+元素。
 
 78
 00:04:35,340 --> 00:04:36,920
-Mh… it seems to hang.
+嗯……好像挂起来了。
 
 79
 00:04:36,919 --> 00:04:38,319
-Let’s try it again.
+让我们再试一次。
 
 80
 00:04:38,320 --> 00:04:40,180
-Now it seems to work.
+现在它似乎起作用了。
 
 81
 00:04:40,180 --> 00:04:44,230
@@ -328,15 +328,15 @@ Now it seems to work.
 
 83
 00:04:50,080 --> 00:04:52,200
-recv data, the data is already lost in the void.
+接收数据，数据已经在空区丢失。
 
 84
 00:04:52,199 --> 00:04:53,199
-Anyhow, it worked.
+不管怎样，它起作用了。
 
 85
 00:04:53,199 --> 00:04:59,269
-Doesn’t have to be perfect, as long as you succeed once, the attack was sucessful.
+不必完美，只要你成功一次，攻击就成功了。
 
 86
 00:04:59,270 --> 00:05:03,940
@@ -344,11 +344,11 @@ Doesn’t have to be perfect, as long as you succeed once, the attack was sucess
 
 87
 00:05:03,939 --> 00:05:05,699
-quickly solve the next one too.
+快速解决下一个问题。
 
 88
 00:05:05,699 --> 00:05:12,959
-Net2 is very similar, we again have a network setup with a program listening on port 2997.
+net2非常相似，我们再次设置了一个网络，在端口2997上监听一个程序。
 
 89
 00:05:12,960 --> 00:05:18,150
@@ -356,19 +356,19 @@ Net2 is very similar, we again have a network setup with a program listening on 
 
 90
 00:05:18,150 --> 00:05:23,160
-random number, adds it to the sum of them all and then sends it over the network.
+随机数，将其添加到所有数字的总和中，然后通过网络发送。
 
 91
 00:05:23,159 --> 00:05:26,969
-The description also says that we have to add 4 32bit integers.
+描述还指出我们必须添加4个32位整数。
 
 92
 00:05:26,970 --> 00:05:30,970
-And it already warns us about the possibility of it wrapping.
+它已经警告我们包装的可能性。
 
 93
 00:05:30,970 --> 00:05:37,790
-Or in proper terms, it warns us about an integers overflow - which again is security relevant.
+或者用恰当的术语，它警告我们整数溢出——这也是安全相关的。
 
 94
 00:05:37,789 --> 00:05:42,539
@@ -376,7 +376,7 @@ Or in proper terms, it warns us about an integers overflow - which again is secu
 
 95
 00:05:42,540 --> 00:05:44,250
-calculate the sum.
+计算总和。
 
 96
 00:05:44,250 --> 00:05:48,450
@@ -384,11 +384,11 @@ calculate the sum.
 
 97
 00:05:48,449 --> 00:05:50,179
-the resulting tuple.
+结果元组。
 
 98
 00:05:50,180 --> 00:05:51,650
-Easy as that.
+很容易。
 
 99
 00:05:51,650 --> 00:05:56,620
@@ -396,23 +396,23 @@ Easy as that.
 
 100
 00:05:56,620 --> 00:06:01,320
-so we can use struct pack to covnert it to a binary string and send that.
+所以我们可以使用struct pack将其covenrt为二进制字符串并发送它。
 
 101
 00:06:01,319 --> 00:06:02,359
-Oh.
+哦。
 
 102
 00:06:02,360 --> 00:06:03,410
-haha.
+哈哈。
 
 103
 00:06:03,409 --> 00:06:06,259
-I wanted to show that this doesn’t work.
+我想证明这不管用。
 
 104
 00:06:06,260 --> 00:06:09,160
-because of the integer overflow.
+因为整数溢出。
 
 105
 00:06:09,159 --> 00:06:12,559
@@ -420,19 +420,19 @@ because of the integer overflow.
 
 106
 00:06:12,560 --> 00:06:15,390
-than 32bits, and that cannot be.
+超过32位，不能。
 
 107
 00:06:15,389 --> 00:06:17,189
-An integer is only 32bit large.
+整数只有32位大。
 
 108
 00:06:17,190 --> 00:06:21,730
-So what happens is, that the integer is simply overflowing, or wrapping around.
+所以发生的是，整数只是溢出，或者环绕。
 
 109
 00:06:21,729 --> 00:06:24,419
-This means the carry of the highest bit is just lost.
+这意味着最高位的进位刚刚丢失。
 
 110
 00:06:24,419 --> 00:06:29,909
@@ -444,11 +444,11 @@ This means the carry of the highest bit is just lost.
 
 112
 00:06:35,220 --> 00:06:37,550
-flag is set that could be checked.
+设置了可以检查的标志。
 
 113
 00:06:37,550 --> 00:06:43,130
-But anyway, in this case our unsigned integer on the server will always wrap around.
+但无论如何，在这种情况下，服务器上的无符号整数将始终换行。
 
 114
 00:06:43,129 --> 00:06:47,849
@@ -456,11 +456,11 @@ But anyway, in this case our unsigned integer on the server will always wrap aro
 
 115
 00:06:47,849 --> 00:06:48,849
-got deprecated.
+被贬低了
 
 116
 00:06:48,849 --> 00:06:50,969
-So we can simply do the same in our code.
+所以我们可以在代码中做同样的事情。
 
 117
 00:06:50,969 --> 00:06:55,969
@@ -468,11 +468,11 @@ So we can simply do the same in our code.
 
 118
 00:06:55,969 --> 00:06:57,819
-many bug reports about it.
+很多关于它的错误报告。
 
 119
 00:06:57,819 --> 00:07:01,269
-Let’s make a simple example of a typical integer overflow issue.
+让我们做一个典型整数溢出问题的简单示例。
 
 120
 00:07:01,270 --> 00:07:06,250
@@ -480,7 +480,7 @@ Let’s make a simple example of a typical integer overflow issue.
 
 121
 00:07:06,250 --> 00:07:07,250
-variable.
+变量。
 
 122
 00:07:07,250 --> 00:07:11,750
@@ -488,7 +488,7 @@ variable.
 
 123
 00:07:11,749 --> 00:07:12,749
-for.
+为了。
 
 124
 00:07:12,749 --> 00:07:17,689
@@ -500,7 +500,7 @@ for.
 
 126
 00:07:22,729 --> 00:07:25,849
-typical overflow condition.
+典型溢流情况。
 
 127
 00:07:25,849 --> 00:07:30,809
@@ -508,7 +508,7 @@ typical overflow condition.
 
 128
 00:07:30,810 --> 00:07:33,640
-to see a little bit more intricate challenges.
+看到一些更复杂的挑战。
 
 129
 00:07:33,639 --> 00:07:35,679

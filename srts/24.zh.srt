@@ -1,18 +1,18 @@
 1
 00:00:00,380 --> 00:00:06,770
-A very common issue that we still constantly encounter is shown in heap level 2 of exploit-exercises.com.
+我们经常遇到的一个非常常见的问题显示在exploit-exercises.com的堆级别2中。
 
 2
 00:00:06,770 --> 00:00:12,780
-This is a classic use-after-free vulnerability.
+这是自由漏洞后的经典用法。
 
 3
 00:00:12,780 --> 00:00:19,530
-Let’s try to understand the code first.
+让我们先试着理解代码。
 
 4
 00:00:19,529 --> 00:00:22,599
-We have here a big while loop inside of main.
+我们在主管道内部有一个大的while循环。
 
 5
 00:00:22,599 --> 00:00:28,779
@@ -20,11 +20,11 @@ We have here a big while loop inside of main.
 
 6
 00:00:28,779 --> 00:00:30,459
-struct up here.
+结构在这里。
 
 7
 00:00:30,460 --> 00:00:36,260
-And auth has the attributes name which is a string up to 32 characters and an integer.
+auth的属性名是一个最多32个字符的字符串和一个整数。
 
 8
 00:00:36,260 --> 00:00:41,330
@@ -32,23 +32,23 @@ And auth has the attributes name which is a string up to 32 characters and an in
 
 9
 00:00:41,330 --> 00:00:42,410
-a string in memory.
+内存中的字符串。
 
 10
 00:00:42,410 --> 00:00:46,400
-So both of these are addresses - pointers.
+所以这两个都是地址指针。
 
 11
 00:00:46,400 --> 00:00:48,970
-Then we read a line from standard input.
+然后我们从标准输入中读取一行。
 
 12
 00:00:48,970 --> 00:00:53,620
-Maximum 128 bytes, so this is a secure fgets read.
+最大128字节，因此这是一个安全的fgets读取。
 
 13
 00:00:53,620 --> 00:00:55,610
-No buffer overflow.
+没有缓冲区溢出。
 
 14
 00:00:55,610 --> 00:00:59,990
@@ -56,27 +56,27 @@ No buffer overflow.
 
 15
 00:00:59,989 --> 00:01:00,989
-commands.
+命令。
 
 16
 00:01:00,989 --> 00:01:03,869
-Either “auth”, “reset”, “service” or “login”.
+“auth”、“reset”、“service”或“login”。
 
 17
 00:01:03,870 --> 00:01:08,190
-Let’s execute the program as well and then let’s talk about each command.
+让我们也执行程序，然后讨论每个命令。
 
 18
 00:01:08,189 --> 00:01:12,639
-When we first start the program, both the auth and the service pointer are null.
+当我们第一次启动程序时，auth和服务指针都为空。
 
 19
 00:01:12,640 --> 00:01:13,980
-Now we wait for input.
+现在我们等待输入。
 
 20
 00:01:13,979 --> 00:01:16,489
-Let’s have a look at the “auth” command.
+让我们看看“auth”命令。
 
 21
 00:01:16,490 --> 00:01:22,960
@@ -84,11 +84,11 @@ Let’s have a look at the “auth” command.
 
 22
 00:01:22,960 --> 00:01:25,790
-for the name + 4 byte for the integer.
+对于名称+整数的4字节。
 
 23
 00:01:25,789 --> 00:01:29,379
-Then the whole allocated memory is overwritten with zeroes.
+然后整个分配的内存被零覆盖。
 
 24
 00:01:29,380 --> 00:01:35,080
@@ -96,15 +96,15 @@ Then the whole allocated memory is overwritten with zeroes.
 
 25
 00:01:35,079 --> 00:01:38,329
-newly allocated area can have old data in there.
+新分配的区域中可以有旧数据。
 
 26
 00:01:38,329 --> 00:01:41,259
-A free does not zero out the memory.
+空闲状态不会使内存归零。
 
 27
 00:01:41,259 --> 00:01:44,349
-So here it’s zeroes out on allocation.
+所以这里的分配是零。
 
 28
 00:01:44,350 --> 00:01:48,650
@@ -112,7 +112,7 @@ So here it’s zeroes out on allocation.
 
 29
 00:01:48,649 --> 00:01:51,579
-available in the auth struct for the name.
+在auth结构中可用于该名称。
 
 30
 00:01:51,579 --> 00:01:56,209
@@ -120,19 +120,19 @@ available in the auth struct for the name.
 
 31
 00:01:56,209 --> 00:01:57,209
-the auth object.
+身份验证对象。
 
 32
 00:01:57,209 --> 00:02:00,799
-Let’s try that, let’s authenticate as admin.
+让我们试试，让我们作为管理员进行身份验证。
 
 33
 00:02:00,799 --> 00:02:05,089
-Cool, as we can see the variable auth contains now an address.
+很酷，我们可以看到变量auth现在包含一个地址。
 
 34
 00:02:05,090 --> 00:02:08,260
-This is where the auth object is on the heap.
+这是auth对象在堆中的位置。
 
 35
 00:02:08,259 --> 00:02:12,539
@@ -140,23 +140,23 @@ This is where the auth object is on the heap.
 
 36
 00:02:12,540 --> 00:02:15,850
-not zero, and if that’s the case we sucessfully logged in.
+不是零，如果是这样，我们就成功登录了。
 
 37
 00:02:15,850 --> 00:02:20,170
-Otherwise, if it’s zero, then it tells us to enter a password.
+否则，如果它是零，那么它会告诉我们输入密码。
 
 38
 00:02:20,170 --> 00:02:23,330
-Though in this case there is not more functionality than that.
+不过，在这种情况下，没有比这更强大的功能了。
 
 39
 00:02:23,330 --> 00:02:28,300
-but just imagine that you are trying to login as admin, without knowing my password.
+但是想象一下，你试图以管理员身份登录，而不知道我的密码。
 
 40
 00:02:28,300 --> 00:02:33,250
-So somehow our goal is to set the integer to a value, and then we are authenticated.
+所以我们的目标是将整数设置为一个值，然后我们就得到了验证。
 
 41
 00:02:33,250 --> 00:02:37,780
@@ -164,15 +164,15 @@ So somehow our goal is to set the integer to a value, and then we are authentica
 
 42
 00:02:37,780 --> 00:02:42,290
-we have learned from the beginning, that there are bugs that allow us to modify variables.
+我们从一开始就知道，存在允许我们修改变量的错误。
 
 43
 00:02:42,290 --> 00:02:46,460
-Another command here is reset, which will free the auth object on the heap.
+这里的另一个命令是reset，它将释放堆上的auth对象。
 
 44
 00:02:46,460 --> 00:02:49,240
-And this is actually where the issue is.
+这就是问题所在。
 
 45
 00:02:49,240 --> 00:02:54,460
@@ -184,23 +184,23 @@ auth变量没有重置为零，它仍然包含指向堆的指针，其中
 
 47
 00:02:59,370 --> 00:03:01,690
-the object was before.
+对象是以前的。
 
 48
 00:03:01,690 --> 00:03:06,110
-And when we for example login now, it will check the name attribute of that object.
+例如，当我们现在登录时，它将检查该对象的name属性。
 
 49
 00:03:06,110 --> 00:03:10,260
-Well, it hasn’t changed so we are still unauthenticated.
+嗯，它没有改变，所以我们还没有经过身份验证。
 
 50
 00:03:10,260 --> 00:03:15,680
-But the login command will “use” the variable auth after we just freed it.
+但是在释放变量auth之后，login命令将“使用”它。
 
 51
 00:03:15,680 --> 00:03:16,680
-“Use-after-free”.
+“免费使用”。
 
 52
 00:03:16,680 --> 00:03:17,680
@@ -212,23 +212,23 @@ But the login command will “use” the variable auth after we just freed it.
 
 54
 00:03:23,070 --> 00:03:25,160
-of the characters after the service command.
+服务命令后的字符数。
 
 55
 00:03:25,160 --> 00:03:29,110
-So for example we can specify that we want to use the hack service.
+例如，我们可以指定要使用黑客服务。
 
 56
 00:03:29,110 --> 00:03:32,900
-And now we also have an address in the service variable.
+现在我们在服务变量中还有一个地址。
 
 57
 00:03:32,900 --> 00:03:36,150
-And strangely it’s the same one as auth.
+奇怪的是，它和auth是同一个。
 
 58
 00:03:36,150 --> 00:03:37,900
-That is weird.
+真奇怪。
 
 59
 00:03:37,900 --> 00:03:39,680
@@ -236,15 +236,15 @@ That is weird.
 
 60
 00:03:39,680 --> 00:03:41,730
-Let’s read the man page.
+让我们看一下手册页。
 
 61
 00:03:41,730 --> 00:03:46,820
-strdup returns a pointer to a new string which is a dublicate of the string s.
+strdup返回一个指向新字符串的指针，该字符串是字符串s的两个副本。
 
 62
 00:03:46,820 --> 00:03:52,050
-The memory for the new string is obtained with malloc, and can be freed with free.
+新字符串的内存是用malloc获得的，可以用free释放。
 
 63
 00:03:52,050 --> 00:03:56,710
@@ -252,11 +252,11 @@ The memory for the new string is obtained with malloc, and can be freed with fre
 
 64
 00:03:56,710 --> 00:03:59,400
-pass to it, and copies it there.
+传过去，复制到那里。
 
 65
 00:03:59,400 --> 00:04:03,240
-So it will also call malloc and thus allocate stuff on the heap.
+所以它也会调用malloc，从而在堆上分配东西。
 
 66
 00:04:03,240 --> 00:04:07,880
@@ -264,31 +264,31 @@ So it will also call malloc and thus allocate stuff on the heap.
 
 67
 00:04:07,880 --> 00:04:11,950
-freed, there was free space, and service got that free space there.
+释放后，就有了可用空间，服务部门在那里获得了可用空间。
 
 68
 00:04:11,950 --> 00:04:14,650
-Let’s look at this in gdb.
+让我们在gdb中看看这个。
 
 69
 00:04:14,650 --> 00:04:16,690
-First we set the assembler syntax to intel.
+首先，我们将汇编程序语法设置为intel。
 
 70
 00:04:16,690 --> 00:04:18,460
-And then we disassemble main.
+然后我们拆卸主管道。
 
 71
 00:04:18,459 --> 00:04:23,379
-Let’s first run it and use auth once, so we performed at least one malloc.
+我们首先运行它并使用auth一次，所以我们至少执行了一个malloc。
 
 72
 00:04:23,380 --> 00:04:27,860
-Then press control+c and check the address of the heap with info proc mappings.
+然后按control+c并使用info proc映射检查堆的地址。
 
 73
 00:04:27,860 --> 00:04:32,120
-Now we can print 20 words from the heap with examine.
+现在我们可以用examine从堆中打印20个单词。
 
 74
 00:04:32,120 --> 00:04:35,930
@@ -296,59 +296,59 @@ Now we can print 20 words from the heap with examine.
 
 75
 00:04:35,930 --> 00:04:40,940
-gdb also knows that auth is from the type struct auth, which we can print pretty again.
+gdb还知道auth来自类型struct auth，我们可以再次打印它。
 
 76
 00:04:40,940 --> 00:04:44,940
-And we can see here the string name and the auth integer.
+这里我们可以看到字符串名和auth整数。
 
 77
 00:04:44,940 --> 00:04:47,750
-We can do the same for the service string.
+我们可以对服务字符串执行相同的操作。
 
 78
 00:04:47,750 --> 00:04:51,250
-Now let’s create a breakpoint before the printf.
+现在让我们在printf之前创建一个断点。
 
 79
 00:04:51,250 --> 00:04:57,440
-And with command we can type what (gdb) commands shall be executed when we hit this breakpoint.
+通过命令，我们可以键入当我们到达这个断点时应该执行什么（gdb）命令。
 
 80
 00:04:57,440 --> 00:05:00,910
-We can use echo to print some strings to make it all look more pretty.
+我们可以用echo打印一些字符串，使其看起来更漂亮。
 
 81
 00:05:00,910 --> 00:05:02,630
-First we want to print the heap.
+首先我们要打印堆。
 
 82
 00:05:02,630 --> 00:05:03,810
-We echo a line.
+我们回响一条线。
 
 83
 00:05:03,810 --> 00:05:06,410
-Then we want to print the auth variable.
+然后我们要打印auth变量。
 
 84
 00:05:06,410 --> 00:05:07,410
-Another line.
+另一条线。
 
 85
 00:05:07,410 --> 00:05:08,410
-And the service variable.
+以及服务变量。
 
 86
 00:05:08,410 --> 00:05:09,780
-At the end we continue automatically.
+最后我们自动继续。
 
 87
 00:05:09,780 --> 00:05:12,930
-Finsih the command sequence with end.
+finsih命令序列结束。
 
 88
 00:05:12,930 --> 00:05:15,030
-Now let’s rerun this binary.
+现在让我们重新运行这个二进制文件。
 
 89
 00:05:15,030 --> 00:05:19,330
@@ -356,7 +356,7 @@ Now let’s rerun this binary.
 
 90
 00:05:19,330 --> 00:05:23,750
-our first value by authenticating with “auth” as admin.
+我们的第一个值是以“auth”作为管理员进行身份验证。
 
 91
 00:05:23,750 --> 00:05:28,930
@@ -368,19 +368,19 @@ our first value by authenticating with “auth” as admin.
 
 93
 00:05:31,880 --> 00:05:35,150
-Now we can see here our heap.
+现在我们可以看到我们的堆了。
 
 94
 00:05:35,150 --> 00:05:38,730
-Like we expect we have here a chunk with our string name admin.
+就像我们期望的那样，这里有一个字符串名为admin的块。
 
 95
 00:05:38,730 --> 00:05:39,730
-Buuuuut.
+布鲁尤特
 
 96
 00:05:39,730 --> 00:05:40,730
-Something is weird.
+有点奇怪。
 
 97
 00:05:40,730 --> 00:05:46,970
@@ -388,7 +388,7 @@ Something is weird.
 
 98
 00:05:46,970 --> 00:05:48,050
-8 byte chunk headers….
+8字节块头….
 
 99
 00:05:48,050 --> 00:05:51,900
@@ -404,7 +404,7 @@ Something is weird.
 
 102
 00:05:57,550 --> 00:05:59,810
-code, and name everything auth.
+代码，并命名所有身份验证。
 
 103
 00:05:59,810 --> 00:06:03,810
@@ -412,7 +412,7 @@ code, and name everything auth.
 
 104
 00:06:03,810 --> 00:06:05,120
-here is called auth.
+这里叫auth。
 
 105
 00:06:05,120 --> 00:06:10,210
@@ -420,51 +420,51 @@ here is called auth.
 
 106
 00:06:10,210 --> 00:06:11,870
-auth, not the struct auth.
+auth，而不是结构auth。
 
 107
 00:06:11,870 --> 00:06:16,060
-Thus it’s only 4 byte - but malloc aligned it to 8 bytes.
+因此，它只有4个字节，但malloc将它与8个字节对齐。
 
 108
 00:06:16,060 --> 00:06:17,060
-Gosh.
+天哪。
 
 109
 00:06:17,060 --> 00:06:18,060
-People.
+人。
 
 110
 00:06:18,060 --> 00:06:19,090
-Please name your variables better.
+请更好地命名变量。
 
 111
 00:06:19,090 --> 00:06:21,500
-This is how bugs and security issues are created.
+这就是如何创建错误和安全问题。
 
 112
 00:06:21,500 --> 00:06:24,630
-Anyhow, let’s ignore that for now.
+不管怎样，我们暂时忽略这一点。
 
 113
 00:06:24,630 --> 00:06:26,920
-Earlier we were wondering how the free works.
+早些时候，我们想知道自由是如何运作的。
 
 114
 00:06:26,919 --> 00:06:31,439
-So let’s free the auth object with reset, and pay attention to what changes.
+因此，让我们用reset释放auth对象，并注意哪些更改。
 
 115
 00:06:31,440 --> 00:06:32,610
-Ok lol.
+好吧，LOL。
 
 116
 00:06:32,610 --> 00:06:34,410
-Basically nothing changed.
+基本上没有改变。
 
 117
 00:06:34,410 --> 00:06:38,610
-Except that the first word of the chunk data got replaced with 0.
+但块数据的第一个字被替换为0。
 
 118
 00:06:38,610 --> 00:06:42,650
@@ -472,15 +472,15 @@ Except that the first word of the chunk data got replaced with 0.
 
 119
 00:06:42,650 --> 00:06:43,870
-address.
+地址。
 
 120
 00:06:43,870 --> 00:06:46,890
-Because free chunks are a linked list.
+因为自由块是一个链表。
 
 121
 00:06:46,890 --> 00:06:50,670
-But we don’t have another free chunk in this list, thus it’s null.
+但是我们在这个列表中没有另一个空闲块，因此它是空的。
 
 122
 00:06:50,669 --> 00:06:54,639
@@ -492,11 +492,11 @@ But we don’t have another free chunk in this list, thus it’s null.
 
 124
 00:06:58,740 --> 00:07:03,060
-the heap, as long as the metadata like the previous address pointer are correct.
+堆，只要像前一个地址指针这样的元数据是正确的。
 
 125
 00:07:03,060 --> 00:07:06,430
-Thus it only changed that particular value.
+因此它只改变了那个特定的值。
 
 126
 00:07:06,430 --> 00:07:10,990
@@ -504,55 +504,55 @@ Thus it only changed that particular value.
 
 127
 00:07:10,990 --> 00:07:11,990
-here.
+在这里。
 
 128
 00:07:11,990 --> 00:07:15,560
-But the name is now empty with nulls, and the integer is also still null.
+但是名称现在是空的，带有空值，整数仍然是空值。
 
 129
 00:07:15,560 --> 00:07:16,560
-But.
+但是。
 
 130
 00:07:16,560 --> 00:07:19,540
-Let’s use service to allocate a string on the heap.
+让我们使用服务在堆上分配一个字符串。
 
 131
 00:07:19,540 --> 00:07:22,300
-Let’s allocate just some recognizable characters.
+让我们只分配一些可识别的字符。
 
 132
 00:07:22,300 --> 00:07:23,860
-Like AAA.
+像AAA一样。
 
 133
 00:07:23,860 --> 00:07:28,700
-Note only 3 As, because the code is shitty and it also takes the space before the As.
+注意只有3as，因为代码很糟糕，它还占用了as前面的空间。
 
 134
 00:07:28,700 --> 00:07:31,300
-Here on the heap we can see that the string got allocated.
+在堆中，我们可以看到字符串已被分配。
 
 135
 00:07:31,300 --> 00:07:35,430
-And we see that the name of the auth object has now some different values.
+我们看到auth对象的名称现在有一些不同的值。
 
 136
 00:07:35,430 --> 00:07:38,940
-Now let’s allocate a new string with service.
+现在让我们为服务分配一个新的字符串。
 
 137
 00:07:38,940 --> 00:07:40,110
-BBB.
+血脑屏障。
 
 138
 00:07:40,110 --> 00:07:42,150
-And another one with CCC.
+另一个是CCC。
 
 139
 00:07:42,150 --> 00:07:44,690
-We see the heap slowly filling up.
+我们看到堆慢慢地填满了。
 
 140
 00:07:44,690 --> 00:07:45,690
@@ -560,19 +560,19 @@ We see the heap slowly filling up.
 
 141
 00:07:45,690 --> 00:07:46,690
-What’s that.
+那是什么？
 
 142
 00:07:46,690 --> 00:07:49,490
-Suddenly the auth integer has a huge value.
+突然间，auth整数有一个巨大的值。
 
 143
 00:07:49,490 --> 00:07:53,970
-That’s because it points into the heap where the CCC is stored.
+这是因为它指向存储CCC的堆。
 
 144
 00:07:53,970 --> 00:07:57,640
-And if we now login, then we get the message that we are already logged in.
+如果我们现在登录，那么我们会收到一条消息，说明我们已经登录了。
 
 145
 00:07:57,640 --> 00:07:58,640
@@ -580,7 +580,7 @@ And if we now login, then we get the message that we are already logged in.
 
 146
 00:07:58,640 --> 00:08:02,580
-I have to say this level is so horribly broken.
+我不得不说这个水平太糟糕了。
 
 147
 00:08:02,580 --> 00:08:07,050
@@ -588,31 +588,31 @@ I have to say this level is so horribly broken.
 
 148
 00:08:07,050 --> 00:08:08,050
-object.
+对象。
 
 149
 00:08:08,050 --> 00:08:09,050
-The space is too small.
+空间太小了。
 
 150
 00:08:09,050 --> 00:08:10,280
-I show you.
+我指给你看。
 
 151
 00:08:10,280 --> 00:08:12,980
-Let’s restart it and auth again as admin.
+让我们重新启动它并作为管理员再次进行身份验证。
 
 152
 00:08:12,979 --> 00:08:16,569
-Now simply enter a along service string.
+现在只需输入一个伴随服务字符串。
 
 153
 00:08:16,570 --> 00:08:18,950
-And boom, we also overwrite the integer.
+而Boom，我们也覆盖了整数。
 
 154
 00:08:18,949 --> 00:08:20,999
-And we get the logged in message.
+我们收到登录信息。
 
 155
 00:08:21,000 --> 00:08:26,220
@@ -620,5 +620,5 @@ And we get the logged in message.
 
 156
 00:08:26,220 --> 00:08:29,740
-the term use-after-free and that was also kinda the intended challenge.
+“免费后使用”这一术语也是一个有计划的挑战。
 

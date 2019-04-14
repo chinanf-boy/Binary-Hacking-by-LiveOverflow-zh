@@ -8,11 +8,11 @@
 
 3
 00:00:18,580 --> 00:00:19,580
-PLT).
+PLT）。
 
 4
 00:00:19,580 --> 00:00:24,660
-Let’s start by creating a very simple C program that just calls a couple of libc functions.
+我们先创建一个非常简单的C程序，它只调用两个libc函数。
 
 5
 00:00:24,660 --> 00:00:30,120
@@ -40,11 +40,11 @@ Let’s start by creating a very simple C program that just calls a couple of li
 
 11
 00:01:00,449 --> 00:01:04,789
-libc can receive updates without having to recompile my binnary.
+libc可以在不重新编译binnary的情况下接收更新。
 
 12
 00:01:04,790 --> 00:01:10,860
-But this also means, that the addresses in libc might be different for each version.
+但这也意味着，libc中的地址对于每个版本可能是不同的。
 
 13
 00:01:10,860 --> 00:01:16,450
@@ -52,11 +52,11 @@ But this also means, that the addresses in libc might be different for each vers
 
 14
 00:01:16,450 --> 00:01:22,270
-can create a call instruction? Well this is where the PLT and GOT comes into play.
+可以创建调用指令吗？好吧，这就是PLT和开始发挥作用的地方。
 
 15
 00:01:22,270 --> 00:01:28,000
-Let’s open this binary in hopper disassembler and let’s have a look at the main function.
+让我们在漏斗拆卸器中打开这个二进制文件，看看主要功能。
 
 16
 00:01:28,000 --> 00:01:32,940
@@ -84,7 +84,7 @@ Let’s open this binary in hopper disassembler and let’s have a look at the m
 
 22
 00:01:58,060 --> 00:02:05,830
-libc is not included in this binary. We landed in the plt section. The process linkage table.
+libc不包含在此二进制文件中。我们在PLT区着陆。流程链接表。
 
 23
 00:02:05,830 --> 00:02:13,090
@@ -92,7 +92,7 @@ libc is not included in this binary. We landed in the plt section. The process l
 
 24
 00:02:13,090 --> 00:02:20,490
-location. And this location got the name puts @ GOT. So let’s go there.
+位置。这个位置的名字是plats@got。我们去那儿吧。
 
 25
 00:02:20,490 --> 00:02:26,940
@@ -136,7 +136,7 @@ location. And this location got the name puts @ GOT. So let’s go there.
 
 35
 00:03:20,060 --> 00:03:25,360
-set up by the kernel. And during that time references like that might get resolved.
+由内核设置。在这段时间内，这样的引用可能会得到解决。
 
 36
 00:03:25,360 --> 00:03:30,500
@@ -148,7 +148,7 @@ set up by the kernel. And during that time references like that might get resolv
 
 38
 00:03:37,540 --> 00:03:43,630
-with teh buttom on the top right. So let’s step forward until we follow the call to puts().
+在右上角有一个按钮。所以让我们向前一步，直到我们按照puts（）的调用进行操作。
 
 39
 00:03:43,630 --> 00:03:49,860
@@ -156,7 +156,7 @@ with teh buttom on the top right. So let’s step forward until we follow the ca
 
 40
 00:03:49,860 --> 00:03:55,730
-in the global offset table. Let’s step further and let’s see what happens. Oh… nope.
+在全局偏移表中。让我们更进一步，看看会发生什么。哦……不。
 
 41
 00:03:55,730 --> 00:04:00,860
@@ -172,7 +172,7 @@ in the global offset table. Let’s step further and let’s see what happens. O
 
 44
 00:04:09,381 --> 00:04:14,541
-when we follow this jump we end up in a function called _dl_runtime_resolve.
+当我们执行这个跳转时，最终得到一个名为_dl_runtime_resolve的函数。
 
 45
 00:04:14,540 --> 00:04:18,530
@@ -180,7 +180,7 @@ when we follow this jump we end up in a function called _dl_runtime_resolve.
 
 46
 00:04:18,530 --> 00:04:25,100
-我们可以看到_dl_runtime_resolve中的地址属于这个ld.so二进制文件。男性页面
+我们可以看到来自运行时解析的地址属于这个ld.so二进制文件。男性页面
 
 47
 00:04:25,100 --> 00:04:31,180
@@ -204,7 +204,7 @@ when we follow this jump we end up in a function called _dl_runtime_resolve.
 
 52
 00:04:54,350 --> 00:04:58,460
-we end up in puts() from libc.
+我们最终从libc得到了puts（）。
 
 53
 00:04:58,460 --> 00:05:04,640
@@ -212,7 +212,7 @@ we end up in puts() from libc.
 
 54
 00:05:04,639 --> 00:05:06,739
-couple of things you can do with it.
+你可以用它做一些事情。
 
 55
 00:05:06,740 --> 00:05:12,600
@@ -220,7 +220,7 @@ couple of things you can do with it.
 
 56
 00:05:12,600 --> 00:05:18,050
-memory. So you can simply overwrite the address in the global offset table for a certain function.
+记忆。因此，您可以简单地覆盖某个函数的全局偏移量表中的地址。
 
 57
 00:05:18,050 --> 00:05:22,550
@@ -228,7 +228,7 @@ memory. So you can simply overwrite the address in the global offset table for a
 
 58
 00:05:22,550 --> 00:05:25,560
-entered in the global offset table.
+在全局偏移量表中输入。
 
 59
 00:05:25,560 --> 00:05:30,410
@@ -256,7 +256,7 @@ entered in the global offset table.
 
 65
 00:05:58,651 --> 00:06:02,561
-is useful if you have to find rop gadgets or you want to do a return-to-libc.
+如果必须查找ROP小工具或要返回libc，则非常有用。
 
 66
 00:06:02,560 --> 00:06:03,560
@@ -268,7 +268,7 @@ is useful if you have to find rop gadgets or you want to do a return-to-libc.
 
 68
 00:06:04,560 --> 00:06:05,560
-table and then leak an address of libc that way.
+然后以这种方式泄漏libc的地址。
 
 69
 00:06:05,560 --> 00:06:08,840
@@ -292,7 +292,7 @@ table and then leak an address of libc that way.
 
 74
 00:06:37,139 --> 00:06:38,869
-over the program execution.
+在程序执行过程中。
 
 75
 00:06:38,870 --> 00:06:44,600
@@ -300,5 +300,5 @@ over the program execution.
 
 76
 00:06:44,600 --> 00:06:46,470
-global offset table to redirect code execution.
+用于重定向代码执行的全局偏移量表。
 

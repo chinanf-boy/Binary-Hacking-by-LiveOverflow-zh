@@ -1,10 +1,10 @@
 1
 00:00:00,280 --> 00:00:04,640
-In this video we will cover heap level 0 from exploit-exercises.com/protostar.
+在这段视频中，我们将从exploit-exercises.com/protostar中介绍堆级别0。
 
 2
 00:00:04,640 --> 00:00:10,470
-It’s the heap exploitation introductory challenge and is very easy.
+这是堆利用的入门挑战，非常简单。
 
 3
 00:00:10,469 --> 00:00:17,129
@@ -12,11 +12,11 @@ It’s the heap exploitation introductory challenge and is very easy.
 
 4
 00:00:17,130 --> 00:00:20,120
-see if or how it’s still exploitable.
+看看它是否还是可以被利用的或者如何被利用的。
 
 5
 00:00:20,120 --> 00:00:24,630
-And spoiler alert, nothing changed for this challenge, it’s super straight forward.
+剧透警报，这项挑战没有改变，它是超直向前。
 
 6
 00:00:24,630 --> 00:00:29,230
@@ -24,7 +24,7 @@ And spoiler alert, nothing changed for this challenge, it’s super straight for
 
 7
 00:00:29,230 --> 00:00:38,520
-want to checkout what else we learn at the end.
+想看看最后我们还学到了什么。
 
 8
 00:00:38,520 --> 00:00:43,410
@@ -32,7 +32,7 @@ want to checkout what else we learn at the end.
 
 9
 00:00:43,409 --> 00:00:45,909
-how to explain and show it to you.
+如何向你解释和展示。
 
 10
 00:00:45,910 --> 00:00:50,980
@@ -40,7 +40,7 @@ how to explain and show it to you.
 
 11
 00:00:50,980 --> 00:00:54,070
-it, kind of like a blind solve or a speedrun.
+它有点像盲解或快跑。
 
 12
 00:00:54,070 --> 00:00:58,540
@@ -48,7 +48,7 @@ it, kind of like a blind solve or a speedrun.
 
 13
 00:00:58,539 --> 00:01:01,109
-the mistakes and pauses I made.
+我犯的错误和停顿。
 
 14
 00:01:01,109 --> 00:01:04,969
@@ -56,7 +56,7 @@ the mistakes and pauses I made.
 
 15
 00:01:04,970 --> 00:01:08,380
-in different moments and point out some other things.
+在不同的时刻，指出一些其他的事情。
 
 16
 00:01:08,380 --> 00:01:12,520
@@ -64,23 +64,23 @@ in different moments and point out some other things.
 
 17
 00:01:12,520 --> 00:01:14,400
-took me in real time.
+实时带我去。
 
 18
 00:01:14,399 --> 00:01:17,789
-But before we start doing the exploit let’s have a look at the code again.
+但是在我们开始利用这个漏洞之前，让我们再看看代码。
 
 19
 00:01:17,789 --> 00:01:21,259
-There are two functions winner() and nowinner().
+有两个函数winner（）和nowinner（）。
 
 20
 00:01:21,259 --> 00:01:23,789
-And obviously we have to somehow call winner().
+显然，我们必须以某种方式称之为winner（）。
 
 21
 00:01:23,789 --> 00:01:29,989
-We can also see there are two structs that get space allocated for them on the heap.
+我们还可以看到有两个结构在堆上为它们分配了空间。
 
 22
 00:01:29,990 --> 00:01:34,860
@@ -88,27 +88,27 @@ We can also see there are two structs that get space allocated for them on the h
 
 23
 00:01:34,859 --> 00:01:38,059
-when you look in the code it’s clear what it does.
+当您查看代码时，很清楚它是做什么的。
 
 24
 00:01:38,060 --> 00:01:40,500
-We set fp to nowinner.
+我们将fp设置为nowinner。
 
 25
 00:01:40,500 --> 00:01:45,380
-Notice how nowinner has no parantheses, this means it’s not being called.
+注意到现在的内在没有偏执，这意味着它没有被召唤。
 
 26
 00:01:45,380 --> 00:01:50,830
-This is literally the function pointer and adding paraentheses would cause a call.
+这实际上是函数指针，添加parenthese将导致调用。
 
 27
 00:01:50,829 --> 00:01:54,579
-And then later we have those paraentheses for fp.
+然后，我们有了FP的副焓。
 
 28
 00:01:54,579 --> 00:02:00,229
-And fp has been set to point to nowinner, so nowinner is executed().
+并且fp被设置为指向nowinner，所以nowinner被执行（）。
 
 29
 00:02:00,229 --> 00:02:05,179
@@ -116,15 +116,15 @@ And fp has been set to point to nowinner, so nowinner is executed().
 
 30
 00:02:05,179 --> 00:02:09,699
-is only 64byte large and overwrite the function pointer.
+只有64字节大并覆盖函数指针。
 
 31
 00:02:09,700 --> 00:02:12,310
-So sounds easy.
+听起来很简单。
 
 32
 00:02:12,310 --> 00:02:15,010
-I start by opening up the binary in gdb.
+我首先打开gdb中的二进制文件。
 
 33
 00:02:15,010 --> 00:02:21,310
@@ -132,19 +132,19 @@ I start by opening up the binary in gdb.
 
 34
 00:02:21,310 --> 00:02:25,010
-but then I realized I forgot the argument parameter again.
+但后来我意识到我又忘记了参数。
 
 35
 00:02:25,010 --> 00:02:29,010
-The strcpy uses the first argument to copy into name.
+strcpy使用第一个参数复制到name中。
 
 36
 00:02:29,010 --> 00:02:32,080
-Ok now we had a clean execution.
+好吧，现在我们干净利落地处决了。
 
 37
 00:02:32,080 --> 00:02:35,720
-Now I want to set a good breakpoint so I disassemble main.
+现在我想设置一个好的断点，这样我就可以分解main了。
 
 38
 00:02:35,720 --> 00:02:39,910
@@ -152,7 +152,7 @@ Now I want to set a good breakpoint so I disassemble main.
 
 39
 00:02:39,910 --> 00:02:43,890
-calls to figure out what corresponds to what in the C code.
+调用以找出与C代码中的内容对应的内容。
 
 40
 00:02:43,890 --> 00:02:49,490
@@ -168,19 +168,19 @@ calls to figure out what corresponds to what in the C code.
 
 43
 00:03:00,370 --> 00:03:01,370
-right away.
+马上。
 
 44
 00:03:01,370 --> 00:03:03,370
-The call rdx.
+呼叫RDX。
 
 45
 00:03:03,370 --> 00:03:07,050
-This is calling the function pointer that contains nowinner().
+这将调用包含nowinner（）的函数指针。
 
 46
 00:03:07,050 --> 00:03:11,490
-Ok, so I execute it again and we hit the breakpoint.
+好的，所以我再次执行它，我们到达了断点。
 
 47
 00:03:11,489 --> 00:03:15,879
@@ -188,7 +188,7 @@ Ok, so I execute it again and we hit the breakpoint.
 
 48
 00:03:15,879 --> 00:03:18,149
-the process with vmmap.
+使用vmmap的进程。
 
 49
 00:03:18,150 --> 00:03:22,520
@@ -200,15 +200,15 @@ the process with vmmap.
 
 51
 00:03:27,150 --> 00:03:30,580
-loaded too, and we also have the heap here.
+也加载了，这里还有堆。
 
 52
 00:03:30,580 --> 00:03:34,370
-So obviously I want to check out how the heap looks like.
+所以很明显我想看看堆的样子。
 
 53
 00:03:34,370 --> 00:03:38,050
-Examine 32 64bit hex values from the start of the heap.
+从堆的开头检查32个64位十六进制值。
 
 54
 00:03:38,050 --> 00:03:43,900
@@ -216,35 +216,35 @@ Examine 32 64bit hex values from the start of the heap.
 
 55
 00:03:43,900 --> 00:03:44,900
-they are.
+他们是。
 
 56
 00:03:44,900 --> 00:03:47,910
-And I also immediately look for the function pointer.
+我也会立即查找函数指针。
 
 57
 00:03:47,909 --> 00:03:50,039
-This looks like an address.
+这像是地址。
 
 58
 00:03:50,040 --> 00:03:53,180
-Quick sanity check with the disassemble command.
+使用disassemble命令快速进行健全性检查。
 
 59
 00:03:53,180 --> 00:03:58,100
-Here is a puts call using this address as a paremter, and so that is our nowinner string.
+这里是一个使用这个地址作为paremter的puts调用，所以这就是我们现在的内部字符串。
 
 60
 00:03:58,099 --> 00:04:00,439
-So yep, that’s nowinner.
+所以是的，这就是现在的内在。
 
 61
 00:04:00,439 --> 00:04:04,639
-So now we want to overwrite that with winner, so we need that address.
+所以现在我们想用winner覆盖它，所以我们需要那个地址。
 
 62
 00:04:04,640 --> 00:04:06,220
-Here it is.
+在这里。
 
 63
 00:04:06,219 --> 00:04:10,839
@@ -252,15 +252,15 @@ Here it is.
 
 64
 00:04:10,840 --> 00:04:13,280
-addresses to the left.
+地址在左边。
 
 65
 00:04:13,280 --> 00:04:20,680
-Address of the start of the name ends in 0x10, and the function pointer is ath 0x60.
+名称开头的地址以0x10结尾，函数指针为ATH 0x60。
 
 66
 00:04:20,680 --> 00:04:23,710
-So we have an offset of 0x50.
+所以我们有一个0x50的偏移量。
 
 67
 00:04:23,710 --> 00:04:28,220
@@ -268,11 +268,11 @@ So we have an offset of 0x50.
 
 68
 00:04:28,220 --> 00:04:30,080
-exploit right away.
+立即利用。
 
 69
 00:04:30,080 --> 00:04:34,550
-So I start by writing a short python inline script to print the exploit string.
+因此，我首先编写一个简短的python内联脚本来打印漏洞字符串。
 
 70
 00:04:34,550 --> 00:04:39,520
@@ -280,15 +280,15 @@ So I start by writing a short python inline script to print the exploit string.
 
 71
 00:04:39,520 --> 00:04:41,520
-so I print a few As.
+所以我打印了一些。
 
 72
 00:04:41,520 --> 00:04:47,690
-Quick check again how many that was, 0x60-0x10 so we need 0x50.
+再次快速检查有多少个，0x60-0x10，所以我们需要0x50。
 
 73
 00:04:47,690 --> 00:04:50,240
-After that we need the address of winner.
+之后我们需要获胜者的地址。
 
 74
 00:04:50,240 --> 00:04:52,610
@@ -300,11 +300,11 @@ After that we need the address of winner.
 
 76
 00:04:56,620 --> 00:05:00,290
-with 0xf6, 0x05 and then 0x40.
+使用0xF6、0x05，然后是0x40。
 
 77
 00:05:00,290 --> 00:05:01,980
-Because of the endianess.
+因为有大麻。
 
 78
 00:05:01,979 --> 00:05:06,789
@@ -312,15 +312,15 @@ Because of the endianess.
 
 79
 00:05:06,790 --> 00:05:07,890
-I expect.
+我期待。
 
 80
 00:05:07,889 --> 00:05:13,039
-But then I notice a 0x0a at the end, and that’s a newline.
+但是我注意到末尾有一个0x0A，这是一个换行符。
 
 81
 00:05:13,040 --> 00:05:16,950
-Python print will add a newline at the end which we don’t want.
+python print将在末尾添加一个我们不需要的换行符。
 
 82
 00:05:16,949 --> 00:05:22,069
@@ -328,15 +328,15 @@ Python print will add a newline at the end which we don’t want.
 
 83
 00:05:22,069 --> 00:05:25,429
-a string to stdout, so we don’t have a newline.
+一个字符串到stdout，所以我们没有换行符。
 
 84
 00:05:25,430 --> 00:05:29,570
-And I verify that again with hexdump.
+我再次用hexdump验证这一点。
 
 85
 00:05:29,569 --> 00:05:35,809
-And then I’m basically done and try it on the target binary.
+然后我基本上完成了，在目标二进制文件上进行尝试。
 
 86
 00:05:35,810 --> 00:05:43,730
@@ -344,7 +344,7 @@ And then I’m basically done and try it on the target binary.
 
 87
 00:05:43,729 --> 00:05:49,479
-and the output is then basically replaced by it and placed here as the arguments.
+然后输出基本上被它替换，放在这里作为参数。
 
 88
 00:05:49,479 --> 00:05:50,659
@@ -356,11 +356,11 @@ and the output is then basically replaced by it and placed here as the arguments
 
 90
 00:05:51,660 --> 00:05:54,480
-I executed the winner function().
+我执行了winner函数（）。
 
 91
 00:05:54,479 --> 00:05:57,049
-You see this was super simple.
+你看这太简单了。
 
 92
 00:05:57,050 --> 00:06:01,550
@@ -368,15 +368,15 @@ You see this was super simple.
 
 93
 00:06:01,550 --> 00:06:03,890
-detail that I didn’t think about.
+我没想到的细节。
 
 94
 00:06:03,889 --> 00:06:06,239
-And I actually never thought about before.
+实际上我以前从来没有想过。
 
 95
 00:06:06,240 --> 00:06:08,510
-So here is the heap output again.
+这里是堆输出。
 
 96
 00:06:08,509 --> 00:06:10,449
@@ -384,11 +384,11 @@ So here is the heap output again.
 
 97
 00:06:10,449 --> 00:06:12,079
-That is clearly ascii.
+这显然是ASCII码。
 
 98
 00:06:12,080 --> 00:06:17,520
-And that’s weird, in our program we did not allocate any string like this on the heap.
+这很奇怪，在我们的程序中，我们没有在堆中分配这样的字符串。
 
 99
 00:06:17,520 --> 00:06:19,260
@@ -396,7 +396,7 @@ And that’s weird, in our program we did not allocate any string like this on t
 
 100
 00:06:19,259 --> 00:06:24,629
-When you look at this ascii text, then you will realize it’s in fact the printf output.
+当您查看这个ASCII文本时，您会发现它实际上是printf输出。
 
 101
 00:06:24,630 --> 00:06:26,270
@@ -404,15 +404,15 @@ When you look at this ascii text, then you will realize it’s in fact the print
 
 102
 00:06:26,270 --> 00:06:28,090
-Let’s investigate.
+让我们调查一下。
 
 103
 00:06:28,090 --> 00:06:31,300
-First I thought we could checkout valgrind.
+首先，我想我们可以去看看瓦尔格林。
 
 104
 00:06:31,300 --> 00:06:35,120
-Valgrind is an instrumentation framework for building dynamic analysis tools.
+Valgrind是用于构建动态分析工具的仪器框架。
 
 105
 00:06:35,120 --> 00:06:39,540
@@ -420,19 +420,19 @@ Valgrind工具可以自动检测许多内存管理和线程
 
 106
 00:06:39,540 --> 00:06:41,770
-bugs, and profile your programs in detail.
+错误，并详细介绍您的程序。
 
 107
 00:06:41,770 --> 00:06:45,750
-I really should use valgrind more often, I use it wayy to little.
+我真的应该更经常地使用Valgrind，我经常使用它。
 
 108
 00:06:45,750 --> 00:06:50,470
-But here is for example the valgrind output with tracing mallocs enabled.
+但下面是启用跟踪mallocs的valgrind输出。
 
 109
 00:06:50,470 --> 00:06:52,660
-And then we run our heap0 level.
+然后我们运行heap0级别。
 
 110
 00:06:52,660 --> 00:06:58,160
@@ -440,15 +440,15 @@ And then we run our heap0 level.
 
 111
 00:06:58,160 --> 00:07:00,440
-didn’t do of 1024.
+不是1024年的事。
 
 112
 00:07:00,440 --> 00:07:04,140
-That’s also the only memory that is freed again.
+这也是唯一被释放的内存。
 
 113
 00:07:04,139 --> 00:07:06,659
-The mallocs we do have no free.
+我们没有自由的马洛克人。
 
 114
 00:07:06,660 --> 00:07:08,780
@@ -456,11 +456,11 @@ The mallocs we do have no free.
 
 115
 00:07:08,780 --> 00:07:11,400
-Another interesting output is strace.
+另一个有趣的输出是strace。
 
 116
 00:07:11,400 --> 00:07:13,280
-Strace traces syscalls.
+strace跟踪系统调用。
 
 117
 00:07:13,280 --> 00:07:18,340
@@ -472,11 +472,11 @@ Strace traces syscalls.
 
 119
 00:07:24,740 --> 00:07:26,190
-in the first place.
+首先。
 
 120
 00:07:26,190 --> 00:07:30,750
-So this is where we get memory that will then be used by libc for the heap.
+所以这就是我们得到内存的地方，然后libc将使用它来处理堆。
 
 121
 00:07:30,750 --> 00:07:36,590
@@ -484,15 +484,15 @@ So this is where we get memory that will then be used by libc for the heap.
 
 122
 00:07:36,590 --> 00:07:38,430
-library function calls.
+库函数调用。
 
 123
 00:07:38,430 --> 00:07:42,740
-But oddly enough we only see two mallocs for the two structs.
+但奇怪的是，我们只看到两个结构的两个malloc。
 
 124
 00:07:42,740 --> 00:07:45,610
-Nothing about the mysterious third malloc.
+关于神秘的第三个malloc什么都没有。
 
 125
 00:07:45,610 --> 00:07:50,100
@@ -500,19 +500,19 @@ Nothing about the mysterious third malloc.
 
 126
 00:07:50,099 --> 00:07:55,399
-the mysterious malloc did not happen from a dynamically linked library call.
+神秘的malloc不是从动态链接的库调用中发生的。
 
 127
 00:07:55,400 --> 00:08:00,520
-Which means, this malloc must have been executed for example by libc itself.
+也就是说，这个malloc必须由libc本身执行。
 
 128
 00:08:00,520 --> 00:08:05,910
-And valgrind is a bit smarter and also traces these internal mallocs.
+Valgrind有点聪明，还可以追踪到这些内部的malloc。
 
 129
 00:08:05,909 --> 00:08:11,759
-For the third test I create a simple program that calls puts, so it prints a string.
+对于第三个测试，我创建了一个调用puts的简单程序，因此它打印一个字符串。
 
 130
 00:08:11,760 --> 00:08:16,490
@@ -520,11 +520,11 @@ For the third test I create a simple program that calls puts, so it prints a str
 
 131
 00:08:16,490 --> 00:08:17,540
-that.
+那。
 
 132
 00:08:17,539 --> 00:08:22,199
-And then we can debug that program and set a breakpoint on brk.
+然后我们可以调试这个程序并在BRK上设置一个断点。
 
 133
 00:08:22,199 --> 00:08:26,389
@@ -532,15 +532,15 @@ And then we can debug that program and set a breakpoint on brk.
 
 134
 00:08:26,389 --> 00:08:30,049
-memory, and so this is called when the heap is set up.
+内存，所以在设置堆时调用它。
 
 135
 00:08:30,050 --> 00:08:33,640
-And the heap is not always setup, only if it is required.
+并且堆并不总是设置的，只有在需要时才设置。
 
 136
 00:08:33,640 --> 00:08:40,250
-So if we assume printf or puts calls malloc, it would have to setup the heap first.
+因此，如果我们假设printf或puts调用malloc，它必须首先设置堆。
 
 137
 00:08:40,250 --> 00:08:44,630
@@ -552,7 +552,7 @@ So if we assume printf or puts calls malloc, it would have to setup the heap fir
 
 139
 00:08:49,380 --> 00:08:51,280
-a clean example.
+一个干净的例子。
 
 140
 00:08:51,280 --> 00:08:56,760
@@ -560,11 +560,11 @@ a clean example.
 
 141
 00:08:56,760 --> 00:08:58,300
-be a symbol name for it.
+成为它的符号名。
 
 142
 00:08:58,300 --> 00:09:01,070
-And a syscall doesn’t have a symbol name.
+系统调用没有符号名。
 
 143
 00:09:01,070 --> 00:09:05,900
@@ -572,11 +572,11 @@ And a syscall doesn’t have a symbol name.
 
 144
 00:09:05,900 --> 00:09:08,460
-syscall you want.
+您需要的系统调用。
 
 145
 00:09:08,460 --> 00:09:12,310
-But there is a brk symbol, but it’s not initially found.
+但是有一个BRK符号，但最初没有找到。
 
 146
 00:09:12,310 --> 00:09:17,560
@@ -584,11 +584,11 @@ But there is a brk symbol, but it’s not initially found.
 
 147
 00:09:17,560 --> 00:09:19,840
-contain a brk symbol.
+包含BRK符号。
 
 148
 00:09:19,840 --> 00:09:25,400
-And infact that is a regular function as a wrapper around the brk syscall.
+实际上，它是一个常规函数，作为BRK系统调用的包装器。
 
 149
 00:09:25,400 --> 00:09:30,580
@@ -596,11 +596,11 @@ And infact that is a regular function as a wrapper around the brk syscall.
 
 150
 00:09:30,580 --> 00:09:32,780
-internal brk function.
+内部BRK功能。
 
 151
 00:09:32,780 --> 00:09:37,070
-So that;s why we can easily set a breakpoint like this.
+所以我们可以很容易地设置这样的断点。
 
 152
 00:09:37,070 --> 00:09:41,460
@@ -608,19 +608,19 @@ So that;s why we can easily set a breakpoint like this.
 
 153
 00:09:41,460 --> 00:09:47,420
-backtrace which tells us which functions have been called that lead to this brk call.
+backtrace，它告诉我们哪些函数被调用，导致了这个brk调用。
 
 154
 00:09:47,420 --> 00:09:49,480
-I clean that up a bit.
+我会清理一下。
 
 155
 00:09:49,480 --> 00:09:50,480
-So here we go.
+我们走吧。
 
 156
 00:09:50,480 --> 00:09:53,500
-And as you can see it starts with IO_puts.
+正如你所看到的，它从输入输出开始。
 
 157
 00:09:53,500 --> 00:09:58,210
@@ -628,7 +628,7 @@ And as you can see it starts with IO_puts.
 
 158
 00:09:58,210 --> 00:10:01,410
-on github, and you can read the code there.
+在Github上，您可以在那里读取代码。
 
 159
 00:10:01,410 --> 00:10:06,290
@@ -636,11 +636,11 @@ on github, and you can read the code there.
 
 160
 00:10:06,290 --> 00:10:10,990
-puts when we call it, has to do with a lot of C macros in libc.
+当我们调用它时，它与libc中的许多c宏有关。
 
 161
 00:10:10,990 --> 00:10:13,860
-I find it really difficult to read that code.
+我发现读这段代码真的很困难。
 
 162
 00:10:13,860 --> 00:10:20,520
@@ -648,7 +648,7 @@ I find it really difficult to read that code.
 
 163
 00:10:20,520 --> 00:10:22,770
-that doesn’t show up in the C code.
+这不会出现在C代码中。
 
 164
 00:10:22,770 --> 00:10:29,060
@@ -656,7 +656,7 @@ that doesn’t show up in the C code.
 
 165
 00:10:29,060 --> 00:10:32,530
-that says that it’s actually IO_Xsputn.
+也就是说它实际上是IO输入。
 
 166
 00:10:32,530 --> 00:10:39,660
@@ -664,31 +664,31 @@ that says that it’s actually IO_Xsputn.
 
 167
 00:10:39,660 --> 00:10:41,530
-JUMP2 is obviously another macro.
+Jump2显然是另一个宏。
 
 168
 00:10:41,530 --> 00:10:43,750
-And it just keeps going like that.
+就这样继续下去。
 
 169
 00:10:43,750 --> 00:10:45,510
-Feel free to do that on your own.
+你可以自己做。
 
 170
 00:10:45,510 --> 00:10:50,610
-But if we trust our trace we can see that at some point it calls doallocbuffer.
+但是，如果我们相信我们的追踪，我们可以在某个时刻看到它称之为DoallocBuffer。
 
 171
 00:10:50,610 --> 00:10:54,780
-And there is also a comment saying: “Allocate a buffer if needed”.
+还有一条评论说：“如果需要，分配一个缓冲区”。
 
 172
 00:10:54,780 --> 00:11:00,690
-So this 1024 byte malloc has to do with the standard output buffer.
+所以这个1024字节的malloc与标准输出缓冲区有关。
 
 173
 00:11:00,690 --> 00:11:06,460
-printf不会立即导致syscall写入，但libc实现了很多
+printf不会立即导致系统调用写入，但是libc实现了很多
 
 174
 00:11:06,460 --> 00:11:11,750
@@ -696,25 +696,25 @@ printf不会立即导致syscall写入，但libc实现了很多
 
 175
 00:11:11,750 --> 00:11:16,950
-waiting for files, or writing a few bigger chunks instead of a lot of small pieces.
+等待文件，或者写一些更大的块而不是很多小的块。
 
 176
 00:11:16,950 --> 00:11:17,950
-Yeah.
+是啊。
 
 177
 00:11:17,950 --> 00:11:20,750
-I would consider this a solved mystery.
+我认为这是一个已解开的谜。
 
 178
 00:11:20,750 --> 00:11:23,750
-Just a little excursion into the inner workings of programs.
+仅仅是对程序内部工作的一点探索。
 
 179
 00:11:23,750 --> 00:11:25,230
-I hope you liked that.
+希望你喜欢。
 
 180
 00:11:25,230 --> 00:11:25,730
-See you next week.
+下周见。
 

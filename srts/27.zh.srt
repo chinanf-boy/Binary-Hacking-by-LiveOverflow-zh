@@ -4,7 +4,7 @@
 
 2
 00:00:04,899 --> 00:00:07,919
-concentration and patience to understand them.
+专心和耐心去理解他们。
 
 3
 00:00:07,920 --> 00:00:12,020
@@ -12,16 +12,16 @@ concentration and patience to understand them.
 
 4
 00:00:12,020 --> 00:00:19,120
-protostar, which will be a lot easier because we have to establish some basics first.
+原恒星，这会更容易，因为我们必须先建立一些基础知识。
 
 5
 00:00:19,119 --> 00:00:26,149
 让我们快速了解一下网络级别
-0.
+0。
 
 6
 00:00:26,150 --> 00:00:31,380
-The description says you have to convert strings to little endian integers.
+说明中指出必须将字符串转换为小尾数整数。
 
 7
 00:00:31,380 --> 00:00:35,830
@@ -29,11 +29,11 @@ The description says you have to convert strings to little endian integers.
 
 8
 00:00:35,829 --> 00:00:36,899
-not quite enough.
+还不够。
 
 9
 00:00:36,899 --> 00:00:38,749
-I show you why.
+我告诉你为什么。
 
 10
 00:00:38,750 --> 00:00:44,920
@@ -41,11 +41,11 @@ I show you why.
 
 11
 00:00:44,920 --> 00:00:46,570
-ID it will run with.
+它将运行。
 
 12
 00:00:46,569 --> 00:00:50,509
-But this function is not a common libc function.
+但此函数不是常见的libc函数。
 
 13
 00:00:50,510 --> 00:00:56,010
@@ -53,11 +53,11 @@ But this function is not a common libc function.
 
 14
 00:00:56,010 --> 00:00:57,010
-user.
+用户。
 
 15
 00:00:57,010 --> 00:01:01,170
-This might seem weird but just don’t think so abstractly about computers.
+这可能看起来很奇怪，但不要对计算机如此抽象地思考。
 
 16
 00:01:01,170 --> 00:01:04,260
@@ -69,7 +69,7 @@ This might seem weird but just don’t think so abstractly about computers.
 
 18
 00:01:09,810 --> 00:01:13,750
-just means that this file has this number as owner set.
+这意味着这个文件将这个编号作为所有者集。
 
 19
 00:01:13,750 --> 00:01:19,320
@@ -77,23 +77,23 @@ just means that this file has this number as owner set.
 
 20
 00:01:19,320 --> 00:01:24,270
-name instead of the number, but under the hood it is still just an integer.
+名称而不是数字，但在引擎盖下它仍然只是一个整数。
 
 21
 00:01:24,270 --> 00:01:28,730
-So even though there is no name assigned to that ID, you are still free to use it.
+因此，即使没有为该ID分配名称，您仍然可以自由使用它。
 
 22
 00:01:28,730 --> 00:01:30,750
-Anyway, back to the code.
+不管怎样，回到代码。
 
 23
 00:01:30,750 --> 00:01:36,430
-The other functions such as serve_forever and set_io are also not known functions.
+其他功能，如永远服务和设置IO，也不是已知的功能。
 
 24
 00:01:36,430 --> 00:01:42,200
-And when you look at the includes, you will notice that it references a common.c file.
+当您查看include时，您会注意到它引用了一个公共的.c文件。
 
 25
 00:01:42,200 --> 00:01:46,820
@@ -101,19 +101,19 @@ And when you look at the includes, you will notice that it references a common.c
 
 26
 00:01:46,820 --> 00:01:48,910
-we don’t know what it does.
+我们不知道它是干什么的。
 
 27
 00:01:48,910 --> 00:01:52,170
-But one function is here, and that is the run() function.
+但这里有一个函数，那就是run（）函数。
 
 28
 00:01:52,170 --> 00:01:55,690
-You can see that it is called at the end of main().
+您可以看到它是在main（）的末尾调用的。
 
 29
 00:01:55,690 --> 00:02:01,460
-Run generated a random number, tells us that you should send that number as little endian.
+run生成了一个随机数，告诉我们应该以小endian的形式发送该数。
 
 30
 00:02:01,460 --> 00:02:06,350
@@ -121,11 +121,11 @@ Run generated a random number, tells us that you should send that number as litt
 
 31
 00:02:06,350 --> 00:02:11,500
-this input as a number and compares if it’s the same as the random number before.
+这个输入作为一个数字，并比较它是否与之前的随机数相同。
 
 32
 00:02:11,500 --> 00:02:12,840
-So just a simple test.
+所以只是一个简单的测试。
 
 33
 00:02:12,840 --> 00:02:18,320
@@ -137,11 +137,11 @@ So just a simple test.
 
 35
 00:02:23,230 --> 00:02:28,620
-but as you know, we are not satisfied on this channel when we ignore underlying concepts.
+但是，正如您所知，当我们忽略基础概念时，我们对这个通道并不满意。
 
 36
 00:02:28,620 --> 00:02:30,810
-We want to understand computers better.
+我们想更好地理解计算机。
 
 37
 00:02:30,810 --> 00:02:36,350
@@ -149,7 +149,7 @@ We want to understand computers better.
 
 38
 00:02:36,349 --> 00:02:40,609
-the process as a daemon, and the other one is about networking and sockets.
+进程是一个守护进程，另一个是关于网络和套接字的。
 
 39
 00:02:40,609 --> 00:02:43,469
@@ -157,19 +157,19 @@ the process as a daemon, and the other one is about networking and sockets.
 
 40
 00:02:43,469 --> 00:02:48,469
-Well we know already everything we need, to be able to reverse engineer this.
+好吧，我们已经知道了我们所需要的一切，能够逆向工程。
 
 41
 00:02:48,469 --> 00:02:52,579
-So let’s start by exploring the behaviour of the program before digging deeper.
+因此，让我们先研究一下程序的行为，然后再深入研究。
 
 42
 00:02:52,579 --> 00:02:55,119
-When you try to run the program, nothing happens.
+当你试图运行程序时，什么也不会发生。
 
 43
 00:02:55,120 --> 00:03:01,270
-But when you look at the running processes you can see that net0 is already running.
+但是当您查看正在运行的进程时，您可以看到net0已经在运行。
 
 44
 00:03:01,269 --> 00:03:05,889
@@ -177,19 +177,19 @@ But when you look at the running processes you can see that net0 is already runn
 
 45
 00:03:05,890 --> 00:03:07,160
-ourselves.
+我们自己。
 
 46
 00:03:07,159 --> 00:03:10,399
-The default root password for this VM is “godmode”.
+这个虚拟机的默认根密码是“godmode”。
 
 47
 00:03:10,400 --> 00:03:14,950
-Now we can kill net0 and we can verify that it is not running anymore.
+现在，我们可以杀死net0，并验证它是否不再运行。
 
 48
 00:03:14,950 --> 00:03:17,570
-So, let’s execute it again.
+所以，让我们再次执行它。
 
 49
 00:03:17,569 --> 00:03:19,389
@@ -197,7 +197,7 @@ So, let’s execute it again.
 
 50
 00:03:19,390 --> 00:03:22,470
-But if we check the processes we can see that it’s running again.
+但如果我们检查这些进程，就会发现它又在运行了。
 
 51
 00:03:22,469 --> 00:03:23,469
@@ -205,7 +205,7 @@ But if we check the processes we can see that it’s running again.
 
 52
 00:03:23,469 --> 00:03:27,089
-Let’s kill it again and start it with strace.
+让我们再杀了它，从斯特拉斯开始。
 
 53
 00:03:27,090 --> 00:03:30,770
@@ -213,11 +213,11 @@ Let’s kill it again and start it with strace.
 
 54
 00:03:30,769 --> 00:03:35,869
-It seems to open a net0.pid file with write permissions.
+它似乎打开了一个具有写权限的net0.pid文件。
 
 55
 00:03:35,870 --> 00:03:41,920
-Then it changes the user and group id to 999 with set effective uid and gid.
+然后将用户和组ID更改为999，并设置有效的uid和gid。
 
 56
 00:03:41,920 --> 00:03:45,360
@@ -225,19 +225,19 @@ Then it changes the user and group id to 999 with set effective uid and gid.
 
 57
 00:03:45,359 --> 00:03:46,359
-id 999.
+身份证999。
 
 58
 00:03:46,359 --> 00:03:47,459
-After that it calls clone().
+然后它调用clone（）。
 
 59
 00:03:47,459 --> 00:03:51,799
-The manpages says that clone creates a new process similar to fork.
+手册页说，克隆创建了一个类似于fork的新进程。
 
 60
 00:03:51,799 --> 00:03:57,339
-So this will spawn a new process as a clone, a copy, of itself.
+因此，这将产生一个新的进程，作为其自身的克隆、副本。
 
 61
 00:03:57,340 --> 00:04:02,570
@@ -245,15 +245,15 @@ So this will spawn a new process as a clone, a copy, of itself.
 
 62
 00:04:02,569 --> 00:04:04,639
-written into the .pid file.
+写入.pid文件。
 
 63
 00:04:04,640 --> 00:04:09,510
-So that file just helps you keeping track of the new process you created.
+所以这个文件只是帮助您跟踪您创建的新流程。
 
 64
 00:04:09,510 --> 00:04:14,920
-And after that the parent process exits and leaves the child process orphaned.
+然后，父进程退出并将子进程孤立。
 
 65
 00:04:14,920 --> 00:04:19,530
@@ -261,11 +261,11 @@ And after that the parent process exits and leaves the child process orphaned.
 
 66
 00:04:19,530 --> 00:04:22,160
-we also refer to this now as a daemon.
+我们现在也将其称为守护进程。
 
 67
 00:04:22,160 --> 00:04:24,390
-It’s now a background process.
+现在这是一个后台进程。
 
 68
 00:04:24,390 --> 00:04:30,320
@@ -273,7 +273,7 @@ It’s now a background process.
 
 69
 00:04:30,320 --> 00:04:32,240
-instead of staying in the parent process.
+而不是停留在父进程中。
 
 70
 00:04:32,240 --> 00:04:37,050
@@ -281,7 +281,7 @@ instead of staying in the parent process.
 
 71
 00:04:37,050 --> 00:04:39,670
-background the old process exits.
+后台旧进程退出。
 
 72
 00:04:39,670 --> 00:04:44,490
@@ -289,7 +289,7 @@ background the old process exits.
 
 73
 00:04:44,490 --> 00:04:46,560
-acts like a blackhole.
+就像一个黑洞。
 
 74
 00:04:46,560 --> 00:04:52,330
@@ -297,11 +297,11 @@ acts like a blackhole.
 
 75
 00:04:52,330 --> 00:04:56,510
-means we bend all these standard streams to point into the blackhole.
+意味着我们弯曲所有这些标准流，指向黑洞。
 
 76
 00:04:56,510 --> 00:04:58,920
-Basically we just throw away anything.
+基本上，我们只是扔掉任何东西。
 
 77
 00:04:58,920 --> 00:05:04,110
@@ -309,11 +309,11 @@ Basically we just throw away anything.
 
 78
 00:05:04,110 --> 00:05:05,410
-number 3.
+3号。
 
 79
 00:05:05,410 --> 00:05:08,350
-Now the fun part starts, a new socket is created.
+现在有趣的部分开始了，创建了一个新的套接字。
 
 80
 00:05:08,350 --> 00:05:13,020
@@ -321,7 +321,7 @@ Now the fun part starts, a new socket is created.
 
 81
 00:05:13,020 --> 00:05:15,870
-want with those flags and settings.
+希望使用这些标志和设置。
 
 82
 00:05:15,870 --> 00:05:21,190
@@ -329,7 +329,7 @@ want with those flags and settings.
 
 83
 00:05:21,190 --> 00:05:23,620
-the port 2999.
+端口2999。
 
 84
 00:05:23,620 --> 00:05:28,970
@@ -341,7 +341,7 @@ the port 2999.
 
 86
 00:05:33,680 --> 00:05:34,680
-process.
+过程。
 
 87
 00:05:34,680 --> 00:05:40,070
@@ -349,15 +349,15 @@ process.
 
 88
 00:05:40,070 --> 00:05:41,070
-process.
+过程。
 
 89
 00:05:41,070 --> 00:05:44,840
-Which makes sense because we called net0 already way earlier.
+这很有意义，因为我们早就给net0打过电话了。
 
 90
 00:05:44,840 --> 00:05:47,570
-So let’s kill the process again and retry this.
+所以让我们再次终止这个过程，然后重试。
 
 91
 00:05:47,570 --> 00:05:48,570
@@ -365,7 +365,7 @@ So let’s kill the process again and retry this.
 
 92
 00:05:48,570 --> 00:05:49,570
-This looks great.
+这看起来不错。
 
 93
 00:05:49,570 --> 00:05:53,940
@@ -373,31 +373,31 @@ This looks great.
 
 94
 00:05:53,940 --> 00:05:54,940
-syscall.
+系统调用。
 
 95
 00:05:54,940 --> 00:06:00,120
-So let’s open a second terminal and use netstat to find this listening process.
+因此，让我们打开第二个终端，并使用netstat查找这个侦听过程。
 
 96
 00:06:00,120 --> 00:06:01,510
-And here it is.
+就在这里。
 
 97
 00:06:01,510 --> 00:06:05,460
-On port 2999 the process net0 is listening.
+在端口2999上，进程net0正在侦听。
 
 98
 00:06:05,460 --> 00:06:06,460
-Cool.
+酷。
 
 99
 00:06:06,460 --> 00:06:10,580
-Now let’s use netcat to establish a TCP connection with this port.
+现在让我们使用netcat与这个端口建立一个TCP连接。
 
 100
 00:06:10,580 --> 00:06:15,790
-This will cause the accept call to return, because a new connection got established.
+这将导致accept调用返回，因为建立了新的连接。
 
 101
 00:06:15,790 --> 00:06:21,570
@@ -405,7 +405,7 @@ This will cause the accept call to return, because a new connection got establis
 
 102
 00:06:21,570 --> 00:06:23,940
-to now handle this server-client connection.
+现在处理此服务器客户端连接。
 
 103
 00:06:23,940 --> 00:06:28,580
@@ -413,11 +413,11 @@ to now handle this server-client connection.
 
 104
 00:06:28,580 --> 00:06:33,010
-you are done, because you have now your own dedicated process.
+你完成了，因为你现在有了自己的专用过程。
 
 105
 00:06:33,010 --> 00:06:36,970
-Also accept returned a new filedescriptor that references this socket.
+同时accept返回了一个引用此套接字的新文件描述符。
 
 106
 00:06:36,970 --> 00:06:43,320
@@ -425,15 +425,15 @@ Also accept returned a new filedescriptor that references this socket.
 
 107
 00:06:43,320 --> 00:06:45,030
-you would with any other file.
+你可以用其他文件。
 
 108
 00:06:45,030 --> 00:06:51,890
-The kernel underneath makes sure to send the data you write as a TCP packet to the client.
+下面的内核确保将您作为TCP包写入的数据发送到客户机。
 
 109
 00:06:51,890 --> 00:06:56,230
-And when it receives data it will make sure that you can read it from this socket.
+当它接收到数据时，它将确保您可以从这个套接字中读取数据。
 
 110
 00:06:56,230 --> 00:07:01,800
@@ -441,15 +441,15 @@ And when it receives data it will make sure that you can read it from this socke
 
 111
 00:07:01,800 --> 00:07:02,800
-filedescriptor.
+文件描述符。
 
 112
 00:07:02,800 --> 00:07:07,790
-And the program can then just read from stdinput and will read the data you sent it.
+然后程序就可以从stdinput中读取，并读取您发送的数据。
 
 113
 00:07:07,790 --> 00:07:10,090
-And that is what the run function does.
+这就是run函数的作用。
 
 114
 00:07:10,090 --> 00:07:16,430
@@ -457,7 +457,7 @@ And that is what the run function does.
 
 115
 00:07:16,430 --> 00:07:22,750
-from this printf here, and then an fread from stdin and this is where we are right now.
+从这里的印刷品，然后是一个来自stdin的fread，这就是我们现在的位置。
 
 116
 00:07:22,750 --> 00:07:28,180
@@ -465,7 +465,7 @@ from this printf here, and then an fread from stdin and this is where we are rig
 
 117
 00:07:28,180 --> 00:07:30,810
-the network to the program, the server.
+网络到程序，服务器。
 
 118
 00:07:30,810 --> 00:07:35,920
@@ -473,23 +473,23 @@ the network to the program, the server.
 
 119
 00:07:35,921 --> 00:07:38,591
-performed the write telling you that it is the wrong number.
+执行了写操作，告诉您号码不对。
 
 120
 00:07:38,590 --> 00:07:41,890
-That’s the failed printf in run().
+这是run（）中失败的printf。
 
 121
 00:07:41,890 --> 00:07:45,000
-So let’s summarize what the hidden code is doing.
+那么让我们总结一下隐藏代码在做什么。
 
 122
 00:07:45,000 --> 00:07:50,220
-It first deamonizes by cloning itself and killing the parent, to become an orphan.
+它首先通过克隆自己和杀死父母来使自己失去理智，成为孤儿。
 
 123
 00:07:50,220 --> 00:07:54,580
-Then it starts listening on port 2999 for TCP connections.
+然后它开始监听端口2999上的TCP连接。
 
 124
 00:07:54,580 --> 00:07:59,430
@@ -497,15 +497,15 @@ Then it starts listening on port 2999 for TCP connections.
 
 125
 00:07:59,431 --> 00:08:06,401
-other time, it will create another clone of the process to handle this established connection.
+另一次，它将创建进程的另一个克隆来处理这个已建立的连接。
 
 126
 00:08:06,400 --> 00:08:11,030
-While the parent is ready again to accept another connection in parallel.
+当父级再次准备好接受另一个并行连接时。
 
 127
 00:08:11,030 --> 00:08:16,430
-The child process that handles the connection is now basically just calling run().
+处理连接的子进程现在基本上只是调用run（）。
 
 128
 00:08:16,430 --> 00:08:22,010
@@ -513,7 +513,7 @@ The child process that handles the connection is now basically just calling run(
 
 129
 00:08:22,010 --> 00:08:24,580
-run() for every client that connects to it.
+为每个连接到它的客户机运行（）。
 
 130
 00:08:24,580 --> 00:08:25,580
@@ -521,27 +521,27 @@ run() for every client that connects to it.
 
 131
 00:08:25,580 --> 00:08:26,990
-We understood that.
+我们理解这一点。
 
 132
 00:08:26,990 --> 00:08:28,840
-Now let’s solve the challenge.
+现在让我们来解决这个挑战。
 
 133
 00:08:28,840 --> 00:08:31,530
-First of all we need to get the string representation of that number.
+首先，我们需要得到这个数字的字符串表示。
 
 134
 00:08:31,530 --> 00:08:37,200
-We can use python for that, specifically the struct package - which we already used before.
+我们可以使用python，特别是我们以前已经使用过的结构包。
 
 135
 00:08:37,200 --> 00:08:41,850
-So with struct.pack we can convert a number to the byte string representation.
+因此，使用struct.pack，我们可以将数字转换为字节字符串表示形式。
 
 136
 00:08:41,849 --> 00:08:47,259
-But as you can see, the resulting string doesn’t use characters we can type with the keyboard.
+但正如您所看到的，结果字符串不使用我们可以用键盘键入的字符。
 
 137
 00:08:47,260 --> 00:08:53,200
@@ -549,11 +549,11 @@ But as you can see, the resulting string doesn’t use characters we can type wi
 
 138
 00:08:53,200 --> 00:08:55,080
-work, because the number is randomized.
+因为这个数字是随机的。
 
 139
 00:08:55,080 --> 00:08:56,880
-But we can use a simple trick.
+但我们可以使用一个简单的技巧。
 
 140
 00:08:56,880 --> 00:09:04,210
@@ -565,7 +565,7 @@ But we can use a simple trick.
 
 142
 00:09:10,390 --> 00:09:12,160
-in the quotes of echo.
+在回音的引言中。
 
 143
 00:09:12,160 --> 00:09:18,420
@@ -581,9 +581,9 @@ in the quotes of echo.
 
 146
 00:09:29,130 --> 00:09:32,650
-which closes cat and echo will send the string to netcat.
+它关闭cat，echo将把字符串发送给netcat。
 
 147
 00:09:32,650 --> 00:09:35,830
-And that works, we get the sucess “thank you sir/madam message”.
+这样，我们就得到了“谢谢您，先生/女士留言”的成功。
 

@@ -8,11 +8,11 @@
 
 3
 00:00:18,279 --> 00:00:20,759
-call functions from libc.
+从libc调用函数。
 
 4
 00:00:20,760 --> 00:00:25,610
-And we also had an idea how to abuse this, when we want to redirect code execution.
+当我们想要重定向代码执行时，我们还知道了如何滥用它。
 
 5
 00:00:25,610 --> 00:00:31,720
@@ -20,23 +20,23 @@ And we also had an idea how to abuse this, when we want to redirect code executi
 
 6
 00:00:31,720 --> 00:00:33,620
-protostar.
+原恒星
 
 7
 00:00:33,620 --> 00:00:35,770
-First let’s have a look at the code.
+首先，让我们看看代码。
 
 8
 00:00:35,770 --> 00:00:38,570
-The main function calls vuln.
+主函数调用Vuln。
 
 9
 00:00:38,570 --> 00:00:43,370
-Vuln reads up to 512 characters from standard input into the buffer.
+Vuln从标准输入读取最多512个字符到缓冲区。
 
 10
 00:00:43,370 --> 00:00:46,990
-And then uses printf to print the buffer.
+然后使用printf打印缓冲区。
 
 11
 00:00:46,989 --> 00:00:52,739
@@ -44,19 +44,19 @@ And then uses printf to print the buffer.
 
 12
 00:00:52,739 --> 00:00:54,959
-that is the format parameter.
+这是格式参数。
 
 13
 00:00:54,960 --> 00:00:58,420
-After the printf there is a call to exit().
+在printf之后，将调用exit（）。
 
 14
 00:00:58,420 --> 00:01:02,300
-This means that this function vuln will never return.
+这意味着这个函数Vuln永远不会返回。
 
 15
 00:01:02,299 --> 00:01:08,759
-It will perform the syscall exit to the kernel, which will quit this process.
+它将执行内核的系统调用退出，这将退出此进程。
 
 16
 00:01:08,760 --> 00:01:13,710
@@ -64,7 +64,7 @@ It will perform the syscall exit to the kernel, which will quit this process.
 
 17
 00:01:13,710 --> 00:01:16,400
-we could not exploit it.
+我们不能利用它。
 
 18
 00:01:16,400 --> 00:01:23,620
@@ -72,27 +72,27 @@ we could not exploit it.
 
 19
 00:01:23,620 --> 00:01:26,820
-the address for hello.
+你好的地址。
 
 20
 00:01:26,820 --> 00:01:30,430
-That instead of exit we execute hello at the end.
+我们不是退出而是在最后执行hello。
 
 21
 00:01:30,430 --> 00:01:32,020
-Let’s get everything ready.
+让我们把一切准备好。
 
 22
 00:01:32,020 --> 00:01:37,630
-I use again vmware to run the protostar image and connect to it via ssh with putty.
+我再次使用vmware运行ProtoStar映像，并使用putty通过ssh连接到它。
 
 23
 00:01:37,630 --> 00:01:40,230
-Open one window for the binary.
+打开一个二进制窗口。
 
 24
 00:01:40,230 --> 00:01:43,530
-And another window where we can write the exploit.
+以及另一个我们可以编写漏洞的窗口。
 
 25
 00:01:43,530 --> 00:01:48,120
@@ -100,15 +100,15 @@ And another window where we can write the exploit.
 
 26
 00:01:48,120 --> 00:01:50,310
-integers to binary strings.
+整数到二进制字符串。
 
 27
 00:01:50,310 --> 00:01:56,050
-Let’s start by first verifying that we have a format string vulnerability.
+让我们首先验证一下我们是否存在格式字符串漏洞。
 
 28
 00:01:56,050 --> 00:02:01,180
-We can just specify some format characters and see if they are turned into numbers.
+我们可以指定一些格式字符，看看它们是否转换成数字。
 
 29
 00:02:01,180 --> 00:02:02,180
@@ -116,23 +116,23 @@ We can just specify some format characters and see if they are turned into numbe
 
 30
 00:02:02,180 --> 00:02:03,460
-That works.
+那是有效的。
 
 31
 00:02:03,460 --> 00:02:07,750
-So to make this exploit work we have to figure out a few addresses.
+所以要想利用这个漏洞，我们必须找出一些地址。
 
 32
 00:02:07,750 --> 00:02:12,810
-Let’s get the address of the hello function with “x” examine hello.
+让我们用“x”来获取hello函数的地址，检查hello。
 
 33
 00:02:12,810 --> 00:02:13,810
-Here it is.
+在这里。
 
 34
 00:02:13,810 --> 00:02:16,150
-Let’s copy that into our exploit script.
+让我们把它复制到我们的漏洞脚本中。
 
 35
 00:02:16,150 --> 00:02:20,400
@@ -140,7 +140,7 @@ Let’s copy that into our exploit script.
 
 36
 00:02:20,400 --> 00:02:24,020
-a mouse right click in the other window.
+在另一个窗口中单击鼠标右键。
 
 37
 00:02:24,020 --> 00:02:28,840
@@ -148,35 +148,35 @@ a mouse right click in the other window.
 
 38
 00:02:28,840 --> 00:02:30,300
-to.
+去。
 
 39
 00:02:30,300 --> 00:02:31,300
-Disassemble main.
+拆卸主泵。
 
 40
 00:02:31,300 --> 00:02:32,300
-Ok.
+好啊。
 
 41
 00:02:32,300 --> 00:02:33,300
-Right.
+正确的。
 
 42
 00:02:33,300 --> 00:02:34,300
-I forgot.
+我忘了。
 
 43
 00:02:34,300 --> 00:02:35,300
-We call vuln.
+我们叫弗林。
 
 44
 00:02:35,300 --> 00:02:36,300
-So disassemble vuln.
+所以拆卸Vuln。
 
 45
 00:02:36,300 --> 00:02:42,380
-And at the bottom you can see the call to exit at the procedure linkage table ptl.
+在底部，您可以看到在过程链接表ptl处的退出调用。
 
 46
 00:02:42,379 --> 00:02:46,789
@@ -184,47 +184,47 @@ And at the bottom you can see the call to exit at the procedure linkage table pt
 
 47
 00:02:46,790 --> 00:02:49,300
-instruction with the jump.
+带跳转的指令。
 
 48
 00:02:49,300 --> 00:02:55,130
-That tries to reference the address of exit from glibc from there.
+它试图引用从glibc退出的地址。
 
 49
 00:02:55,129 --> 00:02:56,239
-So examine that address.
+所以检查一下那个地址。
 
 50
 00:02:56,240 --> 00:02:57,240
-And yup.
+和YUP。
 
 51
 00:02:57,240 --> 00:02:59,370
-That’s the global offset table.
+这是全局偏移表。
 
 52
 00:02:59,370 --> 00:03:02,250
-Now we also store that table address in our script.
+现在，我们还将该表地址存储在脚本中。
 
 53
 00:03:02,249 --> 00:03:05,649
-Now let’s set two breakpoints in vuln.
+现在让我们在vuln中设置两个断点。
 
 54
 00:03:05,650 --> 00:03:06,650
-One before the printf.
+打印前一个。
 
 55
 00:03:06,650 --> 00:03:09,330
-And one after the printf.
+一张在印刷品后面。
 
 56
 00:03:09,330 --> 00:03:13,110
-Next let’s simulate by hand overwriting the got entry.
+接下来，让我们用手覆盖got条目来模拟。
 
 57
 00:03:13,110 --> 00:03:14,490
-So we run the code.
+所以我们运行代码。
 
 58
 00:03:14,489 --> 00:03:15,489
@@ -232,27 +232,27 @@ So we run the code.
 
 59
 00:03:15,489 --> 00:03:16,489
-continue to execute the exit at the end of vuln.
+继续执行Vuln末尾的出口。
 
 60
 00:03:16,489 --> 00:03:17,489
-Run. we enter some random input.
+跑。我们输入一些随机输入。
 
 61
 00:03:17,489 --> 00:03:18,489
-First breakpoint.
+第一个断点。
 
 62
 00:03:18,489 --> 00:03:20,169
-Now we are befoire the printf.
+现在我们开始印刷了。
 
 63
 00:03:20,170 --> 00:03:23,280
-Now let’s overwrite the GOT entry.
+现在让我们覆盖got条目。
 
 64
 00:03:23,279 --> 00:03:25,859
-Let’s check GOTagain.
+我们再检查一下Got。
 
 65
 00:03:25,859 --> 00:03:31,739
@@ -260,63 +260,63 @@ Let’s check GOTagain.
 
 66
 00:03:31,739 --> 00:03:32,889
-want to write.
+想写。
 
 67
 00:03:32,889 --> 00:03:37,909
-And now the entry for exit in the got has changed.
+现在got的出口入口已经改变了。
 
 68
 00:03:37,909 --> 00:03:38,909
-Continue once.
+继续一次。
 
 69
 00:03:38,909 --> 00:03:41,339
-Now we are after the porintf.
+现在我们在找色情电影。
 
 70
 00:03:41,340 --> 00:03:43,430
-Just one instruction away from the call to exit.
+只有一条指令可以从调用中退出。
 
 71
 00:03:43,430 --> 00:03:44,430
-Next instruction.
+下一条指令。
 
 72
 00:03:44,430 --> 00:03:45,430
-And disassemble and info registers.
+以及拆卸和信息寄存器。
 
 73
 00:03:45,430 --> 00:03:46,430
-Yup, we are at the exit.
+是的，我们在出口处。
 
 74
 00:03:46,430 --> 00:03:48,550
-So let’s continue and see if we execute exit, or hello.
+那么让我们继续看看是执行exit，还是hello。
 
 75
 00:03:48,549 --> 00:03:49,649
-Whoop.
+呐喊。
 
 76
 00:03:49,650 --> 00:03:51,950
-Ok. we executed hello.
+好啊。我们执行了你好。
 
 77
 00:03:51,950 --> 00:03:52,950
-That worked.
+效果不错。
 
 78
 00:03:52,950 --> 00:03:57,010
-Now we just have to achieve this write with a format string and percentage n.
+现在，我们只需要用一个格式字符串和百分比n来实现这一写操作。
 
 79
 00:03:57,010 --> 00:03:58,010
-Ok.
+好啊。
 
 80
 00:03:58,010 --> 00:03:59,010
-Step one.
+第一步。
 
 81
 00:03:59,010 --> 00:04:03,020
@@ -324,19 +324,19 @@ Step one.
 
 82
 00:04:03,019 --> 00:04:04,819
-around with the format specifiers.
+在格式说明符周围。
 
 83
 00:04:04,819 --> 00:04:07,509
-We use our script to do those tests.
+我们使用脚本进行这些测试。
 
 84
 00:04:07,510 --> 00:04:10,910
-So first we know the buffer is 512 bytes long.
+所以首先我们知道缓冲区是512字节长。
 
 85
 00:04:10,909 --> 00:04:15,749
-So let’s write a function that pads our string to that length.
+所以让我们编写一个函数，将字符串填充到这个长度。
 
 86
 00:04:15,749 --> 00:04:21,429
@@ -344,11 +344,11 @@ So let’s write a function that pads our string to that length.
 
 87
 00:04:21,430 --> 00:04:23,670
-the length of the current string.
+当前字符串的长度。
 
 88
 00:04:23,670 --> 00:04:28,250
-Then we create a variable exploit and print that variable padded.
+然后我们创建一个变量漏洞并打印这个变量。
 
 89
 00:04:28,250 --> 00:04:33,980
@@ -356,15 +356,15 @@ Then we create a variable exploit and print that variable padded.
 
 90
 00:04:33,980 --> 00:04:34,980
-characters.
+字符。
 
 91
 00:04:34,980 --> 00:04:41,680
-So this will print the first 4 values from the stack.
+所以这将打印堆栈中的前4个值。
 
 92
 00:04:41,680 --> 00:04:44,060
-Yup seems to work.
+是的，似乎有用。
 
 93
 00:04:44,060 --> 00:04:48,840
@@ -372,7 +372,7 @@ Yup seems to work.
 
 94
 00:04:48,840 --> 00:04:51,010
-away our string is on the stack.
+我们的绳子在那堆上。
 
 95
 00:04:51,010 --> 00:04:52,010
@@ -380,15 +380,15 @@ away our string is on the stack.
 
 96
 00:04:52,010 --> 00:04:53,010
-Cool.
+酷。
 
 97
 00:04:53,010 --> 00:04:54,010
-Ok.
+好啊。
 
 98
 00:04:54,010 --> 00:04:56,820
-Our string already starts with the 4th value.
+我们的字符串已经以第4个值开始。
 
 99
 00:04:56,820 --> 00:05:02,510
@@ -396,11 +396,11 @@ Our string already starts with the 4th value.
 
 100
 00:05:02,510 --> 00:05:03,750
-that offset.
+抵消。
 
 101
 00:05:03,750 --> 00:05:06,750
-So 4 dollar after the percentage sign.
+所以在百分比符号之后是4美元。
 
 102
 00:05:06,750 --> 00:05:11,730
@@ -408,11 +408,11 @@ So 4 dollar after the percentage sign.
 
 103
 00:05:11,730 --> 00:05:13,160
-one after another.
+一个接一个。
 
 104
 00:05:13,160 --> 00:05:17,410
-See, now all values are 41414141.
+现在所有值都是41414141。
 
 105
 00:05:17,410 --> 00:05:24,240
@@ -420,7 +420,7 @@ See, now all values are 41414141.
 
 106
 00:05:24,240 --> 00:05:26,480
-to an address on the stack.
+到堆栈上的地址。
 
 107
 00:05:26,480 --> 00:05:31,290
@@ -428,63 +428,63 @@ to an address on the stack.
 
 108
 00:05:31,290 --> 00:05:33,100
-to write to that value.
+写入该值。
 
 109
 00:05:33,100 --> 00:05:34,720
-Let’s try it.
+让我们试试看。
 
 110
 00:05:34,720 --> 00:05:38,260
-We use struct to convert the integer address to a binary string.
+我们使用struct将整数地址转换为二进制字符串。
 
 111
 00:05:38,260 --> 00:05:39,260
-Struct.
+结构。
 
 112
 00:05:39,260 --> 00:05:40,260
-Pack.
+打包。
 
 113
 00:05:40,260 --> 00:05:41,260
-I. exit_plt.
+一、退出。
 
 114
 00:05:41,260 --> 00:05:42,260
-Yup, we seem to hit that address.
+是的，我们好像找到了那个地址。
 
 115
 00:05:42,260 --> 00:05:48,650
-Let’s replace the percentage x with percentage n and see what that does in gdb.
+让我们将百分比x替换为百分比n，看看在gdb中它有什么作用。
 
 116
 00:05:48,650 --> 00:05:54,240
-But first write the output of this script to a file so we can use it in gdb as input.
+但首先将这个脚本的输出写入一个文件，这样我们就可以在gdb中使用它作为输入。
 
 117
 00:05:54,240 --> 00:05:58,520
-Don’t forget to set the breakpoints again.
+不要忘记再次设置断点。
 
 118
 00:05:58,520 --> 00:06:01,030
-Run and pipe in the exploit string.
+在利用字符串中运行和管道。
 
 119
 00:06:01,030 --> 00:06:03,550
-And we hit the breakpoint.
+我们到达了断点。
 
 120
 00:06:03,550 --> 00:06:06,040
-So now we are about to execute the printf.
+所以现在我们要执行printf。
 
 121
 00:06:06,040 --> 00:06:08,380
-Let’s check the GOT entry.
+让我们检查一下got条目。
 
 122
 00:06:08,380 --> 00:06:11,970
-Now let’s execute the printf and let’s check again.
+现在让我们执行printf并再次检查。
 
 123
 00:06:11,970 --> 00:06:12,970
@@ -492,11 +492,11 @@ Now let’s execute the printf and let’s check again.
 
 124
 00:06:12,970 --> 00:06:15,970
-We have overwritten GOT. with a fairly small number.
+我们已经覆盖了got。数量很少。
 
 125
 00:06:15,970 --> 00:06:22,310
-If we now continue we will segfault in exit, because at this address is no function.
+如果我们现在继续，我们将在退出中分段故障，因为在这个地址是没有功能的。
 
 126
 00:06:22,310 --> 00:06:27,740
@@ -504,7 +504,7 @@ If we now continue we will segfault in exit, because at this address is no funct
 
 127
 00:06:27,740 --> 00:06:28,740
-table.
+表。
 
 128
 00:06:28,740 --> 00:06:35,380
@@ -512,19 +512,19 @@ table.
 
 129
 00:06:35,380 --> 00:06:37,050
-of hello.
+你好。
 
 130
 00:06:37,050 --> 00:06:39,220
-Mhmh… hex 0x80484b4.
+MHMH…六角0x80484B4。
 
 131
 00:06:39,220 --> 00:06:45,570
-Damn… that’s a big number.
+该死的…这是个大数字。
 
 132
 00:06:45,570 --> 00:06:51,440
-We have to print like over 134 MILLIOPn characters.
+我们必须打印超过134百万个字符。
 
 133
 00:06:51,440 --> 00:06:56,410
@@ -536,39 +536,39 @@ We have to print like over 134 MILLIOPn characters.
 
 135
 00:06:57,560 --> 00:07:02,570
-Well, first of all we only have space for 512 characters in the buffer.
+首先，缓冲区中只有512个字符的空间。
 
 136
 00:07:02,570 --> 00:07:04,490
-So we can’t simply write them all.
+所以我们不能简单地把它们都写下来。
 
 137
 00:07:04,490 --> 00:07:10,670
-But we can abuse printf format strings again to pad an output string to any size.
+但我们可以再次滥用printf格式字符串，将输出字符串填充到任何大小。
 
 138
 00:07:10,670 --> 00:07:13,840
-Which allows us to write way more characters.
+这样我们可以写更多的字符。
 
 139
 00:07:13,840 --> 00:07:15,240
-Let’s try that.
+我们试试看。
 
 140
 00:07:15,240 --> 00:07:19,190
-Let’s also change the number of ns down to only one.
+我们也将ns的数目改为只有一个。
 
 141
 00:07:19,190 --> 00:07:23,030
-啊。事实上，我们把它改回x，这样我们就不会一直砸桌子了。
+啊。事实上，我们把它改回X，这样我们就不会一直砸桌子了。
 
 142
 00:07:23,030 --> 00:07:25,960
-we can make sure we always hit the address.
+我们可以确保始终按地址。
 
 143
 00:07:25,960 --> 00:07:29,430
-So let’s pad this to to like 30 characters, to see if that works.
+所以，让我们把这个字符垫成30个字符，看看是否有效。
 
 144
 00:07:29,430 --> 00:07:30,430
@@ -576,55 +576,55 @@ So let’s pad this to to like 30 characters, to see if that works.
 
 145
 00:07:30,430 --> 00:07:31,430
-percentage n.
+百分比n
 
 146
 00:07:31,430 --> 00:07:35,000
-Run it against the format4 binary.
+对format4二进制文件运行它。
 
 147
 00:07:35,000 --> 00:07:36,020
-And yes.
+是的。
 
 148
 00:07:36,020 --> 00:07:37,080
-See all those spaces.
+查看所有这些空间。
 
 149
 00:07:37,080 --> 00:07:39,740
-Text got padded to 30 characters.
+文本被填充到30个字符。
 
 150
 00:07:39,740 --> 00:07:48,370
-Now le’ts try that with 134 million.
+现在我们要用1.34亿美元来试试。
 
 151
 00:07:48,370 --> 00:07:52,670
-Okay. seems to work.
+可以。似乎起作用了。
 
 152
 00:07:52,670 --> 00:07:54,830
-It’s printing and printing and printing.
+它是印刷，印刷和印刷。
 
 153
 00:07:54,830 --> 00:07:56,990
-All those millions of spaces.
+千百万空间。
 
 154
 00:07:56,990 --> 00:07:57,990
-This taks aaaages.
+这是一个星期。
 
 155
 00:07:57,990 --> 00:07:58,990
-And we arrived at the end.
+我们到达了终点。
 
 156
 00:07:58,990 --> 00:07:59,990
-Let’s try that in gdb again with percentage n.
+让我们用百分比n在gdb中再试一次。
 
 157
 00:07:59,990 --> 00:08:00,990
-Urgh man.
+呃，伙计。
 
 158
 00:08:00,990 --> 00:08:01,990
@@ -632,15 +632,15 @@ Urgh man.
 
 159
 00:08:01,990 --> 00:08:06,020
-:( Printing those hundret megabytes is just crazy.
+：（打印那些百兆字节简直是疯了。
 
 160
 00:08:06,020 --> 00:08:09,210
-But it did change the global offset table pretty close to hello.
+但它确实改变了全球偏移表非常接近hello。
 
 161
 00:08:09,210 --> 00:08:14,870
-We just would have to fiddle around a bit and adjust it exactly.
+我们只需要稍作调整就行了。
 
 162
 00:08:14,870 --> 00:08:16,020
@@ -648,15 +648,15 @@ We just would have to fiddle around a bit and adjust it exactly.
 
 163
 00:08:16,020 --> 00:08:17,920
-This sucks to print so many characters.
+印这么多字真是太糟了。
 
 164
 00:08:17,920 --> 00:08:19,400
-Let’s use a little trick.
+让我们用点小技巧。
 
 165
 00:08:19,400 --> 00:08:24,110
-Let’s use TWO shorter writes to achieve the same.
+让我们使用两个较短的写入来实现相同的结果。
 
 166
 00:08:24,110 --> 00:08:29,560
@@ -668,35 +668,35 @@ Let’s use TWO shorter writes to achieve the same.
 
 168
 00:08:35,400 --> 00:08:36,450
-bytes.
+字节。
 
 169
 00:08:36,450 --> 00:08:39,870
-Thus constructing the whole 4 byte through two writes.
+因此，通过两次写入构造整个4字节。
 
 170
 00:08:39,870 --> 00:08:44,140
-So let’s try to write the lower two bytes first.
+所以让我们先写下下面的两个字节。
 
 171
 00:08:44,140 --> 00:08:47,310
-Let’s start with a padding like 30.
+让我们从30这样的填充开始。
 
 172
 00:08:47,310 --> 00:08:49,120
-Write the output again into the file.
+再次将输出写入文件。
 
 173
 00:08:49,120 --> 00:08:51,470
-And run gdb with it as input.
+并以它作为输入运行gdb。
 
 174
 00:08:51,470 --> 00:08:58,010
-Ok, so with the padding of 30 we were able to write hex 2e, which is 46.
+好的，填充30，我们就可以写十六进制2e，也就是46。
 
 175
 00:08:58,010 --> 00:09:08,560
-Our goal is to write the two lower bytes so we want 84b4, which is 33972.
+我们的目标是写下两个较低的字节，所以我们需要84B4，即33972。
 
 176
 00:09:08,560 --> 00:09:14,180
@@ -704,11 +704,11 @@ Our goal is to write the two lower bytes so we want 84b4, which is 33972.
 
 177
 00:09:14,180 --> 00:09:15,180
-characters.
+字符。
 
 178
 00:09:15,180 --> 00:09:22,530
-So we substract 16 from it, so we want to put 33960 as a padding.
+所以我们从中减去16，所以我们想把33960作为填充。
 
 179
 00:09:22,529 --> 00:09:28,789
@@ -716,55 +716,55 @@ So we substract 16 from it, so we want to put 33960 as a padding.
 
 180
 00:09:28,790 --> 00:09:31,600
-now 84b4.
+现在是84B4。
 
 181
 00:09:31,600 --> 00:09:37,030
-Now to address the two higher bytes we move our address by two forward.
+现在要处理两个更高的字节，我们将地址向前移动两个字节。
 
 182
 00:09:37,030 --> 00:09:38,960
-And perform another write.
+再写一次。
 
 183
 00:09:38,960 --> 00:09:40,960
-So let’s add this address as well.
+所以我们也添加这个地址。
 
 184
 00:09:40,960 --> 00:09:43,620
-So EXIT_PLT plus 2.
+所以退出PLT加2。
 
 185
 00:09:43,620 --> 00:09:48,780
-This means that for the second write we want to address the fith element on the stack.
+这意味着对于第二次写入，我们要处理堆栈上的fith元素。
 
 186
 00:09:48,780 --> 00:09:52,930
-And now we just have to figure out how many we need to write here.
+现在我们只需要弄清楚我们需要在这里写多少。
 
 187
 00:09:52,930 --> 00:09:55,720
-Let’s try with 30 again.
+我们再试试30。
 
 188
 00:09:55,720 --> 00:09:56,720
-Ok.
+好啊。
 
 189
 00:09:56,720 --> 00:10:01,650
-The lower two bytes now stay 84b4.
+下面两个字节现在保持84b4。
 
 190
 00:10:01,650 --> 00:10:02,730
-Perfect.
+很完美。
 
 191
 00:10:02,730 --> 00:10:06,550
-And the higher bytes are 84d2.
+更高的字节是84d2。
 
 192
 00:10:06,550 --> 00:10:10,240
-But we want to get 0804.
+但我们想得到0804。
 
 193
 00:10:10,240 --> 00:10:15,020
@@ -776,7 +776,7 @@ But we want to get 0804.
 
 195
 00:10:21,210 --> 00:10:26,070
-that also currently we screw up data that is stored behind our exit GOT entry.
+目前，我们也会破坏存储在出口入口后面的数据。
 
 196
 00:10:26,070 --> 00:10:31,500
@@ -784,31 +784,31 @@ that also currently we screw up data that is stored behind our exit GOT entry.
 
 197
 00:10:31,500 --> 00:10:32,590
-is 1 and the rest becomes 0 again.
+为1，其余值再次变为0。
 
 198
 00:10:32,589 --> 00:10:36,769
-It doesn’t matter for the GOT, because it will only see the other 4 bytes.
+对于got来说并不重要，因为它只会看到其他4个字节。
 
 199
 00:10:36,770 --> 00:10:42,620
-So basically we overflow those two upper bytes so we can get there a lower value in.
+所以基本上，我们溢出这两个高位字节，这样我们可以得到一个较低的值。
 
 200
 00:10:42,620 --> 00:10:44,760
-Now currently we have 84d2.
+现在我们有84d2。
 
 201
 00:10:44,760 --> 00:10:46,430
-And we want 0804.
+我们要0804。
 
 202
 00:10:46,430 --> 00:10:47,820
-I mean.
+我是说。
 
 203
 00:10:47,820 --> 00:10:49,360
-We actually want 10804.
+我们实际上想要10804。
 
 204
 00:10:49,360 --> 00:10:59,020
@@ -816,71 +816,71 @@ We actually want 10804.
 
 205
 00:10:59,020 --> 00:11:00,190
-10804.
+10804。
 
 206
 00:11:00,190 --> 00:11:02,730
-So 8332.
+所以8332。
 
 207
 00:11:02,730 --> 00:11:05,400
-But that’s hex, so that is 33586.
+但那是十六进制的，所以是33586。
 
 208
 00:11:05,400 --> 00:11:10,000
-And it already included the 30 padding.
+它已经包括了30个填充物。
 
 209
 00:11:10,000 --> 00:11:12,790
-So we must not forget that.
+所以我们不能忘记这一点。
 
 210
 00:11:12,790 --> 00:11:15,190
-Now we might be done.
+现在我们可以结束了。
 
 211
 00:11:15,190 --> 00:11:18,230
-Let’s check.
+让我们检查一下。
 
 212
 00:11:18,230 --> 00:11:21,140
-We write the output file.
+我们编写输出文件。
 
 213
 00:11:21,140 --> 00:11:23,230
-We run gdb.
+我们运行GDB。
 
 214
 00:11:23,230 --> 00:11:25,210
-We break before the printf.
+我们在印刷品之前就坏了。
 
 215
 00:11:25,210 --> 00:11:27,740
-This is how the table entry looks before.
+这就是表条目以前的样子。
 
 216
 00:11:27,740 --> 00:11:30,990
-Now continue and examine the address again.
+现在继续检查地址。
 
 217
 00:11:30,990 --> 00:11:32,440
-Wh00p.
+WHP。
 
 218
 00:11:32,440 --> 00:11:33,540
-We changed it.
+我们改变了它。
 
 219
 00:11:33,540 --> 00:11:35,470
-And that’s the address of hello.
+这是你好的地址。
 
 220
 00:11:35,470 --> 00:11:37,950
-So now continue and let the program run.
+现在继续运行程序。
 
 221
 00:11:37,950 --> 00:11:40,480
-BOOM. code execution redirected.
+繁荣。代码执行已重定向。
 
 222
 00:11:40,480 --> 00:11:41,480

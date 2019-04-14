@@ -1,6 +1,6 @@
 1
 00:00:00,110 --> 00:00:03,990
-Let’s head into the final levels of exploit-exercises protostar.
+让我们进入开发练习的最后一个阶段。
 
 2
 00:00:03,989 --> 00:00:10,279
@@ -8,11 +8,11 @@ Let’s head into the final levels of exploit-exercises protostar.
 
 3
 00:00:10,280 --> 00:00:14,140
-CTF challenges.
+CTF的挑战。
 
 4
 00:00:14,139 --> 00:00:18,099
-Let’s have a look at final level 0.
+让我们来看看最后的0级。
 
 5
 00:00:18,100 --> 00:00:22,190
@@ -24,7 +24,7 @@ Let’s have a look at final level 0.
 
 7
 00:00:26,370 --> 00:00:27,900
-figure out what they do.
+弄清楚他们在做什么。
 
 8
 00:00:27,900 --> 00:00:33,340
@@ -32,23 +32,23 @@ figure out what they do.
 
 9
 00:00:33,340 --> 00:00:35,290
-get_username.
+GETUsUrNeNeX。
 
 10
 00:00:35,290 --> 00:00:41,190
-This function has a local 512 byte big buffer which is overwritten with 0.
+此函数有一个本地512字节的大缓冲区，该缓冲区被0覆盖。
 
 11
 00:00:41,190 --> 00:00:45,190
-Then gets is used to read data from the user into the buffer.
+然后使用gets将数据从用户读取到缓冲区中。
 
 12
 00:00:45,190 --> 00:00:50,330
-And as we have learned many episodes ago, gets is a dangerous function.
+正如我们之前所了解的，get是一个危险的功能。
 
 13
 00:00:50,329 --> 00:00:53,319
-So this is obviously our buffer overflow.
+这显然是我们的缓冲区溢出。
 
 14
 00:00:53,320 --> 00:00:57,970
@@ -56,15 +56,15 @@ So this is obviously our buffer overflow.
 
 15
 00:00:57,970 --> 00:00:59,690
-a 0.
+A 0。
 
 16
 00:00:59,690 --> 00:01:06,180
-After that is a loop, which will go over the buffer and call toupper on every character.
+之后是一个循环，它将遍历缓冲区并对每个字符调用toupper。
 
 17
 00:01:06,180 --> 00:01:08,110
-Then the function returns.
+然后函数返回。
 
 18
 00:01:08,110 --> 00:01:13,400
@@ -72,7 +72,7 @@ Then the function returns.
 
 19
 00:01:13,400 --> 00:01:15,340
-code execution.
+代码执行。
 
 20
 00:01:15,340 --> 00:01:20,680
@@ -80,7 +80,7 @@ code execution.
 
 21
 00:01:20,680 --> 00:01:22,360
-to uppercase.
+大写字母。
 
 22
 00:01:22,360 --> 00:01:26,770
@@ -88,11 +88,11 @@ to uppercase.
 
 23
 00:01:26,770 --> 00:01:31,070
-on the stack have to not change when toupper is used.
+当使用TOUPPER时，堆栈上的不可更改。
 
 24
 00:01:31,070 --> 00:01:34,420
-Meaning, you cannot use lower-case ascii characters.
+也就是说，不能使用小写的ASCII字符。
 
 25
 00:01:34,420 --> 00:01:39,130
@@ -100,19 +100,19 @@ Meaning, you cannot use lower-case ascii characters.
 
 26
 00:01:39,130 --> 00:01:42,740
-Let’s think about this and work our way backwards.
+让我们考虑一下这个问题，然后向后努力。
 
 27
 00:01:42,740 --> 00:01:49,730
-So what condition has to be true in order that toupper is not used on our input.
+所以，为了不在我们的输入中使用toupper，必须满足什么条件。
 
 28
 00:01:49,729 --> 00:01:56,129
-Well the for loop uses strlen to determine on how many bytes it will do this.
+for循环使用strlen来确定它将执行此操作的字节数。
 
 29
 00:01:56,130 --> 00:01:59,200
-And strlen counts all bytes until in finds a null byte.
+strlen计算所有字节，直到in找到一个空字节。
 
 30
 00:01:59,200 --> 00:02:05,340
@@ -120,11 +120,11 @@ And strlen counts all bytes until in finds a null byte.
 
 31
 00:02:05,340 --> 00:02:07,480
-we would be fine.
+我们会没事的。
 
 32
 00:02:07,479 --> 00:02:11,059
-Ok, how could we get a null byte in there.
+好吧，我们怎么能得到一个空字节呢？
 
 33
 00:02:11,060 --> 00:02:16,350
@@ -132,19 +132,19 @@ Ok, how could we get a null byte in there.
 
 34
 00:02:16,349 --> 00:02:18,079
-newline or EOF.
+换行或EOF。
 
 35
 00:02:18,080 --> 00:02:21,690
-This means gets will have no issue of reading a null-byte.
+这意味着gets将不会有读取空字节的问题。
 
 36
 00:02:21,690 --> 00:02:22,690
-Easy.
+容易的。
 
 37
 00:02:22,690 --> 00:02:25,490
-So we can completly ignore the to uppercase stuff.
+所以我们可以完全忽略to大写的内容。
 
 38
 00:02:25,490 --> 00:02:30,200
@@ -152,7 +152,7 @@ So we can completly ignore the to uppercase stuff.
 
 39
 00:02:30,200 --> 00:02:31,200
-carriage return.
+回车。
 
 40
 00:02:31,200 --> 00:02:36,650
@@ -160,11 +160,11 @@ carriage return.
 
 41
 00:02:36,650 --> 00:02:41,740
-a carriage return instead, which will then afterwards get replaced by a null byte.
+一个回车，然后被一个空字节替换。
 
 42
 00:02:41,740 --> 00:02:44,150
-So that would also work.
+所以这也是可行的。
 
 43
 00:02:44,150 --> 00:02:49,260
@@ -172,11 +172,11 @@ So that would also work.
 
 44
 00:02:49,260 --> 00:02:51,210
-concept buffer overflow.
+概念缓冲区溢出。
 
 45
 00:02:51,209 --> 00:02:56,899
-We can use python with -c, to directly write a short script in the argument.
+我们可以使用python和-c直接在参数中编写一个简短的脚本。
 
 46
 00:02:56,900 --> 00:03:02,810
@@ -184,7 +184,7 @@ We can use python with -c, to directly write a short script in the argument.
 
 47
 00:03:02,810 --> 00:03:04,710
-to be uppercase.
+大写。
 
 48
 00:03:04,709 --> 00:03:10,149
@@ -192,7 +192,7 @@ to be uppercase.
 
 49
 00:03:10,150 --> 00:03:12,150
-to overflow the instruction pointer.
+溢出指令指针。
 
 50
 00:03:12,150 --> 00:03:17,780
@@ -200,7 +200,7 @@ to overflow the instruction pointer.
 
 51
 00:03:17,780 --> 00:03:20,320
-after the nullbyte.
+在空字节之后。
 
 52
 00:03:20,320 --> 00:03:25,090
@@ -208,15 +208,15 @@ after the nullbyte.
 
 53
 00:03:25,090 --> 00:03:26,380
-with netcat.
+使用NETCAT。
 
 54
 00:03:26,379 --> 00:03:31,909
-So we can simply pipe the output of our python one-liner to netcat as well.
+所以我们也可以简单地将python一行程序的输出通过管道传输到netcat。
 
 55
 00:03:31,909 --> 00:03:36,259
-We don’t see the output “No such user… “ like before.
+我们没有像以前那样看到输出“没有这样的用户…”。
 
 56
 00:03:36,260 --> 00:03:42,760
@@ -224,7 +224,7 @@ We don’t see the output “No such user… “ like before.
 
 57
 00:03:42,760 --> 00:03:47,770
-we successfully overwrote the instruction pointer and crashed the program.
+我们成功地重写了指令指针并使程序崩溃。
 
 58
 00:03:47,769 --> 00:03:50,399
@@ -236,23 +236,23 @@ we successfully overwrote the instruction pointer and crashed the program.
 
 60
 00:03:54,920 --> 00:03:56,980
-called core files.
+称为核心文件。
 
 61
 00:03:56,980 --> 00:04:00,910
-It says that the filename pattern is set to /tmp/ something.
+文件名模式设置为/tmp/something。
 
 62
 00:04:00,909 --> 00:04:04,139
-This means that core dumps are stored in tmp.
+这意味着核心转储存储在TMP中。
 
 63
 00:04:04,140 --> 00:04:10,030
-And when we have a look at the content of /tmp/ we will see a core file we just produced.
+当我们查看/tmp/的内容时，我们将看到一个刚刚生成的核心文件。
 
 64
 00:04:10,030 --> 00:04:14,080
-They belong to root, so let’s switch to root so we can work with them.
+它们属于根目录，所以让我们切换到根目录，这样我们就可以使用它们了。
 
 65
 00:04:14,080 --> 00:04:15,700
@@ -260,7 +260,7 @@ They belong to root, so let’s switch to root so we can work with them.
 
 66
 00:04:15,700 --> 00:04:19,620
-Let’s ask the linux manual with `man core`.
+让我们用“man core”来询问Linux手册。
 
 67
 00:04:19,620 --> 00:04:25,020
@@ -272,7 +272,7 @@ Let’s ask the linux manual with `man core`.
 
 69
 00:04:30,990 --> 00:04:32,000
-of termination.
+终止的。
 
 70
 00:04:31,999 --> 00:04:37,559
@@ -280,7 +280,7 @@ of termination.
 
 71
 00:04:37,559 --> 00:04:41,599
-to get a lot of information about our buffer overflow.
+获取大量关于缓冲区溢出的信息。
 
 72
 00:04:41,599 --> 00:04:47,009
@@ -288,7 +288,7 @@ to get a lot of information about our buffer overflow.
 
 73
 00:04:47,009 --> 00:04:48,949
-at the time that it terminated.
+在它终止的时候。
 
 74
 00:04:48,949 --> 00:04:54,209
@@ -296,15 +296,15 @@ at the time that it terminated.
 
 75
 00:04:54,210 --> 00:04:56,080
-use gdb.
+使用GDB。
 
 76
 00:04:56,080 --> 00:05:02,270
-A list of the signals which cause a process to dump core can be found in signal(7).
+在信号（7）中可以找到导致进程转储核心的信号列表。
 
 77
 00:05:02,270 --> 00:05:04,010
-Ok, interesting.
+好的，很有趣。
 
 78
 00:05:04,009 --> 00:05:09,999
@@ -312,7 +312,7 @@ Ok, interesting.
 
 79
 00:05:10,000 --> 00:05:13,530
-So to understand this properly, let’s also try to understand what signals are.
+为了正确理解这一点，让我们也试着理解什么是信号。
 
 80
 00:05:13,529 --> 00:05:17,779
@@ -320,27 +320,27 @@ So to understand this properly, let’s also try to understand what signals are.
 
 81
 00:05:17,779 --> 00:05:19,489
-about signal in the manual.
+关于手册中的信号。
 
 82
 00:05:19,490 --> 00:05:21,500
-so `man 7 signal`.
+所以“曼7信号”。
 
 83
 00:05:21,500 --> 00:05:25,480
-Let’s have a look at the standard signals further down.
+让我们再往下看一下标准信号。
 
 84
 00:05:25,479 --> 00:05:29,009
-Linux supports the standard signals listed below.
+Linux支持下面列出的标准信号。
 
 85
 00:05:29,009 --> 00:05:34,599
-Several signal numbers are architecture-dependent, as indicated in the "Value" column.
+如“值”一栏所示，几个信号号取决于体系结构。
 
 86
 00:05:34,599 --> 00:05:38,539
-Mhh, so signals can be different on different architectures.
+mhh，所以信号在不同的架构上是不同的。
 
 87
 00:05:38,539 --> 00:05:43,779
@@ -352,11 +352,11 @@ Mhh, so signals can be different on different architectures.
 
 89
 00:05:49,649 --> 00:05:50,649
-features.
+特征。
 
 90
 00:05:50,649 --> 00:05:53,219
-Let’s have a look at the list of signals.
+让我们看看信号列表。
 
 91
 00:05:53,219 --> 00:05:58,939
@@ -364,7 +364,7 @@ Let’s have a look at the list of signals.
 
 92
 00:05:58,940 --> 00:06:02,720
-the keyboard, this happens when you press control+C.
+键盘，当你按下Control+C时会发生这种情况。
 
 93
 00:06:02,719 --> 00:06:07,709
@@ -372,7 +372,7 @@ the keyboard, this happens when you press control+C.
 
 94
 00:06:07,710 --> 00:06:10,440
-a SIGILL, that’s also a signal.
+一个信号，这也是一个信号。
 
 95
 00:06:10,439 --> 00:06:14,939
@@ -380,11 +380,11 @@ a SIGILL, that’s also a signal.
 
 96
 00:06:14,939 --> 00:06:15,939
-instruction.
+指令。
 
 97
 00:06:15,939 --> 00:06:19,679
-Or our favorite syscall, SIGSEGV, a segfault.
+或者我们最喜欢的系统调用，sigsegv，一个segfault。
 
 98
 00:06:19,679 --> 00:06:24,219
@@ -392,15 +392,15 @@ Or our favorite syscall, SIGSEGV, a segfault.
 
 99
 00:06:24,219 --> 00:06:25,219
-memory.
+记忆。
 
 100
 00:06:25,219 --> 00:06:27,719
-Or try to write to non existing memory.
+或者尝试写入不存在的内存。
 
 101
 00:06:27,720 --> 00:06:33,990
-Which obviously is also triggered by low level hardware when you try to execute bad stuff.
+很明显，当你试图执行坏的东西时，这也是由低级硬件触发的。
 
 102
 00:06:33,990 --> 00:06:39,560
@@ -408,11 +408,11 @@ Which obviously is also triggered by low level hardware when you try to execute 
 
 103
 00:06:39,559 --> 00:06:40,779
-or ignored.
+或者忽略。
 
 104
 00:06:40,779 --> 00:06:44,839
-This means most of these signals can be caught by the process.
+这意味着这些信号中的大部分都可以被过程捕获。
 
 105
 00:06:44,839 --> 00:06:51,329
@@ -424,7 +424,7 @@ This means most of these signals can be caught by the process.
 
 107
 00:06:56,259 --> 00:06:57,259
-into gdb.
+进入GDB。
 
 108
 00:06:57,259 --> 00:07:02,309
@@ -432,11 +432,11 @@ into gdb.
 
 109
 00:07:02,309 --> 00:07:05,219
-catch it and perform a different action.
+抓住它并执行不同的操作。
 
 110
 00:07:05,220 --> 00:07:09,780
-So signals are kind of like interrupts for processes by the kernel.
+所以信号有点像内核对进程的中断。
 
 111
 00:07:09,779 --> 00:07:15,349
@@ -444,7 +444,7 @@ So signals are kind of like interrupts for processes by the kernel.
 
 112
 00:07:15,349 --> 00:07:18,469
-the kernel to send a signal to a process.
+向进程发送信号的内核。
 
 113
 00:07:18,469 --> 00:07:23,589
@@ -452,11 +452,11 @@ the kernel to send a signal to a process.
 
 114
 00:07:23,589 --> 00:07:28,059
-handlers to perform certain actions when it receives these signals.
+处理程序在接收到这些信号时执行某些操作。
 
 115
 00:07:28,059 --> 00:07:29,059
-So.
+所以。
 
 116
 00:07:29,059 --> 00:07:35,099
@@ -464,11 +464,11 @@ So.
 
 117
 00:07:35,099 --> 00:07:38,019
-is raised and a signal is triggered.
+发出并触发信号。
 
 118
 00:07:38,020 --> 00:07:41,050
-The process doesn’t handle it and is killed by the kernel.
+进程不处理它，它被内核杀死。
 
 119
 00:07:41,050 --> 00:07:46,430
@@ -476,11 +476,11 @@ The process doesn’t handle it and is killed by the kernel.
 
 120
 00:07:46,429 --> 00:07:47,649
-this signal.
+这个信号。
 
 121
 00:07:47,649 --> 00:07:50,599
-So now let’s use gdb to see what happened.
+现在让我们用gdb来看看发生了什么。
 
 122
 00:07:50,599 --> 00:07:57,469
@@ -488,7 +488,7 @@ So now let’s use gdb to see what happened.
 
 123
 00:07:57,469 --> 00:07:58,539
-file as a second argument.
+文件作为第二个参数。
 
 124
 00:07:58,539 --> 00:08:04,439
@@ -496,23 +496,23 @@ file as a second argument.
 
 125
 00:08:04,439 --> 00:08:07,499
-signal 11, a segmentation fault.
+信号11，分段故障。
 
 126
 00:08:07,499 --> 00:08:11,449
-We can also look at the registers and see the value of eip.
+我们还可以查看寄存器并查看EIP的值。
 
 127
 00:08:11,449 --> 00:08:14,199
-And those are definitely our characters we have entered.
+这些绝对是我们已经输入的角色。
 
 128
 00:08:14,199 --> 00:08:17,849
-We can also explore the stack with examining the stack pointer.
+我们还可以通过检查堆栈指针来探索堆栈。
 
 129
 00:08:17,849 --> 00:08:22,779
-You can see that having these core files is extremely useful.
+您可以看到拥有这些核心文件非常有用。
 
 130
 00:08:22,780 --> 00:08:27,720
@@ -520,27 +520,27 @@ You can see that having these core files is extremely useful.
 
 131
 00:08:27,719 --> 00:08:30,249
-instruction pointer on the stack.
+堆栈上的指令指针。
 
 132
 00:08:30,249 --> 00:08:35,729
-Another way to debug this further is to use gdb to attach to the already running process.
+另一种进一步调试的方法是使用gdb附加到已经运行的进程。
 
 133
 00:08:35,729 --> 00:08:37,749
-Make sure you are root.
+确保你是根。
 
 134
 00:08:37,750 --> 00:08:42,430
-Simply find the process id and call gdb with -p and the pid.
+只需找到进程ID并使用-p和p id调用gdb。
 
 135
 00:08:42,430 --> 00:08:48,080
-As you can see the process is currently in accept waiting for a client to connect.
+如您所见，进程当前处于接受状态，等待客户机连接。
 
 136
 00:08:48,079 --> 00:08:51,169
-But when we send our PoC overflow, we don’t see a segfault.
+但当我们发送POC溢出时，我们看不到segfault。
 
 137
 00:08:51,170 --> 00:08:55,500
@@ -548,11 +548,11 @@ But when we send our PoC overflow, we don’t see a segfault.
 
 138
 00:08:55,500 --> 00:08:56,500
-client.
+客户端。
 
 139
 00:08:56,500 --> 00:08:58,330
-And we always stay in the parent.
+我们总是呆在父母身边。
 
 140
 00:08:58,329 --> 00:09:03,559
@@ -560,9 +560,9 @@ And we always stay in the parent.
 
 141
 00:09:03,560 --> 00:09:05,970
-the long input, we get the segfault.
+长的输入，我们得到了segfault。
 
 142
 00:09:05,970 --> 00:09:10,400
-Awesome, now you have everything in place to develop the full exploit.
+太棒了，现在你已经准备好了开发全部资源的一切。
 

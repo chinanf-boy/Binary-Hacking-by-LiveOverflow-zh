@@ -4,11 +4,11 @@
 
 2
 00:00:03,120 --> 00:00:05,780
-language I made, ugly but works.
+我用的语言，难看但有用。
 
 3
 00:00:05,779 --> 00:00:09,119
-And we compiled this into this weird binary format.
+我们把它编译成这个奇怪的二进制格式。
 
 4
 00:00:09,120 --> 00:00:14,340
@@ -16,7 +16,7 @@ And we compiled this into this weird binary format.
 
 5
 00:00:14,339 --> 00:00:15,339
-program.
+程序。
 
 6
 00:00:15,339 --> 00:00:19,199
@@ -24,7 +24,7 @@ program.
 
 7
 00:00:19,200 --> 00:00:23,090
-triggers a buffer overflow and overwrites the return pointer on the stack.
+触发缓冲区溢出并覆盖堆栈上的返回指针。
 
 8
 00:00:23,090 --> 00:00:27,070
@@ -32,11 +32,11 @@ triggers a buffer overflow and overwrites the return pointer on the stack.
 
 9
 00:00:27,070 --> 00:00:31,300
-code, that we inject and then jump to, with the buffer overflow.
+代码，我们注入然后跳转到，缓冲区溢出。
 
 10
 00:00:31,300 --> 00:00:34,930
-But that is not even possible, because the stack is not executable.
+但这甚至是不可能的，因为堆栈是不可执行的。
 
 11
 00:00:34,929 --> 00:00:39,969
@@ -44,27 +44,27 @@ But that is not even possible, because the stack is not executable.
 
 12
 00:00:39,969 --> 00:00:42,399
-able to execute my programs.
+能够执行我的程序。
 
 13
 00:00:42,399 --> 00:00:47,839
-And at this point it’s pretty clear, that this is possible thanks to return-oriented-programming.
+在这一点上，很明显，这是可能的，多亏了面向返回的编程。
 
 14
 00:00:47,839 --> 00:00:50,399
-So let’s examine how this works.
+让我们来研究一下这是如何工作的。
 
 15
 00:00:50,399 --> 00:00:51,819
-But I warn you.
+但是我警告你。
 
 16
 00:00:51,820 --> 00:00:55,880
-You really need to get your brain into an abstract philosophical thinking mode.
+你真的需要让你的大脑进入一种抽象的哲学思维模式。
 
 17
 00:00:55,879 --> 00:00:57,439
-This will get weird.
+这会变得很奇怪。
 
 18
 00:00:57,440 --> 00:01:02,110
@@ -72,7 +72,7 @@ This will get weird.
 
 19
 00:01:02,109 --> 00:01:05,119
-Return Oriented Programming tutorials and then come back to this.
+返回面向编程的教程，然后回到这里。
 
 20
 00:01:05,120 --> 00:01:09,580
@@ -80,27 +80,27 @@ Return Oriented Programming tutorials and then come back to this.
 
 21
 00:01:09,580 --> 00:01:10,580
-for you.
+为你。
 
 22
 00:01:10,580 --> 00:01:12,870
-So just try...
+所以试着…
 
 23
 00:01:12,870 --> 00:01:14,520
-Anyway.
+不管怎样。
 
 24
 00:01:14,520 --> 00:01:19,480
-Let’s head in.
+我们进去吧。
 
 25
 00:01:19,480 --> 00:01:24,490
-So in x86 assembler there is an instuction called “call”.
+所以在x86汇编程序中有一个称为“call”的指令。
 
 26
 00:01:24,490 --> 00:01:27,090
-And call actually does two things.
+而Call实际上有两件事。
 
 27
 00:01:27,090 --> 00:01:30,490
@@ -108,27 +108,27 @@ And call actually does two things.
 
 28
 00:01:30,491 --> 00:01:32,631
-instruction) on the stack.
+指令）。
 
 29
 00:01:32,630 --> 00:01:37,620
-And then it changes EIP, the current instruction pointer, to the call destination.
+然后它将当前指令指针EIP更改为调用目标。
 
 30
 00:01:37,620 --> 00:01:40,750
-So the CPU continues execution there.
+所以CPU继续在那里执行。
 
 31
 00:01:40,750 --> 00:01:46,690
-Now when we in C call a function, this will be compiled to an assembler call instruction.
+现在，当我们在C语言中调用一个函数时，它将被编译成一个汇编程序调用指令。
 
 32
 00:01:46,690 --> 00:01:51,020
-But to understand return-oriented-programming, you have to forget this.
+但是要理解面向返回的编程，必须忘记这一点。
 
 33
 00:01:51,020 --> 00:01:54,030
-Ignore the concept of calling functions.
+忽略调用函数的概念。
 
 34
 00:01:54,030 --> 00:01:59,140
@@ -136,15 +136,15 @@ Ignore the concept of calling functions.
 
 35
 00:01:59,140 --> 00:02:04,730
-onto the stack, and then set instruction pointer to the target address.
+在堆栈上，然后将指令指针设置为目标地址。
 
 36
 00:02:04,730 --> 00:02:07,530
-And the return instruction behaves in the same way.
+返回指令的行为也一样。
 
 37
 00:02:07,530 --> 00:02:12,480
-YES ret is compiled from a return in C. But forget this connection.
+是的，ret是从c中的返回编译而来的。但是不要再考虑这个连接了。
 
 38
 00:02:12,480 --> 00:02:17,560
@@ -152,11 +152,11 @@ ret只是弹出一个地址，我们称之为返回地址，从堆栈中取出�
 
 39
 00:02:17,560 --> 00:02:19,900
-instruction pointer back to that.
+指令指针回到那个位置。
 
 40
 00:02:19,900 --> 00:02:25,070
-And “pooping a value” from the stack is also already again an abstract interpretation.
+从堆栈中“pooping a value”也是一种抽象的解释。
 
 41
 00:02:25,069 --> 00:02:29,639
@@ -164,31 +164,31 @@ And “pooping a value” from the stack is also already again an abstract inter
 
 42
 00:02:29,640 --> 00:02:30,720
-takes that value.
+接受这个价值。
 
 43
 00:02:30,719 --> 00:02:33,369
-And then it increments the stack pointer register.
+然后它增加堆栈指针寄存器。
 
 44
 00:02:33,370 --> 00:02:35,430
-It increments because the stack grows downwards.
+它递增是因为堆栈向下增长。
 
 45
 00:02:35,430 --> 00:02:38,560
-So if we shrink it, when we POP a value, we increase it.
+所以如果我们缩小它，当我们弹出一个值，我们就增加它。
 
 46
 00:02:38,560 --> 00:02:40,890
-So it gets closer to the highest address again.
+所以它再次接近最高地址。
 
 47
 00:02:40,889 --> 00:02:41,889
-Anyway.
+不管怎样。
 
 48
 00:02:41,889 --> 00:02:42,979
-This is what ret does.
+这就是惩戒所做的。
 
 49
 00:02:42,980 --> 00:02:47,070
@@ -200,11 +200,11 @@ This is what ret does.
 
 51
 00:02:52,290 --> 00:02:54,270
-(in quotation marks).
+（用引号）。
 
 52
 00:02:54,269 --> 00:02:56,339
-So this was lesson one.
+这就是第一课。
 
 53
 00:02:56,340 --> 00:03:01,920
@@ -212,31 +212,31 @@ So this was lesson one.
 
 54
 00:03:01,920 --> 00:03:04,660
-what the instruction itself does.
+指令本身的作用。
 
 55
 00:03:04,660 --> 00:03:08,530
-So again, remember what the “ret” (the return) instruction does.
+所以，再次记住“ret”（返回）指令的作用。
 
 56
 00:03:08,530 --> 00:03:12,110
-First look at the stack register, follow this address and take that value.
+首先查看堆栈寄存器，按照这个地址并取这个值。
 
 57
 00:03:12,109 --> 00:03:13,189
-Increment the stack pointer.
+增加堆栈指针。
 
 58
 00:03:13,190 --> 00:03:15,110
-Set the instruction pointer to that value.
+将指令指针设置为该值。
 
 59
 00:03:15,110 --> 00:03:16,110
-Done.
+完成。
 
 60
 00:03:16,110 --> 00:03:18,170
-Now let’s think about something else.
+现在让我们想想别的。
 
 61
 00:03:18,170 --> 00:03:22,140
@@ -244,7 +244,7 @@ Now let’s think about something else.
 
 62
 00:03:22,139 --> 00:03:26,339
-A CPU is a piece of hardware that executes instructions.
+CPU是执行指令的硬件。
 
 63
 00:03:26,340 --> 00:03:30,350
@@ -256,7 +256,7 @@ A CPU is a piece of hardware that executes instructions.
 
 65
 00:03:33,099 --> 00:03:38,279
-Well there is memory, where instructions are stored, and this memory has addresses.
+有内存，存储指令，这个内存有地址。
 
 66
 00:03:38,279 --> 00:03:43,359
@@ -264,19 +264,19 @@ Well there is memory, where instructions are stored, and this memory has address
 
 67
 00:03:43,360 --> 00:03:45,950
-with the next instruction to execute.
+下一条要执行的指令。
 
 68
 00:03:45,950 --> 00:03:48,140
-So if it’s 0, it will execute this.
+所以如果它是0，它将执行这个。
 
 69
 00:03:48,139 --> 00:03:51,049
-And then it does whatever this instruction is defined to do.
+然后它就做了这个指令定义要做的任何事情。
 
 70
 00:03:51,049 --> 00:03:53,889
-Not that important what this instruction exactly does.
+这条指令所做的并不重要。
 
 71
 00:03:53,890 --> 00:03:58,800
@@ -284,7 +284,7 @@ Not that important what this instruction exactly does.
 
 72
 00:03:58,799 --> 00:04:00,949
-to point to the next instruction.
+指向下一条指令。
 
 73
 00:04:00,950 --> 00:04:05,030
@@ -292,11 +292,11 @@ to point to the next instruction.
 
 74
 00:04:05,029 --> 00:04:06,029
-one.
+一个。
 
 75
 00:04:06,029 --> 00:04:07,029
-And so forth.
+诸如此类。
 
 76
 00:04:07,029 --> 00:04:10,539
@@ -304,11 +304,11 @@ And so forth.
 
 77
 00:04:10,540 --> 00:04:12,060
-pointer is directly updated.
+指针直接更新。
 
 78
 00:04:12,059 --> 00:04:13,059
-But you get it.
+但你明白了。
 
 79
 00:04:13,059 --> 00:04:17,199
@@ -316,27 +316,27 @@ But you get it.
 
 80
 00:04:17,199 --> 00:04:19,429
-or executes those instructions.
+或者执行这些指令。
 
 81
 00:04:19,430 --> 00:04:21,890
-So the CPU is a machine implemented in hardware.
+所以CPU是一个硬件实现的机器。
 
 82
 00:04:21,889 --> 00:04:25,149
-But of course there are also virtual machines.
+当然也有虚拟机。
 
 83
 00:04:25,150 --> 00:04:28,200
-So machines implemented on top of our CPU machines.
+所以机器实现在我们的CPU机器之上。
 
 84
 00:04:28,199 --> 00:04:33,769
-And for example the JVM, the Java Virtual Machine behaves in the same way.
+例如JVM，Java虚拟机以相同的方式运行。
 
 85
 00:04:33,770 --> 00:04:35,170
-It is a machine.
+这是一台机器。
 
 86
 00:04:35,169 --> 00:04:40,589
@@ -348,7 +348,7 @@ It is a machine.
 
 88
 00:04:46,020 --> 00:04:47,550
-there called opcode.
+这里叫操作码。
 
 89
 00:04:47,550 --> 00:04:52,550
@@ -356,11 +356,11 @@ there called opcode.
 
 90
 00:04:52,550 --> 00:04:54,330
-it to the next one.
+到下一个。
 
 91
 00:04:54,330 --> 00:04:55,810
-Here I looked up the source code for that.
+在这里，我查找了它的源代码。
 
 92
 00:04:55,810 --> 00:04:59,240
@@ -372,23 +372,23 @@ Here I looked up the source code for that.
 
 94
 00:05:04,610 --> 00:05:07,430
-counter, so this moves it forward.
+计数器，所以它向前移动。
 
 95
 00:05:07,430 --> 00:05:10,790
-Like the CPU would increment the instruction pointer.
+就像CPU会增加指令指针一样。
 
 96
 00:05:10,790 --> 00:05:12,200
-So this is lesson two.
+这是第二课。
 
 97
 00:05:12,199 --> 00:05:14,339
-A machine in an abstract sense is simple.
+抽象意义上的机器很简单。
 
 98
 00:05:14,340 --> 00:05:17,340
-There is memory that holds code or instructions.
+有存储代码或指令的存储器。
 
 99
 00:05:17,340 --> 00:05:21,700
@@ -396,7 +396,7 @@ There is memory that holds code or instructions.
 
 100
 00:05:21,699 --> 00:05:25,409
-the program counter to point to the next one.
+程序计数器指向下一个。
 
 101
 00:05:25,409 --> 00:05:29,879
@@ -404,11 +404,11 @@ the program counter to point to the next one.
 
 102
 00:05:29,879 --> 00:05:34,429
-Well last video I also introduced the concept of a weird machine.
+最后一段视频我还介绍了一个奇怪的机器的概念。
 
 103
 00:05:34,430 --> 00:05:38,300
-Somehow this invoice program implemented a weird machine.
+不知怎么的，这个发票程序实现了一个奇怪的机器。
 
 104
 00:05:38,300 --> 00:05:43,110
@@ -416,7 +416,7 @@ Somehow this invoice program implemented a weird machine.
 
 105
 00:05:43,110 --> 00:05:44,110
-moment.
+时刻。
 
 106
 00:05:44,110 --> 00:05:48,500
@@ -424,7 +424,7 @@ moment.
 
 107
 00:05:48,501 --> 00:05:53,201
-with a technique called return-oriented-programming, then you should ask yourself now.
+使用一种称为面向返回编程的技术，那么您现在应该问问自己。
 
 108
 00:05:53,199 --> 00:05:58,219
@@ -440,11 +440,11 @@ with a technique called return-oriented-programming, then you should ask yoursel
 
 111
 00:06:04,290 --> 00:06:08,920
-Well, luckily we have some example programs, and we can debug this weird machine with GDB.
+幸运的是，我们有一些示例程序，我们可以用gdb调试这台奇怪的机器。
 
 112
 00:06:08,919 --> 00:06:13,189
-Let’s load the invoice program into GDB and let’s learn how it executes.
+让我们将发票程序加载到gdb中，并学习它是如何执行的。
 
 113
 00:06:13,189 --> 00:06:17,089
@@ -452,11 +452,11 @@ Let’s load the invoice program into GDB and let’s learn how it executes.
 
 114
 00:06:17,090 --> 00:06:18,470
-playlist for that.
+播放列表。
 
 115
 00:06:18,470 --> 00:06:22,820
-But when you are familiar with it, you know that we overwrote stuff on the stack.
+但是当你熟悉它时，你知道我们重写了堆栈上的内容。
 
 116
 00:06:22,820 --> 00:06:26,730
@@ -464,43 +464,43 @@ But when you are familiar with it, you know that we overwrote stuff on the stack
 
 117
 00:06:26,730 --> 00:06:28,400
-cause the buffer overflow.
+导致缓冲区溢出。
 
 118
 00:06:28,400 --> 00:06:31,980
-So we can set a breakpoint here, and we set one at the return.
+所以我们可以在这里设置一个断点，在返回处设置一个断点。
 
 119
 00:06:31,979 --> 00:06:36,489
-Then let’s run the binary and as an input we pass in the helloworld.binary.
+然后让我们运行二进制文件，作为输入，我们传入helloworld.binary。
 
 120
 00:06:36,490 --> 00:06:40,090
-And we know now that input triggers the buffer overflow.
+现在我们知道了输入触发了缓冲区溢出。
 
 121
 00:06:40,090 --> 00:06:42,480
-So here we hit the breakpoint at the gets.
+所以在这里，我们碰到了get的断点。
 
 122
 00:06:42,480 --> 00:06:46,970
-If we execute the gets and examine th stack, we can find all of our input here.
+如果我们执行gets并检查这个堆栈，我们可以在这里找到所有的输入。
 
 123
 00:06:46,971 --> 00:06:50,121
-Here are all the As that fill up the buffer.
+这里是所有填充缓冲区的内容。
 
 124
 00:06:50,120 --> 00:06:55,280
-And then we have these randomly looking, but actually carefully chosen values after it.
+然后我们有这些随机查找的，但实际上仔细选择了它之后的值。
 
 125
 00:06:55,280 --> 00:06:57,840
-But let’s go forward to the return instruction.
+但让我们继续执行返回指令。
 
 126
 00:06:57,840 --> 00:07:03,930
-So now we are about to execute the return, and please remember what return means.
+所以现在我们要执行返回，请记住返回的含义。
 
 127
 00:07:03,930 --> 00:07:08,760
@@ -508,7 +508,7 @@ So now we are about to execute the return, and please remember what return means
 
 128
 00:07:08,759 --> 00:07:11,649
-so this is the stack and that’s the top element.
+所以这是堆栈，这是顶部元素。
 
 129
 00:07:11,650 --> 00:07:16,750
@@ -516,39 +516,39 @@ so this is the stack and that’s the top element.
 
 130
 00:07:16,750 --> 00:07:17,820
-pointer to it.
+指向它的指针。
 
 131
 00:07:17,820 --> 00:07:20,800
-And at the same time increments the stack pointer.
+同时增加堆栈指针。
 
 132
 00:07:20,800 --> 00:07:22,040
-So let’s do that.
+那我们就这么做吧。
 
 133
 00:07:22,039 --> 00:07:23,709
-Single step forward.
+向前迈出一步。
 
 134
 00:07:23,710 --> 00:07:27,020
-ANd now let’s compare before and after the return.
+现在让我们比较一下回归前后的情况。
 
 135
 00:07:27,020 --> 00:07:28,730
-It did exactly what we expected.
+它做了我们所期望的。
 
 136
 00:07:28,729 --> 00:07:35,389
-The stack pointer register was incremented from 0x18 to 0x20, so move 8 bytes forward.
+堆栈指针寄存器从0x18增加到了0x20，所以向前移动8个字节。
 
 137
 00:07:35,389 --> 00:07:40,229
-And the instruction pointer got set to the value previously on top of the stack.
+指令指针被设置为先前在堆栈顶部的值。
 
 138
 00:07:40,229 --> 00:07:45,719
-Btw... when we execute a “ret” we also often use the phrase “we return into &lt;something&gt;”.
+顺便说一句。。。当执行“ret”时，我们还经常使用短语“we return into&lt；something&gt；”。
 
 139
 00:07:45,719 --> 00:07:51,849
@@ -556,27 +556,27 @@ Btw... when we execute a “ret” we also often use the phrase “we return int
 
 140
 00:07:51,849 --> 00:07:53,019
-continued execution here”.
+继续执行”。
 
 141
 00:07:53,020 --> 00:07:54,140
-It’s all the same.
+一切都一样。
 
 142
 00:07:54,139 --> 00:07:57,449
-Don’t get confused by the term “return”.
+不要被“回报”这个词混淆。
 
 143
 00:07:57,449 --> 00:07:59,729
-You know what the ret instruction really does.
+你知道RET指令的真正作用。
 
 144
 00:07:59,729 --> 00:08:03,429
-It simply takes a value from the stack and sets the instruction pointer to it.
+它只是从堆栈中获取一个值并设置指向它的指令指针。
 
 145
 00:08:03,430 --> 00:08:04,430
-Anyway.
+不管怎样。
 
 146
 00:08:04,430 --> 00:08:05,430
@@ -588,15 +588,15 @@ Anyway.
 
 148
 00:08:08,139 --> 00:08:09,139
-It points here...
+它指向这里…
 
 149
 00:08:09,139 --> 00:08:10,209
-To this assembler code.
+到这个汇编代码。
 
 150
 00:08:10,210 --> 00:08:13,380
-A pop rdx and a pop rbx.
+一个流行RDX和一个流行RBX。
 
 151
 00:08:13,380 --> 00:08:15,790
@@ -604,19 +604,19 @@ A pop rdx and a pop rbx.
 
 152
 00:08:15,789 --> 00:08:20,449
-So this means it takes one value from the stack and puts it into rdx.
+这意味着它从堆栈中获取一个值并将其放入RDX中。
 
 153
 00:08:20,449 --> 00:08:21,709
-Increments rsp again.
+再次增加RSP。
 
 154
 00:08:21,710 --> 00:08:25,670
-Then takes the next value on the stack and moves it into rbx.
+然后获取堆栈上的下一个值并将其移动到RBX中。
 
 155
 00:08:25,670 --> 00:08:28,130
-Increments rsp and then we are at the return again.
+增加RSP，然后我们再次返回。
 
 156
 00:08:28,130 --> 00:08:32,360
@@ -624,7 +624,7 @@ Increments rsp and then we are at the return again.
 
 157
 00:08:32,360 --> 00:08:33,360
-it.
+它。
 
 158
 00:08:33,360 --> 00:08:35,810
@@ -632,7 +632,7 @@ it.
 
 159
 00:08:35,810 --> 00:08:36,810
-Okay.
+可以。
 
 160
 00:08:36,810 --> 00:08:37,820
@@ -640,15 +640,15 @@ Okay.
 
 161
 00:08:37,820 --> 00:08:39,670
-Here we have a pop rdi.
+这里有一个流行的RDI。
 
 162
 00:08:39,669 --> 00:08:43,049
-So it takes the next value on the stack, moves it into rdi.
+所以它获取栈中的下一个值，将其移动到RDI中。
 
 163
 00:08:43,050 --> 00:08:47,660
-And then comes ret, which takes the next value and sets the instruction pointer to it.
+然后是ret，它获取下一个值并设置指向它的指令指针。
 
 164
 00:08:47,660 --> 00:08:49,210
@@ -656,11 +656,11 @@ And then comes ret, which takes the next value and sets the instruction pointer 
 
 165
 00:08:49,209 --> 00:08:50,609
-Now we execute a move.
+现在我们开始行动。
 
 166
 00:08:50,610 --> 00:08:55,480
-We move edx, into the address pointed to by rdi.
+我们把EDX移动到RDI所指的地址。
 
 167
 00:08:55,480 --> 00:08:57,970
@@ -668,7 +668,7 @@ We move edx, into the address pointed to by rdi.
 
 168
 00:08:57,970 --> 00:09:03,470
-The pop RDX at the beginning, set the value of EDX to a value we had on the stack.
+在开始的pop rdx中，将edx的值设置为堆栈上的值。
 
 169
 00:09:03,470 --> 00:09:09,040
@@ -676,7 +676,7 @@ The pop RDX at the beginning, set the value of EDX to a value we had on the stac
 
 170
 00:09:09,040 --> 00:09:11,440
-with a pop RDI.
+一个流行的RDI。
 
 171
 00:09:11,440 --> 00:09:13,700
@@ -688,7 +688,7 @@ with a pop RDI.
 
 173
 00:09:18,470 --> 00:09:19,930
-we specified.
+我们指定了。
 
 174
 00:09:19,930 --> 00:09:25,360
@@ -696,11 +696,11 @@ we specified.
 
 175
 00:09:25,360 --> 00:09:28,070
-to the address RDI points to.
+到地址RDI指向。
 
 176
 00:09:28,070 --> 00:09:31,110
-Now look at the source code of the hello world program.
+现在看看hello world程序的源代码。
 
 177
 00:09:31,110 --> 00:09:36,300
@@ -708,12 +708,12 @@ Now look at the source code of the hello world program.
 
 178
 00:09:36,300 --> 00:09:37,300
-4.
+4。
 
 179
 00:09:37,300 --> 00:09:40,130
 然后将变量4存储在内存位置
-1.
+1。
 
 180
 00:09:40,130 --> 00:09:44,420
@@ -721,11 +721,11 @@ Now look at the source code of the hello world program.
 
 181
 00:09:44,420 --> 00:09:45,570
-into rdx.
+进入RDX。
 
 182
 00:09:45,570 --> 00:09:49,820
-And then we move rdx to a memory location we specify in RDI.
+然后我们将RDX移动到在RDI中指定的内存位置。
 
 183
 00:09:49,820 --> 00:09:53,600
@@ -733,27 +733,27 @@ And then we move rdx to a memory location we specify in RDI.
 
 184
 00:09:53,600 --> 00:09:55,260
-my compiler program does.
+我的编译器程序可以。
 
 185
 00:09:55,260 --> 00:10:01,200
-I know, maybe that is a bit too confusing, maybe better just ignore my compiler shenanigans.
+我知道，也许这有点太令人困惑了，也许最好还是忽略我的编译器恶作剧。
 
 186
 00:10:01,199 --> 00:10:02,809
-But if think about what we did.
+但如果想想我们做了什么。
 
 187
 00:10:02,810 --> 00:10:07,620
-We executed these few instructions that move a value into some memory location.
+我们执行了这些将值移动到某个内存位置的指令。
 
 188
 00:10:07,620 --> 00:10:14,990
-And we did that by using super weird instructions, which we usually refer to as “gadgets”.
+我们通过使用超奇怪的指令做到了这一点，我们通常称之为“小工具”。
 
 189
 00:10:14,990 --> 00:10:19,150
-To perform this memory write, we used three gadgets.
+为了执行这个内存写入，我们使用了三个小工具。
 
 190
 00:10:19,150 --> 00:10:24,530
@@ -761,7 +761,7 @@ To perform this memory write, we used three gadgets.
 
 191
 00:10:24,529 --> 00:10:25,529
-gadget”.
+小玩意儿
 
 192
 00:10:25,529 --> 00:10:28,059
@@ -769,11 +769,11 @@ gadget”.
 
 193
 00:10:28,060 --> 00:10:31,210
-They all end with a return instruction.
+它们都以返回指令结束。
 
 194
 00:10:31,210 --> 00:10:32,830
-Now bend you mind.
+现在弯下腰。
 
 195
 00:10:32,829 --> 00:10:37,739
@@ -781,15 +781,15 @@ Now bend you mind.
 
 196
 00:10:37,740 --> 00:10:38,740
-instructions.
+指令。
 
 197
 00:10:38,740 --> 00:10:41,340
-First, we have memory, that is our stack.
+首先，我们有内存，这就是我们的堆栈。
 
 198
 00:10:41,339 --> 00:10:44,039
-On there we had all these addresses and values.
+在那里我们有所有这些地址和价值观。
 
 199
 00:10:44,040 --> 00:10:50,480
@@ -801,23 +801,23 @@ On there we had all these addresses and values.
 
 201
 00:10:55,699 --> 00:10:59,139
-on the stack and continued CPU execution there.
+在堆栈上继续执行CPU。
 
 202
 00:10:59,140 --> 00:11:03,160
-Then the stack pointer pointed to the next value, we popped it and moved it to the next.
+然后栈指针指向下一个值，我们弹出它并将其移到下一个值。
 
 203
 00:11:03,160 --> 00:11:04,880
-Pooped another value moved it to the next.
+pooled另一个值将其移动到下一个值。
 
 204
 00:11:04,880 --> 00:11:10,660
-And then came another return which took the value and let the CPU execute code there.
+然后又出现了另一个返回，它获取值并让CPU在那里执行代码。
 
 205
 00:11:10,660 --> 00:11:13,770
-Moving the stack again to the next value.
+再次将堆栈移动到下一个值。
 
 206
 00:11:13,769 --> 00:11:19,789
@@ -833,7 +833,7 @@ Moving the stack again to the next value.
 
 209
 00:11:25,830 --> 00:11:28,420
-rdx and then a pop rbx.
+然后是一个流行的RBX。
 
 210
 00:11:28,420 --> 00:11:33,760
@@ -841,7 +841,7 @@ rdx and then a pop rbx.
 
 211
 00:11:33,760 --> 00:11:35,060
-address of rdi.
+RDI地址。
 
 212
 00:11:35,060 --> 00:11:41,120
@@ -849,7 +849,7 @@ address of rdi.
 
 213
 00:11:41,120 --> 00:11:45,550
-means we push an address on the stack and set the instruction pointer to the given destination.
+意味着我们在堆栈上推送一个地址，并将指令指针设置到给定的目标。
 
 214
 00:11:45,550 --> 00:11:49,930
@@ -861,7 +861,7 @@ means we push an address on the stack and set the instruction pointer to the giv
 
 216
 00:11:50,930 --> 00:11:54,760
-Both define some action, what it does, and then the machine moves to the next instruction.
+两者都定义了一些动作，它做什么，然后机器移动到下一条指令。
 
 217
 00:11:54,760 --> 00:11:59,800
@@ -873,11 +873,11 @@ CPU通过递增指令指针来执行此操作，Java虚拟机执行此操作。
 
 219
 00:12:04,140 --> 00:12:05,900
-the stack pointer.
+堆栈指针。
 
 220
 00:12:05,899 --> 00:12:08,899
-I know, these gadgets are super weird instructions.
+我知道，这些小玩意是非常奇怪的指令。
 
 221
 00:12:08,899 --> 00:12:13,199
@@ -889,7 +889,7 @@ I know, these gadgets are super weird instructions.
 
 223
 00:12:17,519 --> 00:12:19,619
-of gadgets are available.
+个小工具可用。
 
 224
 00:12:19,620 --> 00:12:24,620
@@ -897,7 +897,7 @@ of gadgets are available.
 
 225
 00:12:24,620 --> 00:12:28,460
-have this pattern of a few instructions followed by a “ret”.
+让这几个指令的模式后面跟着一个“ret”。
 
 226
 00:12:28,459 --> 00:12:32,839
@@ -905,11 +905,11 @@ have this pattern of a few instructions followed by a “ret”.
 
 227
 00:12:32,840 --> 00:12:34,270
-on this weird machine.
+在这台奇怪的机器上。
 
 228
 00:12:34,269 --> 00:12:35,589
-I know it’s crappy.
+我知道这很糟糕。
 
 229
 00:12:35,590 --> 00:12:40,670
@@ -917,11 +917,11 @@ I know it’s crappy.
 
 230
 00:12:40,670 --> 00:12:41,690
-Machine.
+机器。
 
 231
 00:12:41,690 --> 00:12:45,520
-But it’s enough to basically perform any kind of computation.
+但基本上可以进行任何计算。
 
 232
 00:12:45,519 --> 00:12:50,379
@@ -929,7 +929,7 @@ But it’s enough to basically perform any kind of computation.
 
 233
 00:12:50,380 --> 00:12:56,140
-this text representation to actual addresses that point to those gadgets.
+此文本表示指向这些小工具的实际地址。
 
 234
 00:12:56,140 --> 00:13:01,530
@@ -937,7 +937,7 @@ this text representation to actual addresses that point to those gadgets.
 
 235
 00:13:01,529 --> 00:13:03,039
-weird machine.
+奇怪的机器。
 
 236
 00:13:03,040 --> 00:13:07,640
@@ -945,19 +945,19 @@ weird machine.
 
 237
 00:13:07,640 --> 00:13:08,640
-gadgets.
+小工具。
 
 238
 00:13:08,640 --> 00:13:11,800
-And it’s own initialisation code that setups that weird machine.
+它是自己的初始化代码来设置这台奇怪的机器。
 
 239
 00:13:11,800 --> 00:13:15,720
-Basically the code that triggered our vulnerability in the first place.
+基本上，首先触发我们漏洞的代码。
 
 240
 00:13:15,720 --> 00:13:17,650
-So writing such an exploit.
+所以写这样一篇文章。
 
 241
 00:13:17,649 --> 00:13:23,289
@@ -965,7 +965,7 @@ So writing such an exploit.
 
 242
 00:13:23,290 --> 00:13:24,290
-overflow.
+溢出。
 
 243
 00:13:24,290 --> 00:13:28,730
@@ -977,11 +977,11 @@ overflow.
 
 245
 00:13:34,740 --> 00:13:36,620
-together with the stack works.
+和烟囱一起工作。
 
 246
 00:13:36,620 --> 00:13:43,530
-And what we can program is just bound by our creativity and availability of useful gadgets.
+我们可以编程的只是我们的创造力和有用小工具的可用性。
 
 247
 00:13:43,529 --> 00:13:47,639
@@ -989,11 +989,11 @@ And what we can program is just bound by our creativity and availability of usef
 
 248
 00:13:47,639 --> 00:13:49,149
-ANYTHING you want.
+任何你想要的。
 
 249
 00:13:49,149 --> 00:13:53,579
-You just chain these small assembler snippets together to build anything.
+您只需将这些小的汇编程序片段链接在一起就可以构建任何东西。
 
 250
 00:13:53,579 --> 00:13:58,209
@@ -1001,7 +1001,7 @@ You just chain these small assembler snippets together to build anything.
 
 251
 00:13:58,209 --> 00:13:59,939
-be just a regular program.
+做一个普通的计划。
 
 252
 00:13:59,940 --> 00:14:04,650
@@ -1009,19 +1009,19 @@ be just a regular program.
 
 253
 00:14:04,649 --> 00:14:06,619
-adds them together, and prints the result.
+将它们加在一起，并打印结果。
 
 254
 00:14:06,620 --> 00:14:07,620
-And that’s it.
+就这样。
 
 255
 00:14:07,620 --> 00:14:11,640
-That is return oriented programming explained in a super confused way.
+这就是以一种非常混乱的方式解释的面向返回的编程。
 
 256
 00:14:11,639 --> 00:14:14,849
-I know, this is maybe not the best ROP tutorial.
+我知道，这可能不是最好的ROP教程。
 
 257
 00:14:14,850 --> 00:14:19,590
@@ -1033,7 +1033,7 @@ I know, this is maybe not the best ROP tutorial.
 
 259
 00:14:24,459 --> 00:14:25,459
-opening.
+打开。
 
 260
 00:14:25,459 --> 00:14:30,839
@@ -1041,15 +1041,15 @@ opening.
 
 261
 00:14:30,839 --> 00:14:32,609
-for my channel.
+为了我的频道。
 
 262
 00:14:32,610 --> 00:14:37,010
-Also I like to remind you to checkout the papers and talks I have listed in the description.
+另外，我想提醒你检查一下我在描述中列出的文件和谈话。
 
 263
 00:14:37,009 --> 00:14:39,579
-Please read them even if you didn’t understand this video.
+即使你不理解这段视频，也请阅读。
 
 264
 00:14:39,579 --> 00:14:44,459
@@ -1057,9 +1057,9 @@ Please read them even if you didn’t understand this video.
 
 265
 00:14:44,459 --> 00:14:46,129
-and exploit development.
+开拓发展。
 
 266
 00:14:46,130 --> 00:14:50,250
-Anyway… thanks for watching and maybe checkout my Patreon and YouTube membership in the description.
+不管怎样……谢谢你看了我的Patreon和YouTube会员的描述，也许还可以结账。
 

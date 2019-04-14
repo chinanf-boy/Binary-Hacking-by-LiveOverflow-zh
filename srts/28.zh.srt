@@ -4,11 +4,11 @@
 
 2
 00:00:05,340 --> 00:00:09,150
-is listening on a port and then we connected to it with netcat.
+正在监听一个端口，然后我们用netcat连接到它。
 
 3
 00:00:09,150 --> 00:00:14,060
-This video we want to go one layer deeper and have a look at the TCP protocol.
+这个视频我们想深入一层，看看TCP协议。
 
 4
 00:00:14,059 --> 00:00:18,069
@@ -16,35 +16,35 @@ This video we want to go one layer deeper and have a look at the TCP protocol.
 
 5
 00:00:18,070 --> 00:00:25,600
-the network.
+网络。
 
 6
 00:00:25,600 --> 00:00:27,950
-We have used netcat now multiple times.
+我们已经多次使用过netcat。
 
 7
 00:00:27,950 --> 00:00:31,620
-We used it in CTFs and last video to connect to challenges.
+我们在CTF和最后一个视频中使用它来连接挑战。
 
 8
 00:00:31,620 --> 00:00:35,250
-And in the web security series we used it to talk to a real webserver.
+在Web安全系列中，我们使用它来与真正的Web服务器对话。
 
 9
 00:00:35,250 --> 00:00:41,000
-So you know that netcat is a very handy tool to send tcp packets over the network.
+所以你知道，netcat是一个非常方便的工具，可以通过网络发送TCP包。
 
 10
 00:00:41,000 --> 00:00:45,190
-So I suggest we download wireshark to analyse packets we send with netcat.
+所以我建议我们下载wireshark来分析我们用netcat发送的数据包。
 
 11
 00:00:45,190 --> 00:00:50,890
-When we open wireshark we select the network interface we want to capture packets.
+当我们打开wireshark时，我们选择要捕获数据包的网络接口。
 
 12
 00:00:50,890 --> 00:00:55,770
-In this case our traffic doesn’t leave the machine thus we can select the loopback interface.
+在这种情况下，我们的流量不会离开机器，因此我们可以选择环回接口。
 
 13
 00:00:55,770 --> 00:01:00,480
@@ -52,15 +52,15 @@ In this case our traffic doesn’t leave the machine thus we can select the loop
 
 14
 00:01:00,480 --> 00:01:01,750
-in your PC.
+在你的电脑里。
 
 15
 00:01:01,750 --> 00:01:06,940
-Through this interface will go all our traffic that we send around on our local machine.
+通过这个接口，我们在本地机器上发送的所有流量都将通过这个接口传输。
 
 16
 00:01:06,940 --> 00:01:13,570
-And as you may know, the own machine is always identified as localhost or IP 127.0.0.1.
+正如您可能知道的，自己的机器总是被标识为localhost或IP 127.0.0.1。
 
 17
 00:01:13,570 --> 00:01:19,290
@@ -68,7 +68,7 @@ And as you may know, the own machine is always identified as localhost or IP 127
 
 18
 00:01:19,290 --> 00:01:20,970
-and we select a port.
+我们选择一个端口。
 
 19
 00:01:20,970 --> 00:01:25,720
@@ -76,11 +76,11 @@ and we select a port.
 
 20
 00:01:25,720 --> 00:01:29,080
-processes that are currently listening on a port.
+当前正在侦听端口的进程。
 
 21
 00:01:29,080 --> 00:01:31,240
-And here is our netcat process.
+下面是我们的netcat过程。
 
 22
 00:01:31,240 --> 00:01:35,280
@@ -88,7 +88,7 @@ And here is our netcat process.
 
 23
 00:01:35,280 --> 00:01:39,100
-syscalls that netcat uses to establish a server.
+netcat用于建立服务器的系统调用。
 
 24
 00:01:39,100 --> 00:01:45,500
@@ -96,11 +96,11 @@ syscalls that netcat uses to establish a server.
 
 25
 00:01:45,500 --> 00:01:49,770
-on that port and is now waiting for a connection to be established with accept.
+在该端口上，正在等待通过accept建立连接。
 
 26
 00:01:49,770 --> 00:01:54,530
-It’s basically exactly what we reverse engineered in last video.
+这基本上就是我们在上一个视频中逆向工程的内容。
 
 27
 00:01:54,530 --> 00:01:58,280
@@ -108,15 +108,15 @@ It’s basically exactly what we reverse engineered in last video.
 
 28
 00:01:58,280 --> 00:01:59,320
-network yet.
+网络尚未。
 
 29
 00:01:59,320 --> 00:02:00,320
-Ok.
+好啊。
 
 30
 00:02:00,320 --> 00:02:04,210
-Now let’s use the second window to connect to this netcat server.
+现在，让我们使用第二个窗口连接到这个netcat服务器。
 
 31
 00:02:04,210 --> 00:02:09,010
@@ -124,55 +124,55 @@ Now let’s use the second window to connect to this netcat server.
 
 32
 00:02:09,009 --> 00:02:10,009
-port.
+端口。
 
 33
 00:02:10,009 --> 00:02:12,689
-And now, we see three entries in wireshark.
+现在，我们在Wireshark中看到了三个条目。
 
 34
 00:02:12,690 --> 00:02:16,410
-We see a SYN, SYNACK and ACK. packet.
+我们看到一个syn，syn ack和ack。小包裹。
 
 35
 00:02:16,410 --> 00:02:19,070
-Let’s quickly have a look at those.
+让我们快速看一下。
 
 36
 00:02:19,070 --> 00:02:23,110
-As you can see in the lowest window, a packet is just some binary data.
+正如您在最低的窗口中看到的，数据包只是一些二进制数据。
 
 37
 00:02:23,110 --> 00:02:28,730
-And that binary data has meaning which wireshark can parse and display us nicely.
+这个二进制数据意味着wireshark可以很好地解析和显示我们。
 
 38
 00:02:28,730 --> 00:02:33,680
-So above it we can see the decoded packet and it’s divided by layers.
+所以在上面我们可以看到解码后的包，它被层层划分。
 
 39
 00:02:33,680 --> 00:02:38,890
-Because this packet didn’t leave our machine the ethernet layer is just all zeroes.
+因为这个包没有离开我们的机器，所以以太网层都是零。
 
 40
 00:02:38,890 --> 00:02:43,200
-Usually you would find here your mac address and the mac address from your switch or router.
+通常，您可以在这里找到您的MAC地址和来自交换机或路由器的MAC地址。
 
 41
 00:02:43,200 --> 00:02:47,200
-So that layer is only used between two direct connections.
+因此，该层仅用于两个直接连接之间。
 
 42
 00:02:47,200 --> 00:02:50,770
-Besides the Mac addresses, this layer also contains a TYPE.
+除了MAC地址，这个层还包含一个类型。
 
 43
 00:02:50,770 --> 00:02:57,550
-And the type is set to hex 800, which indicates that the next layer is an IPv4 layer.
+类型设置为hex 800，表示下一层是IPv4层。
 
 44
 00:02:57,550 --> 00:03:00,500
-Wireshark sees that and knows now how to decode the next bytes.
+Wireshark看到了这一点，现在知道如何解码下一个字节了。
 
 45
 00:03:00,500 --> 00:03:05,640
@@ -180,7 +180,7 @@ Wireshark sees that and knows now how to decode the next bytes.
 
 46
 00:03:05,640 --> 00:03:06,780
-to that layer.
+到那一层。
 
 47
 00:03:06,780 --> 00:03:12,630
@@ -188,11 +188,11 @@ to that layer.
 
 48
 00:03:12,629 --> 00:03:16,759
-first 4 bits of this byte is 4.
+这个字节的前4位是4。
 
 49
 00:03:16,760 --> 00:03:21,440
-You can also see here the source and destination IP, which in this case is the same.
+您还可以在这里看到源IP和目标IP，在本例中是相同的。
 
 50
 00:03:21,440 --> 00:03:26,830
@@ -204,7 +204,7 @@ You can also see here the source and destination IP, which in this case is the s
 
 52
 00:03:31,260 --> 00:03:36,440
-that this packet is forwarded until you reach that machine.
+直到你到达那台机器，这个包才被转发。
 
 53
 00:03:36,440 --> 00:03:41,290
@@ -212,11 +212,11 @@ that this packet is forwarded until you reach that machine.
 
 54
 00:03:41,290 --> 00:03:42,290
-identifier.
+标识符。
 
 55
 00:03:42,290 --> 00:03:47,370
-In this case it’s 6, which means the content of this IP layer is a TCP header.
+在本例中，它是6，这意味着这个IP层的内容是一个TCP头。
 
 56
 00:03:47,370 --> 00:03:52,450
@@ -224,7 +224,7 @@ IP和TCP通常在一起，这很常见，因此您可能听说过
 
 57
 00:03:52,450 --> 00:03:57,790
-of TCP/IP before, which just says that there is a TCP layer over an IP layer.
+在TCP/IP之前，它只是说在IP层上有一个TCP层。
 
 58
 00:03:57,790 --> 00:04:02,500
@@ -236,15 +236,15 @@ TCP层现在将帮助识别
 
 60
 00:04:07,900 --> 00:04:12,040
-program or process on this machine should handle this packet.
+这台机器上的程序或进程应该处理这个包。
 
 61
 00:04:12,040 --> 00:04:14,500
-And that is identified with the port number.
+并用端口号标识。
 
 62
 00:04:14,500 --> 00:04:18,650
-You can see here that the destination port is set to 1234.
+您可以在这里看到目标端口设置为1234。
 
 63
 00:04:18,650 --> 00:04:24,210
@@ -252,7 +252,7 @@ You can see here that the destination port is set to 1234.
 
 64
 00:04:24,210 --> 00:04:25,480
-this server.
+这个服务器。
 
 65
 00:04:25,479 --> 00:04:29,859
@@ -260,11 +260,11 @@ this server.
 
 66
 00:04:29,860 --> 00:04:33,330
-machine knows which process gets this response.
+机器知道哪个进程得到这个响应。
 
 67
 00:04:33,330 --> 00:04:36,000
-And that’s usually a random high port number.
+这通常是一个随机的高端口号。
 
 68
 00:04:35,999 --> 00:04:41,059
@@ -272,19 +272,19 @@ And that’s usually a random high port number.
 
 69
 00:04:41,060 --> 00:04:42,530
-the protocol.
+协议。
 
 70
 00:04:42,529 --> 00:04:48,379
-A Protocol just refers to a set of rules on how to talk to another computer.
+协议只是指一组关于如何与另一台计算机对话的规则。
 
 71
 00:04:48,380 --> 00:04:53,940
-If a client and server agree on how to send data back and forth, it will work.
+如果客户机和服务器就如何来回发送数据达成一致，它将工作。
 
 72
 00:04:53,940 --> 00:05:00,160
-So What we will see now is just what somebody came up with in order to create a data connection.
+所以我们现在看到的就是有人为了创建一个数据连接而想到的。
 
 73
 00:05:00,159 --> 00:05:05,509
@@ -292,35 +292,35 @@ So What we will see now is just what somebody came up with in order to create a 
 
 74
 00:05:05,509 --> 00:05:06,649
-a connection.
+连接。
 
 75
 00:05:06,649 --> 00:05:10,909
-Ok, so we see that 3 packets were exchanged.
+好的，我们看到交换了3个包。
 
 76
 00:05:10,909 --> 00:05:15,459
-First the client sent a so called SYN packet, a synchronize packet.
+首先，客户机发送了一个所谓的SYN包，一个同步包。
 
 77
 00:05:15,460 --> 00:05:19,230
-And then the server responded with an SYN,ACK packet.
+然后服务器用一个syn，ack包响应。
 
 78
 00:05:19,229 --> 00:05:22,079
-Meaning I acknowledge that I received it.
+意思是我承认我收到了它。
 
 79
 00:05:22,080 --> 00:05:25,650
-This is important because maybe the initial packet didn’t arrive.
+这很重要，因为可能最初的数据包没有到达。
 
 80
 00:05:25,650 --> 00:05:30,860
-So when you as a client get a response, you know that the server got your message.
+因此，当您作为客户机得到响应时，您知道服务器收到了您的消息。
 
 81
 00:05:30,860 --> 00:05:35,200
-This means the client knows now that the connection works.
+这意味着客户机现在知道连接可以工作了。
 
 82
 00:05:35,199 --> 00:05:40,199
@@ -328,11 +328,11 @@ This means the client knows now that the connection works.
 
 83
 00:05:40,199 --> 00:05:42,129
-packet was successful.
+数据包成功。
 
 84
 00:05:42,129 --> 00:05:45,179
-Maybe the server can only receive but not send packets.
+也许服务器只能接收但不能发送数据包。
 
 85
 00:05:45,180 --> 00:05:51,260
@@ -344,51 +344,51 @@ Maybe the server can only receive but not send packets.
 
 87
 00:05:57,990 --> 00:06:01,140
-with this other machine, now we can talk data.
+用另一台机器，现在我们可以谈数据了。
 
 88
 00:06:01,139 --> 00:06:03,489
-And this is all done transparently.
+这一切都是透明的。
 
 89
 00:06:03,490 --> 00:06:06,520
-You didn’t have to construct these packets yourself.
+您不必自己构建这些包。
 
 90
 00:06:06,520 --> 00:06:09,500
-You simply opened a socket and waited for a connection.
+您只需打开一个插座并等待连接。
 
 91
 00:06:09,499 --> 00:06:10,499
-Ok.
+好啊。
 
 92
 00:06:10,499 --> 00:06:13,889
-Now let’s send some data from the client to the server.
+现在让我们将一些数据从客户机发送到服务器。
 
 93
 00:06:13,889 --> 00:06:18,249
-You can see that immediately the server was able to read the line you sent.
+您可以立即看到服务器能够读取您发送的行。
 
 94
 00:06:18,250 --> 00:06:19,940
-How does that look in wireshark.
+这在Wireshark中是怎么看的？
 
 95
 00:06:19,939 --> 00:06:23,499
-We see two new packets.
+我们看到两个新的包。
 
 96
 00:06:23,499 --> 00:06:27,619
-A PSH packet from the client to the server, and an ack packet back.
+从客户机到服务器的PSH数据包，以及返回的ACK数据包。
 
 97
 00:06:27,619 --> 00:06:31,369
-The packet from the client also now has an additional DATA layer.
+来自客户机的数据包现在也有一个额外的数据层。
 
 98
 00:06:31,369 --> 00:06:35,259
-And that data layer just contains the raw bytes we sent.
+数据层只包含我们发送的原始字节。
 
 99
 00:06:35,259 --> 00:06:39,919
@@ -396,11 +396,11 @@ And that data layer just contains the raw bytes we sent.
 
 100
 00:06:39,919 --> 00:06:40,919
-received.
+收到。
 
 101
 00:06:40,919 --> 00:06:43,159
-Now let’s send a response from the server.
+现在让我们从服务器发送一个响应。
 
 102
 00:06:43,159 --> 00:06:49,399
@@ -408,7 +408,7 @@ Now let’s send a response from the server.
 
 103
 00:06:49,401 --> 00:06:50,771
-that accept returned.
+接受返回。
 
 104
 00:06:50,770 --> 00:06:56,470
@@ -416,7 +416,7 @@ that accept returned.
 
 105
 00:06:56,470 --> 00:06:59,460
-magic below sent that over the network.
+下面的魔法通过网络发送了。
 
 106
 00:06:59,459 --> 00:07:04,389
@@ -424,15 +424,15 @@ magic below sent that over the network.
 
 107
 00:07:04,389 --> 00:07:07,969
-acknwoledged the arrival with an ack packet back.
+用一个ACK包将到达的货物打包回去。
 
 108
 00:07:07,969 --> 00:07:09,359
-One more more thing.
+还有一件事。
 
 109
 00:07:09,360 --> 00:07:11,980
-Obviously the size of a packet is limited.
+显然，数据包的大小是有限的。
 
 110
 00:07:11,979 --> 00:07:16,709
@@ -444,11 +444,11 @@ Obviously the size of a packet is limited.
 
 112
 00:07:18,760 --> 00:07:21,280
-Let’s just copy a bunch of characters and send them.
+让我们复制一些字符并发送它们。
 
 113
 00:07:21,279 --> 00:07:25,569
-Ahhh, see, now there are more than just two packets.
+啊，看，现在有两个以上的包。
 
 114
 00:07:25,569 --> 00:07:30,069
@@ -456,7 +456,7 @@ Ahhh, see, now there are more than just two packets.
 
 115
 00:07:30,069 --> 00:07:33,099
-driver, I don’t really know, it got split up.
+司机，我真的不知道，它被分开了。
 
 116
 00:07:33,099 --> 00:07:37,339
@@ -464,11 +464,11 @@ driver, I don’t really know, it got split up.
 
 117
 00:07:37,339 --> 00:07:41,639
-packet was only sent out once the server acknowledges the first one.
+只有当服务器确认第一个包时，才会发送该包。
 
 118
 00:07:41,639 --> 00:07:44,279
-Let’s see what happens when you kill the client.
+让我们看看当你杀死客户时会发生什么。
 
 119
 00:07:44,279 --> 00:07:49,909
@@ -476,15 +476,15 @@ Let’s see what happens when you kill the client.
 
 120
 00:07:49,909 --> 00:07:53,219
-out, do indicate we are done with this channel.
+out，do表示我们已经完成了这个频道。
 
 121
 00:07:53,219 --> 00:07:57,939
-You can free up your resources and you don’t have to expect more packets from this connection.
+您可以释放您的资源，并且不必期望来自此连接的更多数据包。
 
 122
 00:07:57,940 --> 00:08:01,330
-And like during setup, there are 3 packets exchanged.
+和安装过程一样，有3个包交换。
 
 123
 00:08:01,330 --> 00:08:06,320
@@ -492,7 +492,7 @@ And like during setup, there are 3 packets exchanged.
 
 124
 00:08:06,319 --> 00:08:07,799
-that it is done.
+完成了。
 
 125
 00:08:07,800 --> 00:08:13,140
@@ -500,27 +500,27 @@ that it is done.
 
 126
 00:08:13,139 --> 00:08:14,439
-responds with an ack.
+用ACK响应。
 
 127
 00:08:14,439 --> 00:08:16,739
-Now both now that it’s over.
+现在都结束了。
 
 128
 00:08:16,740 --> 00:08:21,130
-Now this whole exchange is referred to as a TCP stream.
+现在整个交换被称为TCP流。
 
 129
 00:08:21,129 --> 00:08:26,849
-We established a connection, then exchanged data back and forth, and then quit the connection.
+我们建立了一个连接，然后来回交换数据，然后退出连接。
 
 130
 00:08:26,849 --> 00:08:32,619
-And wireshark allows us to investigate this stream, for example with Follow TCP stream.
+wireshark允许我们研究这个流，例如使用follow tcp流。
 
 131
 00:08:32,620 --> 00:08:37,070
-Here only the data is visible and color coded who sent what.
+这里只有可见的数据和发送内容的颜色编码。
 
 132
 00:08:37,070 --> 00:08:41,500
@@ -528,11 +528,11 @@ Here only the data is visible and color coded who sent what.
 
 133
 00:08:41,500 --> 00:08:46,160
-you will understand now much better what it means to have a server and client.
+现在您将更好地理解拥有服务器和客户机意味着什么。
 
 134
 00:08:46,160 --> 00:08:51,080
-And that HTTP is just data sent over TCP, exactly how we sent these messages.
+HTTP只是通过TCP发送的数据，正是我们发送这些消息的方式。
 
 135
 00:08:51,079 --> 00:08:56,469
@@ -540,5 +540,5 @@ And that HTTP is just data sent over TCP, exactly how we sent these messages.
 
 136
 00:08:56,470 --> 00:08:57,860
-messages received over TCP.
+通过TCP接收的消息。
 

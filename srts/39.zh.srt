@@ -4,7 +4,7 @@
 
 2
 00:00:05,370 --> 00:00:09,740
-but had it compiled on a modern system with ASLR and 64bit.
+但它是在一个具有ASLR和64位的现代系统上编译的。
 
 3
 00:00:09,740 --> 00:00:13,930
@@ -12,15 +12,15 @@ but had it compiled on a modern system with ASLR and 64bit.
 
 4
 00:00:13,929 --> 00:00:17,509
-with it, but then actually figured out a reliable technique.
+有了它，但实际上找到了一种可靠的技术。
 
 5
 00:00:17,510 --> 00:00:24,120
-So let’s explore some more of the format levels.
+因此，让我们进一步探讨一些格式级别。
 
 6
 00:00:24,119 --> 00:00:31,289
-Format1, at first, looks very simple.
+格式1起初看起来很简单。
 
 7
 00:00:31,289 --> 00:00:35,349
@@ -28,7 +28,7 @@ Format1, at first, looks very simple.
 
 8
 00:00:35,350 --> 00:00:39,670
-value 0xdeadbeef, and here we just have to write..
+值0Xdeadbeef，这里我们只需要写..
 
 9
 00:00:39,670 --> 00:00:40,670
@@ -36,23 +36,23 @@ value 0xdeadbeef, and here we just have to write..
 
 10
 00:00:40,670 --> 00:00:44,080
-Let’s have quick look if our trick still works.
+如果我们的诀窍还奏效，让我们快点看一看。
 
 11
 00:00:44,080 --> 00:00:49,430
-So this level also takes an argument, but passes it directly to printf.
+所以这个级别也接受一个参数，但直接传递给printf。
 
 12
 00:00:49,430 --> 00:00:51,860
-No sprintf and buffer involved.
+不涉及sprintf和buffer。
 
 13
 00:00:51,860 --> 00:00:52,860
-Anyway.
+不管怎样。
 
 14
 00:00:52,860 --> 00:00:58,820
-we compile it again on our 64bit ubuntu version and open it in gdb.
+我们在64位Ubuntu版本上再次编译它，并在gdb中打开它。
 
 15
 00:00:58,820 --> 00:01:04,630
@@ -60,11 +60,11 @@ we compile it again on our 64bit ubuntu version and open it in gdb.
 
 16
 00:01:04,629 --> 00:01:06,169
-AAAAAAAAAA.
+AAAAAAAAAA
 
 17
 00:01:06,170 --> 00:01:08,410
-Then we have a look at the stack.
+然后我们来看看这个堆栈。
 
 18
 00:01:08,409 --> 00:01:11,259
@@ -76,15 +76,15 @@ Then we have a look at the stack.
 
 20
 00:01:12,649 --> 00:01:14,819
-Let’s keep looking further down.
+让我们继续往下看。
 
 21
 00:01:14,820 --> 00:01:16,600
-Oh wow.
+哇哦。
 
 22
 00:01:16,600 --> 00:01:19,290
-They are all the way down there.
+他们一直在下面。
 
 23
 00:01:19,290 --> 00:01:21,360
@@ -92,7 +92,7 @@ They are all the way down there.
 
 24
 00:01:21,360 --> 00:01:22,360
-Well so.
+好吧。
 
 25
 00:01:22,360 --> 00:01:27,200
@@ -100,11 +100,11 @@ Well so.
 
 26
 00:01:27,200 --> 00:01:28,200
-challenge.
+挑战。
 
 27
 00:01:28,200 --> 00:01:30,470
-We directly print the arguments.
+我们直接打印参数。
 
 28
 00:01:30,469 --> 00:01:35,309
@@ -112,11 +112,11 @@ We directly print the arguments.
 
 29
 00:01:35,310 --> 00:01:36,680
-of the stack.
+堆栈的
 
 30
 00:01:36,679 --> 00:01:38,579
-So these are the environment variables.
+这些是环境变量。
 
 31
 00:01:38,579 --> 00:01:43,599
@@ -124,19 +124,19 @@ So these are the environment variables.
 
 32
 00:01:43,600 --> 00:01:44,600
-level.
+水平。
 
 33
 00:01:44,600 --> 00:01:45,600
-That sucks.
+那太糟糕了。
 
 34
 00:01:45,600 --> 00:01:51,070
-But actually it’s still solveable, we don’t need the trick from last video at all.
+但事实上，它仍然是可以解决的，我们根本不需要最后一个视频的技巧。
 
 35
 00:01:51,069 --> 00:01:53,309
-It’s simpler than you might think.
+这比你想象的要简单。
 
 36
 00:01:53,310 --> 00:01:58,180
@@ -144,7 +144,7 @@ It’s simpler than you might think.
 
 37
 00:01:58,179 --> 00:02:02,319
-and boils down to the same thing.
+归根结底就是同样的事情。
 
 38
 00:02:02,319 --> 00:02:04,249
@@ -152,44 +152,44 @@ and boils down to the same thing.
 
 39
 00:02:04,249 --> 00:02:07,999
-It does read data into a local variable on the stack.
+它确实将数据读取到堆栈上的局部变量中。
 
 40
 00:02:07,999 --> 00:02:11,719
-But it doesn’t look like we can overflow the buffer.
+但看起来我们不能溢出缓冲区。
 
 41
 00:02:11,720 --> 00:02:15,700
-This program gets the input from standard input instead of an argument.
+此程序从标准输入而不是参数获取输入。
 
 42
 00:02:15,700 --> 00:02:19,490
 然后检查目标是否
-64.
+64。
 
 43
 00:02:19,490 --> 00:02:20,500
-Ok.
+好啊。
 
 44
 00:02:20,500 --> 00:02:24,300
-So let’s compile it and open it in gdb.
+所以让我们编译它并在gdb中打开它。
 
 45
 00:02:24,300 --> 00:02:30,450
-Again we look for the if-compare, seems to be here, 0x40 is 64.
+我们再次寻找if比较，似乎在这里，0x40是64。
 
 46
 00:02:30,450 --> 00:02:32,970
-And set a breakpoint then run it.
+设置一个断点，然后运行它。
 
 47
 00:02:32,970 --> 00:02:37,110
-This time it’s waiting for input, so enter some As and Bs.
+这一次它正在等待输入，所以输入一些as和bs。
 
 48
 00:02:37,110 --> 00:02:40,440
-Now we hit the breakpoint and let’s have a look at the stack.
+现在我们到达了断点，让我们看看堆栈。
 
 49
 00:02:40,440 --> 00:02:46,560
@@ -197,7 +197,7 @@ mh，我们知道我们的缓冲区有512个字节，看起来有一堆地址。
 
 50
 00:02:46,560 --> 00:02:47,890
-in range.
+在范围内。
 
 51
 00:02:47,890 --> 00:02:54,200
@@ -205,7 +205,7 @@ in range.
 
 52
 00:02:54,200 --> 00:02:55,660
-Well no not really.
+不，不是真的。
 
 53
 00:02:55,660 --> 00:03:00,200
@@ -213,7 +213,7 @@ Well no not really.
 
 54
 00:03:00,200 --> 00:03:04,320
-further up to make space for it, but doesn’t clear it.
+为了给它腾出空间，但还没弄清楚。
 
 55
 00:03:04,320 --> 00:03:08,310
@@ -221,7 +221,7 @@ further up to make space for it, but doesn’t clear it.
 
 56
 00:03:08,310 --> 00:03:13,650
-then got destroyed again when they returned, but their values always remain there.
+当他们回来的时候又被摧毁了，但是他们的价值观一直都在那里。
 
 57
 00:03:13,650 --> 00:03:18,150
@@ -233,15 +233,15 @@ then got destroyed again when they returned, but their values always remain ther
 
 59
 00:03:23,100 --> 00:03:24,640
-it’s place before.
+这是以前的地方。
 
 60
 00:03:24,640 --> 00:03:25,640
-Anyway.
+不管怎样。
 
 61
 00:03:25,640 --> 00:03:28,060
-Let’s see where our target variable is.
+让我们看看目标变量在哪里。
 
 62
 00:03:28,060 --> 00:03:32,690
@@ -249,7 +249,7 @@ Let’s see where our target variable is.
 
 63
 00:03:32,690 --> 00:03:34,560
-of target.
+目标。
 
 64
 00:03:34,560 --> 00:03:36,060
@@ -261,11 +261,11 @@ of target.
 
 66
 00:03:39,020 --> 00:03:43,660
-Somebody who has some experience with exploitation on 64bit knows already what that is.
+有64位开发经验的人已经知道这是什么了。
 
 67
 00:03:43,660 --> 00:03:46,750
-It’s a very recognisable address.
+这是一个很容易辨认的地址。
 
 68
 00:03:46,750 --> 00:03:52,310
@@ -273,27 +273,27 @@ It’s a very recognisable address.
 
 69
 00:03:52,310 --> 00:03:54,520
-Look at the permissions for this memory region.
+查看此内存区域的权限。
 
 70
 00:03:54,520 --> 00:03:57,840
-It is read and writeable, not executable.
+它是可读写的，不是可执行的。
 
 71
 00:03:57,840 --> 00:03:59,560
-So it’s not where code is.
+所以代码不在这里。
 
 72
 00:03:59,560 --> 00:04:01,190
-It’s in a data segment.
+它在一个数据段中。
 
 73
 00:04:01,190 --> 00:04:07,170
-And when we look at the code we see that target isn’t defined in a function as local variable.
+当我们查看代码时，我们发现目标并没有在函数中定义为局部变量。
 
 74
 00:04:07,170 --> 00:04:12,450
-It’s a global variable, so it’s placed in a data segment.
+它是一个全局变量，所以它被放置在一个数据段中。
 
 75
 00:04:12,450 --> 00:04:18,360
@@ -301,15 +301,15 @@ It’s a global variable, so it’s placed in a data segment.
 
 76
 00:04:18,359 --> 00:04:22,439
-this address is not affected by ASLR by default.
+默认情况下，此地址不受ASLR影响。
 
 77
 00:04:22,440 --> 00:04:27,260
-Lets add another printf here, like we did last video to print the address of target.
+让我们在这里添加另一个printf，就像上次打印目标地址的视频一样。
 
 78
 00:04:27,259 --> 00:04:32,859
-And when we run it a few times, you see target doesn’t change.
+当我们运行几次，你会发现目标并没有改变。
 
 79
 00:04:32,860 --> 00:04:34,000
@@ -317,27 +317,27 @@ And when we run it a few times, you see target doesn’t change.
 
 80
 00:04:34,000 --> 00:04:36,180
-So it should be fairly straight forward.
+所以应该是相当直接的。
 
 81
 00:04:36,180 --> 00:04:39,100
-Step 1: let’s find our input on the stack.
+步骤1：让我们在堆栈上找到输入。
 
 82
 00:04:39,099 --> 00:04:44,049
-We enter some As followed by %x to print stack values.
+我们输入一些，后跟%x以打印堆栈值。
 
 83
 00:04:44,050 --> 00:04:45,050
-And here we are.
+我们到了。
 
 84
 00:04:45,050 --> 00:04:47,260
-1, 2, 3, 4, 5, 6.
+1，2，3，4，5，6.
 
 85
 00:04:47,259 --> 00:04:50,379
-At offset 6 we have our input.
+在偏移量6处，我们有我们的输入。
 
 86
 00:04:50,379 --> 00:04:56,209
@@ -345,35 +345,35 @@ At offset 6 we have our input.
 
 87
 00:04:56,210 --> 00:04:59,040
-the %n to write to it.
+要写入的%n。
 
 88
 00:04:59,039 --> 00:05:01,399
-Let’s try it.
+让我们试试看。
 
 89
 00:05:01,400 --> 00:05:06,850
-So we should now enter our input via echo, so we can encode raw characters in hex.
+所以我们现在应该通过echo输入我们的输入，这样我们可以用十六进制编码原始字符。
 
 90
 00:05:06,849 --> 00:05:09,529
-Then pipe the input into format2.
+然后将输入通过管道传输到格式2中。
 
 91
 00:05:09,530 --> 00:05:11,610
-So let’s enter the address of target.
+那么让我们输入目标的地址。
 
 92
 00:05:11,610 --> 00:05:20,070
-Ah see, there it is, but it’s 4 bytes, so there is also a space still included.
+啊，看，有，但它是4个字节，所以还有一个空间还包括在内。
 
 93
 00:05:20,070 --> 00:05:23,980
-This has to be a zero, because the address is only 3 bytes.
+这必须是零，因为地址只有3个字节。
 
 94
 00:05:23,979 --> 00:05:27,599
-So we add that, but now we don’t see any output anymore.
+所以我们加上这个，但是现在我们看不到任何输出了。
 
 95
 00:05:27,599 --> 00:05:28,599
@@ -381,31 +381,31 @@ So we add that, but now we don’t see any output anymore.
 
 96
 00:05:28,599 --> 00:05:31,649
-Well, printf prints strings.
+好吧，printf打印字符串。
 
 97
 00:05:31,650 --> 00:05:37,150
-And strings are null-terminated in C. So printf stops when it reahed the 0.
+字符串在C中以NULL结尾。因此，当printf达到0时，它将停止。
 
 98
 00:05:37,150 --> 00:05:40,010
-So we never reach our %x format modifiers.
+因此，我们永远无法达到我们的%x格式修改器。
 
 99
 00:05:40,009 --> 00:05:47,399
-This means, we should move our address to the end, so we can have format stuff before.
+这意味着，我们应该把地址移到末尾，这样我们就可以有格式的东西了。
 
 100
 00:05:47,400 --> 00:05:49,670
-Now let’s try to find again our address.
+现在让我们再找一次我们的地址。
 
 101
 00:05:49,669 --> 00:05:54,159
-This time I’m using the dollar syntax to enter an offset directly.
+这次我使用美元语法直接输入一个偏移量。
 
 102
 00:05:54,159 --> 00:05:59,529
-So we know our start was at offset 6, so the address has to be further down.
+所以我们知道我们的起点是6号，所以地址必须再往下。
 
 103
 00:05:59,530 --> 00:06:04,370
@@ -413,11 +413,11 @@ So we know our start was at offset 6, so the address has to be further down.
 
 104
 00:06:04,370 --> 00:06:06,680
-charachter for the shell.
+为贝壳雕刻。
 
 105
 00:06:06,680 --> 00:06:10,450
-If we keep going with the offsets, we can find the As.
+如果我们继续使用偏移量，我们可以找到as。
 
 106
 00:06:10,449 --> 00:06:14,499
@@ -425,27 +425,27 @@ If we keep going with the offsets, we can find the As.
 
 107
 00:06:14,500 --> 00:06:18,030
-as padding to align it perfectly.
+作为填充物使其完全对齐。
 
 108
 00:06:18,030 --> 00:06:19,800
-Ok now looks good.
+好的，现在看起来不错。
 
 109
 00:06:19,800 --> 00:06:22,850
-Let’s change it to a %n.
+我们把它改成%n。
 
 110
 00:06:22,849 --> 00:06:24,629
-Segmentation fault.
+分段错误。
 
 111
 00:06:24,630 --> 00:06:26,010
-Well that didn’t work.
+好吧，那不管用。
 
 112
 00:06:26,009 --> 00:06:27,009
-Weird.
+奇怪的。
 
 113
 00:06:27,009 --> 00:06:32,269
@@ -453,55 +453,55 @@ Weird.
 
 114
 00:06:32,270 --> 00:06:33,800
-the crash.
+撞车事故。
 
 115
 00:06:33,800 --> 00:06:35,960
-So here we are at a move.
+所以我们要行动了。
 
 116
 00:06:35,960 --> 00:06:41,380
-It tries to move whatever is in r15d into the address in rax.
+它试图将r15d中的任何内容移动到rax中的地址。
 
 117
 00:06:41,380 --> 00:06:44,280
-And so rax appears to be an invalid address.
+因此，rax似乎是一个无效的地址。
 
 118
 00:06:44,279 --> 00:06:46,309
-It’s not our target.
+这不是我们的目标。
 
 119
 00:06:46,310 --> 00:06:48,650
-There is a 0xa.
+有一个0xA。
 
 120
 00:06:48,650 --> 00:06:50,490
-And that is obviously a newline.
+这显然是一条新线。
 
 121
 00:06:50,490 --> 00:06:51,550
-So that’s the issue.
+这就是问题所在。
 
 122
 00:06:51,550 --> 00:06:56,120
-We are on 64bit, so we have 64bit addresses.
+我们是64位的，所以我们有64位地址。
 
 123
 00:06:56,120 --> 00:07:00,190
-But we only entered 4 bytes, and after the echo is a newline.
+但是我们只输入了4个字节，在echo之后是一个换行符。
 
 124
 00:07:00,189 --> 00:07:03,739
-So we just have to add 4 more nullbytes.
+所以我们只需要再增加4个空字节。
 
 125
 00:07:03,740 --> 00:07:06,190
-Ok we don’t get a crash now.
+好的，我们现在没有撞车。
 
 126
 00:07:06,189 --> 00:07:08,489
-But target is still 0.
+但目标仍然是0。
 
 127
 00:07:08,490 --> 00:07:09,490
@@ -509,7 +509,7 @@ But target is still 0.
 
 128
 00:07:09,490 --> 00:07:12,760
-Let’s make it crash again by making the address invalid again.
+让我们再次使地址无效，使其崩溃。
 
 129
 00:07:12,759 --> 00:07:16,919
@@ -517,19 +517,19 @@ Let’s make it crash again by making the address invalid again.
 
 130
 00:07:16,919 --> 00:07:18,589
-written to it.
+写给它。
 
 131
 00:07:18,590 --> 00:07:20,740
-So we see, rax looks good.
+所以我们知道，Rax看起来不错。
 
 132
 00:07:20,740 --> 00:07:23,820
-It only is invalid because of what we changed.
+因为我们改变了什么，它才是无效的。
 
 133
 00:07:23,819 --> 00:07:25,829
-Otherwise it would be great.
+否则就太好了。
 
 134
 00:07:25,830 --> 00:07:30,710
@@ -545,27 +545,27 @@ Otherwise it would be great.
 
 137
 00:07:35,889 --> 00:07:38,649
-Let’s think for a second.
+让我们考虑一下。
 
 138
 00:07:38,650 --> 00:07:39,850
-Ohhhhhh.
+哦。
 
 139
 00:07:39,850 --> 00:07:41,430
-Of course it’s 0.
+当然是0。
 
 140
 00:07:41,430 --> 00:07:44,010
-Because we didn’t pint anything yet.
+因为我们还没有品脱任何东西。
 
 141
 00:07:44,009 --> 00:07:48,399
-Before we do the %n we obviously have to print something first.
+在进行%n之前，我们显然必须先打印一些内容。
 
 142
 00:07:48,400 --> 00:07:53,560
-So let’s add %64d, to print 64 characters.
+所以，让我们添加%64d，以打印64个字符。
 
 143
 00:07:53,560 --> 00:07:59,330
@@ -577,15 +577,15 @@ So let’s add %64d, to print 64 characters.
 
 145
 00:08:05,240 --> 00:08:07,060
-4 characters somewhere.
+4个字符。
 
 146
 00:08:07,060 --> 00:08:11,600
-But luckily we made the padding earlier large enough and so that’s simple.
+但幸运的是，我们早些时候把填充物做得足够大，所以这很简单。
 
 147
 00:08:11,600 --> 00:08:15,410
-And here we go, it’s “you modified the target”.
+现在我们开始，它是“你修改了目标”。
 
 148
 00:08:15,409 --> 00:08:21,019
@@ -593,15 +593,15 @@ And here we go, it’s “you modified the target”.
 
 149
 00:08:21,020 --> 00:08:22,790
-much hassle.
+太麻烦了。
 
 150
 00:08:22,789 --> 00:08:24,309
-Goddamit.
+该死的。
 
 151
 00:08:24,309 --> 00:08:29,919
-So maybe now you wonder, but the system has ASLR, why is this address fixed.
+所以现在你可能想知道，但是系统有ASLR，为什么这个地址是固定的。
 
 152
 00:08:29,919 --> 00:08:36,009
@@ -613,15 +613,15 @@ So maybe now you wonder, but the system has ASLR, why is this address fixed.
 
 154
 00:08:37,099 --> 00:08:38,099
-keeps changing.
+不断变化。
 
 155
 00:08:38,099 --> 00:08:41,239
-But the binary itself is not affected by ASLR.
+但是二进制文件本身不受ASLR的影响。
 
 156
 00:08:41,240 --> 00:08:46,060
-Unless we specifically compile it to be position independent code.
+除非我们把它专门编译成位置独立的代码。
 
 157
 00:08:46,060 --> 00:08:52,820
@@ -629,7 +629,7 @@ Unless we specifically compile it to be position independent code.
 
 158
 00:08:52,820 --> 00:08:55,420
-for position independent code.
+位置独立代码。
 
 159
 00:08:55,420 --> 00:09:01,570
@@ -637,17 +637,17 @@ for position independent code.
 
 160
 00:09:01,570 --> 00:09:02,630
-lot.
+很多。
 
 161
 00:09:02,630 --> 00:09:05,250
-Now it’s going to be much harder.
+现在要困难得多。
 
 162
 00:09:05,250 --> 00:09:08,320
-Maybe with some strategies from the last video it’s doable.
+也许用上一段视频中的一些策略，它是可行的。
 
 163
 00:09:08,320 --> 00:09:10,910
-I leave that as an exercise to you watching.
+我把它作为练习留给你看。
 

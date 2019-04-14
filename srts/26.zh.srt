@@ -1,6 +1,6 @@
 1
 00:00:00,149 --> 00:00:04,749
-Last video we had a look at the dlmalloc implementation of free().
+上一个视频我们看了free（）的dlmalloc实现。
 
 2
 00:00:04,750 --> 00:00:10,030
@@ -8,7 +8,7 @@ Last video we had a look at the dlmalloc implementation of free().
 
 3
 00:00:10,030 --> 00:00:11,420
-another address.
+另一个地址。
 
 4
 00:00:11,419 --> 00:00:16,779
@@ -16,7 +16,7 @@ another address.
 
 5
 00:00:16,779 --> 00:00:18,399
-global offset table.
+全局偏移表。
 
 6
 00:00:18,400 --> 00:00:24,300
@@ -24,7 +24,7 @@ global offset table.
 
 7
 00:00:24,300 --> 00:00:30,510
-null-bytes and we can’t write those with strcpy.
+空字节，我们不能用strcpy编写这些字节。
 
 8
 00:00:30,510 --> 00:00:38,880
@@ -32,7 +32,7 @@ null-bytes and we can’t write those with strcpy.
 
 9
 00:00:38,880 --> 00:00:41,040
-to refine our exploitation plan.
+完善我们的开发计划。
 
 10
 00:00:41,040 --> 00:00:47,090
@@ -40,7 +40,7 @@ to refine our exploitation plan.
 
 11
 00:00:47,090 --> 00:00:50,520
-yourself, but this video will be more of a presentation.
+你自己，但这段视频更像是一个演示。
 
 12
 00:00:50,520 --> 00:00:55,570
@@ -48,11 +48,11 @@ yourself, but this video will be more of a presentation.
 
 13
 00:00:55,570 --> 00:00:58,580
-the amount of people who understand how it works.
+了解它如何工作的人数。
 
 14
 00:00:58,580 --> 00:01:01,620
-So let’s look again at how a heap chunk looks like.
+我们再来看看堆块的外观。
 
 15
 00:01:01,620 --> 00:01:05,780
@@ -60,27 +60,27 @@ So let’s look again at how a heap chunk looks like.
 
 16
 00:01:05,780 --> 00:01:09,560
-2nd word and malloc will return the address here.
+第二个字和malloc将在这里返回地址。
 
 17
 00:01:09,560 --> 00:01:13,190
-This means you have this area for user data.
+这意味着您有这个用户数据区域。
 
 18
 00:01:13,190 --> 00:01:17,000
-The last bits of the chunk size have special meaning.
+块大小的最后一位具有特殊意义。
 
 19
 00:01:17,000 --> 00:01:21,270
-Most importantly the last bit is the previous in use bit.
+最重要的是，最后一位是前一个正在使用的位。
 
 20
 00:01:21,270 --> 00:01:24,160
-So that is information about the chunk BEFORE the current chunk.
+这是关于当前块之前的块的信息。
 
 21
 00:01:24,159 --> 00:01:27,139
-So that’s a little bit weird to wrap your head around at the beginning.
+所以在开始的时候把头包起来有点奇怪。
 
 22
 00:01:27,140 --> 00:01:31,660
@@ -88,15 +88,15 @@ So that’s a little bit weird to wrap your head around at the beginning.
 
 23
 00:01:31,659 --> 00:01:33,039
-bit set.
+位集。
 
 24
 00:01:33,040 --> 00:01:35,640
-Because the chunk in front of it is in use.
+因为它前面的块正在使用中。
 
 25
 00:01:35,640 --> 00:01:38,790
-Now a free chunk could contain more information.
+现在，一个自由块可以包含更多信息。
 
 26
 00:01:38,790 --> 00:01:44,310
@@ -104,55 +104,55 @@ Now a free chunk could contain more information.
 
 27
 00:01:44,310 --> 00:01:45,310
-0.
+0。
 
 28
 00:01:45,310 --> 00:01:47,760
-To indicate that the previous chunk is not in use anymore.
+以指示上一块不再使用。
 
 29
 00:01:47,760 --> 00:01:50,430
-Now imagine there is a third chunk.
+现在假设有第三块。
 
 30
 00:01:50,430 --> 00:01:55,120
-A chunk after the 2nd one, which has it’s previous in use bit NOT set.
+第二个块之后的块，它的前一个使用位未设置。
 
 31
 00:01:55,120 --> 00:01:57,380
-This means the 2nd chunk is free.
+这意味着第二个块是空闲的。
 
 32
 00:01:57,380 --> 00:02:01,480
-Now the algorithm would like to merge, consolidate those two blocks.
+现在，算法要合并，合并这两个块。
 
 33
 00:02:01,479 --> 00:02:04,799
-This is where the two words after the size start being important.
+这就是大小后的两个词开始变得重要的地方。
 
 34
 00:02:04,800 --> 00:02:07,730
-They are the forward and backward pointer.
+它们是向前和向后的指针。
 
 35
 00:02:07,730 --> 00:02:12,990
-Just as a sidenote, this only applies to chunks that are bigger than the fastbin size.
+正如旁注，这只适用于大于fastbin大小的块。
 
 36
 00:02:12,989 --> 00:02:16,349
-Because fastbins are very small chunks and they don’t use a double linked list.
+因为FastBins是非常小的块，它们不使用双链接列表。
 
 37
 00:02:16,349 --> 00:02:17,879
-So our chunks are bigger.
+所以我们的块更大。
 
 38
 00:02:17,879 --> 00:02:20,139
-Let’s consider this heap setup.
+让我们考虑一下这个堆设置。
 
 39
 00:02:20,140 --> 00:02:24,530
-We have a chunk we want to free, which is followed by an already free chunk.
+我们有一个要释放的块，后面跟着一个已经释放的块。
 
 40
 00:02:24,530 --> 00:02:29,240
@@ -160,15 +160,15 @@ We have a chunk we want to free, which is followed by an already free chunk.
 
 41
 00:02:29,239 --> 00:02:30,239
-chunks.
+块。
 
 42
 00:02:30,239 --> 00:02:32,139
-So they are in this double linked list.
+所以它们在这个双链表中。
 
 43
 00:02:32,140 --> 00:02:37,130
-Now what will happen is, the free algorithm will merge these two blocks together.
+现在会发生的是，自由算法将这两个块合并在一起。
 
 44
 00:02:37,129 --> 00:02:42,059
@@ -176,7 +176,7 @@ Now what will happen is, the free algorithm will merge these two blocks together
 
 45
 00:02:42,060 --> 00:02:43,080
-macro.
+宏。
 
 46
 00:02:43,080 --> 00:02:47,780
@@ -184,7 +184,7 @@ macro.
 
 47
 00:02:47,780 --> 00:02:50,350
-the forward pointer of the previous chunk.
+前一块的前向指针。
 
 48
 00:02:50,349 --> 00:02:55,109
@@ -192,7 +192,7 @@ the forward pointer of the previous chunk.
 
 49
 00:02:55,109 --> 00:02:56,109
-next chunk.
+下一个块。
 
 50
 00:02:56,109 --> 00:03:00,739
@@ -200,15 +200,15 @@ next chunk.
 
 51
 00:03:00,739 --> 00:03:06,549
-can point into the global offset table and write there the forward address.
+可以指向全局偏移量表并在其中写入转发地址。
 
 52
 00:03:06,549 --> 00:03:10,339
-In the last video we stopped here and didn’t check out what happens next.
+在上一段视频中，我们停在这里，没有查看接下来会发生什么。
 
 53
 00:03:10,340 --> 00:03:11,740
-But let me tell you now.
+但我现在告诉你。
 
 54
 00:03:11,739 --> 00:03:17,019
@@ -216,23 +216,23 @@ But let me tell you now.
 
 55
 00:03:17,019 --> 00:03:18,209
-free block.
+自由块。
 
 56
 00:03:18,209 --> 00:03:21,719
-And then we will insert this block into the double linked list.
+然后我们将这个块插入到双链接列表中。
 
 57
 00:03:21,719 --> 00:03:24,469
-Which means we take one chunk, and look up it’s forward chunk.
+这意味着我们取了一块，并查找它的前块。
 
 58
 00:03:24,469 --> 00:03:28,789
-And then we update the pointers accordingly to now include our chunk.
+然后我们相应地更新指针，以包含块。
 
 59
 00:03:28,790 --> 00:03:30,480
-This is the whole magic of the heap.
+这就是堆的全部魔力。
 
 60
 00:03:30,480 --> 00:03:36,350
@@ -240,11 +240,11 @@ This is the whole magic of the heap.
 
 61
 00:03:36,349 --> 00:03:40,059
-tricks” to see what they tell us about the unlink exploit.
+诡计“看看他们告诉我们什么关于不链接的利用。
 
 62
 00:03:40,060 --> 00:03:45,270
-Both articles contain a cool little trick to overcome the limitations of the null-byte.
+这两篇文章都包含一个很酷的小技巧来克服空字节的限制。
 
 63
 00:03:45,269 --> 00:03:49,829
@@ -252,19 +252,19 @@ Both articles contain a cool little trick to overcome the limitations of the nul
 
 64
 00:03:49,829 --> 00:03:52,569
-no field has to contain a null-byte.
+任何字段都不必包含空字节。
 
 65
 00:03:52,569 --> 00:03:56,799
-This means we have to use very very large values for the size.
+这意味着我们必须对大小使用非常大的值。
 
 66
 00:03:56,799 --> 00:04:00,219
-But that doesn’t seem useful, because the heap is not that big.
+但这似乎没用，因为堆没那么大。
 
 67
 00:04:00,219 --> 00:04:01,239
-Mh.
+马来酸酐
 
 68
 00:04:01,239 --> 00:04:06,879
@@ -272,7 +272,7 @@ Mh.
 
 69
 00:04:06,879 --> 00:04:08,039
-values.
+价值观。
 
 70
 00:04:08,040 --> 00:04:12,950
@@ -280,15 +280,15 @@ values.
 
 71
 00:04:12,950 --> 00:04:14,390
-very large number.
+数量很大。
 
 72
 00:04:14,390 --> 00:04:17,260
-For example fffffffC.
+例如fffffff c。
 
 73
 00:04:17,260 --> 00:04:19,320
-That would be over 4 billion.
+那将超过40亿。
 
 74
 00:04:19,319 --> 00:04:25,739
@@ -296,39 +296,39 @@ That would be over 4 billion.
 
 75
 00:04:25,740 --> 00:04:27,610
-That doesn’t fit in 32bit.
+这不适合32位。
 
 76
 00:04:27,610 --> 00:04:29,950
-And the carry of the addition will be lost.
+加在一起的东西会丢失。
 
 77
 00:04:29,949 --> 00:04:33,039
-And now you have a very small value again.
+现在你又有了一个非常小的值。
 
 78
 00:04:33,040 --> 00:04:35,270
-In fact it’s 0x60.
+事实上，它是0x60。
 
 79
 00:04:35,270 --> 00:04:38,150
-Which is 4 less than 0x64.
+4小于0x64。
 
 80
 00:04:38,150 --> 00:04:47,050
-This means by adding 4 billion, the ffffffc to 100, we actually subtracted 4.
+这意味着加上40亿，ffffff c到100，我们实际上减去了4。
 
 81
 00:04:47,050 --> 00:04:49,730
-And that’s a really useful behaviour for our case.
+这对我们来说是非常有用的行为。
 
 82
 00:04:49,729 --> 00:04:55,329
-Because this value that doesn’t contain any null-bytes behaves like a very small subtraction.
+因为这个不包含任何空字节的值的行为就像一个非常小的减法。
 
 83
 00:04:55,330 --> 00:04:59,630
-So when we skim over the sourcecode again, we can now make a plan.
+所以当我们再次浏览源代码时，我们现在可以制定一个计划。
 
 84
 00:04:59,629 --> 00:05:03,439
@@ -336,11 +336,11 @@ So when we skim over the sourcecode again, we can now make a plan.
 
 85
 00:05:03,440 --> 00:05:04,440
-80.
+80。
 
 86
 00:05:04,440 --> 00:05:07,850
-So let’s do the 100 like last video.
+所以让我们来做最后一个视频。
 
 87
 00:05:07,850 --> 00:05:11,890
@@ -348,23 +348,23 @@ So let’s do the 100 like last video.
 
 88
 00:05:11,889 --> 00:05:12,889
-block.
+块。
 
 89
 00:05:12,889 --> 00:05:15,009
-This ways we don’t have to setup another fake chunk.
+这样我们就不必设置另一个假块。
 
 90
 00:05:15,009 --> 00:05:19,509
-So we make sure that the last bit of the block we are going to free is set to 1.
+所以我们要确保我们要释放的块的最后一个位设置为1。
 
 91
 00:05:19,509 --> 00:05:21,479
-So it’s still in use.
+所以它还在使用中。
 
 92
 00:05:21,479 --> 00:05:24,839
-But we could do the consolidate forward part.
+但我们可以做巩固前进的部分。
 
 93
 00:05:24,840 --> 00:05:29,070
@@ -372,7 +372,7 @@ But we could do the consolidate forward part.
 
 94
 00:05:29,070 --> 00:05:32,370
-if that is not set, we attempt to unlink, consolidate that block.
+如果没有设置，我们将尝试取消链接，合并该块。
 
 95
 00:05:32,370 --> 00:05:37,470
@@ -380,15 +380,15 @@ if that is not set, we attempt to unlink, consolidate that block.
 
 96
 00:05:37,470 --> 00:05:41,570
-we want to use to overwrite the GoT with an address from the heap.
+我们想用堆中的地址覆盖got。
 
 97
 00:05:41,569 --> 00:05:46,829
-And the second chunk has to have a size with the lowest bit set to 0.
+第二个块必须有一个最小位设置为0的大小。
 
 98
 00:05:46,830 --> 00:05:50,050
-BUT we can’t use small size values.
+但我们不能使用小尺寸的值。
 
 99
 00:05:50,050 --> 00:05:54,720
@@ -396,27 +396,27 @@ BUT we can’t use small size values.
 
 100
 00:05:54,720 --> 00:05:55,910
-to an address.
+到一个地址。
 
 101
 00:05:55,910 --> 00:05:59,360
-The code doesn’t check that it’s a ridiculous huge chunk.
+代码并没有检查它是否是一个荒谬的大块。
 
 102
 00:05:59,360 --> 00:06:01,310
-It just adds that value.
+它只是增加了这个价值。
 
 103
 00:06:01,310 --> 00:06:03,130
-And here is where the trick comes into play.
+这就是技巧发挥的地方。
 
 104
 00:06:03,130 --> 00:06:09,500
-We could use fffffffc as the size of the chunk, which results in a -4.
+我们可以使用fffff c作为块的大小，结果是-4。
 
 105
 00:06:09,500 --> 00:06:11,220
-Now think what will happen.
+现在想想会发生什么。
 
 106
 00:06:11,219 --> 00:06:15,429
@@ -424,7 +424,7 @@ Now think what will happen.
 
 107
 00:06:15,430 --> 00:06:20,290
-chunk, which fools free into thinking the next chunk is at -4 from here.
+大块头，傻瓜们认为下一个大块头在这里-4。
 
 108
 00:06:20,289 --> 00:06:26,309
@@ -436,7 +436,7 @@ chunk, which fools free into thinking the next chunk is at -4 from here.
 
 110
 00:06:31,580 --> 00:06:32,580
-it.
+它。
 
 111
 00:06:32,580 --> 00:06:33,580
@@ -444,19 +444,19 @@ it.
 
 112
 00:06:33,580 --> 00:06:35,330
-It’s very beautiful and clever.
+它很漂亮很聪明。
 
 113
 00:06:35,330 --> 00:06:37,200
-And doesn’t contain any null bytes.
+并且不包含任何空字节。
 
 114
 00:06:37,199 --> 00:06:43,029
-So let’s see if we can fill that heap in a way that we can do that with strcpys.
+那么让我们看看我们是否可以用strcpy来填充这个堆。
 
 115
 00:06:43,030 --> 00:06:45,540
-So strcpy stops at a null-byte.
+所以strcpy在一个空字节处停止。
 
 116
 00:06:45,539 --> 00:06:49,849
@@ -464,11 +464,11 @@ So strcpy stops at a null-byte.
 
 117
 00:06:49,850 --> 00:06:51,710
-100, 0x64.
+100，0x64。
 
 118
 00:06:51,710 --> 00:06:58,020
-Ehh.. obviously we want to prev in use bit set, so we need to overflow it with 0x65.
+嗯…显然，我们想要防止使用位集，所以我们需要用0x65溢出它。
 
 119
 00:06:58,020 --> 00:07:03,160
@@ -476,7 +476,7 @@ Ehh.. obviously we want to prev in use bit set, so we need to overflow it with 0
 
 120
 00:07:03,159 --> 00:07:05,039
-keeps the size clean.
+保持尺寸清洁。
 
 121
 00:07:05,039 --> 00:07:09,239
@@ -484,15 +484,15 @@ keeps the size clean.
 
 122
 00:07:09,240 --> 00:07:14,270
-chunks with ffffc, and afterwards the two addresses we want to write.
+用ffffc分块，然后我们要写的两个地址。
 
 123
 00:07:14,270 --> 00:07:19,330
-现在，就像前面的视频一样，我们将把一个地址设置为全局偏移表，
+现在，就像在上一个视频中一样，我们将把一个地址设置为全局偏移表，
 
 124
 00:07:19,330 --> 00:07:24,530
-so that we overwrite puts, and the other one will be pointing into the first heap.
+这样我们就覆盖了puts，而另一个将指向第一个堆。
 
 125
 00:07:24,530 --> 00:07:28,630
@@ -500,7 +500,7 @@ so that we overwrite puts, and the other one will be pointing into the first hea
 
 126
 00:07:28,629 --> 00:07:31,609
-strcpy to place some shellcode here.
+strcpy在这里放置一些shellcode。
 
 127
 00:07:31,610 --> 00:07:35,760
@@ -512,23 +512,23 @@ strcpy to place some shellcode here.
 
 129
 00:07:40,990 --> 00:07:43,710
-data and continue shellcode afterwards.
+然后继续shellcode。
 
 130
 00:07:43,710 --> 00:07:45,460
-But we just want to call winner.
+但我们只想打电话给赢家。
 
 131
 00:07:45,460 --> 00:07:48,960
-So let’s construct the exploit.
+那么让我们来构建这个漏洞。
 
 132
 00:07:48,960 --> 00:07:53,360
-You could do it in one line, but let me break it up to makeit easier to follow.
+你可以排成一行，但让我把它拆开，让它更容易跟随。
 
 133
 00:07:53,360 --> 00:07:59,070
-In each of these windows we will construct one parameter, one string for each strcpy.
+在这些窗口中，我们将为每个strcpy构造一个参数和一个字符串。
 
 134
 00:07:59,069 --> 00:08:04,459
@@ -536,7 +536,7 @@ In each of these windows we will construct one parameter, one string for each st
 
 135
 00:08:04,460 --> 00:08:09,510
-the one to overwrite the chunk size with 101 of the 3rd chunk.
+用第三个块的101覆盖块大小。
 
 136
 00:08:09,509 --> 00:08:14,239
@@ -544,7 +544,7 @@ the one to overwrite the chunk size with 101 of the 3rd chunk.
 
 137
 00:08:14,240 --> 00:08:17,730
-the chunk, where we then write 101, 0x65.
+块，然后我们在这里写1010x65。
 
 138
 00:08:17,729 --> 00:08:22,949
@@ -552,15 +552,15 @@ the chunk, where we then write 101, 0x65.
 
 139
 00:08:22,949 --> 00:08:25,179
-parameter in gdb.
+gdb中的参数。
 
 140
 00:08:25,180 --> 00:08:28,580
-We can then run it and investigate the heap.
+然后我们可以运行它并调查堆。
 
 141
 00:08:28,580 --> 00:08:32,700
-Looks perfect, the size of the third chunk is now 0x65.
+看起来很完美，第三个块的大小现在是0x65。
 
 142
 00:08:32,700 --> 00:08:38,170
@@ -568,7 +568,7 @@ Looks perfect, the size of the third chunk is now 0x65.
 
 143
 00:08:38,170 --> 00:08:39,390
-byte big.
+字节大。
 
 144
 00:08:39,390 --> 00:08:44,090
@@ -580,16 +580,16 @@ byte big.
 
 146
 00:08:50,250 --> 00:08:54,380
-followed by the global offset table address and the heap address.
+后面是全局偏移表地址和堆地址。
 
 147
 00:08:54,380 --> 00:08:58,090
-Here I get the table address for puts and subtract -12 from it.
+这里我得到了看跌期权的表地址，并从中减去-12。
 
 148
 00:08:58,090 --> 00:09:01,540
 因为堆地址将写入
-+12.
++ 12。
 
 149
 00:09:01,540 --> 00:09:06,760
@@ -597,19 +597,19 @@ Here I get the table address for puts and subtract -12 from it.
 
 150
 00:09:06,760 --> 00:09:07,920
-to call winner.
+打电话给胜利者。
 
 151
 00:09:07,920 --> 00:09:11,450
-I quickly googled for an online assembler to create the shellcode.
+我很快在谷歌上搜索了一个在线汇编程序来创建shellcode。
 
 152
 00:09:11,450 --> 00:09:16,200
-We want to call an absolute address, to do this we have to go via a register.
+我们要调用一个绝对地址，要做到这一点，我们必须通过一个寄存器。
 
 153
 00:09:16,200 --> 00:09:22,140
-So we could move the address of winner into eax and then call eax.
+所以我们可以把获胜者的地址移到eax中，然后调用eax。
 
 154
 00:09:22,140 --> 00:09:27,380
@@ -617,43 +617,43 @@ So we could move the address of winner into eax and then call eax.
 
 155
 00:09:27,380 --> 00:09:28,850
-file.
+文件。
 
 156
 00:09:28,850 --> 00:09:30,330
-Cool.
+酷。
 
 157
 00:09:30,330 --> 00:09:33,450
-Now that we have all thre parameters we can rerun the program.
+既然我们有了三个参数，就可以重新运行程序了。
 
 158
 00:09:33,450 --> 00:09:34,590
-So Let’s have a look at the heap.
+让我们来看看堆。
 
 159
 00:09:34,590 --> 00:09:35,590
-It looks nice.
+看起来不错。
 
 160
 00:09:35,590 --> 00:09:37,920
-Let’s execute the free and single step into the puts call.
+让我们在看跌期权调用中执行自由和单步操作。
 
 161
 00:09:37,920 --> 00:09:39,090
-Oh.
+哦。
 
 162
 00:09:39,090 --> 00:09:42,810
-great we follow into the heap, but somehow our shellcode is wrong.
+太好了，我们继续往下看，但不知何故，我们的shell代码是错误的。
 
 163
 00:09:42,810 --> 00:09:45,580
-You can see that it’s complete garbage.
+你可以看到它完全是垃圾。
 
 164
 00:09:45,580 --> 00:09:48,710
-Instead of our shellcode we have some addresses here.
+这里没有我们的外壳代码，而是有一些地址。
 
 165
 00:09:48,710 --> 00:09:49,710
@@ -661,31 +661,31 @@ Instead of our shellcode we have some addresses here.
 
 166
 00:09:49,710 --> 00:09:53,300
-Of course, we perform multiple frees, not just the one.
+当然，我们执行多个释放，而不仅仅是一个。
 
 167
 00:09:53,300 --> 00:09:56,790
-So we obviously write metadata over these values.
+所以我们显然是在这些值上写元数据的。
 
 168
 00:09:56,790 --> 00:10:00,560
-But we can simply fix that by pointing to a different area of the heap.
+但我们可以简单地通过指向堆的不同区域来解决这个问题。
 
 169
 00:10:00,560 --> 00:10:02,600
-How about here at 14.
+14点在这儿怎么样？
 
 170
 00:10:02,600 --> 00:10:07,080
-Now we change the address and prepend some characters to our shellcode. and try it again.
+现在我们更改地址，并在shell代码前面加上一些字符。然后再试一次。
 
 171
 00:10:07,080 --> 00:10:12,480
-We run it, single step into puts and arrive at winner.
+我们跑过去，一步一步的投入，最终获得冠军。
 
 172
 00:10:12,480 --> 00:10:13,480
-hehe.
+呵呵。
 
 173
 00:10:13,480 --> 00:10:17,530
@@ -693,7 +693,7 @@ hehe.
 
 174
 00:10:17,530 --> 00:10:18,530
-It worked.
+它奏效了。
 
 175
 00:10:18,530 --> 00:10:19,950

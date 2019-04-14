@@ -4,31 +4,31 @@
 
 2
 00:00:04,670 --> 00:00:08,900
-quick look at what happens when you compile this code on a modern system.
+快速查看在现代系统上编译此代码时会发生什么。
 
 3
 00:00:08,900 --> 00:00:11,450
-Specifically with the stack cookies.
+特别是与栈cookies。
 
 4
 00:00:11,450 --> 00:00:14,890
-In this video I wanna develop a working exploit for it.
+在这段视频中，我想为它开发一个工作漏洞。
 
 5
 00:00:14,889 --> 00:00:21,479
-And believe me there are a few mountains we have to overcome.
+相信我，还有几座山我们必须克服。
 
 6
 00:00:21,480 --> 00:00:27,330
-Let’s get everybody quickly on track.
+让我们让每个人都尽快赶上进度。
 
 7
 00:00:27,329 --> 00:00:29,899
-We have a simple buffer overflow vulnerability.
+我们有一个简单的缓冲区溢出漏洞。
 
 8
 00:00:29,899 --> 00:00:36,999
-Originally the goal was to overflow into another variable to change the outcome of an if case.
+最初的目标是溢出到另一个变量中，以更改if案例的结果。
 
 9
 00:00:37,000 --> 00:00:42,010
@@ -36,7 +36,7 @@ Originally the goal was to overflow into another variable to change the outcome 
 
 10
 00:00:42,010 --> 00:00:43,010
-before.
+以前。
 
 11
 00:00:43,010 --> 00:00:48,330
@@ -44,7 +44,7 @@ before.
 
 12
 00:00:48,330 --> 00:00:51,390
-and simply redirect the code execution there.
+然后简单地将代码执行重定向到那里。
 
 13
 00:00:51,390 --> 00:00:57,400
@@ -52,11 +52,11 @@ and simply redirect the code execution there.
 
 14
 00:00:57,400 --> 00:00:59,690
-checked before the function returns.
+函数返回前检查。
 
 15
 00:00:59,690 --> 00:01:03,600
-So in order to overflow the return pointer we would have to guess the cookie.
+所以为了溢出返回指针，我们必须猜测cookie。
 
 16
 00:01:03,600 --> 00:01:09,040
@@ -64,7 +64,7 @@ So in order to overflow the return pointer we would have to guess the cookie.
 
 17
 00:01:09,039 --> 00:01:14,299
-of times always guessing a stack cookie, and eventually we should get lucky.
+有时我们总是猜测一堆饼干，最终我们应该走运。
 
 18
 00:01:14,299 --> 00:01:19,359
@@ -72,15 +72,15 @@ of times always guessing a stack cookie, and eventually we should get lucky.
 
 19
 00:01:19,360 --> 00:01:20,360
-value.
+价值。
 
 20
 00:01:20,360 --> 00:01:25,670
-This input really must be correct in order to work once we guess the correct cookie value.
+一旦我们猜测到正确的cookie值，这个输入必须是正确的才能工作。
 
 21
 00:01:25,670 --> 00:01:28,450
-So we have to debug this heavily.
+所以我们必须大量调试它。
 
 22
 00:01:28,450 --> 00:01:33,420
@@ -88,39 +88,39 @@ So we have to debug this heavily.
 
 23
 00:01:33,420 --> 00:01:38,120
-nicer and let’s just enter a loooot of characters in order to observe what happens.
+好的，让我们输入一堆字符来观察发生了什么。
 
 24
 00:01:38,119 --> 00:01:39,959
-Oops stack smashing detected.
+检测到OOPS堆栈粉碎。
 
 25
 00:01:39,960 --> 00:01:42,660
-We obviously want to ignore that.
+我们显然想忽略这一点。
 
 26
 00:01:42,659 --> 00:01:47,149
-So let’s set a breakpoint just before it would continue to __stack_chk_fail.
+所以让我们设置一个断点，在它继续堆栈失败之前。
 
 27
 00:01:47,149 --> 00:01:53,049
-And then set eip to where it would have jumped to if the cookie was correct.
+然后将EIP设置为如果cookie是正确的，它会跳到的位置。
 
 28
 00:01:53,049 --> 00:01:58,349
-With a simple commands directive we can automate this everytime this breakpoint is hit.
+通过一个简单的命令指令，我们可以在每次点击这个断点时自动执行这个操作。
 
 29
 00:01:58,350 --> 00:02:00,810
-Then continue.
+然后继续。
 
 30
 00:02:00,810 --> 00:02:04,090
-Segmentation fault, that’s what we would expect.
+分段错误，这是我们所期望的。
 
 31
 00:02:04,090 --> 00:02:05,090
-Awesome.
+令人惊叹的。
 
 32
 00:02:05,090 --> 00:02:06,090
@@ -136,7 +136,7 @@ Awesome.
 
 35
 00:02:15,040 --> 00:02:16,790
-Look at the stack register.
+查看堆栈寄存器。
 
 36
 00:02:16,790 --> 00:02:22,080
@@ -148,7 +148,7 @@ esp指向无效的内存，因此当返回是构造时要查找返回
 
 38
 00:02:27,480 --> 00:02:29,250
-invalid memory.
+内存无效。
 
 39
 00:02:29,250 --> 00:02:33,660
@@ -156,19 +156,19 @@ invalid memory.
 
 40
 00:02:33,660 --> 00:02:36,680
-Let’s look again in the disassembly.
+让我们再看一次拆解。
 
 41
 00:02:36,680 --> 00:02:39,390
-Down here just before the return.
+就在回来之前。
 
 42
 00:02:39,390 --> 00:02:46,550
-So a value referenced by the base pointer, so a value on the stack is moved into ecx.
+所以一个被基指针引用的值，所以堆栈上的一个值被移动到ECX中。
 
 43
 00:02:46,550 --> 00:02:52,020
-And then ecx -4 is calculated and that becomes the new stack pointer.
+然后计算ECX-4，它就成为新的堆栈指针。
 
 44
 00:02:52,020 --> 00:02:55,780
@@ -176,11 +176,11 @@ And then ecx -4 is calculated and that becomes the new stack pointer.
 
 45
 00:02:55,780 --> 00:03:00,520
--4 is stored in ecx and pushed on to the stack.
+-4存储在ECX中并被推到堆栈中。
 
 46
 00:03:00,520 --> 00:03:05,230
-So the stack pointer is also saved on the stack.
+所以堆栈指针也保存在堆栈上。
 
 47
 00:03:05,230 --> 00:03:09,730
@@ -188,7 +188,7 @@ So the stack pointer is also saved on the stack.
 
 48
 00:03:09,730 --> 00:03:13,710
-return pointer, we first have to control the stack pointer.
+返回指针，我们首先必须控制堆栈指针。
 
 49
 00:03:13,710 --> 00:03:17,210
@@ -200,31 +200,31 @@ return pointer, we first have to control the stack pointer.
 
 51
 00:03:21,960 --> 00:03:26,100
-take the return pointer we control in the buffer esp points to and we win.
+拿着我们在缓冲区控制的返回指针esp指向，我们就赢了。
 
 52
 00:03:26,100 --> 00:03:31,960
-But the issue is this modern system also has now ASLR.
+但问题是，这个现代系统现在也有了ASLR。
 
 53
 00:03:31,960 --> 00:03:38,260
-We can see that if we re-enable aslr in the debugger and run it a few times.
+我们可以看到，如果我们在调试器中重新启用ASLR并运行它几次。
 
 54
 00:03:38,260 --> 00:03:39,530
-Observe the esp value.
+观察ESP值。
 
 55
 00:03:39,530 --> 00:03:41,170
-It’s always different.
+总是不一样的。
 
 56
 00:03:41,170 --> 00:03:45,850
-I admit it’s not fully random, but it’s more bytes we would have to guess.
+我承认这不是完全随机的，但我们要猜的是更多的字节。
 
 57
 00:03:45,850 --> 00:03:51,470
-And to hit the cookie AND a valid stack address is starting to look bad.
+如果命中cookie，那么有效的堆栈地址就开始变得糟糕了。
 
 58
 00:03:51,470 --> 00:03:57,630
@@ -232,7 +232,7 @@ And to hit the cookie AND a valid stack address is starting to look bad.
 
 59
 00:03:57,630 --> 00:03:59,650
-There is even more here.
+这里还有更多。
 
 60
 00:03:59,650 --> 00:04:04,800
@@ -240,7 +240,7 @@ There is even more here.
 
 61
 00:04:04,800 --> 00:04:07,350
-it to where the stack actually starts in memory.
+到堆栈在内存中实际开始的位置。
 
 62
 00:04:07,350 --> 00:04:13,910
@@ -248,7 +248,7 @@ it to where the stack actually starts in memory.
 
 63
 00:04:13,910 --> 00:04:15,250
-the stack really starts.
+堆栈真的开始了。
 
 64
 00:04:15,250 --> 00:04:20,630
@@ -260,7 +260,7 @@ the stack really starts.
 
 66
 00:04:25,920 --> 00:04:29,250
-at the actual beginning of the stack memory area.
+在堆栈内存区的实际开始处。
 
 67
 00:04:29,250 --> 00:04:35,430
@@ -268,15 +268,15 @@ at the actual beginning of the stack memory area.
 
 68
 00:04:35,430 --> 00:04:41,320
-parts of an address and this way also the lower bytes become unpredictable.
+地址的一部分，这样，较低的字节也会变得不可预测。
 
 69
 00:04:41,320 --> 00:04:44,310
-The game of exploitation has clearly changed.
+剥削的游戏已经明显改变了。
 
 70
 00:04:44,310 --> 00:04:46,870
-There are more hurdles.
+还有更多的障碍。
 
 71
 00:04:46,870 --> 00:04:48,910
@@ -292,27 +292,27 @@ There are more hurdles.
 
 74
 00:04:53,260 --> 00:04:54,260
-Well.
+好。
 
 75
 00:04:54,260 --> 00:04:55,540
-there is a way.
+有一条路。
 
 76
 00:04:55,540 --> 00:04:56,810
-But we have to get creative.
+但我们必须有创造力。
 
 77
 00:04:56,810 --> 00:04:59,290
-It’s not that easy anymore.
+现在不那么容易了。
 
 78
 00:04:59,290 --> 00:05:04,600
-Ok so we know there is a cookie on the stack and we believe it’s bruteforceable.
+好吧，所以我们知道在堆栈上有一个cookie，我们相信它是无法处理的。
 
 79
 00:05:04,600 --> 00:05:09,160
-So let’s assume we found the correct cookie, how do we go from there.
+所以假设我们找到了正确的cookie，我们该怎么做呢？
 
 80
 00:05:09,160 --> 00:05:13,090
@@ -320,19 +320,19 @@ So let’s assume we found the correct cookie, how do we go from there.
 
 81
 00:05:13,090 --> 00:05:18,340
-The value of esp was saved at the beginning and restored here at the end again.
+esp的值在开始时保存，在结束时再次恢复到这里。
 
 82
 00:05:18,340 --> 00:05:20,570
-which means we can abuse that.
+这意味着我们可以滥用它。
 
 83
 00:05:20,570 --> 00:05:23,720
-we don’t have to overwrite the whole pointer.
+我们不需要覆盖整个指针。
 
 84
 00:05:23,720 --> 00:05:28,400
-What if we just corrupt the first byte, so the lowest part of the address.
+如果我们只是破坏了地址的第一个字节，那么地址的最低部分。
 
 85
 00:05:28,400 --> 00:05:33,500
@@ -340,7 +340,7 @@ What if we just corrupt the first byte, so the lowest part of the address.
 
 86
 00:05:33,500 --> 00:05:35,230
-stack memory.
+堆栈内存。
 
 87
 00:05:35,230 --> 00:05:40,820
@@ -348,7 +348,7 @@ stack memory.
 
 88
 00:05:40,820 --> 00:05:43,940
-lower than the stored esp value here.
+低于此处存储的esp值。
 
 89
 00:05:43,940 --> 00:05:50,300
@@ -356,7 +356,7 @@ lower than the stored esp value here.
 
 90
 00:05:50,300 --> 00:05:54,400
-into valid stack memory and take the address there to return into.
+到有效的堆栈内存中，并获取要返回的地址。
 
 91
 00:05:54,400 --> 00:05:59,240
@@ -364,7 +364,7 @@ into valid stack memory and take the address there to return into.
 
 92
 00:05:59,240 --> 00:06:03,190
-return into the if-case that prints our goal.
+回到印出我们目标的国际单项体育联合会案例中。
 
 93
 00:06:03,190 --> 00:06:08,170
@@ -380,27 +380,27 @@ return into the if-case that prints our goal.
 
 96
 00:06:19,300 --> 00:06:21,280
-and when we are lucky it points into our buffer.
+当我们幸运的时候，它指向我们的缓冲区。
 
 97
 00:06:21,280 --> 00:06:23,390
-Let’s figure out the length.
+我们来计算一下长度。
 
 98
 00:06:23,390 --> 00:06:29,040
-So when we run it with the long input, we see that esp got overwritten with SSSS.
+所以当我们使用长输入运行它时，我们看到esp被sss覆盖了。
 
 99
 00:06:29,040 --> 00:06:35,150
-One byte is 4 lower than the others, thus became an O, which was cauysed by the ecx-4.
+一个字节比其他字节低4，因此成为一个O，被ECX-4烧灼。
 
 100
 00:06:35,150 --> 00:06:39,080
-So this means we want to stop right before that.
+所以这意味着我们要在那之前就停下来。
 
 101
 00:06:39,080 --> 00:06:43,930
-And when we run it now, we see that esp ends now in fc.
+当我们现在运行它时，我们看到esp现在在fc中结束。
 
 102
 00:06:43,930 --> 00:06:48,890
@@ -408,11 +408,11 @@ And when we run it now, we see that esp ends now in fc.
 
 103
 00:06:48,890 --> 00:06:54,790
-because of ecx-4, so 0 - 4 we end up with fc.
+因为ECX-4，所以0-4我们以FC结束。
 
 104
 00:06:54,790 --> 00:06:59,500
-But as you can see, we didn’t get lucky, esp points to not our buffer.
+但正如你所看到的，我们并没有幸运，特别是指我们的缓冲区。
 
 105
 00:06:59,500 --> 00:07:06,160
@@ -420,15 +420,15 @@ But as you can see, we didn’t get lucky, esp points to not our buffer.
 
 106
 00:07:06,160 --> 00:07:08,440
-now esp points to our buffer.
+现在，esp指向我们的缓冲区。
 
 107
 00:07:08,440 --> 00:07:14,340
-And when we now return we actually return into 4d4d4d4d, which is MMMM.
+当我们现在返回时，我们实际上返回到4d4d4d4d，也就是mmmm。
 
 108
 00:07:14,340 --> 00:07:16,700
-It worked.
+它奏效了。
 
 109
 00:07:16,700 --> 00:07:21,090
@@ -440,11 +440,11 @@ It worked.
 
 111
 00:07:26,260 --> 00:07:30,200
-amount of change so esp points into our buffer.
+使esp指向我们的缓冲区的变化量。
 
 112
 00:07:30,199 --> 00:07:33,169
-But you also see it’s not 100% reliable.
+但你也看到它不是100%可靠。
 
 113
 00:07:33,169 --> 00:07:38,689
@@ -452,27 +452,27 @@ But you also see it’s not 100% reliable.
 
 114
 00:07:38,690 --> 00:07:39,690
-to us.
+对我们来说。
 
 115
 00:07:39,690 --> 00:07:44,020
-But that’s fairly common so I hope that it’s common enough to still make it feasible.
+但这是相当普遍的，所以我希望它足够普遍，仍然使其可行。
 
 116
 00:07:44,020 --> 00:07:47,300
-So now all that we have to do is, put it together.
+所以现在我们要做的就是把它组合起来。
 
 117
 00:07:47,300 --> 00:07:49,650
-Let’s write a quick python script.
+让我们编写一个快速的python脚本。
 
 118
 00:07:49,650 --> 00:07:53,140
-We import struct to convert the address to 4 byte strings.
+我们导入结构以将地址转换为4个字节的字符串。
 
 119
 00:07:53,139 --> 00:07:55,459
-Little lambda helper function for that.
+小lambda助手函数。
 
 120
 00:07:55,460 --> 00:07:59,730
@@ -480,11 +480,11 @@ Little lambda helper function for that.
 
 121
 00:07:59,729 --> 00:08:01,609
-want to return to.
+希望返回。
 
 122
 00:08:01,610 --> 00:08:05,990
-We hope we can make esp point into this area.
+我们希望能让esp指向这个领域。
 
 123
 00:08:05,990 --> 00:08:09,760
@@ -492,43 +492,43 @@ We hope we can make esp point into this area.
 
 124
 00:08:09,759 --> 00:08:10,759
-for.
+为了。
 
 125
 00:08:10,759 --> 00:08:15,169
-Afterwards then comes 4 more bytes, and that’s it.
+然后又有4个字节，就是这样。
 
 126
 00:08:15,169 --> 00:08:16,389
-Then we print it.
+然后我们打印出来。
 
 127
 00:08:16,389 --> 00:08:17,389
-Looks good.
+看起来不错。
 
 128
 00:08:17,389 --> 00:08:20,519
-You see the raw bytes are output with hexdump.
+您可以看到原始字节是用hexdump输出的。
 
 129
 00:08:20,520 --> 00:08:21,650
-Write it to a file.
+把它写进一个文件。
 
 130
 00:08:21,650 --> 00:08:26,460
-Let’s set a breakpoint at the cookie check to make sure the cookie is in the right place.
+让我们在cookie检查处设置一个断点，以确保cookie在正确的位置。
 
 131
 00:08:26,460 --> 00:08:30,630
-And then we can use the file as input in gdb.
+然后我们可以在gdb中使用该文件作为输入。
 
 132
 00:08:30,630 --> 00:08:32,520
-First breakpoint was the cookie check.
+第一个断点是cookie检查。
 
 133
 00:08:32,520 --> 00:08:36,820
-And we can see we overwrite the cookie with COOK.
+我们可以看到我们用库克覆盖了饼干。
 
 134
 00:08:36,820 --> 00:08:41,150
@@ -536,23 +536,23 @@ And we can see we overwrite the cookie with COOK.
 
 135
 00:08:41,151 --> 00:08:42,711
-check and we reach the return.
+检查一下，我们到达返回点。
 
 136
 00:08:42,710 --> 00:08:44,510
-Oh and look at that.
+哦，看看那个。
 
 137
 00:08:44,510 --> 00:08:49,080
-We got lucky with esp and esp actually points into our buffer.
+我们很幸运有了电除尘器，电除尘器实际上指向了我们的缓冲区。
 
 138
 00:08:49,080 --> 00:08:55,350
-When we now continue we return into the if-case that prints the modified string.
+当我们现在继续时，我们返回到打印修改后字符串的if案例中。
 
 139
 00:08:55,350 --> 00:08:56,950
-And there it is.
+就在那里。
 
 140
 00:08:56,950 --> 00:08:57,950
@@ -560,15 +560,15 @@ And there it is.
 
 141
 00:08:57,950 --> 00:09:00,630
-So the exploit theoretically works.
+所以这项研究在理论上是可行的。
 
 142
 00:09:00,630 --> 00:09:03,700
-All that is left, is the cookie bruteforcing.
+剩下的就是饼干的野蛮变形。
 
 143
 00:09:03,700 --> 00:09:06,570
-Unfortunately that deserves it’s own episode again.
+不幸的是，这又应该成为自己的一集。
 
 144
 00:09:06,570 --> 00:09:10,830
@@ -576,13 +576,13 @@ Unfortunately that deserves it’s own episode again.
 
 145
 00:09:10,830 --> 00:09:12,350
-wanna squeeze it in here.
+想挤进去吗？
 
 146
 00:09:12,350 --> 00:09:13,980
-Again, try to do that part yourself.
+同样，试着自己做那个部分。
 
 147
 00:09:13,980 --> 00:09:15,250
-You could really learn alot.
+你真的可以学到很多。
 

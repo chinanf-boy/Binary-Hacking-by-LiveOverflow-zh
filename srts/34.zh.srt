@@ -1,6 +1,6 @@
 1
 00:00:00,120 --> 00:00:03,620
-So we finished exploit-exercises protostar a while ago.
+所以我们在不久前就完成了“原恒星”的开发。
 
 2
 00:00:03,620 --> 00:00:08,770
@@ -8,7 +8,7 @@ So we finished exploit-exercises protostar a while ago.
 
 3
 00:00:08,770 --> 00:00:10,230
-ago.
+以前。
 
 4
 00:00:10,230 --> 00:00:13,750
@@ -16,7 +16,7 @@ ago.
 
 5
 00:00:13,750 --> 00:00:19,550
-you tried to copy the source code and compile it on their own modern linux machine.
+您试图复制源代码并在他们自己的现代Linux机器上编译它。
 
 6
 00:00:19,550 --> 00:00:23,360
@@ -24,11 +24,11 @@ you tried to copy the source code and compile it on their own modern linux machi
 
 7
 00:00:23,360 --> 00:00:28,800
-mitigations by revisiting some of the protostar challenges on a current ubuntu.
+通过重新访问当前Ubuntu上的一些原恒星挑战来缓解。
 
 8
 00:00:28,800 --> 00:00:30,000
-And see how far we get.
+看看我们能走多远。
 
 9
 00:00:30,000 --> 00:00:38,350
@@ -36,11 +36,11 @@ And see how far we get.
 
 10
 00:00:38,350 --> 00:00:42,220
-So let’s have a quick look at the very simple source code again.
+因此，让我们再次快速查看非常简单的源代码。
 
 11
 00:00:42,219 --> 00:00:48,689
-There were these variables, a buffer and this modified integer which was set to 0.
+有这些变量、一个缓冲区和这个修改后的整数，设置为0。
 
 12
 00:00:48,690 --> 00:00:53,460
@@ -48,7 +48,7 @@ There were these variables, a buffer and this modified integer which was set to 
 
 13
 00:00:53,460 --> 00:00:55,570
-doesn’t have a way to check the length.
+无法检查长度。
 
 14
 00:00:55,570 --> 00:01:00,910
@@ -56,11 +56,11 @@ doesn’t have a way to check the length.
 
 15
 00:01:00,909 --> 00:01:02,889
-adjacent memory.
+相邻存储器。
 
 16
 00:01:02,890 --> 00:01:08,330
-The binary on the old protostar VM had the modified variable just after the buffer.
+旧的prototastarvm上的二进制文件在缓冲区后面有修改过的变量。
 
 17
 00:01:08,330 --> 00:01:14,250
@@ -68,35 +68,35 @@ The binary on the old protostar VM had the modified variable just after the buff
 
 18
 00:01:14,250 --> 00:01:17,390
-change the outcome of this if.
+更改此if的结果。
 
 19
 00:01:17,390 --> 00:01:19,910
-So let’s try this again on a modern system.
+所以让我们在现代系统上再试一次。
 
 20
 00:01:19,910 --> 00:01:27,100
-I’m using digitalocean to quickly spin up a new ubuntu linux machine and ssh into it.
+我正在使用DigitalOcean快速启动一台新的UbuntuLinux机器，并在其中使用ssh。
 
 21
 00:01:27,100 --> 00:01:29,430
-Then I take the code and compile it.
+然后我获取代码并编译它。
 
 22
 00:01:29,430 --> 00:01:31,280
-Oh, new system.
+哦，新系统。
 
 23
 00:01:31,280 --> 00:01:34,700
-So we also have to install gcc, the compiler.
+所以我们还必须安装gcc，编译器。
 
 24
 00:01:34,700 --> 00:01:36,240
-Now it works.
+现在它起作用了。
 
 25
 00:01:36,240 --> 00:01:40,250
-You can already see that the compiler is warning us of the use of gets().
+您已经可以看到编译器警告我们使用get（）。
 
 26
 00:01:40,250 --> 00:01:44,990
@@ -104,7 +104,7 @@ You can already see that the compiler is warning us of the use of gets().
 
 27
 00:01:44,990 --> 00:01:45,990
-warnings like this.
+这样的警告。
 
 28
 00:01:45,990 --> 00:01:50,500
@@ -112,39 +112,39 @@ warnings like this.
 
 29
 00:01:50,500 --> 00:01:52,270
-you right away.
+你马上就来。
 
 30
 00:01:52,270 --> 00:01:53,270
-So let’s see.
+让我们来看一看。
 
 31
 00:01:53,270 --> 00:01:57,760
-Let’s try to input a lot of characters and see if we can change the modified variable.
+让我们尝试输入大量字符，看看是否可以更改修改后的变量。
 
 32
 00:01:57,760 --> 00:02:01,700
-But it doesn’t seem to work.
+但它似乎不起作用。
 
 33
 00:02:01,700 --> 00:02:05,370
-The only thing we can get is a stack smashing detected error.
+我们唯一能得到的是一个堆栈粉碎检测到的错误。
 
 34
 00:02:05,370 --> 00:02:07,350
-And the process is aborted.
+这个过程被中止了。
 
 35
 00:02:07,350 --> 00:02:12,160
-That’s the first evidence that a bit more stuff is going on here.
+这是第一个证据表明这里正在发生更多的事情。
 
 36
 00:02:12,159 --> 00:02:16,339
-So let’s look at the assembly code that the compiler produced.
+那么让我们看看编译器生成的汇编代码。
 
 37
 00:02:16,340 --> 00:02:20,310
-First of all let’s check why we couldn’t overwrite the modified variable.
+首先，让我们检查一下为什么不能覆盖修改后的变量。
 
 38
 00:02:20,310 --> 00:02:24,000
@@ -152,19 +152,19 @@ First of all let’s check why we couldn’t overwrite the modified variable.
 
 39
 00:02:23,999 --> 00:02:25,309
-Mh kinda.
+嗯。
 
 40
 00:02:25,310 --> 00:02:26,560
-But let’s see.
+但让我们看看。
 
 41
 00:02:26,560 --> 00:02:30,930
-You see this location on the stack is where the local variable modified is stored.
+您可以在堆栈上看到这个位置是存储修改后的局部变量的位置。
 
 42
 00:02:30,930 --> 00:02:35,570
-You can see that because the value 0 is moved to it, like in the C code.
+您可以看到这一点，因为值0被移动到它上面，就像在C代码中一样。
 
 43
 00:02:35,569 --> 00:02:39,739
@@ -172,11 +172,11 @@ You can see that because the value 0 is moved to it, like in the C code.
 
 44
 00:02:39,739 --> 00:02:41,169
-passed to gets.
+传递给获取。
 
 45
 00:02:41,170 --> 00:02:42,980
-Like in the C code.
+就像C代码一样。
 
 46
 00:02:42,980 --> 00:02:47,460
@@ -184,11 +184,11 @@ Like in the C code.
 
 47
 00:02:47,459 --> 00:02:49,229
-the buffer anymore.
+缓冲区也不复存在了。
 
 48
 00:02:49,230 --> 00:02:54,700
-We can write as many characters as we want, but we will never overwrite modified.
+我们可以写任意多的字符，但是我们永远不会覆盖修改过的字符。
 
 49
 00:02:54,700 --> 00:02:59,170
@@ -196,27 +196,27 @@ We can write as many characters as we want, but we will never overwrite modified
 
 50
 00:02:59,170 --> 00:03:01,250
-assembler code either.
+汇编程序代码。
 
 51
 00:03:01,250 --> 00:03:03,870
-And that’s not a coincidence.
+这不是巧合。
 
 52
 00:03:03,870 --> 00:03:08,010
-Buffers or arrays are risky compared to simple integer variables.
+与简单的整数变量相比，缓冲区或数组是有风险的。
 
 53
 00:03:08,010 --> 00:03:10,730
-Buffers are prone to buffer overflows.
+缓冲区容易发生缓冲区溢出。
 
 54
 00:03:10,730 --> 00:03:16,050
-So the compiler made the decision to order the local variables in a particular way.
+因此，编译器决定以特定的方式对局部变量进行排序。
 
 55
 00:03:16,049 --> 00:03:19,109
-And it kinda has something to do with the stack smashing detected message.
+它与堆栈粉碎检测到的消息有点关系。
 
 56
 00:03:19,109 --> 00:03:24,039
@@ -224,7 +224,7 @@ And it kinda has something to do with the stack smashing detected message.
 
 57
 00:03:24,040 --> 00:03:25,190
-overwritten.
+改写。
 
 58
 00:03:25,189 --> 00:03:27,019
@@ -232,23 +232,23 @@ overwritten.
 
 59
 00:03:27,019 --> 00:03:31,569
-Let’s open the compiled binary in a disassembler to have a better look at it.
+让我们在反汇编程序中打开已编译的二进制文件，以便更好地查看它。
 
 60
 00:03:31,569 --> 00:03:36,029
-If you are still learning about this stuff, assembler code always looks very intimidating.
+如果您仍在学习这些东西，汇编程序代码看起来总是非常吓人。
 
 61
 00:03:36,030 --> 00:03:38,980
-But it’s all about recognizing and learning patterns.
+但这都是关于认识和学习模式。
 
 62
 00:03:38,980 --> 00:03:42,370
-One such pattern is here with the stack cookies.
+这里有一个类似的模式和堆栈cookies。
 
 63
 00:03:42,370 --> 00:03:46,830
-Because when you reverse engineer a program, you can basically ignore a lot of stuff.
+因为当你逆向工程一个程序时，你基本上可以忽略很多东西。
 
 64
 00:03:46,829 --> 00:03:50,909
@@ -256,7 +256,7 @@ Because when you reverse engineer a program, you can basically ignore a lot of s
 
 65
 00:03:50,909 --> 00:03:53,729
-to do with the functionality of the program.
+处理程序的功能。
 
 66
 00:03:53,730 --> 00:03:57,870
@@ -264,19 +264,19 @@ to do with the functionality of the program.
 
 67
 00:03:57,870 --> 00:04:02,240
-called here, so there is a gets, so that is reading something.
+在这里打电话，所以有一个GET，那就是读一些东西。
 
 68
 00:04:02,239 --> 00:04:07,509
-Then a local variable is compared and then it prints a string with puts in either case.
+然后比较一个局部变量，然后它打印一个字符串，在这两种情况下都使用puts。
 
 69
 00:04:07,510 --> 00:04:09,980
-So you already get a rough idea from that.
+所以你已经从中得到了一个大致的想法。
 
 70
 00:04:09,980 --> 00:04:14,610
-But we already know what it does, so whats up with the parts of the stack cookie.
+但是我们已经知道它做什么了，那么栈cookie的各个部分又有什么变化。
 
 71
 00:04:14,609 --> 00:04:19,989
@@ -284,11 +284,11 @@ But we already know what it does, so whats up with the parts of the stack cookie
 
 72
 00:04:19,989 --> 00:04:23,139
-28, into the register rax.
+28，进入寄存器RAX。
 
 73
 00:04:23,139 --> 00:04:25,249
-And then that value is placed onto the stack.
+然后将该值放入堆栈。
 
 74
 00:04:25,250 --> 00:04:30,150
@@ -296,15 +296,15 @@ And then that value is placed onto the stack.
 
 75
 00:04:30,150 --> 00:04:36,070
-the stack and then xored with this mysterious value in fs hex 28.
+然后用这个神秘的fs hex 28值对堆栈进行异或处理。
 
 76
 00:04:36,069 --> 00:04:39,439
-This is just a check if the two values are the same.
+这只是检查两个值是否相同。
 
 77
 00:04:39,440 --> 00:04:43,000
-If they are equal the function is allowed to return.
+如果它们相等，则允许函数返回。
 
 78
 00:04:43,000 --> 00:04:48,670
@@ -312,11 +312,11 @@ If they are equal the function is allowed to return.
 
 79
 00:04:48,669 --> 00:04:51,799
-and the program will never return.
+程序永远不会回来。
 
 80
 00:04:51,800 --> 00:04:53,160
-And this makes sense right.
+这是有道理的。
 
 81
 00:04:53,160 --> 00:04:57,340
@@ -328,11 +328,11 @@ And this makes sense right.
 
 83
 00:05:00,320 --> 00:05:04,140
-And at the end the value on the stack is compared again to this mysterious value.
+最后，栈中的值再次与这个神秘的值进行比较。
 
 84
 00:05:04,139 --> 00:05:09,069
-So if we had a buffer overflow that overwrote this stack cookie, this check would fail.
+所以如果我们有一个覆盖这个堆栈cookie的缓冲区溢出，这个检查就会失败。
 
 85
 00:05:09,069 --> 00:05:15,079
@@ -344,27 +344,27 @@ So if we had a buffer overflow that overwrote this stack cookie, this check woul
 
 87
 00:05:20,310 --> 00:05:23,940
-kernel ring 0 code or if you write userspace ring 3 programs.
+内核环0代码或如果编写用户空间环3程序。
 
 88
 00:05:23,940 --> 00:05:26,410
-And there is a lot of historical baggage with them.
+他们身上有很多历史包袱。
 
 89
 00:05:26,410 --> 00:05:30,050
-And to be completely honest with you, I don’t fully understand it.
+老实说，我不完全理解。
 
 90
 00:05:30,050 --> 00:05:34,100
-Maybe somebody in the comments can correct me and add some additional information.
+也许评论中的人可以纠正我并添加一些附加信息。
 
 91
 00:05:34,100 --> 00:05:36,950
-So take this explanation with a grain of salt.
+所以用一点盐来解释这个问题。
 
 92
 00:05:36,949 --> 00:05:41,059
-You can imagine the fs register to point to some memory.
+您可以想象fs寄存器指向一些内存。
 
 93
 00:05:41,060 --> 00:05:44,770
@@ -372,31 +372,31 @@ You can imagine the fs register to point to some memory.
 
 94
 00:05:44,770 --> 00:05:45,770
-to.
+去。
 
 95
 00:05:45,770 --> 00:05:48,920
-The kernel (I think) set up where it points to.
+内核（我认为）设置在它指向的地方。
 
 96
 00:05:48,919 --> 00:05:52,829
-So the process doesn’t really care where it points to, it can just use it.
+所以这个过程并不真正关心它指向哪里，它可以直接使用它。
 
 97
 00:05:52,830 --> 00:05:57,400
-And it can then reference different values at certain offsets in that memory.
+然后它可以在内存中的特定偏移量处引用不同的值。
 
 98
 00:05:57,400 --> 00:06:01,990
-So for example the stack cookie is stored at offset hex 28.
+因此，例如，堆栈cookie存储在偏移量hex 28处。
 
 99
 00:06:01,990 --> 00:06:07,010
-And actually the location must be somewhere in the virtual memory of the process as well.
+实际上，位置也必须在进程的虚拟内存中。
 
 100
 00:06:07,009 --> 00:06:15,239
-Let’s install the gdb enhancment peda really quick because it has a great memory find function.
+让我们快速安装gdb增强踏板，因为它有很好的内存查找功能。
 
 101
 00:06:15,240 --> 00:06:19,460
@@ -404,23 +404,23 @@ Let’s install the gdb enhancment peda really quick because it has a great memo
 
 102
 00:06:19,460 --> 00:06:22,340
-the process memory for this value.
+此值的进程内存。
 
 103
 00:06:22,340 --> 00:06:27,140
-And you can see it shows up in some kind of mapped memory.
+你可以看到它出现在某种映射内存中。
 
 104
 00:06:27,139 --> 00:06:29,949
-And if you check the memory maps it is included here.
+如果你查一下记忆地图，它就在这里。
 
 105
 00:06:29,950 --> 00:06:34,110
-And that is really the location where fs points to.
+这就是fs指向的位置。
 
 106
 00:06:34,110 --> 00:06:39,100
-Because for example we can now overwrite this value with hex 41, so capital AAAAAAA.
+因为例如，我们现在可以用hex 41覆盖这个值，所以大写aaaaaaa。
 
 107
 00:06:39,099 --> 00:06:43,059
@@ -428,19 +428,19 @@ Because for example we can now overwrite this value with hex 41, so capital AAAA
 
 108
 00:06:43,060 --> 00:06:46,430
-the stack with hex 414141.
+带有十六进制414141的堆栈。
 
 109
 00:06:46,430 --> 00:06:50,610
-当我们到达函数的末尾时，堆栈cookie值明显被覆盖了。
+当我们到达函数的末尾时，堆栈cookie值显然被覆盖了。
 
 110
 00:06:50,610 --> 00:06:51,820
-by us with 414141.
+我们用414141。
 
 111
 00:06:51,819 --> 00:06:58,079
-But we also just set by hand the original value of the stack cookie to 41414.
+但我们还手工将堆栈cookie的原始值设置为41414。
 
 112
 00:06:58,080 --> 00:07:02,440
@@ -448,19 +448,19 @@ But we also just set by hand the original value of the stack cookie to 41414.
 
 113
 00:07:02,439 --> 00:07:05,879
-value is and will compare those two now.
+现在的值是并将比较这两个值。
 
 114
 00:07:05,880 --> 00:07:10,100
-And not suprisingly we continue to the return and get a segfault.
+我们继续返回并得到一个segfault。
 
 115
 00:07:10,100 --> 00:07:12,620
-Instead of going to the stack_check_fail.
+而不是去堆栈检查失败。
 
 116
 00:07:12,620 --> 00:07:16,630
-This means we actually have changed the original value of the stack cookie.
+这意味着我们实际上已经更改了堆栈cookie的原始值。
 
 117
 00:07:16,629 --> 00:07:17,789
@@ -472,15 +472,15 @@ This means we actually have changed the original value of the stack cookie.
 
 119
 00:07:22,290 --> 00:07:24,510
-case and magically make it exploitable.
+并神奇地使其可利用。
 
 120
 00:07:24,509 --> 00:07:27,179
-We are just playing around with it to understand it better.
+我们只是在玩弄它，以便更好地理解它。
 
 121
 00:07:27,180 --> 00:07:31,760
-And we know that the original stack cookie value is stored somewhere in memory.
+我们知道原始的堆栈cookie值存储在内存的某个地方。
 
 122
 00:07:31,759 --> 00:07:36,729
@@ -488,7 +488,7 @@ And we know that the original stack cookie value is stored somewhere in memory.
 
 123
 00:07:36,729 --> 00:07:38,399
-every exploit attempt.
+每一次剥削尝试。
 
 124
 00:07:38,400 --> 00:07:43,320
@@ -500,7 +500,7 @@ every exploit attempt.
 
 126
 00:07:48,069 --> 00:07:51,189
-to the original value before the function returns.
+函数返回前的原始值。
 
 127
 00:07:51,189 --> 00:07:55,379
@@ -508,7 +508,7 @@ to the original value before the function returns.
 
 128
 00:07:55,379 --> 00:07:58,389
-will never return because the cookie is wrong.
+永远不会回来，因为cookie是错误的。
 
 129
 00:07:58,389 --> 00:08:02,469
@@ -516,7 +516,7 @@ will never return because the cookie is wrong.
 
 130
 00:08:02,470 --> 00:08:04,110
-overwritten.
+改写。
 
 131
 00:08:04,110 --> 00:08:08,440
@@ -524,7 +524,7 @@ overwritten.
 
 132
 00:08:08,439 --> 00:08:09,639
-buffer overflow.
+缓冲区溢出。
 
 133
 00:08:09,639 --> 00:08:14,399
@@ -532,7 +532,7 @@ buffer overflow.
 
 134
 00:08:14,400 --> 00:08:17,090
-to things overwritten on the stack.
+在堆栈上覆盖的内容。
 
 135
 00:08:17,090 --> 00:08:22,620
@@ -544,7 +544,7 @@ to things overwritten on the stack.
 
 137
 00:08:27,439 --> 00:08:29,119
-the stack cookie.
+堆栈cookie。
 
 138
 00:08:29,120 --> 00:08:33,920
@@ -552,39 +552,39 @@ the stack cookie.
 
 139
 00:08:33,919 --> 00:08:37,199
-buffers to be as close as possible to the stack cookie.
+缓冲区应尽可能靠近堆栈cookie。
 
 140
 00:08:37,200 --> 00:08:41,800
-Which causes the modified and buffer variable to be reordered in this way.
+这会导致修改后的变量和缓冲区变量以这种方式重新排序。
 
 141
 00:08:41,800 --> 00:08:46,090
-The buffer is placed after the modified variable, closer to the cookie.
+缓冲区放在修改后的变量之后，靠近cookie。
 
 142
 00:08:46,089 --> 00:08:47,309
-Darn it.
+该死。
 
 143
 00:08:47,310 --> 00:08:50,770
-There is another interesting thing about stack cookies.
+关于堆叠cookies还有一件有趣的事情。
 
 144
 00:08:50,769 --> 00:08:56,309
-Let’s rerun the program and collect a few random cookies.
+让我们重新运行程序并收集一些随机的cookie。
 
 145
 00:08:56,310 --> 00:08:59,920
-Do you notice something, they all start with a zero byte.
+你注意到什么了吗，它们都是从一个零字节开始的。
 
 146
 00:08:59,920 --> 00:09:03,890
-So this is the little endian format but in memory the bytes would look like this.
+所以这是小endian格式，但是在内存中，字节应该是这样的。
 
 147
 00:09:03,889 --> 00:09:06,119
-So that’s interesting.
+所以这很有趣。
 
 148
 00:09:06,120 --> 00:09:12,010
@@ -592,7 +592,7 @@ So that’s interesting.
 
 149
 00:09:12,010 --> 00:09:13,530
-be a static 0.
+静态0。
 
 150
 00:09:13,530 --> 00:09:19,860
@@ -604,11 +604,11 @@ be a static 0.
 
 152
 00:09:24,760 --> 00:09:29,880
-not be guessable or bruteforcable, but 7 bytes is huuuuge number already.
+不是可猜测的或不可预测的，但7个字节已经是huuuge数了。
 
 153
 00:09:29,880 --> 00:09:31,790
-So probably good enough.
+所以可能足够好。
 
 154
 00:09:31,790 --> 00:09:37,570
@@ -616,31 +616,31 @@ So probably good enough.
 
 155
 00:09:37,570 --> 00:09:39,250
-string exploits.
+字符串漏洞。
 
 156
 00:09:39,250 --> 00:09:44,730
-So you use that to leak a stack cookie value and then your overflow is trivial again.
+所以您使用它来泄漏一个堆栈cookie值，然后您的溢出再次是微不足道的。
 
 157
 00:09:44,730 --> 00:09:47,690
-But some overflows happen because of a strcpy.
+但有些溢出是因为strcpy。
 
 158
 00:09:47,690 --> 00:09:50,630
-And strings in C are zero terminated.
+C中的字符串以零结尾。
 
 159
 00:09:50,630 --> 00:09:55,850
-因此，即使您知道堆栈cookie，并且您有一个易受攻击的strcpy，也可以
+因此，即使您知道栈cookie，并且您有一个易受攻击的strcpy，也可以
 
 160
 00:09:55,851 --> 00:10:01,131
-never overwrite the cookie with the corerct value, because you cannot write a 0 byte.
+永远不要用corerct值覆盖cookie，因为您不能写入0字节。
 
 161
 00:10:01,130 --> 00:10:03,620
-Because a null byte marks the end of a string in c.
+因为空字节在C中标记了字符串的结尾。
 
 162
 00:10:03,620 --> 00:10:09,110
@@ -648,15 +648,15 @@ Because a null byte marks the end of a string in c.
 
 163
 00:10:09,110 --> 00:10:14,120
-only stops at a newline, so you could write 0 bytes with that.
+只在换行处停止，因此可以用它写入0个字节。
 
 164
 00:10:14,120 --> 00:10:17,190
-So it’s a very clever choice to include a 0 byte in the cookie.
+所以在cookie中包含0字节是一个非常聪明的选择。
 
 165
 00:10:17,190 --> 00:10:23,250
-It’s an additional protection against strcpys, even if the cookie value is known.
+这是对strcpys的额外保护，即使cookie值已知。
 
 166
 00:10:23,250 --> 00:10:26,650
@@ -668,75 +668,75 @@ It’s an additional protection against strcpys, even if the cookie value is kno
 
 168
 00:10:29,070 --> 00:10:31,150
-Let’s find out.
+让我们看看。
 
 169
 00:10:31,149 --> 00:10:34,719
-To compile a 32bit program on 64bit you have to install some other stuff.
+要在64位上编译32位程序，您必须安装一些其他东西。
 
 170
 00:10:34,720 --> 00:10:37,720
-And we can also quickly check if this is not exploitable.
+我们还可以快速检查这是否是不可利用的。
 
 171
 00:10:37,720 --> 00:10:41,570
-And you can see that we also only get the stack smash protection error.
+您可以看到，我们也只得到堆栈粉碎保护错误。
 
 172
 00:10:41,570 --> 00:10:42,570
-Ok.
+好啊。
 
 173
 00:10:42,570 --> 00:10:44,870
-So let’s extract some stack cookies here.
+所以让我们在这里提取一些堆叠的饼干。
 
 174
 00:10:44,870 --> 00:10:48,450
-You can also see that a different segment register is used here on 32bit.
+您还可以看到32位上使用了不同的段寄存器。
 
 175
 00:10:48,449 --> 00:10:50,919
-But same concept.
+但同样的概念。
 
 176
 00:10:50,920 --> 00:10:52,860
-And who would have thought.
+谁会想到呢？
 
 177
 00:10:52,860 --> 00:10:54,690
-Also a 0 byte in it.
+还有一个0字节。
 
 178
 00:10:54,690 --> 00:10:57,780
-So this makes only 3 bytes of randomness.
+所以这只产生了3个字节的随机性。
 
 179
 00:10:57,779 --> 00:11:00,569
-16 million possible values.
+1600万可能值。
 
 180
 00:11:00,570 --> 00:11:04,410
-&lt;painful noise&gt; mhmh That sounds a bit more scary.
+&lt；痛苦的噪音&gt；mhmh听起来有点可怕。
 
 181
 00:11:04,410 --> 00:11:10,440
-16 million depending on the context where and how the program is run is not much.
+1600万取决于程序运行的环境和方式并不多。
 
 182
 00:11:10,440 --> 00:11:13,370
-Maybe in our case it might actually make it exploitable.
+也许在我们的例子中，它实际上可能使它成为可利用的。
 
 183
 00:11:13,370 --> 00:11:18,990
-I mean the original protostar VM was also 32bit, so I think it’s fair game.
+我的意思是原来的原恒星虚拟机也是32位的，所以我认为这是公平的游戏。
 
 184
 00:11:18,990 --> 00:11:23,120
-But to be fair, 64bit probably makes it unexploitable.
+但公平地说，64位可能使其无法开发。
 
 185
 00:11:23,120 --> 00:11:24,390
-So the plan is clear.
+所以计划是明确的。
 
 186
 00:11:24,390 --> 00:11:30,360
@@ -744,7 +744,7 @@ So the plan is clear.
 
 187
 00:11:30,360 --> 00:11:35,770
-exploit string to it, which uses random cookie cookie values to bruteforce it.
+利用它的字符串，该字符串使用随机的cookie cookie值对其进行破坏。
 
 188
 00:11:35,769 --> 00:11:40,479
@@ -752,25 +752,25 @@ exploit string to it, which uses random cookie cookie values to bruteforce it.
 
 189
 00:11:40,480 --> 00:11:46,140
-pointer and redirect code execution to the output, the if case, we want.
+指针并将代码执行重定向到输出，如果是，我们需要。
 
 190
 00:11:46,140 --> 00:11:47,170
-Well.
+好。
 
 191
 00:11:47,170 --> 00:11:48,850
-The plan sounds good.
+这个计划听起来不错。
 
 192
 00:11:48,850 --> 00:11:50,740
-If it were just this easy.
+如果只是这么简单的话。
 
 193
 00:11:50,740 --> 00:11:53,960
-We will need a bit more time for this so let’s do it in another video.
+我们需要更多的时间来完成这项工作，所以让我们在另一个视频中完成这项工作。
 
 194
 00:11:53,959 --> 00:11:56,479
-But it’s a fun challenge, so you should try that too.
+但这是一个有趣的挑战，所以你也应该试试。
 

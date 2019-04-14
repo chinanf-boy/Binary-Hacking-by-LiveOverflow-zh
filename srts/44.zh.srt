@@ -1,7 +1,7 @@
 1
 00:00:00,149 --> 00:00:05,900
 这个视频的主题非常特别
-me because it's the slogan of this channel.
+因为这是这个频道的口号。
 
 2
 00:00:05,900 --> 00:00:11,320
@@ -10,7 +10,7 @@ me because it's the slogan of this channel.
 
 3
 00:00:11,320 --> 00:00:17,611
-and use it to explain return oriented programming.
+并用它来解释面向返回的编程。
 但让我们从头开始。拜托
 
 4
@@ -20,7 +20,7 @@ and use it to explain return oriented programming.
 
 5
 00:00:23,170 --> 00:00:27,119
-else.
+否则。
 
 6
 00:00:27,119 --> 00:00:36,020
@@ -30,7 +30,7 @@ else.
 7
 00:00:36,020 --> 00:00:40,340
 糟糕的语言。但是我给你看一些
-example programs.
+示例程序。
 
 8
 00:00:40,340 --> 00:00:45,900
@@ -44,12 +44,12 @@ example programs.
 
 10
 00:00:51,010 --> 00:00:56,740
-four to the string Hell.
+四到弦地狱。
 然后我们把变量4存储在内存中
 
 11
 00:00:56,740 --> 00:01:02,020
-location 1.
+位置1。
 然后我们把变量4设为空间w o，
 
 12
@@ -60,7 +60,7 @@ location 1.
 13
 00:01:07,740 --> 00:01:13,090
 RLD！并将该值存储在内存位置
-3.
+三。
 
 14
 00:01:13,090 --> 00:01:16,180
@@ -69,12 +69,12 @@ RLD！并将该值存储在内存位置
 
 15
 00:01:16,180 --> 00:01:22,120
-to prepare the two parameters for PRINTF.
+为printf准备两个参数。
 第一个参数，即目的地
 
 16
 00:01:22,120 --> 00:01:27,630
-variable, is set to the memory location 1.
+变量，设置为内存位置1。
 存储器位置是连续存储器，
 
 17
@@ -85,11 +85,11 @@ variable, is set to the memory location 1.
 18
 00:01:32,270 --> 00:01:37,450
 printf将被设置为0。只是一个
-Hello World字符串的printf。不打印
+hello world字符串的printf。不打印
 
 19
 00:01:37,450 --> 00:01:40,550
-format modifiers and parameters here.
+这里是格式修改器和参数。
 
 20
 00:01:40,550 --> 00:01:46,200
@@ -98,7 +98,7 @@ format modifiers and parameters here.
 
 21
 00:01:46,200 --> 00:01:49,799
-pretty simple.
+很简单。
 我们来运行这个程序吧！
 
 22
@@ -109,7 +109,7 @@ pretty simple.
 23
 00:01:56,670 --> 00:02:02,799
 很奇怪，这是源代码，
-and the name of the outfile, so helloworld.binary.
+和外文件的名称，所以helloworld.binary。
 
 24
 00:02:02,799 --> 00:02:09,060
@@ -118,13 +118,13 @@ and the name of the outfile, so helloworld.binary.
 
 25
 00:02:09,060 --> 00:02:16,280
-readable characters, 1, 123 and a lot of AAAAAAAs.
+可读字符，1，123和许多AAAAA。
 但我们也可以找到我们的“你好世界”片段
 
 26
 00:02:16,280 --> 00:02:23,629
 在那里。见鬼去吧。其他价值观
-are just jibberish.
+只是在逃避。
 
 27
 00:02:23,629 --> 00:02:28,879
@@ -133,13 +133,13 @@ cat，所以打印二进制文件并通过管道
 
 28
 00:02:28,879 --> 00:02:36,109
-output into the interpreter, called invoice.
-Okay, I know the output is really confusing.
+输出到解释器中，称为发票。
+好吧，我知道输出很混乱。
 
 29
 00:02:36,109 --> 00:02:41,400
 但这只是奇怪的发票的一部分
-program. so just ignore that invoicing menu.
+程序。所以忽略开发票菜单。
 
 30
 00:02:41,400 --> 00:02:46,030
@@ -168,7 +168,7 @@ program. so just ignore that invoicing menu.
 35
 00:03:05,150 --> 00:03:09,890
 然后我们必须输出二进制文件，
-pipe it into the input of the invoice program.
+将其导入到发票程序的输入中。
 
 36
 00:03:09,890 --> 00:03:14,209
@@ -177,7 +177,7 @@ pipe it into the input of the invoice program.
 
 37
 00:03:14,209 --> 00:03:18,549
-send more input that we type to the program.
+向程序发送更多输入。
 只是一些Linux命令行foo，不用担心
 
 38
@@ -192,12 +192,12 @@ send more input that we type to the program.
 
 40
 00:03:28,379 --> 00:03:29,560
-menu around it.
+菜单在它周围。
 
 41
 00:03:29,560 --> 00:03:33,799
 让我们再举一个例子。我真的很自豪
-of this one.
+这一个。
 
 42
 00:03:33,799 --> 00:03:39,099
@@ -206,12 +206,12 @@ of this one.
 
 43
 00:03:39,099 --> 00:03:45,169
-on that value. So we have to enter a number.
+在这个价值上。所以我们必须输入一个数字。
 结果，所以原始整数
 
 44
 00:03:45,169 --> 00:03:49,340
-be in the result variable.
+在结果变量中。
 然后我们用
 
 45
@@ -221,7 +221,7 @@ be in the result variable.
 
 46
 00:03:54,749 --> 00:03:57,319
-memory location 2.
+内存位置2。
 
 47
 00:03:57,319 --> 00:04:02,371
@@ -236,7 +236,7 @@ memory location 2.
 49
 00:04:07,799 --> 00:04:12,340
 结果中的新转换整数
-variable 4.
+变量4。
 
 50
 00:04:12,340 --> 00:04:17,209
@@ -256,12 +256,12 @@ variable 4.
 53
 00:04:30,160 --> 00:04:36,820
 我们编制了SUM程序。并执行它
-again with cat. Then we enter the first number.
+再次与猫。然后我们输入第一个数字。
 
 54
 00:04:36,820 --> 00:04:41,050
 然后是第二个号码。我们得到了
-sum output.
+求和输出。
 
 55
 00:04:41,050 --> 00:04:46,980
@@ -285,7 +285,7 @@ sum output.
 
 59
 00:05:04,950 --> 00:05:06,830
-weird looking.
+看起来怪怪的。
 
 60
 00:05:06,830 --> 00:05:12,560
@@ -300,7 +300,7 @@ weird looking.
 62
 00:05:18,080 --> 00:05:24,120
 并添加评论。我们可以增加一些
-more to just get a feeling for the program.
+更多的只是为了让你对这个项目有一种感觉。
 
 63
 00:05:24,120 --> 00:05:29,830
@@ -310,7 +310,7 @@ more to just get a feeling for the program.
 64
 00:05:29,830 --> 00:05:35,300
 然后退出。输入我们的名字后，我们得到一个
-nice list of our invoices.
+我们的发票清单很好。
 
 65
 00:05:35,300 --> 00:05:43,110
@@ -330,7 +330,7 @@ Soooo…等待。。。什么？这是发票
 68
 00:05:53,889 --> 00:06:00,009
 输入到发票程序，所以我们只需
-试着复制它。也许我们也会运行它
+试着复制它。也许我们也会经营它
 
 69
 00:06:00,009 --> 00:06:06,189
@@ -344,7 +344,7 @@ Soooo…等待。。。什么？这是发票
 
 71
 00:06:12,560 --> 00:06:18,130
-a bit more data at the end.
+最后还有一点数据。
 繁荣！分割错误？Rip，指令
 
 72
@@ -388,12 +388,12 @@ Bratus将介绍奇怪机器的概念
 80
 00:07:01,590 --> 00:07:05,199
 从他所说的“黑客研究所教的
-me".
+“我”。
 
 81
 00:07:05,199 --> 00:07:15,919
 第二课，我所说的“构图创造”
-weird machines" parallel universes of computers.
+奇怪的机器“计算机的平行宇宙”。
 
 82
 00:07:15,919 --> 00:07:26,129
@@ -408,7 +408,7 @@ weird machines" parallel universes of computers.
 84
 00:07:32,600 --> 00:07:41,439
 一台奇怪的机器。实际上是谁的指令
-combinations of your well designed features.
+您精心设计的功能组合。
 
 85
 00:07:41,439 --> 00:07:52,710
@@ -422,12 +422,12 @@ combinations of your well designed features.
 
 87
 00:07:58,650 --> 00:07:59,690
-the machine.
+机器。
 
 88
 00:07:59,690 --> 00:08:09,099
 所以想想堆栈溢出。思考堆
-overflows which are a bit more interesting.
+更有趣的溢出。
 
 89
 00:08:09,099 --> 00:08:18,900
@@ -436,13 +436,13 @@ overflows which are a bit more interesting.
 
 90
 00:08:18,900 --> 00:08:28,050
-that the exploit crafted input can trigger.
+利用精心设计的输入可以触发。
 你不打算在
 
 91
 00:08:28,050 --> 00:08:35,270
 那种时尚。整个宇宙都很奇怪
-machines.
+机器。
 
 92
 00:08:35,270 --> 00:08:41,230
@@ -451,7 +451,7 @@ machines.
 
 93
 00:08:41,230 --> 00:08:48,540
-input most often.
+经常输入。
 所以这里有一个1997年的案例研究
 
 94
@@ -462,7 +462,7 @@ input most often.
 95
 00:08:56,530 --> 00:09:03,760
 编程。大约用了10年
-propagate.
+传播。
 
 96
 00:09:03,760 --> 00:09:09,770
@@ -482,12 +482,12 @@ propagate.
 99
 00:09:22,330 --> 00:09:30,310
 你以为是你的朋友。嗯，不，他们
-are traitors, lying and wait.
+都是叛徒，撒谎和等待。
 
 100
 00:09:30,310 --> 00:09:40,540
 2008年，学术界终于有了一个坚定的理解
-这种技术的品牌，被称为，
+这一技术品牌被称为，
 
 101
 00:09:40,540 --> 00:09:51,010
@@ -496,7 +496,7 @@ are traitors, lying and wait.
 
 102
 00:09:51,010 --> 00:09:52,680
-(assembly shellcode) is.
+（程序集外壳代码）是。
 
 103
 00:09:52,680 --> 00:09:58,390
@@ -506,7 +506,7 @@ are traitors, lying and wait.
 104
 00:09:58,390 --> 00:10:04,100
 我。因此，它成了
-my channel.
+我的频道。
 
 105
 00:10:04,100 --> 00:10:10,310
@@ -525,18 +525,18 @@ my channel.
 
 108
 00:10:23,060 --> 00:10:29,580
-weird machines due to a stack buffer overflow.
+堆栈缓冲区溢出导致的奇怪机器。
 开发人员设计了一台奇怪的机器
 
 109
 00:10:29,580 --> 00:10:37,410
 甚至不知道。一个奇怪的机器所以
-powerful that it can execute basically anything.
+功能强大，基本上可以执行任何操作。
 
 110
 00:10:37,410 --> 00:10:44,090
 如此强大，我们可以创建一种编程语言
-that only runs on this single weird machine.
+只在这台奇怪的机器上运行。
 
 111
 00:10:44,090 --> 00:10:49,330
@@ -555,7 +555,7 @@ that only runs on this single weird machine.
 
 114
 00:11:03,000 --> 00:11:05,680
-it's so beautiful at the same time.
+同时又很漂亮。
 
 115
 00:11:05,680 --> 00:11:10,450
@@ -579,7 +579,7 @@ it's so beautiful at the same time.
 
 119
 00:11:27,040 --> 00:11:28,140
-works.
+作品。
 
 120
 00:11:28,140 --> 00:11:31,610
@@ -593,7 +593,7 @@ works.
 
 122
 00:11:36,250 --> 00:11:37,440
-IT security papers.
+IT安全文件。
 
 123
 00:11:37,440 --> 00:11:37,700

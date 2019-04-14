@@ -32,7 +32,7 @@
 
 9
 00:00:46,230 --> 00:00:55,430
-any compile flags and see what we get.
+任何编译标志，看看我们得到了什么。
 
 10
 00:00:55,430 --> 00:01:01,190
@@ -56,7 +56,7 @@ any compile flags and see what we get.
 
 15
 00:01:20,590 --> 00:01:22,960
-with format0.
+用格式0。
 
 16
 00:01:22,960 --> 00:01:28,950
@@ -68,7 +68,7 @@ with format0.
 
 18
 00:01:35,509 --> 00:01:39,039
-inject stuff like %d or %s.
+注入类似%d或%s的内容。
 
 19
 00:01:39,040 --> 00:01:46,670
@@ -76,11 +76,11 @@ inject stuff like %d or %s.
 
 20
 00:01:46,670 --> 00:01:54,790
-to stdout, like regular printf, but prints, or stores the formatted string, in buffer.
+到stdout，如常规printf，但在缓冲区中打印或存储格式化字符串。
 
 21
 00:01:54,790 --> 00:01:57,520
-And the buffer is only 64 bytes long.
+缓冲区只有64个字节长。
 
 22
 00:01:57,520 --> 00:02:02,690
@@ -96,11 +96,11 @@ And the buffer is only 64 bytes long.
 
 25
 00:02:14,330 --> 00:02:20,290
-it so that it’s overflown with 0xdeadbeef you pass this check.
+这样你就可以通过这张支票了。
 
 26
 00:02:20,290 --> 00:02:25,480
-So enter 64characters, and 0xdeadbeef and you won.
+所以输入64个字符，输入0个死区，你就赢了。
 
 27
 00:02:25,480 --> 00:02:30,370
@@ -120,7 +120,7 @@ So enter 64characters, and 0xdeadbeef and you won.
 
 31
 00:02:51,850 --> 00:02:55,570
-are written into buffer and you win.
+写进缓冲区，你就赢了。
 
 32
 00:02:55,569 --> 00:02:59,069
@@ -132,7 +132,7 @@ are written into buffer and you win.
 
 34
 00:03:05,489 --> 00:03:11,149
-to install peda, a gdb extension that makes things look nicer.
+安装PEDA，一个使事情看起来更美好的GDB扩展。
 
 35
 00:03:11,150 --> 00:03:15,520
@@ -156,7 +156,7 @@ to install peda, a gdb extension that makes things look nicer.
 
 40
 00:03:43,220 --> 00:03:50,160
-buffer. It is before, so we can write as much data as we want, we won’t overwrite target.
+缓冲器。它是以前的，所以我们可以写尽可能多的数据，我们不会覆盖目标。
 
 41
 00:03:50,160 --> 00:03:57,140
@@ -164,7 +164,7 @@ buffer. It is before, so we can write as much data as we want, we won’t overwr
 
 42
 00:03:57,140 --> 00:04:06,280
-for the string is loaded from basepointer - 0x50, so it’s located after target.
+因为字符串是从basepointer-0x50加载的，所以它位于目标之后。
 
 43
 00:04:06,280 --> 00:04:08,980
@@ -188,7 +188,7 @@ for the string is loaded from basepointer - 0x50, so it’s located after target
 
 48
 00:04:32,710 --> 00:04:38,900
-它把0个死区写到一个地址。所以我们可以写信给目标公司，然后赢了。
+它把0个死区写到一个地址。所以我们可以写信给Target，然后赢了
 
 49
 00:04:38,900 --> 00:04:39,900
@@ -196,11 +196,11 @@ for the string is loaded from basepointer - 0x50, so it’s located after target
 
 50
 00:04:39,900 --> 00:04:47,560
-But ASLR is our problem. Let me add a printf to the code to print the address of target.
+但ASLR是我们的问题。让我在代码中添加一个printf来打印目标的地址。
 
 51
 00:04:47,560 --> 00:04:52,250
-ampercant target returns the reference of a variable, so that’s the address.
+ampercant目标返回变量的引用，因此这就是地址。
 
 52
 00:04:52,250 --> 00:04:58,100
@@ -228,7 +228,7 @@ ampercant target returns the reference of a variable, so that’s the address.
 
 58
 00:05:30,430 --> 00:05:36,640
-where we bruteforced a 3 byte stack cookie, that was roughly 16 million possible options.
+在这里我们野蛮地构造了一个3字节的堆栈cookie，这是大约1600万个可能的选项。
 
 59
 00:05:36,639 --> 00:05:41,879
@@ -240,7 +240,7 @@ where we bruteforced a 3 byte stack cookie, that was roughly 16 million possible
 
 61
 00:05:47,960 --> 00:05:53,400
-have to install the gcc multilib to do that. And then we can compile it with -m32.
+为此，必须安装gcc multilib。然后我们可以用-m32编译它。
 
 62
 00:05:53,400 --> 00:06:00,110
@@ -264,7 +264,7 @@ have to install the gcc multilib to do that. And then we can compile it with -m3
 
 67
 00:06:25,069 --> 00:06:26,799
-really do it.
+真的做到了。
 
 68
 00:06:26,800 --> 00:06:30,660
@@ -352,15 +352,15 @@ sprintf格式的结果。让我们尝试通过消费在堆栈上找到aabbb
 
 89
 00:08:25,271 --> 00:08:29,701
-here at offset 9 we now printed the hex value of our input.
+在偏移量9处，我们现在打印输入的十六进制值。
 
 90
 00:08:29,699 --> 00:08:36,349
-Now let’s look at the stack layout for a nice stack address we could partially overwrite.
+现在，让我们看看堆栈布局，找到一个可以部分覆盖的好的堆栈地址。
 
 91
 00:08:36,349 --> 00:08:42,989
-Ok so down here is one, let’s see what offset that has. Let’s keep going.
+好的，下面是一个，让我们看看有什么偏移。我们继续走吧。
 
 92
 00:08:42,990 --> 00:08:48,330
@@ -368,7 +368,7 @@ Ok so down here is one, let’s see what offset that has. Let’s keep going.
 
 93
 00:08:48,330 --> 00:08:54,860
-9 to offset 19 we have 10 groups of 8 bytes, so 80 bytes to fill and reach this value.
+9为了偏移19，我们有10组8字节，所以80字节可以填充并达到这个值。
 
 94
 00:08:54,860 --> 00:08:59,980
@@ -380,7 +380,7 @@ Ok so down here is one, let’s see what offset that has. Let’s keep going.
 
 96
 00:09:05,269 --> 00:09:11,929
-end of our address that got printed by our 19 lx, got overwritten with As.
+地址的结尾被我们的19 lx打印出来，用as覆盖。
 
 97
 00:09:11,930 --> 00:09:17,680
@@ -400,7 +400,7 @@ end of our address that got printed by our 19 lx, got overwritten with As.
 
 101
 00:09:35,200 --> 00:09:40,850
-that often it’s not the same, but eventually, it will match.
+这往往是不一样的，但最终，它会匹配。
 
 102
 00:09:40,850 --> 00:09:49,890
@@ -436,7 +436,7 @@ that often it’s not the same, but eventually, it will match.
 
 110
 00:10:30,190 --> 00:10:34,040
-we can do %n, and that’s not possible.
+我们可以做%n，这是不可能的。
 
 111
 00:10:34,040 --> 00:10:39,500
@@ -452,5 +452,5 @@ we can do %n, and that’s not possible.
 
 114
 00:10:47,670 --> 00:10:49,700
-a semi reliable exploit for this.
+对此的半可靠利用。
 

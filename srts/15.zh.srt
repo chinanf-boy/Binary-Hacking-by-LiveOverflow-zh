@@ -1,10 +1,10 @@
 1
 00:00:06,230 --> 00:00:09,050
-Let’s move on to exploit-exercises stack level 5.
+让我们继续利用练习堆栈级别5。
 
 2
 00:00:09,050 --> 00:00:13,430
-You should have watched the previous videos to understand how we got here.
+你应该看之前的录像了解我们是怎么到这里的。
 
 3
 00:00:13,430 --> 00:00:14,530
@@ -12,7 +12,7 @@ You should have watched the previous videos to understand how we got here.
 
 4
 00:00:14,530 --> 00:00:20,240
-Stack5 is a standard buffer overflow, this time introducing shellcode.
+stack5是一个标准的缓冲区溢出，这次引入了shellcode。
 
 5
 00:00:20,240 --> 00:00:21,260
@@ -20,11 +20,11 @@ Stack5 is a standard buffer overflow, this time introducing shellcode.
 
 6
 00:00:21,260 --> 00:00:25,200
-that, it might be easier to use someone elses shellcode.
+这样，可能更容易使用别人的shellcode。
 
 7
 00:00:25,199 --> 00:00:27,179
-That is also what we will do.
+这也是我们将要做的。
 
 8
 00:00:27,180 --> 00:00:28,180
@@ -36,19 +36,19 @@ That is also what we will do.
 
 10
 00:00:33,579 --> 00:00:37,049
-the program executing and return to the debugger.
+执行并返回调试器的程序。
 
 11
 00:00:37,050 --> 00:00:38,360
-And that is very helpful.
+这很有帮助。
 
 12
 00:00:38,360 --> 00:00:41,760
-Ok, let’s have a look at this code.
+好的，让我们看一下这个代码。
 
 13
 00:00:41,760 --> 00:00:42,950
-It is surprisingly small.
+它非常小。
 
 14
 00:00:42,949 --> 00:00:48,309
@@ -56,7 +56,7 @@ It is surprisingly small.
 
 15
 00:00:48,309 --> 00:00:49,839
-on the stack.
+在堆栈上。
 
 16
 00:00:49,840 --> 00:00:54,680
@@ -64,27 +64,27 @@ on the stack.
 
 17
 00:00:54,680 --> 00:01:01,920
-So put on your wizard's hat, because we will do some magic.
+所以戴上巫师的帽子，因为我们会做一些魔法。
 
 18
 00:01:01,920 --> 00:01:07,360
-Let’s open this program in gdb, and let’s just throw a long string against it.
+让我们在gdb中打开这个程序，然后向它抛出一个长字符串。
 
 19
 00:01:07,360 --> 00:01:10,820
-To do that let’s already prepare our exploit script.
+为了做到这一点，我们已经准备好了我们的漏洞脚本。
 
 20
 00:01:10,820 --> 00:01:14,900
-So first we want to find the offset that allows us to control the instruction pointer.
+所以我们首先要找到允许我们控制指令指针的偏移量。
 
 21
 00:01:14,900 --> 00:01:17,800
-I’d like to use a simple pattern like the alphabet.
+我想用一个简单的模式，像字母表。
 
 22
 00:01:17,800 --> 00:01:21,770
-So I create this exploit variable and assign the long string to it, and then print that.
+所以我创建了这个漏洞变量，并将长字符串赋给它，然后打印它。
 
 23
 00:01:21,770 --> 00:01:26,840
@@ -92,15 +92,15 @@ So I create this exploit variable and assign the long string to it, and then pri
 
 24
 00:01:26,840 --> 00:01:28,350
-gdb.
+GDB。
 
 25
 00:01:28,350 --> 00:01:32,150
-Before we execute the program, let’s create a breakpoint at the return of main.
+在执行程序之前，让我们在main的返回处创建一个断点。
 
 26
 00:01:32,150 --> 00:01:36,970
-And let’s define a hook, like we have done in a previous video.
+让我们定义一个钩子，就像我们在前一个视频中所做的那样。
 
 27
 00:01:36,970 --> 00:01:41,610
@@ -108,43 +108,43 @@ And let’s define a hook, like we have done in a previous video.
 
 28
 00:01:41,610 --> 00:01:47,190
-next, so examine one instruction at the location of eip.
+接下来，检查EIP位置的一条指令。
 
 29
 00:01:47,190 --> 00:01:51,390
-And then examine 8 words as hex from the stack.
+然后从堆栈中检查8个十六进制单词。
 
 30
 00:01:51,390 --> 00:01:52,890
-And end.
+结束。
 
 31
 00:01:52,890 --> 00:01:56,450
-Then execute it, and we hit the breakpoint at the return.
+然后执行它，我们在返回时碰到了断点。
 
 32
 00:01:56,450 --> 00:01:59,790
-The next line shows us how the stack looks like right now.
+下一行显示了堆栈现在的样子。
 
 33
 00:01:59,790 --> 00:02:05,270
-And when we execute the ret, we will jump to the address that was on the stack before.
+当我们执行ret时，我们将跳转到堆栈上以前的地址。
 
 34
 00:02:05,270 --> 00:02:08,390
-So no execute it again with the alphabet.
+所以不可以用字母表再执行一次。
 
 35
 00:02:08,390 --> 00:02:12,890
-We are at the return again, and we can see that we have overwritten stuff on the stack.
+我们再次返回，我们可以看到堆栈上有覆盖的内容。
 
 36
 00:02:12,890 --> 00:02:18,470
-So now we try to return to address hex 54545454.
+现在我们试着返回地址hex 545454。
 
 37
 00:02:18,469 --> 00:02:21,719
-Which is obviously invalid, so we get a Segmentation Fault.
+这显然是无效的，所以我们得到一个分割错误。
 
 38
 00:02:21,719 --> 00:02:26,459
@@ -152,15 +152,15 @@ Which is obviously invalid, so we get a Segmentation Fault.
 
 39
 00:02:26,459 --> 00:02:31,419
-T’s.
+T的
 
 40
 00:02:31,420 --> 00:02:34,270
-So let’s update our exploit script.
+所以让我们更新我们的漏洞脚本。
 
 41
 00:02:34,269 --> 00:02:35,819
-This will be our padding.
+这将是我们的填充物。
 
 42
 00:02:35,819 --> 00:02:40,119
@@ -168,15 +168,15 @@ This will be our padding.
 
 43
 00:02:40,120 --> 00:02:42,280
-jump anywhere we want.
+想跳到哪里就跳。
 
 44
 00:02:42,280 --> 00:02:46,400
-And I use struct to create a binary string from the address again.
+我再次使用struct从地址创建一个二进制字符串。
 
 45
 00:02:46,400 --> 00:02:48,750
-So struct.pack.
+所以结构。
 
 46
 00:02:48,749 --> 00:02:50,269
@@ -184,7 +184,7 @@ So struct.pack.
 
 47
 00:02:50,269 --> 00:02:55,089
-We don’t have any win() function like in previous levels.
+我们没有任何win（）函数，就像以前的级别一样。
 
 48
 00:02:55,090 --> 00:02:57,220
@@ -192,31 +192,31 @@ We don’t have any win() function like in previous levels.
 
 49
 00:02:57,219 --> 00:03:04,589
-I think I will give you a second to think about this.
+我想我会让你考虑一下。
 
 50
 00:03:04,590 --> 00:03:13,040
-Right, we can just jump to the stack where we control data.
+对，我们可以直接跳到控制数据的堆栈。
 
 51
 00:03:13,040 --> 00:03:16,290
-So obviously we could place some assembler code there.
+所以很明显我们可以在那里放置一些汇编代码。
 
 52
 00:03:16,290 --> 00:03:18,320
-Now let’s find a good address.
+现在我们找个好地址。
 
 53
 00:03:18,319 --> 00:03:22,089
-We could just jump right after the instruction pointer we control.
+我们可以直接跳到我们控制的指令指针之后。
 
 54
 00:03:22,090 --> 00:03:27,020
-To do that just run again, execute the ret and have a look at the stack pointer.
+要做到这一点，只需再次运行，执行ret并查看堆栈指针。
 
 55
 00:03:27,019 --> 00:03:29,999
-So that is the address we want to jump to.
+所以这就是我们要跳转到的地址。
 
 56
 00:03:30,000 --> 00:03:35,820
@@ -224,23 +224,23 @@ So that is the address we want to jump to.
 
 57
 00:03:35,819 --> 00:03:41,809
-not use the opcode CC, the int3, they were suggesting in the challenge description.
+不使用操作码cc，即int3，它们在挑战描述中给出了建议。
 
 58
 00:03:41,810 --> 00:03:45,340
-Let’s also quickly have a look at the intel instruction reference.
+我们还可以快速查看英特尔指令参考。
 
 59
 00:03:45,340 --> 00:03:47,800
-Let’s search for “Int 3”.
+让我们搜索“int 3”。
 
 60
 00:03:47,799 --> 00:03:50,469
-Ok mmhh… call itnerrupt procedure.
+好的，嗯…叫它中断程序。
 
 61
 00:03:50,469 --> 00:03:52,159
-what else do we find.
+我们还能找到什么。
 
 62
 00:03:52,160 --> 00:03:56,570
@@ -248,15 +248,15 @@ what else do we find.
 
 63
 00:03:56,569 --> 00:03:59,109
-Huuu, that’s interesting.
+胡，真有趣。
 
 64
 00:03:59,110 --> 00:04:02,160
-Ok and here is the description of it.
+好的，这是对它的描述。
 
 65
 00:04:02,159 --> 00:04:04,399
-Interrupt number 3, traps to debugger.
+中断3，陷阱到调试器。
 
 66
 00:04:04,400 --> 00:04:06,390
@@ -268,7 +268,7 @@ Int3指令是一个特殊的单字节操作码（CC），用于调用
 
 68
 00:04:11,819 --> 00:04:13,579
-debug exception handler.
+调试异常处理程序。
 
 69
 00:04:13,579 --> 00:04:18,399
@@ -280,11 +280,11 @@ debug exception handler.
 
 71
 00:04:23,000 --> 00:04:24,050
-other code).
+其他代码）。
 
 72
 00:04:24,050 --> 00:04:25,050
-wooooh.
+哇哦。
 
 73
 00:04:25,050 --> 00:04:26,510
@@ -300,7 +300,7 @@ wooooh.
 
 76
 00:04:31,500 --> 00:04:34,220
-How can you just stop the CPU from executing something.
+你怎么能阻止CPU执行某件事情呢？
 
 77
 00:04:34,220 --> 00:04:36,200
@@ -308,23 +308,23 @@ How can you just stop the CPU from executing something.
 
 78
 00:04:36,200 --> 00:04:40,630
-Actually a debugger can just use the INT 3 instruction.
+实际上，调试程序只能使用int 3指令。
 
 79
 00:04:40,630 --> 00:04:42,570
-Let’s make an example.
+让我们举个例子。
 
 80
 00:04:42,570 --> 00:04:45,810
-We just created a breakpoint at this ret.
+我们刚刚在这个ret上创建了一个断点。
 
 81
 00:04:45,810 --> 00:04:51,080
-What we actually did was, we replaced this return instruction in memory with int 3.
+实际上，我们用int 3替换了内存中的这个返回指令。
 
 82
 00:04:51,080 --> 00:04:54,110
-And when the CPU reached this instruction, an exception was raised.
+当CPU达到这个指令时，引发了一个异常。
 
 83
 00:04:54,110 --> 00:05:00,010
@@ -336,11 +336,11 @@ And when the CPU reached this instruction, an exception was raised.
 
 85
 00:05:07,140 --> 00:05:08,140
-continued somewhere else).
+继续其他地方）。
 
 86
 00:05:08,140 --> 00:05:12,180
-And we can now decide how we want to handle this exception.
+现在我们可以决定如何处理这个异常。
 
 87
 00:05:12,180 --> 00:05:16,990
@@ -348,15 +348,15 @@ And we can now decide how we want to handle this exception.
 
 88
 00:05:16,990 --> 00:05:18,920
-value, the return instruction.
+值，返回指令。
 
 89
 00:05:18,920 --> 00:05:22,920
-That can also be used as an anti reversing technique.
+这也可以作为一种反反转技术。
 
 90
 00:05:22,920 --> 00:05:26,780
-Because a regular application will not use the CC instruction.
+因为常规应用程序不会使用CC指令。
 
 91
 00:05:26,780 --> 00:05:31,890
@@ -364,31 +364,31 @@ Because a regular application will not use the CC instruction.
 
 92
 00:05:31,890 --> 00:05:36,590
-knows that somebody attached a debugger and tried to set a breakpoint.
+知道有人附加了一个调试器并试图设置断点。
 
 93
 00:05:36,590 --> 00:05:38,220
-And now we will use the CC in our payload.
+现在我们将在有效载荷中使用CC。
 
 94
 00:05:38,220 --> 00:05:39,220
-So let’s append a couple of CCs after the overwritten return pointer.
+所以让我们在覆盖的返回指针后面附加几个ccs。
 
 95
 00:05:39,220 --> 00:05:41,890
-Don’t forget to write the output of the script into the exploit file.
+不要忘记将脚本的输出写入漏洞文件。
 
 96
 00:05:41,890 --> 00:05:44,040
-And then test this in gdb.
+然后在gdb中测试这个。
 
 97
 00:05:44,040 --> 00:05:45,740
-Ok run again.
+好的，再跑。
 
 98
 00:05:45,740 --> 00:05:49,800
-We can see that we stopped at the ret and we see the address where we would return to.
+我们可以看到我们停在惩戒所，我们看到我们将返回的地址。
 
 99
 00:05:49,800 --> 00:05:56,200
@@ -400,11 +400,11 @@ We can see that we stopped at the ret and we see the address where we would retu
 
 101
 00:06:02,500 --> 00:06:07,560
-stopped because it received a signal SIGTRAP, a trace/breakpoint trap.
+停止，因为它接收到一个信号信号陷阱，一个跟踪/断点陷阱。
 
 102
 00:06:07,560 --> 00:06:08,560
-Cool.
+酷。
 
 103
 00:06:08,560 --> 00:06:13,220
@@ -412,7 +412,7 @@ Cool.
 
 104
 00:06:13,220 --> 00:06:14,930
-instruction.
+指令。
 
 105
 00:06:14,930 --> 00:06:17,360
@@ -428,27 +428,27 @@ instruction.
 
 108
 00:06:22,430 --> 00:06:24,630
-That is not what we should see.
+这不是我们应该看到的。
 
 109
 00:06:24,630 --> 00:06:26,240
-We should get the breakpoint message.
+我们应该得到断点消息。
 
 110
 00:06:26,240 --> 00:06:31,060
-Let’s open it in gdb here and try it again.
+让我们在gdb中打开它，然后再试一次。
 
 111
 00:06:31,060 --> 00:06:32,460
-Still illegal instruction.
+仍然是非法指令。
 
 112
 00:06:32,460 --> 00:06:39,880
-Let’s set the hooks and the breakpoints like in the other gdb session.
+让我们像在其他gdb会话中一样设置钩子和断点。
 
 113
 00:06:39,880 --> 00:06:41,370
-Ok run.
+好吧，跑吧。
 
 114
 00:06:41,370 --> 00:06:42,660
@@ -456,7 +456,7 @@ Ok run.
 
 115
 00:06:42,660 --> 00:06:45,060
-The addresses on the stack are not the same.
+堆栈上的地址不相同。
 
 116
 00:06:45,060 --> 00:06:47,220
@@ -464,43 +464,43 @@ The addresses on the stack are not the same.
 
 117
 00:06:47,220 --> 00:06:49,550
-Let’s do something crazy.
+让我们做些疯狂的事情吧。
 
 118
 00:06:49,550 --> 00:06:50,710
-Print the whole stack.
+打印整个堆栈。
 
 119
 00:06:50,710 --> 00:06:53,060
-I just print a thousand strings or something.
+我只印了一千串或其他东西。
 
 120
 00:06:53,060 --> 00:06:55,250
-Let’s se what we get.
+让我们看看我们得到了什么。
 
 121
 00:06:55,250 --> 00:06:57,130
-Ok first we have some gibebrish.
+好的，首先我们有一些基代数。
 
 122
 00:06:57,130 --> 00:06:58,270
-Let’s go further.
+我们走得更远。
 
 123
 00:06:58,270 --> 00:06:59,270
-UUUh… see.
+嗯……看。
 
 124
 00:06:59,270 --> 00:07:00,980
-Now we get some interesting stuff.
+现在我们得到一些有趣的东西。
 
 125
 00:07:00,980 --> 00:07:04,160
-Let’s do the same in the other gdb session.
+让我们在另一个gdb会话中做同样的事情。
 
 126
 00:07:04,160 --> 00:07:06,380
-This looks like the environment variables.
+这看起来像环境变量。
 
 127
 00:07:06,380 --> 00:07:11,150
@@ -508,23 +508,23 @@ This looks like the environment variables.
 
 128
 00:07:11,150 --> 00:07:12,150
-video.
+视频。
 
 129
 00:07:12,150 --> 00:07:16,400
-Mh and when you look at the addresses, they are still diferent.
+当你看到地址时，它们仍然是不同的。
 
 130
 00:07:16,400 --> 00:07:17,400
-So let’s look a bit further down.
+让我们再往下看。
 
 131
 00:07:17,400 --> 00:07:21,630
-mh! down here they are the same.
+嗯！在这里他们是一样的。
 
 132
 00:07:21,630 --> 00:07:26,540
-So between here and the environemnt variables above there mus be something different.
+所以在这里和上面的环境变量之间，有一些不同。
 
 133
 00:07:26,540 --> 00:07:31,710
@@ -532,11 +532,11 @@ So between here and the environemnt variables above there mus be something diffe
 
 134
 00:07:31,710 --> 00:07:33,610
-working directory is different.
+工作目录不同。
 
 135
 00:07:33,610 --> 00:07:35,960
-They have a different length.
+它们的长度不同。
 
 136
 00:07:35,960 --> 00:07:41,010
@@ -544,15 +544,15 @@ They have a different length.
 
 137
 00:07:41,010 --> 00:07:42,010
-path.
+路径。
 
 138
 00:07:42,010 --> 00:07:44,060
-And thus pushing the stack further up.
+从而进一步推高堆栈。
 
 139
 00:07:44,060 --> 00:07:48,170
-No wonder that the stack addresses are not the same anymore.
+难怪堆栈地址不再相同了。
 
 140
 00:07:48,170 --> 00:07:50,340
@@ -564,15 +564,15 @@ No wonder that the stack addresses are not the same anymore.
 
 142
 00:07:54,290 --> 00:07:55,290
-stack.
+栈。
 
 143
 00:07:55,290 --> 00:07:59,140
-For example by removing all environment variables before executing a binary.
+例如，在执行二进制文件之前删除所有环境变量。
 
 144
 00:07:59,140 --> 00:08:03,550
-But there is another very easy but effective trick.
+但还有另一个非常简单但有效的技巧。
 
 145
 00:08:03,550 --> 00:08:04,690
@@ -588,15 +588,15 @@ But there is another very easy but effective trick.
 
 148
 00:08:10,280 --> 00:08:13,300
-Let’s just add a looooot of NOP instructions.
+让我们添加一个loooot的nop指令。
 
 149
 00:08:13,300 --> 00:08:16,050
-A Nop instruction performs no operation.
+nop指令不执行任何操作。
 
 150
 00:08:16,050 --> 00:08:17,980
-And it has the opcode hex 90.
+它有操作码hex 90。
 
 151
 00:08:17,980 --> 00:08:22,310
@@ -604,19 +604,19 @@ And it has the opcode hex 90.
 
 152
 00:08:22,310 --> 00:08:24,150
-hits our nops.
+击中我们的NoP。
 
 153
 00:08:24,150 --> 00:08:25,580
-So run again.
+所以再次运行。
 
 154
 00:08:25,580 --> 00:08:28,710
-Now we can see we have a lot of NOPs on the stack.
+现在我们可以看到堆栈上有很多nop。
 
 155
 00:08:28,710 --> 00:08:32,700
-And the address we will jump to points somewhere else further down.
+我们将跳转到下一个其他地方的地址。
 
 156
 00:08:32,700 --> 00:08:36,930
@@ -624,11 +624,11 @@ And the address we will jump to points somewhere else further down.
 
 157
 00:08:36,930 --> 00:08:39,990
-of the nops.
+NOPS的。
 
 158
 00:08:39,990 --> 00:08:42,740
-So let’s just single step forwards.
+让我们向前迈出一步。
 
 159
 00:08:42,740 --> 00:08:48,030
@@ -636,55 +636,55 @@ So let’s just single step forwards.
 
 160
 00:08:48,029 --> 00:08:49,219
-Boom.
+繁荣。
 
 161
 00:08:49,220 --> 00:08:50,410
-Cool.
+酷。
 
 162
 00:08:50,410 --> 00:08:53,780
-And that also works now outside of gdb.
+这也在GDB之外起作用。
 
 163
 00:08:53,779 --> 00:08:56,959
-Now instead of CC, we want to execute something useful.
+现在，我们要执行一些有用的操作，而不是CC。
 
 164
 00:08:56,960 --> 00:08:59,390
-So let’s look for some shellcode.
+所以我们来找一些外壳代码。
 
 165
 00:08:59,389 --> 00:09:04,259
-As the challenge description said, it’s best to reuse shellcode from other people.
+正如挑战描述所说，最好重用其他人的shell代码。
 
 166
 00:09:04,259 --> 00:09:08,639
-I really like the collection of shellcode from shellstorm.
+我真的很喜欢从ShellStorm收集的Shellcode。
 
 167
 00:09:08,640 --> 00:09:12,660
-Shellstorm has a lot of different kind of shellcode, for a lot of different system.
+ShellStorm有许多不同类型的Shellcode，用于许多不同的系统。
 
 168
 00:09:12,660 --> 00:09:16,280
-So we are looking for a Linux Intel 32bit shellcode.
+因此，我们正在寻找一个LinuxIntel32bit shellcode。
 
 169
 00:09:16,279 --> 00:09:21,809
-FreeBSD, Linux on ARM, 64bit, and here we have 32bit.
+freebsd，arm上的linux，64位，这里我们有32位。
 
 170
 00:09:21,810 --> 00:09:24,360
-They all have a short description and do different stuff.
+他们都有一个简短的描述和做不同的事情。
 
 171
 00:09:24,360 --> 00:09:28,540
-But we are looking for a simple execve that will execute a shell.
+但是我们正在寻找一个简单的execve来执行shell。
 
 172
 00:09:28,540 --> 00:09:31,160
-So, why not take this one.
+所以，为什么不买这个呢？
 
 173
 00:09:31,160 --> 00:09:35,310
@@ -692,11 +692,11 @@ So, why not take this one.
 
 174
 00:09:35,310 --> 00:09:40,730
-on the stack, which are infact just a string that is the path /bin/sh.
+在堆栈上，它只是一个字符串，它是路径/bin/sh。
 
 175
 00:09:40,730 --> 00:09:42,960
-And then calls execve.
+然后呼叫Execve。
 
 176
 00:09:42,959 --> 00:09:46,699
@@ -704,11 +704,11 @@ And then calls execve.
 
 177
 00:09:46,699 --> 00:09:52,559
-program.
+程序。
 
 178
 00:09:52,560 --> 00:09:59,600
-mhmh… nothing happens.
+嗯……什么都没发生。
 
 179
 00:09:59,600 --> 00:10:00,600
@@ -716,39 +716,39 @@ mhmh… nothing happens.
 
 180
 00:10:00,600 --> 00:10:03,930
-Let’s add the CC at the start of the payload if we still hit it.
+让我们在有效载荷开始时添加CC，如果我们仍然击中它。
 
 181
 00:10:03,931 --> 00:10:07,711
-It should work.
+它应该起作用。
 
 182
 00:10:07,709 --> 00:10:12,029
-Remove the CC againa and try it in gdb. let’s single step.
+移除CC againa并在gdb中尝试。让我们迈出一步。
 
 183
 00:10:12,029 --> 00:10:13,549
-We are sliding down the nop slide.
+我们正在滑下NOP滑道。
 
 184
 00:10:13,550 --> 00:10:14,550
-All seems fine.
+一切似乎都很好。
 
 185
 00:10:14,550 --> 00:10:15,960
-And now comes the shellcode.
+现在是Shellcode。
 
 186
 00:10:15,959 --> 00:10:20,059
-And it says: “Executing new program, /bin/dash”.
+它说：“执行新程序，/bin/dash”。
 
 187
 00:10:20,060 --> 00:10:23,010
-That first sounds weird, but is correct.
+这听起来很奇怪，但是正确的。
 
 188
 00:10:23,010 --> 00:10:25,180
-/bin/sh just points to /bin/dash.
+/bin/sh只指向/bin/dash。
 
 189
 00:10:25,180 --> 00:10:27,970
@@ -756,31 +756,31 @@ That first sounds weird, but is correct.
 
 190
 00:10:27,970 --> 00:10:28,970
-Also on a side note.
+也在旁注上。
 
 191
 00:10:28,970 --> 00:10:30,520
-This gdb session is no broken.
+这个gdb会话没有中断。
 
 192
 00:10:30,520 --> 00:10:34,090
-Because execve, replaces the current program with another one.
+因为execve，所以用另一个程序替换当前程序。
 
 193
 00:10:34,089 --> 00:10:35,909
-So stack5 got replaced by /bin/dash.
+所以stack5被/bin/dash替换。
 
 194
 00:10:35,910 --> 00:10:39,490
-And you can see that when you try to execute it again.
+当你再次尝试执行它时，你可以看到这一点。
 
 195
 00:10:39,490 --> 00:10:41,950
-So you would have to load stack5 again with file.
+所以您必须再次加载stack5和文件。
 
 196
 00:10:41,949 --> 00:10:42,949
-Ok.
+好啊。
 
 197
 00:10:42,949 --> 00:10:45,339
@@ -788,15 +788,15 @@ Ok.
 
 198
 00:10:45,339 --> 00:10:46,979
-This is one of the things I got nuts.
+这是我发疯的原因之一。
 
 199
 00:10:46,980 --> 00:10:52,070
-When I first got stuck like this I spend houuurs trying to figure out what is happening.
+当我第一次陷入这样的困境时，我花了好几个小时试图弄清楚到底发生了什么。
 
 200
 00:10:52,069 --> 00:10:57,579
-As much as I want to see anybody else suffer like me, I tell you what the problem is.
+尽管我很想看到像我这样的人受苦，但我告诉你问题出在哪里。
 
 201
 00:10:57,579 --> 00:11:01,459
@@ -804,51 +804,51 @@ As much as I want to see anybody else suffer like me, I tell you what the proble
 
 202
 00:11:01,459 --> 00:11:02,759
-From standard input.
+来自标准输入。
 
 203
 00:11:02,759 --> 00:11:03,759
-But!.
+但是！.
 
 204
 00:11:03,759 --> 00:11:09,309
-We used a program and redirected it’s stdoutput into the stdinput of this program.
+我们使用了一个程序，并将它的stdOutput重定向到这个程序的stdInput中。
 
 205
 00:11:09,309 --> 00:11:12,389
-And when the program was done it closed that pipe.
+当程序完成后，它关闭了管道。
 
 206
 00:11:12,389 --> 00:11:16,299
-So now the shell is executed, but doesn’t have any input.
+所以现在shell被执行，但没有任何输入。
 
 207
 00:11:16,300 --> 00:11:17,310
-Because it’s closed.
+因为它已经关闭了。
 
 208
 00:11:17,310 --> 00:11:19,490
-So it will just exit.
+所以它就会退出。
 
 209
 00:11:19,490 --> 00:11:22,960
-And there is a neat trick to get basically around that.
+有一个很好的技巧可以基本上解决这个问题。
 
 210
 00:11:22,959 --> 00:11:28,989
-When you use cat without parameters, it simply redirect it’s stdinput to the standard output.
+当您在没有参数的情况下使用cat时，它只是将stdinput重定向到标准输出。
 
 211
 00:11:28,990 --> 00:11:30,130
-See like here.
+请看这里。
 
 212
 00:11:30,130 --> 00:11:34,280
-You type something in, and it get’s reflected out.
+你输入一些东西，它就会反射出来。
 
 213
 00:11:34,279 --> 00:11:38,859
-Now you can chain programs together on one line, for example with semicolon.
+现在，您可以在一行上将程序链接在一起，例如使用分号。
 
 214
 00:11:38,860 --> 00:11:43,930
@@ -856,7 +856,7 @@ Now you can chain programs together on one line, for example with semicolon.
 
 215
 00:11:43,930 --> 00:11:45,730
-enter new input.
+输入新输入。
 
 216
 00:11:45,730 --> 00:11:50,270
@@ -868,25 +868,25 @@ enter new input.
 
 218
 00:11:55,559 --> 00:11:59,459
-and we can simply relay input via cat to the shell.
+我们可以简单地将输入通过cat中继到shell。
 
 219
 00:11:59,459 --> 00:12:01,709
-BAM! it works.
+巴姆！它起作用了。
 
 220
 00:12:01,709 --> 00:12:06,599
-We have an ugly shell, and we can verify our identity with whoami, or id.
+我们有一个丑陋的外壳，我们可以用whoami或id来验证我们的身份。
 
 221
 00:12:06,600 --> 00:12:09,260
-So now we escalated privileges to root.
+所以现在我们把特权升级到根目录。
 
 222
 00:12:09,259 --> 00:12:11,239
-Damn. feels so good.
+该死。感觉很好。
 
 223
 00:12:11,240 --> 00:12:12,350
-It’s just beautiful.
+真是太美了。
 

@@ -1,6 +1,6 @@
 1
 00:00:00,110 --> 00:00:03,480
-So I was browsing reddit, and this new CTF for beginners popped up.
+所以我在浏览Reddit，这个新的面向初学者的CTF出现了。
 
 2
 00:00:03,479 --> 00:00:09,079
@@ -8,7 +8,7 @@ So I was browsing reddit, and this new CTF for beginners popped up.
 
 3
 00:00:09,080 --> 00:00:10,080
-stuff.
+东西。
 
 4
 00:00:10,080 --> 00:00:14,080
@@ -20,7 +20,7 @@ stuff.
 
 6
 00:00:18,130 --> 00:00:19,240
-flag.
+旗帜。
 
 7
 00:00:19,240 --> 00:00:23,810
@@ -28,11 +28,11 @@ flag.
 
 8
 00:00:23,810 --> 00:00:24,810
-to gain root.
+生根
 
 9
 00:00:24,810 --> 00:00:32,480
-So let’s do that.
+那我们就这么做吧。
 
 10
 00:00:32,480 --> 00:00:34,990
@@ -44,11 +44,11 @@ So let’s do that.
 
 12
 00:00:40,030 --> 00:00:41,030
-server.
+服务器。
 
 13
 00:00:41,030 --> 00:00:44,370
-So we can simply copy this code to a file in tmp and compile it.
+所以我们可以简单地将这个代码复制到tmp中的一个文件中并编译它。
 
 14
 00:00:44,370 --> 00:00:49,180
@@ -60,7 +60,7 @@ So we can simply copy this code to a file in tmp and compile it.
 
 16
 00:00:55,050 --> 00:00:56,050
-content.
+内容。
 
 17
 00:00:56,050 --> 00:01:00,850
@@ -68,11 +68,11 @@ content.
 
 18
 00:01:00,850 --> 00:01:02,790
-some other characters to it.
+还有其他一些角色。
 
 19
 00:01:02,790 --> 00:01:04,950
-And when we check, we can see that it works.
+当我们检查的时候，我们可以看到它起作用了。
 
 20
 00:01:04,949 --> 00:01:09,849
@@ -80,11 +80,11 @@ And when we check, we can see that it works.
 
 21
 00:01:09,850 --> 00:01:12,070
-vulnerable and he should quickly update.
+易受攻击，他应该迅速更新。
 
 22
 00:01:12,070 --> 00:01:16,550
-But now we need a plan what root file we could overwrite to become root ourselves.
+但是现在我们需要一个计划，我们可以覆盖什么根文件来自己成为根文件。
 
 23
 00:01:16,550 --> 00:01:21,650
@@ -92,7 +92,7 @@ But now we need a plan what root file we could overwrite to become root ourselve
 
 24
 00:01:21,650 --> 00:01:23,500
-prepend anything.
+准备好任何东西。
 
 25
 00:01:23,500 --> 00:01:29,520
@@ -104,15 +104,15 @@ prepend anything.
 
 27
 00:01:34,189 --> 00:01:36,549
-where the entry point is.
+入口点在哪里。
 
 28
 00:01:36,549 --> 00:01:40,589
-An easier strategy is to overwrite data in a text file.
+更简单的策略是覆盖文本文件中的数据。
 
 29
 00:01:40,590 --> 00:01:43,280
-And I chose /etc/passwd.
+我选择了/etc/passwd。
 
 30
 00:01:43,280 --> 00:01:48,200
@@ -120,35 +120,35 @@ And I chose /etc/passwd.
 
 31
 00:01:48,200 --> 00:01:51,280
-user to 0, we would login as root.
+用户为0时，我们将以根用户身份登录。
 
 32
 00:01:51,280 --> 00:01:52,280
-So.
+所以。
 
 33
 00:01:52,280 --> 00:01:55,560
-The dirty cow proof of concept writes to the beginning of the file.
+脏母牛概念证明写入文件的开头。
 
 34
 00:01:55,560 --> 00:01:58,560
-So first we have to figure out the offset inside of /etc/passwd.
+所以我们首先要计算出/etc/passwd内部的偏移量。
 
 35
 00:01:58,560 --> 00:02:02,160
-We can use hexdump for that and count a little bit.
+我们可以用hexdump来计算。
 
 36
 00:02:02,159 --> 00:02:06,839
-So pwn1 user is at offset hex 4c0 plus a little bit.
+所以pwn1用户的偏移量是hex 4c0加上一点。
 
 37
 00:02:06,840 --> 00:02:12,970
-I use python as a caluclator and modify the exploit code to write to a fixed offset.
+我使用python作为计算程序，并修改漏洞代码以写入固定的偏移量。
 
 38
 00:02:12,970 --> 00:02:14,960
-I think here would be a good plan.
+我认为这是个好计划。
 
 39
 00:02:14,959 --> 00:02:20,089
@@ -156,15 +156,15 @@ I think here would be a good plan.
 
 40
 00:02:20,091 --> 00:02:23,951
-write, because you can screw up the whole system if you don’t.
+写，因为如果你不写的话，你可以把整个系统搞砸。
 
 41
 00:02:23,950 --> 00:02:30,150
-So I copy /etc/passwd to try what I want to do before doing it to the real binary.
+所以我复制/etc/passwd来尝试我想做的事情，然后再对真正的二进制文件进行操作。
 
 42
 00:02:30,150 --> 00:02:33,730
-And of course, my first attempt would have wrecked the system.
+当然，我的第一次尝试会破坏系统。
 
 43
 00:02:33,730 --> 00:02:40,670
@@ -172,27 +172,27 @@ And of course, my first attempt would have wrecked the system.
 
 44
 00:02:40,670 --> 00:02:43,360
-and I write to the real /etc/passwd.
+我写信给真正的/etc/passwd。
 
 45
 00:02:43,360 --> 00:02:47,870
-Now when we switch to pwn1 or ssh login to pwn1, we get a root shell.
+现在，当我们切换到pwn1或ssh登录到pwn1时，会得到一个根shell。
 
 46
 00:02:47,870 --> 00:02:51,770
-Then we can read out all flags.
+然后我们可以读出所有的标记。
 
 47
 00:02:51,770 --> 00:02:57,290
-Once we are done, we revert back /etc/passwd to the original state.
+完成后，我们将/etc/passwd恢复到原始状态。
 
 48
 00:02:57,290 --> 00:02:58,550
-Some important notes.
+一些重要的注释。
 
 49
 00:02:58,550 --> 00:03:01,930
-Be very very careful what you overwrite with an exploit like this.
+非常小心你用这样的漏洞覆盖了什么。
 
 50
 00:03:01,930 --> 00:03:08,730
@@ -200,11 +200,11 @@ Be very very careful what you overwrite with an exploit like this.
 
 51
 00:03:08,730 --> 00:03:10,400
-lock yourself out.
+把自己锁在外面。
 
 52
 00:03:10,400 --> 00:03:15,590
-Also if you find a server vulnerable, think about the impact or context you are in.
+另外，如果您发现服务器易受攻击，请考虑您所处的影响或上下文。
 
 53
 00:03:15,590 --> 00:03:21,070
@@ -212,7 +212,7 @@ Also if you find a server vulnerable, think about the impact or context you are 
 
 54
 00:03:21,069 --> 00:03:23,789
-a webserver you exploited from some random company.
+从某个随机公司开发的Web服务器。
 
 55
 00:03:23,790 --> 00:03:27,950
@@ -220,21 +220,21 @@ a webserver you exploited from some random company.
 
 56
 00:03:27,950 --> 00:03:30,400
-damage.
+损坏。
 
 57
 00:03:30,400 --> 00:03:32,210
-Make an ethical decision.
+做出合乎道德的决定。
 
 58
 00:03:32,209 --> 00:03:34,519
-Be aware of the risk you are taking.
+注意你所冒的风险。
 
 59
 00:03:34,519 --> 00:03:39,239
-And thanks to maro for being cool about this and allowing me to make a video about it.
+感谢Maro对这件事的冷静，并允许我制作一个关于它的视频。
 
 60
 00:03:39,239 --> 00:03:40,299
-Good luck with your plattform.
+祝你的鸭嘴兽好运。
 

@@ -4,7 +4,7 @@
 
 2
 00:00:06,410 --> 00:00:08,370
-a modern ubuntu system.
+现代Ubuntu系统。
 
 3
 00:00:08,370 --> 00:00:12,790
@@ -12,7 +12,7 @@ a modern ubuntu system.
 
 4
 00:00:12,789 --> 00:00:15,329
-the end I wasn’t able to solve it.
+结果我没能解决。
 
 5
 00:00:15,329 --> 00:00:22,139
@@ -20,15 +20,15 @@ the end I wasn’t able to solve it.
 
 6
 00:00:22,140 --> 00:00:24,660
-had a method to exploit it.
+有办法利用它。
 
 7
 00:00:24,660 --> 00:00:32,630
-So let’s have a look at it.
+我们来看看。
 
 8
 00:00:32,630 --> 00:00:35,450
-这是wcbowlings post：
+下面是wcbowlings post：
 
 9
 00:00:35,450 --> 00:00:40,250
@@ -36,7 +36,7 @@ So let’s have a look at it.
 
 10
 00:00:40,250 --> 00:00:43,320
-normally under 500 iterations.
+通常在500次迭代下。
 
 11
 00:00:43,320 --> 00:00:46,750
@@ -44,7 +44,7 @@ normally under 500 iterations.
 
 12
 00:00:46,750 --> 00:00:52,550
-Overwrite the GOT entry for __stack_chk_fail with an address so we jump there instead.
+用地址覆盖\堆栈\的got项失败，因此我们跳到那里。
 
 13
 00:00:52,550 --> 00:00:59,390
@@ -52,7 +52,7 @@ Overwrite the GOT entry for __stack_chk_fail with an address so we jump there in
 
 14
 00:00:59,390 --> 00:01:00,930
-instead.
+相反。
 
 15
 00:01:00,930 --> 00:01:07,050
@@ -68,15 +68,15 @@ instead.
 
 18
 00:01:14,740 --> 00:01:17,480
-and here is a learning opportunity for me.
+这是我学习的机会。
 
 19
 00:01:17,480 --> 00:01:19,590
-So I’m not going to pretend I knew this.
+所以我不会假装我知道这些。
 
 20
 00:01:19,590 --> 00:01:25,300
-For whatever reason I never noticed that __stack_chk_fail is in the global offset table.
+无论出于什么原因，我从未注意到uu stack_chk_fail在全局偏移表中。
 
 21
 00:01:25,300 --> 00:01:31,620
@@ -96,11 +96,11 @@ For whatever reason I never noticed that __stack_chk_fail is in the global offse
 
 25
 00:01:47,000 --> 00:01:49,540
-with a stack cookie.
+用一堆饼干。
 
 26
 00:01:49,540 --> 00:01:54,320
-So I really like this challenge now, because the solution is so clever.
+所以我现在真的很喜欢这个挑战，因为这个解决方案很聪明。
 
 27
 00:01:54,320 --> 00:01:57,680
@@ -108,7 +108,7 @@ So I really like this challenge now, because the solution is so clever.
 
 28
 00:01:57,680 --> 00:02:01,100
-buffer overflow is also on the global offset table.
+缓冲区溢出也在全局偏移表上。
 
 29
 00:02:01,100 --> 00:02:07,130
@@ -116,11 +116,11 @@ buffer overflow is also on the global offset table.
 
 30
 00:02:07,130 --> 00:02:08,970
-entry for __stack_chk_fail.
+_uuu stack_chk_的条目失败。
 
 31
 00:02:08,970 --> 00:02:13,110
-And then do a buffer overflow, to trigger that function.
+然后执行缓冲区溢出，以触发该函数。
 
 32
 00:02:13,109 --> 00:02:17,649
@@ -128,11 +128,11 @@ And then do a buffer overflow, to trigger that function.
 
 33
 00:02:17,650 --> 00:02:22,700
-the stack, so that we can use %n with the format string vulnerability.
+堆栈，以便我们可以将%n与格式字符串漏洞一起使用。
 
 34
 00:02:22,700 --> 00:02:29,840
-And the issue is that it contains nullbytes which we can’t pass in via the arguments.
+问题是它包含nullbytes，我们不能通过参数传递。
 
 35
 00:02:29,840 --> 00:02:34,030
@@ -140,15 +140,15 @@ And the issue is that it contains nullbytes which we can’t pass in via the arg
 
 36
 00:02:34,030 --> 00:02:36,400
-So we can’t enter arbitrary nullbytes.
+所以我们不能输入任意的空字节。
 
 37
 00:02:36,400 --> 00:02:42,380
-But wcbowling had a cool trick with empty strings as arguments.
+但是wcpowling有一个很酷的技巧，用空字符串作为参数。
 
 38
 00:02:42,379 --> 00:02:47,579
-Because a string ends with a nullbyte, so an empty string is just null.
+因为字符串以空字节结尾，所以空字符串只是空字符串。
 
 39
 00:02:47,580 --> 00:02:52,100
@@ -160,23 +160,23 @@ Because a string ends with a nullbyte, so an empty string is just null.
 
 41
 00:02:58,189 --> 00:03:00,819
-addresses that point to the strings.
+指向字符串的地址。
 
 42
 00:03:00,819 --> 00:03:03,349
-And then you just have memory with all the strings.
+然后你就有了所有字符串的内存。
 
 43
 00:03:03,349 --> 00:03:08,729
-And so this way you can get the address with null-bytes on to the stack.
+这样就可以把空字节的地址放到堆栈上。
 
 44
 00:03:08,730 --> 00:03:11,610
-Pretty clever, I never thought about this before.
+很聪明，我以前从没想过这个。
 
 45
 00:03:11,609 --> 00:03:15,639
-And now you basically just have to put everything together.
+现在你基本上要把所有的东西都放在一起。
 
 46
 00:03:15,639 --> 00:03:20,349
@@ -184,7 +184,7 @@ wcbowling使用pwnlib来实现这个漏洞，它是一个非常有用的python�
 
 47
 00:03:20,349 --> 00:03:21,519
-it out.
+它出来了。
 
 48
 00:03:21,519 --> 00:03:26,919
@@ -192,11 +192,11 @@ it out.
 
 49
 00:03:26,919 --> 00:03:30,649
-hits the addresses passed in via the arguments.
+点击通过参数传入的地址。
 
 50
 00:03:30,650 --> 00:03:33,980
-And so there are two single byte writes.
+所以有两个单字节的写入。
 
 51
 00:03:33,980 --> 00:03:36,270
@@ -208,23 +208,23 @@ And so there are two single byte writes.
 
 53
 00:03:41,549 --> 00:03:42,549
-two bytes.
+两个字节。
 
 54
 00:03:42,549 --> 00:03:45,839
-So you can just reuse most of it.
+所以你可以重新使用它的大部分。
 
 55
 00:03:45,840 --> 00:03:50,610
-Then this is being executed in a loop until the winning message is shown.
+然后循环执行，直到显示获胜消息。
 
 56
 00:03:50,610 --> 00:03:55,430
-The stack has some randomized offsets, thus you have to try it a few times.
+堆栈有一些随机偏移，因此您必须尝试几次。
 
 57
 00:03:55,430 --> 00:03:57,880
-Here is the asciicinema recording by wcbowling.
+这是wcbowling的电影录音。
 
 58
 00:03:57,879 --> 00:04:03,259
@@ -232,11 +232,11 @@ Here is the asciicinema recording by wcbowling.
 
 59
 00:04:03,260 --> 00:04:09,170
-to record a screencast so I can actually see how you debug it and what the problem is.
+录制一个屏幕广播，这样我就可以看到您如何调试它以及问题是什么。
 
 60
 00:04:09,169 --> 00:04:14,459
-So while I understand now the basic idea, I still wanted to implement it myself.
+所以，虽然我现在了解了这个基本概念，但我仍然想自己去实现它。
 
 61
 00:04:14,459 --> 00:04:20,329
@@ -244,11 +244,11 @@ So while I understand now the basic idea, I still wanted to implement it myself.
 
 62
 00:04:20,329 --> 00:04:25,879
-to hit the arguments, and the alignment of the address through the arguments.
+点击参数，并通过参数调整地址。
 
 63
 00:04:25,879 --> 00:04:31,909
-And while I was doing that and struggling with exactly those details, I had an epiphany.
+当我在做这件事，并与这些细节斗争时，我有了一个顿悟。
 
 64
 00:04:31,910 --> 00:04:37,630
@@ -256,7 +256,7 @@ And while I was doing that and struggling with exactly those details, I had an e
 
 65
 00:04:37,629 --> 00:04:38,749
-this.
+这个。
 
 66
 00:04:38,750 --> 00:04:44,050
@@ -264,7 +264,7 @@ this.
 
 67
 00:04:44,050 --> 00:04:46,160
-how excited that makes me.
+这让我多么兴奋。
 
 68
 00:04:46,159 --> 00:04:50,739
@@ -272,19 +272,19 @@ how excited that makes me.
 
 69
 00:04:50,740 --> 00:04:54,660
-else it might not work, you will see in a second why.
+否则可能不起作用，你马上就会明白原因。
 
 70
 00:04:54,660 --> 00:04:55,990
-So here it is.
+就在这里。
 
 71
 00:04:55,990 --> 00:04:56,990
-That’s all.
+仅此而已。
 
 72
 00:04:56,990 --> 00:05:02,570
-And when we execute it, you can see it gets into an execution loop of the winning message.
+当我们执行它时，您可以看到它进入了获胜消息的执行循环。
 
 73
 00:05:02,569 --> 00:05:07,609
@@ -296,7 +296,7 @@ And when we execute it, you can see it gets into an execution loop of the winnin
 
 75
 00:05:14,139 --> 00:05:17,559
-are quite a few beautiful puzzle pieces here.
+这里有很多漂亮的拼图。
 
 76
 00:05:17,560 --> 00:05:22,810
@@ -304,11 +304,11 @@ are quite a few beautiful puzzle pieces here.
 
 77
 00:05:22,810 --> 00:05:24,060
-__stack_check_fail.
+_堆栈检查失败。
 
 78
 00:05:24,060 --> 00:05:30,050
-wcbowling had two writes and placed the address in the arguments, which made it so unreliable.
+wcbowling有两个写操作，并将地址放在参数中，这使得它非常不可靠。
 
 79
 00:05:30,050 --> 00:05:36,330
@@ -316,11 +316,11 @@ wcbowling had two writes and placed the address in the arguments, which made it 
 
 80
 00:05:36,330 --> 00:05:37,870
-the last video.
+最后一段视频。
 
 81
 00:05:37,870 --> 00:05:40,030
-But there is one problem.
+但有一个问题。
 
 82
 00:05:40,030 --> 00:05:45,330
@@ -328,7 +328,7 @@ But there is one problem.
 
 83
 00:05:45,330 --> 00:05:46,520
-position.
+位置。
 
 84
 00:05:46,520 --> 00:05:51,240
@@ -336,7 +336,7 @@ position.
 
 85
 00:05:51,240 --> 00:05:52,920
-position on our stack.
+在我们的堆栈上的位置。
 
 86
 00:05:52,919 --> 00:06:00,359
@@ -344,15 +344,15 @@ position on our stack.
 
 87
 00:06:00,360 --> 00:06:03,290
-padding and places it into the buffer.
+填充并将其放入缓冲区。
 
 88
 00:06:03,289 --> 00:06:07,259
-Then comes the raw bytes of the address, and places it.
+然后是地址的原始字节，并将其放置。
 
 89
 00:06:07,259 --> 00:06:11,459
-And then comes the format modifier to write to an address on the stack.
+然后，格式修饰符来写入堆栈上的地址。
 
 90
 00:06:11,460 --> 00:06:17,300
@@ -361,31 +361,31 @@ And then comes the format modifier to write to an address on the stack.
 91
 00:06:17,300 --> 00:06:21,140
 偏移位置，我们总是用
-214.
+214。
 
 92
 00:06:21,139 --> 00:06:27,009
-Though the problem is, we can’t have an arbitrary amount of bytes padding.
+尽管问题是，我们不能有任意数量的字节填充。
 
 93
 00:06:27,010 --> 00:06:29,710
-Because the address has to be 8byte alligned.
+因为地址必须是8字节的联合签名。
 
 94
 00:06:29,710 --> 00:06:35,100
-So we can only increase or decrease the padding in 8 byte steps.
+所以我们只能在8字节的步骤中增加或减少填充。
 
 95
 00:06:35,099 --> 00:06:37,699
-Which affects the amounts of bytes we can write.
+这会影响我们可以写入的字节数。
 
 96
 00:06:37,699 --> 00:06:38,699
-With %n.
+使用%N。
 
 97
 00:06:38,699 --> 00:06:42,389
-It’s always in these 8 steps.
+它总是在这8个步骤。
 
 98
 00:06:42,389 --> 00:06:48,499
@@ -393,11 +393,11 @@ It’s always in these 8 steps.
 
 99
 00:06:48,500 --> 00:06:49,500
-address.
+地址。
 
 100
 00:06:49,500 --> 00:06:51,180
-Now there are two challenges.
+现在有两个挑战。
 
 101
 00:06:51,180 --> 00:06:57,010
@@ -409,7 +409,7 @@ Now there are two challenges.
 
 103
 00:07:03,669 --> 00:07:05,709
-memory and get a segfault.
+记忆并得到一个SEGAULT。
 
 104
 00:07:05,710 --> 00:07:12,130
@@ -417,11 +417,11 @@ memory and get a segfault.
 
 105
 00:07:12,129 --> 00:07:14,869
-stack by just using more arguments.
+通过使用更多参数进行叠加。
 
 106
 00:07:14,870 --> 00:07:19,400
-It will add entries to the argv array and increase it.
+它将向argv数组添加条目并增加它。
 
 107
 00:07:19,400 --> 00:07:25,570
@@ -429,7 +429,7 @@ It will add entries to the argv array and increase it.
 
 108
 00:07:25,569 --> 00:07:29,409
-on the stack had other values in it, it won’t work.
+在堆栈中还有其他值，它将不起作用。
 
 109
 00:07:29,409 --> 00:07:34,519
@@ -437,7 +437,7 @@ on the stack had other values in it, it won’t work.
 
 110
 00:07:34,520 --> 00:07:36,410
-number before.
+以前的号码。
 
 111
 00:07:36,410 --> 00:07:41,110
@@ -449,7 +449,7 @@ number before.
 
 113
 00:07:47,330 --> 00:07:49,660
-have a zero at the correct spot.
+在正确的位置有一个零。
 
 114
 00:07:49,659 --> 00:07:52,519
@@ -461,7 +461,7 @@ have a zero at the correct spot.
 
 116
 00:07:57,810 --> 00:08:03,010
-that we are not sure what to write because of our multiples of 8 restrictions.
+由于我们的8倍限制，我们不确定要写什么。
 
 117
 00:08:03,009 --> 00:08:08,179
@@ -469,11 +469,11 @@ that we are not sure what to write because of our multiples of 8 restrictions.
 
 118
 00:08:08,180 --> 00:08:12,700
-paddings and adjusts the amount of arguments and the write offset accordingly.
+填充并相应地调整参数量和写入偏移量。
 
 119
 00:08:12,699 --> 00:08:17,399
-And I started by looking around the printing of the winning message.
+我开始四处看看获奖信息的打印。
 
 120
 00:08:17,400 --> 00:08:24,500
@@ -481,15 +481,15 @@ And I started by looking around the printing of the winning message.
 
 121
 00:08:24,499 --> 00:08:25,899
-that doesn’t work.
+那不管用。
 
 122
 00:08:25,900 --> 00:08:31,740
-Anyway, I was then just trying them, to see if anything interesting would come from it.
+不管怎样，我当时只是在尝试，看看是否有什么有趣的东西会从中产生。
 
 123
 00:08:31,740 --> 00:08:34,760
-And luckily this one worked.
+幸运的是，这一个成功了。
 
 124
 00:08:34,760 --> 00:08:40,460
@@ -497,11 +497,11 @@ And luckily this one worked.
 
 125
 00:08:40,460 --> 00:08:41,460
-cookie.
+饼干。
 
 126
 00:08:41,460 --> 00:08:43,530
-Let’s look at the stack.
+让我们看看这个堆栈。
 
 127
 00:08:43,530 --> 00:08:49,210
@@ -509,31 +509,31 @@ Let’s look at the stack.
 
 128
 00:08:49,210 --> 00:08:50,660
-write to.
+写信给某人。
 
 129
 00:08:50,660 --> 00:08:54,480
-And then here at the end is the target address we want to write to.
+最后是我们要写入的目标地址。
 
 130
 00:08:54,480 --> 00:08:56,250
-The GOT address.
+得到的地址。
 
 131
 00:08:56,250 --> 00:09:00,170
-We can also look now what value has been written there.
+我们现在也可以看看这里写了什么值。
 
 132
 00:09:00,170 --> 00:09:03,550
-So we will jump to 0x40066b.
+所以我们将跳转到0x40066B。
 
 133
 00:09:03,550 --> 00:09:08,450
-Let’s look at the disassembly and see where that would be.
+让我们看看分解图，看看它在哪里。
 
 134
 00:09:08,450 --> 00:09:09,450
-66b.
+66 B。
 
 135
 00:09:09,450 --> 00:09:11,280
@@ -545,15 +545,15 @@ Let’s look at the disassembly and see where that would be.
 
 137
 00:09:14,620 --> 00:09:17,760
-It’s in between the compare and the jump-not-equal.
+它在比较和跳跃之间不相等。
 
 138
 00:09:17,760 --> 00:09:25,180
-Let’s use x to print 3 instructions, instead of the disassemble command.
+让我们用x来打印3条指令，而不是反汇编命令。
 
 139
 00:09:25,180 --> 00:09:26,240
-Do you see that.
+你看到了吗？
 
 140
 00:09:26,240 --> 00:09:29,650
@@ -565,7 +565,7 @@ WTF现在有移动，而不是CMP？
 
 142
 00:09:31,440 --> 00:09:34,850
-Welcome to intel assembler and more advanced ROP.
+欢迎使用Intel汇编程序和更高级的ROP。
 
 143
 00:09:34,850 --> 00:09:39,980
@@ -573,7 +573,7 @@ Welcome to intel assembler and more advanced ROP.
 
 144
 00:09:39,980 --> 00:09:42,280
-but never heard anybody using that term.
+但从未听人用过这个词。
 
 145
 00:09:42,280 --> 00:09:48,770
@@ -581,11 +581,11 @@ but never heard anybody using that term.
 
 146
 00:09:48,770 --> 00:09:52,090
-it will just read those bytes and interpret them as assembler.
+它只读取这些字节并将其解释为汇编程序。
 
 147
 00:09:52,090 --> 00:09:59,900
-And so in this case, the cmp and jne turned into two simple moves.
+在这种情况下，cmp和jne变成了两个简单的移动。
 
 148
 00:09:59,900 --> 00:10:06,010
@@ -593,7 +593,7 @@ And so in this case, the cmp and jne turned into two simple moves.
 
 149
 00:10:06,010 --> 00:10:07,850
-message.
+消息。
 
 150
 00:10:07,850 --> 00:10:13,250
@@ -605,5 +605,5 @@ message.
 
 152
 00:10:19,390 --> 00:10:22,440
-then we call puts to print the message.
+然后我们调用Puts来打印消息。
 

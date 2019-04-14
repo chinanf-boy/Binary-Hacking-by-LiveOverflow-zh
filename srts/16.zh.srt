@@ -8,7 +8,7 @@
 
 3
 00:00:17,070 --> 00:00:18,320
-as well.
+也。
 
 4
 00:00:18,320 --> 00:00:23,760
@@ -16,7 +16,7 @@ as well.
 
 5
 00:00:23,759 --> 00:00:25,789
-restrictions on the return address.
+对寄信人地址的限制。
 
 6
 00:00:25,789 --> 00:00:31,239
@@ -24,19 +24,19 @@ restrictions on the return address.
 
 7
 00:00:31,240 --> 00:00:32,370
-shellcode works.
+Shellcode工作。
 
 8
 00:00:32,369 --> 00:00:35,369
-I hope I explained it well enough in the past videos.
+我希望我在过去的视频中解释得足够好。
 
 9
 00:00:35,370 --> 00:00:38,950
-But if there are still open questions, please post them on reddit.
+但如果还有未解决的问题，请将其张贴在Reddit上。
 
 10
 00:00:38,949 --> 00:00:42,319
-I really need you to have understood that stuff.
+我真的需要你理解那些东西。
 
 11
 00:00:42,320 --> 00:00:44,840
@@ -48,11 +48,11 @@ I really need you to have understood that stuff.
 
 13
 00:00:49,730 --> 00:00:55,680
-(objdump -s), or ret2libc, or even return orientated programming.
+（objdump-s），或ret2libc，甚至返回定向编程。
 
 14
 00:00:55,680 --> 00:00:59,730
-In this video we will not be able to explore return oriented programming.
+在本视频中，我们将无法探索面向返回的编程。
 
 15
 00:00:59,730 --> 00:01:04,850
@@ -60,27 +60,27 @@ In this video we will not be able to explore return oriented programming.
 
 16
 00:01:04,850 --> 00:01:05,850
-programming.
+编程。
 
 17
 00:01:05,850 --> 00:01:07,420
-So let’s have a look at the source code.
+让我们来看一下源代码。
 
 18
 00:01:07,420 --> 00:01:12,860
-And again, it’s very similar to the previous levels, just some small changes.
+同样，它与之前的水平非常相似，只是一些小的变化。
 
 19
 00:01:12,860 --> 00:01:18,130
-Instead of everything being in main, main calls this function get_path.
+不是所有东西都在主目录中，主目录调用这个函数get_path。
 
 20
 00:01:18,130 --> 00:01:21,700
-Get path allocates a string buffer for 64 characters.
+get path为64个字符分配字符串缓冲区。
 
 21
 00:01:21,700 --> 00:01:23,440
-Then reads a string with gets.
+然后用get读取字符串。
 
 22
 00:01:23,440 --> 00:01:28,550
@@ -88,11 +88,11 @@ Then reads a string with gets.
 
 23
 00:01:28,550 --> 00:01:31,310
-can use to overwrite the return pointer on the stack.
+可用于覆盖堆栈上的返回指针。
 
 24
 00:01:31,310 --> 00:01:33,480
-But the next line is interesting.
+但下一行很有趣。
 
 25
 00:01:33,480 --> 00:01:38,460
@@ -100,35 +100,35 @@ _ builtin返回地址是编译器中的一个函数，您可以使用它来读�
 
 26
 00:01:38,460 --> 00:01:40,630
-current return address from the stack.
+堆栈中的当前返回地址。
 
 27
 00:01:40,630 --> 00:01:45,990
-And this return address is checked if it starts with hex 0xbf.
+如果返回地址以hex 0xbf开头，则检查该返回地址。
 
 28
 00:01:45,990 --> 00:01:49,230
-The ampersand performs a bitwise AND with the address.
+和号对地址执行位“与”。
 
 29
 00:01:49,230 --> 00:01:53,560
-After that only the part where they were same survives.
+在那之后，只有他们相同的部分存活下来。
 
 30
 00:01:53,560 --> 00:01:55,520
-basically setting the remaining bits to 0.
+基本上将剩余的位设置为0。
 
 31
 00:01:55,520 --> 00:01:58,500
-And checking if the front is still hex bf.
+检查前面是否仍然是六角高炉。
 
 32
 00:01:58,500 --> 00:02:05,070
-If the return address starts with 0xbf, it prints this return address and exits.
+如果返回地址以0xBF开头，则打印此返回地址并退出。
 
 33
 00:02:05,070 --> 00:02:06,830
-When we use our exploit from last time.
+当我们使用上次的漏洞时。
 
 34
 00:02:06,830 --> 00:02:11,150
@@ -136,31 +136,31 @@ When we use our exploit from last time.
 
 35
 00:02:11,150 --> 00:02:12,750
-that it doesn’t work.
+它不起作用。
 
 36
 00:02:12,750 --> 00:02:14,410
-It fails with bzzzt.
+BZZT失败了。
 
 37
 00:02:14,409 --> 00:02:15,409
-Ok.
+好啊。
 
 38
 00:02:15,409 --> 00:02:19,389
-So we cannot use addresses that start with hex bf.
+所以我们不能使用以hex-bf开头的地址。
 
 39
 00:02:19,389 --> 00:02:22,579
-The exit protects this function from being exploited that way.
+出口保护这个功能不被这样利用。
 
 40
 00:02:22,579 --> 00:02:25,799
-Because the exit is a syscall that simply quits the program.
+因为exit是一个系统调用，只需退出程序。
 
 41
 00:02:25,799 --> 00:02:30,629
-So even though we have smashed the return pointer, this function will never return.
+所以即使我们破坏了返回指针，这个函数也不会返回。
 
 42
 00:02:30,629 --> 00:02:35,879
@@ -168,7 +168,7 @@ So even though we have smashed the return pointer, this function will never retu
 
 43
 00:02:35,879 --> 00:02:37,099
-exploit it.
+利用它。
 
 44
 00:02:37,099 --> 00:02:41,909
@@ -176,15 +176,15 @@ exploit it.
 
 45
 00:02:41,909 --> 00:02:43,919
-memory with `info proc map`.
+内存中有“info proc map”。
 
 46
 00:02:43,920 --> 00:02:48,690
-We can see that the only addresses that start with bf are on the stack.
+我们可以看到，只有以bf开头的地址在堆栈上。
 
 47
 00:02:48,689 --> 00:02:52,109
-So basically we cannot return to a stack address.
+所以基本上我们不能返回到堆栈地址。
 
 48
 00:02:52,109 --> 00:02:57,829
@@ -196,19 +196,19 @@ So basically we cannot return to a stack address.
 
 50
 00:02:59,379 --> 00:03:01,989
-So first of all, we can still control the return pointer.
+所以首先，我们仍然可以控制返回指针。
 
 51
 00:03:01,989 --> 00:03:04,119
-As long as it doesn’t start with bf.
+只要不是从男朋友开始。
 
 52
 00:03:04,120 --> 00:03:08,620
-And now comes this sick idea, of returning into known code.
+现在出现了一个病态的想法，回到已知的代码中。
 
 53
 00:03:08,620 --> 00:03:10,140
-Let’s think about this.
+让我们想想这个。
 
 54
 00:03:10,140 --> 00:03:15,730
@@ -216,75 +216,75 @@ Let’s think about this.
 
 55
 00:03:15,730 --> 00:03:17,280
-just jumps there.
+就跳到那里。
 
 56
 00:03:17,279 --> 00:03:24,309
-… What would happen if you return to the address 0x080484f9.
+…如果您返回地址0x080484f9会发生什么。
 
 57
 00:03:24,310 --> 00:03:27,240
-Which is the return instruction itself.
+这是返回指令本身。
 
 58
 00:03:27,239 --> 00:03:28,239
-Think about this.
+想想这个。
 
 59
 00:03:28,239 --> 00:03:32,279
-We overwrite the return pointer with hex 0x080.
+我们用十六进制0x080覆盖返回指针。
 
 60
 00:03:32,279 --> 00:03:37,499
-We reach the return instruction, it will pop this address from the stack and jump to it.
+我们到达返回指令，它将从堆栈中弹出这个地址并跳转到它。
 
 61
 00:03:37,500 --> 00:03:39,360
-Basically just jump to itself.
+基本上就是跳到自己身上。
 
 62
 00:03:39,360 --> 00:03:44,130
-And now it will read the next address on the stack and jump there.
+现在它将读取堆栈上的下一个地址并跳到那里。
 
 63
 00:03:44,129 --> 00:03:45,589
-Now you could repeat that.
+现在你可以重复一遍。
 
 64
 00:03:45,590 --> 00:03:48,260
-Make the next address on the stack again 0x080.
+再次将堆栈上的下一个地址设置为0x080。
 
 65
 00:03:48,260 --> 00:03:51,540
-Or place the address of the stack here.
+或者把栈的地址放在这里。
 
 66
 00:03:51,540 --> 00:03:53,210
-And we can return into the stack again.
+我们可以再次回到堆栈中。
 
 67
 00:03:53,209 --> 00:03:55,599
-And in theory that should work.
+从理论上讲，这是可行的。
 
 68
 00:03:55,599 --> 00:03:59,669
-Because the original return address got overwritten with an address that starts with 0x080.
+因为原始返回地址被以0x080开头的地址覆盖。
 
 69
 00:03:59,670 --> 00:04:02,350
-Ok let’s try that.
+好吧，我们试试看。
 
 70
 00:04:02,349 --> 00:04:04,439
-let’s modify our exploit code.
+让我们修改我们的漏洞代码。
 
 71
 00:04:04,439 --> 00:04:08,659
-Instead of the shellcode let’s use int 3, CC instruction again.
+我们不再使用shellcode，而是使用int 3，cc指令。
 
 72
 00:04:08,659 --> 00:04:09,729
-For a trap.
+陷阱。
 
 73
 00:04:09,730 --> 00:04:13,710
@@ -292,59 +292,59 @@ For a trap.
 
 74
 00:04:13,709 --> 00:04:14,789
-suitable shellcode.
+合适的外壳代码。
 
 75
 00:04:14,790 --> 00:04:17,720
-So let’s focus on the interesting part.
+所以让我们集中在有趣的部分。
 
 76
 00:04:17,720 --> 00:04:23,590
-Set a breakpoint at the return of getpath, and then run it with our exploit input.
+在getpath的返回处设置一个断点，然后使用我们的漏洞输入运行它。
 
 77
 00:04:23,590 --> 00:04:24,590
-We hit the breakpoint.
+我们到达了断点。
 
 78
 00:04:24,590 --> 00:04:27,020
-And we got past the return pointer check.
+我们通过了返回指针检查。
 
 79
 00:04:27,020 --> 00:04:29,140
-So let’s look at the stack ourselves.
+那么让我们自己来看看这个堆栈。
 
 80
 00:04:29,139 --> 00:04:34,589
-We can see that the address on top of the stack is now the 0x080.
+我们可以看到堆栈顶部的地址现在是0x080。
 
 81
 00:04:34,590 --> 00:04:36,400
-Which is the return instruction.
+这是返回指令。
 
 82
 00:04:36,400 --> 00:04:38,280
-So now single step forward.
+所以现在向前迈出一步。
 
 83
 00:04:38,280 --> 00:04:40,960
-This should pop this address from the stack and jump there.
+这应该从堆栈中弹出这个地址并跳转到那里。
 
 84
 00:04:40,960 --> 00:04:41,970
-And indeed.
+确实如此。
 
 85
 00:04:41,970 --> 00:04:46,230
-We hit the breakpoint again, because we jumped to itself.
+我们又碰到了断点，因为我们跳到了自己身上。
 
 86
 00:04:46,230 --> 00:04:50,720
-When you now look at the stack, the next address on the stack is the stack address.
+现在查看堆栈时，堆栈上的下一个地址是堆栈地址。
 
 87
 00:04:50,720 --> 00:04:53,340
-And we will return into this address now.
+我们现在就回这个地址。
 
 88
 00:04:53,340 --> 00:04:58,810
@@ -352,7 +352,7 @@ And we will return into this address now.
 
 89
 00:04:58,810 --> 00:05:00,430
-we hit our traps.
+我们击中了陷阱。
 
 90
 00:05:00,430 --> 00:05:01,430
@@ -364,23 +364,23 @@ we hit our traps.
 
 92
 00:05:03,030 --> 00:05:04,030
-By the way.
+顺便说一句。
 
 93
 00:05:04,030 --> 00:05:07,360
-This address where we jumped to, the 0x080 is a gadget.
+我们跳到的这个地址，0x080是一个小工具。
 
 94
 00:05:07,360 --> 00:05:11,200
-When you read about return oriented programming, you are looking for gadgets.
+当你读到关于面向返回的编程时，你在寻找小工具。
 
 95
 00:05:11,199 --> 00:05:13,649
-And that was a simple no operation gadget.
+这是一个简单的禁止操作的小工具。
 
 96
 00:05:13,650 --> 00:05:15,900
-It was just a return, doing nothing.
+这只是一种回报，什么都不做。
 
 97
 00:05:15,900 --> 00:05:20,620
@@ -388,15 +388,15 @@ It was just a return, doing nothing.
 
 98
 00:05:20,620 --> 00:05:22,430
-before returning to the next address.
+在返回下一个地址之前。
 
 99
 00:05:22,430 --> 00:05:28,300
-Now when we do this kind of stuff, you hear me saying “return into”, or “jump to”.
+现在当我们做这种事情的时候，你听到我说“回到”，或者“跳到”。
 
 100
 00:05:28,300 --> 00:05:30,590
-Those become equivalent in this case.
+在这种情况下，它们是等价的。
 
 101
 00:05:30,590 --> 00:05:35,860
@@ -404,31 +404,31 @@ Those become equivalent in this case.
 
 102
 00:05:35,860 --> 00:05:36,860
-anymore.
+不再。
 
 103
 00:05:36,860 --> 00:05:39,310
-We are returning into something else.
+我们又回到了别的地方。
 
 104
 00:05:39,310 --> 00:05:41,980
-Effectively just jumping somewhere else.
+实际上只是跳到别的地方。
 
 105
 00:05:41,979 --> 00:05:55,589
-So I hope that doesn’t confuse you.
+所以我希望这不会让你困惑。
 
 106
 00:05:55,590 --> 00:06:04,630
-Let’s have a look at another trick.
+让我们看一看另一个技巧。
 
 107
 00:06:04,629 --> 00:06:22,249
-It’s very similar to what we did in stack level 4.
+这与我们在第4层堆栈中所做的非常相似。
 
 108
 00:06:22,250 --> 00:06:25,480
-So where else could we jump to.
+那么我们还能跳到哪里呢？
 
 109
 00:06:25,480 --> 00:06:52,840
@@ -436,63 +436,63 @@ So where else could we jump to.
 
 110
 00:06:52,840 --> 00:06:56,350
-hints said we could look into ret2libc.
+提示说我们可以调查ret2libc。
 
 111
 00:06:56,350 --> 00:07:03,330
-Now that you are almost a pro in exploitation, you understand what that means.
+既然你几乎是剥削的行家，你就明白这意味着什么了。
 
 112
 00:07:03,330 --> 00:07:04,970
-Return into libc.
+返回libc。
 
 113
 00:07:04,970 --> 00:07:09,990
-Like we just returned into some code, we could also return into the huge library libc.
+就像我们刚刚返回到一些代码中一样，我们也可以返回到巨大的libc库中。
 
 114
 00:07:09,990 --> 00:07:13,990
-There must be something interesting that we could abuse.
+一定有什么有趣的东西我们可以滥用。
 
 115
 00:07:13,990 --> 00:07:16,860
-One interesting function from libc is system.
+libc中一个有趣的函数是system。
 
 116
 00:07:16,860 --> 00:07:19,470
-Which executes a shell command.
+执行shell命令。
 
 117
 00:07:19,470 --> 00:07:22,150
-With print system, we can find the address of it.
+通过打印系统，我们可以找到它的地址。
 
 118
 00:07:22,150 --> 00:07:25,100
-But simply returning into it will probably not work.
+但是简单地回到它里面可能不会起作用。
 
 119
 00:07:25,100 --> 00:07:28,080
-We need to make sure to control a couple of things.
+我们需要确保控制一些事情。
 
 120
 00:07:28,080 --> 00:07:32,430
-Let’s create a simple C program that calls the libc system for us.
+让我们创建一个简单的C程序，它为我们调用libc系统。
 
 121
 00:07:32,430 --> 00:07:36,170
-In the end we want to somehow execute system with /bin/sh.
+最后，我们希望以某种方式使用/bin/sh执行系统。
 
 122
 00:07:36,169 --> 00:07:39,349
-Because then we get a shell.
+因为这样我们就有了外壳。
 
 123
 00:07:39,349 --> 00:07:41,339
-If we try that here, that works well.
+如果我们在这里试一下，效果很好。
 
 124
 00:07:41,340 --> 00:07:43,540
-Now let’s look at this in gdb.
+现在让我们看看gdb中的这个。
 
 125
 00:07:43,539 --> 00:07:49,069
@@ -500,7 +500,7 @@ Now let’s look at this in gdb.
 
 126
 00:07:49,069 --> 00:07:51,279
-is put on top of the stack.
+放在堆栈的顶部。
 
 127
 00:07:51,280 --> 00:07:56,010
@@ -508,7 +508,7 @@ is put on top of the stack.
 
 128
 00:07:56,009 --> 00:07:57,009
-well.
+好。
 
 129
 00:07:57,009 --> 00:08:01,159
@@ -516,35 +516,35 @@ well.
 
 130
 00:08:01,159 --> 00:08:02,289
-system.
+系统。
 
 131
 00:08:02,289 --> 00:08:04,729
-First the address of the command is placed on the stack.
+首先，命令的地址放在堆栈上。
 
 132
 00:08:04,729 --> 00:08:08,689
-And then the address we want to return to.
+然后我们要返回的地址。
 
 133
 00:08:08,690 --> 00:08:12,640
-Now imagine if we use our buffer overflow to return into system.
+现在想象一下，如果我们使用缓冲区溢出返回到系统中。
 
 134
 00:08:12,639 --> 00:08:15,769
-Firstof all we didn’t execute a call instruction.
+首先，我们没有执行调用指令。
 
 135
 00:08:15,770 --> 00:08:18,620
-Thus there was no return address pushed.
+因此没有推送返回地址。
 
 136
 00:08:18,620 --> 00:08:20,760
-But we fully control the stack.
+但是我们完全控制了堆栈。
 
 137
 00:08:20,759 --> 00:08:24,139
-So system expects the stack to look like this.
+所以系统希望堆栈看起来像这样。
 
 138
 00:08:24,139 --> 00:08:25,969
@@ -552,19 +552,19 @@ So system expects the stack to look like this.
 
 139
 00:08:25,970 --> 00:08:29,800
-So first we have to put the return address for system on the stack.
+所以首先我们必须将系统的返回地址放在堆栈上。
 
 140
 00:08:29,800 --> 00:08:32,680
-But actually we don’t care about this right now.
+但实际上我们现在不在乎这个。
 
 141
 00:08:32,680 --> 00:08:35,370
-But that is still cool and important, and remember that.
+但这仍然很酷也很重要，记住这一点。
 
 142
 00:08:35,370 --> 00:08:38,040
-Because you can chain those things together.
+因为你可以把这些东西连在一起。
 
 143
 00:08:38,039 --> 00:08:43,669
@@ -576,7 +576,7 @@ Because you can chain those things together.
 
 145
 00:08:48,770 --> 00:08:49,770
-step.
+步骤。
 
 146
 00:08:49,770 --> 00:08:55,390
@@ -584,59 +584,59 @@ step.
 
 147
 00:08:55,390 --> 00:08:57,400
-into 0x41414141.
+进入0x41414141。
 
 148
 00:08:57,400 --> 00:09:03,010
-the next address on the stack has to be a string we want to execute.
+堆栈上的下一个地址必须是要执行的字符串。
 
 149
 00:09:03,010 --> 00:09:05,250
-Preferably “/bin/sh”.
+最好是“/bin/sh”。
 
 150
 00:09:05,250 --> 00:09:08,280
-There are many options how to get a reference to such a string.
+如何获取对此类字符串的引用有许多选项。
 
 151
 00:09:08,280 --> 00:09:10,460
-one option would be to use a stack address.
+一种选择是使用堆栈地址。
 
 152
 00:09:10,460 --> 00:09:11,900
-Because there are strings we control.
+因为有我们控制的字符串。
 
 153
 00:09:11,900 --> 00:09:13,930
-Or environment variables.
+或环境变量。
 
 154
 00:09:13,930 --> 00:09:16,680
-Because they are at the bottom of the stack and a bit easier to predict.
+因为它们位于堆栈的底部，并且更容易预测。
 
 155
 00:09:16,680 --> 00:09:20,150
-But as you remember, the stack is a bit unreliable and shifting around.
+但是，正如您所记得的，这个堆栈有点不可靠，而且会四处移动。
 
 156
 00:09:20,150 --> 00:09:22,920
-A more reliable technique is this here.
+这里有一种更可靠的技术。
 
 157
 00:09:22,920 --> 00:09:27,880
-We can use find to search in the mapped memory of libc for a string.
+我们可以使用find在libc的映射内存中搜索字符串。
 
 158
 00:09:27,880 --> 00:09:30,970
-Cool, apparently at this address we can find /bin/sh.
+很酷，显然在这个地址我们可以找到/bin/sh。
 
 159
 00:09:30,970 --> 00:09:33,390
-Let’s check if that is true.
+我们来看看这是不是真的。
 
 160
 00:09:33,390 --> 00:09:35,620
-Examine memory as string at this address.
+在此地址以字符串形式检查内存。
 
 161
 00:09:35,620 --> 00:09:36,620
@@ -644,11 +644,11 @@ Examine memory as string at this address.
 
 162
 00:09:36,620 --> 00:09:37,950
-What the frak! gdb.
+弗拉克！GDB。
 
 163
 00:09:37,950 --> 00:09:39,720
-What the hell are you doing.
+你到底在干什么？
 
 164
 00:09:39,720 --> 00:09:43,390
@@ -656,55 +656,55 @@ What the hell are you doing.
 
 165
 00:09:43,390 --> 00:09:45,800
-I have no idea why this happens.
+我不知道为什么会这样。
 
 166
 00:09:45,800 --> 00:09:47,300
-Couldn’t find anything online.
+在网上找不到任何东西。
 
 167
 00:09:47,300 --> 00:09:48,300
-Anyway.
+不管怎样。
 
 168
 00:09:48,300 --> 00:09:49,300
-Ignore this.
+忽略这一点。
 
 169
 00:09:49,300 --> 00:09:50,300
-Here is another technique.
+这是另一种技术。
 
 170
 00:09:50,300 --> 00:09:53,940
-We can use strings to find all strings in libc.
+我们可以使用字符串来查找libc中的所有字符串。
 
 171
 00:09:53,940 --> 00:09:58,160
-And with -t we can print the offset inside this file as hex.
+使用-t，我们可以将文件中的偏移量打印为十六进制。
 
 172
 00:09:58,160 --> 00:10:02,450
-And then we can simply add this offset to the address libc is loaded to.
+然后我们可以简单地将这个偏移量添加到libc加载到的地址。
 
 173
 00:10:02,450 --> 00:10:05,070
-And that is the real address of /bin/sh.
+这是/bin/sh的真实地址。
 
 174
 00:10:05,070 --> 00:10:07,620
-Ok so let’s copy this address into our exploit.
+好吧，让我们把这个地址复制到我们的漏洞中。
 
 175
 00:10:07,620 --> 00:10:11,250
-And then let’s try it.
+然后我们试试看。
 
 176
 00:10:11,250 --> 00:10:15,210
-Remember to use the trick from the previous video with the parenthesis and cat.
+记住要用上一个视频中带括号和cat的技巧。
 
 177
 00:10:15,210 --> 00:10:18,450
-Because the exploit script will close the input again.
+因为漏洞脚本将再次关闭输入。
 
 178
 00:10:18,450 --> 00:10:19,450
@@ -712,11 +712,11 @@ Because the exploit script will close the input again.
 
 179
 00:10:19,450 --> 00:10:20,450
-It works.
+它起作用了。
 
 180
 00:10:20,450 --> 00:10:23,200
-What we just did was the technique called ret2libc.
+我们刚刚做的是一种叫做ret2libc的技术。
 
 181
 00:10:23,200 --> 00:10:25,440
@@ -724,23 +724,23 @@ What we just did was the technique called ret2libc.
 
 182
 00:10:25,441 --> 00:10:26,441
-Maybe you ask yourself why the hell the stack was executable in the first place.
+也许你会问自己，为什么这个堆栈一开始是可执行的。
 
 183
 00:10:26,441 --> 00:10:27,441
-There is no valid reason why the stack should be executable.
+堆栈应该是可执行的，没有合理的理由。
 
 184
 00:10:27,441 --> 00:10:28,441
-That’s why there exists a general memory policy nowadays.
+这就是为什么现在有一个通用的记忆策略。
 
 185
 00:10:28,441 --> 00:10:29,441
-Write xor Execute.
+写入XOR执行。
 
 186
 00:10:29,441 --> 00:10:30,441
-Basically it means, never have a memory page that is writeable AND executable.
+基本上，它意味着永远没有可写和可执行的内存页。
 
 187
 00:10:30,441 --> 00:10:31,441
@@ -748,7 +748,7 @@ Basically it means, never have a memory page that is writeable AND executable.
 
 188
 00:10:31,441 --> 00:10:32,441
-process memory.
+进程内存。
 
 189
 00:10:32,441 --> 00:10:33,441
@@ -756,11 +756,11 @@ process memory.
 
 190
 00:10:33,441 --> 00:10:34,441
-the NX bit, the non executable bit for memory pages like the stack.
+nx位，是内存页（如堆栈）的不可执行位。
 
 191
 00:10:34,441 --> 00:10:35,441
-But reality is not so simple.
+但现实并非如此简单。
 
 192
 00:10:35,441 --> 00:10:36,441
@@ -768,23 +768,23 @@ But reality is not so simple.
 
 193
 00:10:36,441 --> 00:10:37,441
-support features like that.
+支持这样的功能。
 
 194
 00:10:37,441 --> 00:10:38,441
-Or modern programming languages like javascript use JIT.
+或者像javascript这样的现代编程语言使用jit。
 
 195
 00:10:38,441 --> 00:10:39,441
-Just in time compiler.
+实时编译器。
 
 196
 00:10:39,441 --> 00:10:40,441
-So they have to compile code on the fly in memory when needed and execute that.
+因此，当需要时，他们必须在内存中即时编译代码并执行它。
 
 197
 00:10:40,441 --> 00:10:41,441
-So they need writeable and executable memory regions.
+因此，它们需要可写和可执行的内存区域。
 
 198
 00:10:41,441 --> 00:10:42,441
@@ -792,13 +792,13 @@ So they need writeable and executable memory regions.
 
 199
 00:10:42,441 --> 00:10:43,441
-but still pwn a system.
+但仍然需要一个系统。
 
 200
 00:10:43,441 --> 00:10:44,441
-And at some point in the future, I will make a video about return oriented programming.
+在将来的某个时候，我会制作一个关于面向返回编程的视频。
 
 201
 00:10:44,441 --> 00:10:44,451
-Which is the next advanced step for this kind of technique.
+这是这种技术的下一个高级步骤。
 
