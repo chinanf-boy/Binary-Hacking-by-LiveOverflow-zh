@@ -392,7 +392,7 @@ got incremented and the address placed there.
 
 99
 00:05:57,030 --> 00:05:59,780
-So now comes our push EBP.
+So now comes our .
 
 100
 00:05:59,780 --> 00:06:04,450

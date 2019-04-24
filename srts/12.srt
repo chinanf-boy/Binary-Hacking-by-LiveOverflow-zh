@@ -28,7 +28,7 @@ The title of this video is inspired by the famous phrack article “Smashing The
 
 8
 00:00:35,390 --> 00:00:38,370
-For Fun And Profit” from 1996.
+” from 1996.
 
 9
 00:00:38,370 --> 00:00:41,240
