@@ -8,7 +8,7 @@ talk about the Global Offset Table (short GOT) and the Process Linkage Table (sh
 
 3
 00:00:18,580 --> 00:00:19,580
-PLT).
+PLT)
 
 4
 00:00:19,580 --> 00:00:24,660
